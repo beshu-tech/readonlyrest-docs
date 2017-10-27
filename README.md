@@ -1,6 +1,6 @@
 # Documentation for ReadonlyREST plugin
 
-* [📖 Docs for Elasticsearch plugin](index.md)
+* [📖 Docs for Elasticsearch plugin](elasticsearch.md)
 
 * [📖 Docs for Kibana plugin](kibana.md)
 
