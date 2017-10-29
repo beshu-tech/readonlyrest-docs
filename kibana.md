@@ -1,7 +1,7 @@
 # Kibana Plugin overview
 
-ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](../pro.html) and [ReadonlyREST ENTERPRISE](../enterprise.html) packages.
-See product descriptions and a comparison chart in the official [ReadonlyREST website](../index.html)
+ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html) packages.
+See product descriptions and a comparison chart in the official [ReadonlyREST website](https://readonlyrest.com)
 
 ## After purchasing
 
