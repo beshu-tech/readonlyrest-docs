@@ -73,16 +73,20 @@ This means the configuration will be kept all in one place and if you used Reado
 
 ## Example: multiuser ELK
 
-This is a typical example of configuration snippet to add at the end of your `elasticsearch.yml` file, to support ReadonlyREST PRO.
+Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml`:
 
 ```yaml
-
-# For xpack users: only leave monitoring on.
+# For xpack users: you may only leave monitoring on.
 # xpack.graph.enabled: false
 # xpack.ml.enabled: false
 # xpack.monitoring.enabled: true
 # xpack.security.enabled: false
 # xpack.watcher.enabled: false
+```
+
+This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` file, to support ReadonlyREST PRO.
+
+```yaml
 
 readonlyrest:
 
@@ -135,7 +139,7 @@ Whatever your configuration ends up being, remember:
 
 ## Kibana configuration
 
-Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using a pair of credentials we just defined in `elasticsearch.yml` (see above, the ::KIBANA-SRV:: block).
+Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using a pair of credentials we just defined in `readonlyrest.yml` (see above, the ::KIBANA-SRV:: block).
 
 Open up `conf/kibana.yml` and add the following:
 
@@ -152,4 +156,4 @@ elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
 ```
 
-And of course also make suree `elasticsearch.url` points to the designated Elasticsearch instance (check also the http or https)
+And of course also make sure `elasticsearch.url` points to the designated Elasticsearch instance (check also the http or https)
