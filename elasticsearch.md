@@ -20,7 +20,10 @@ readonlyrest:
 ```
 
 *An Example of Access Control List (ACL) made of 2 blocks.*
- 
+
+The YAML snippet above, like all of this plugin's settings should be saved inside a file called `readonlyrest.yml` you can create right beside the main YAML configuration file of Elasticsearch.
+
+**PRO TIP**: If you are a subscriber of the PRO/Enterprise Kibana plugin, you can edit and refresh the settings through a GUI.
 
 ## Installing
 To install ReadonlyREST plugin for Elasticsearch:
@@ -34,7 +37,7 @@ bin/elasticsearch-plugin install file://<download_path>/readonlyrest-*.zip
 
 3. **Update settings**: Edit Elasticsearch configuration file and add any of the snippets you find in the documentation page
  ```bash
- vim $ES_HOME/conf/elasticsearch.yml
+ vim $ES_HOME/conf/readonlyrest.yml
  
  ```
  
@@ -91,7 +94,7 @@ readonlyrest:
 
     ssl:
       # put the keystore in the same dir with elasticsearch.yml 
-      keystore_file: "config/keystore.jks"
+      keystore_file: "keystore.jks"
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 ```
@@ -415,7 +418,7 @@ via one or more LDAP server, or we can forward the Authorization header to an ex
 Optionally we can introduce the notion of groups (see them as bags of users). 
 The aim of having groups is to write a very specific block once, and being able to allow multiple usernames that satisfy the block.
 
-Groups can be declared and associated to users statically in the elasticsearch.yml file. 
+Groups can be declared and associated to users statically in the readonlyrest.yml file. 
 Alternatively, groups for a given username can be retrieved from an LDAP server or from a LDAP server, or a custom JSON/XML service.
  
 You can mix and match the techniques to satisfy your requirements. For example, you can configure ReadonlyREST to:
@@ -425,7 +428,7 @@ You can mix and match the techniques to satisfy your requirements. For example, 
 Another example:
 * Extract the username from Authorization header (HTTP Basic Auth)
 * Validate said username's password via LDAP server
-* resolve groups associated to the user from groups defined in elasticsearch.yml
+* resolve groups associated to the user from groups defined in readonlyrest.yml
 
 More examples are shown below together with a sample configuration.  
 
@@ -778,7 +781,7 @@ See [commercial license FAQ page](commercial.html) for more information.
  bin/plugin install file:///download-folder/readonlyrest-1.13.2_es5.1.2.zip
 ```
 
- 4. Edit `config/elasticsearch.yml` and add your configuration as seen in examples.
+ 4. Edit `config/readonlyrest.yml` and add your configuration as seen in examples.
  
 ## Build from Source
 You need to have installed: git, maven, Java 8 JDK, zip. So use apt-get or brew to get them.
@@ -812,7 +815,7 @@ keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass 
 Now copy the `keystore.jks` inside the plugin directory inside the Elasticsearch home. 
 
 ```bash
-cp keystore.jks /elasticsearch/plugins/readonlyrest/
+cp keystore.jks /elasticsearch/conifg/
 ```
 
 **Step 3**
@@ -828,15 +831,15 @@ You should have obtained "4338fa3ea95532196849ae27615e14dda95c77b1".
 
 
 **Step 5**
-Let's add some configuration to our Elasticsearch: edit `conf/elasticsearch.yml` and append the following lines:
+Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` and append the following lines:
 
  ```yaml
  readonlyrest:
     
      ssl:
        enable: true
-       # keystore in the same dir with elasticsearch.yml
-       keystore_file: "config/keystore.jks"
+       # keystore in the same dir with readonlyrest.yml
+       keystore_file: "keystore.jks"
        keystore_pass: readonlyrest
        key_pass: readonlyrest
  
@@ -897,7 +900,7 @@ Of course, if you do not use ssl, disable it.
      ssl:
        enable: true
        # keystore in the same dir with elasticsearch.yml
-       keystore_file: "/elasticsearch/plugins/readonlyrest/keystore.jks"
+       keystore_file: "keystore.jks"
        keystore_pass: readonlyrest
        key_pass: readonlyrest
 
