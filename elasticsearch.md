@@ -361,6 +361,49 @@ readonlyrest:
       auth_key: simone:ro
       kibana_access: ro
 ```
+## Custom audit log serializer
+
+You can write your own custom audit log serializer class, add it to the ROR plugin class path and configure it through the YAML settings.
+
+### Implementation
+1. Create a new Java project in your IDE
+2. Create a class like this:
+```java
+import tech.beshu.ror.ResponseContext;
+import tech.beshu.ror.requestcontext.AuditLogSerializer;
+
+import java.util.HashMap;
+import java.util.Map;
+
+  public static class MySerializer implements AuditLogSerializer {
+
+    @Override
+    public Map<String, ?> createLoggableEntry(ResponseContext context) {
+      Map<String, Object> theMap = new HashMap<>();
+      theMap.put("indices", context.getRequestContext().getIndices());
+      return theMap;
+    }
+  }
+
+```
+3. Satisfy the two tech.beshu.* imports above by copy-pasting the two classes from ROR core code base into your project (they have no other dependency).
+
+4. Find the MyCustomSerializer.class somewhere in your build directory
+
+5. ` jar cvf CUSTOMSERIALIZER.jar MyCustomSerializer.class`
+
+6.  mv CUSTOMSERIALIZER.jar plugins/readonlyrest/
+
+7. Your config/readonlyrest.yml should start like this
+```yml
+readonlyrest:
+    audit_serializer: MyCustomSerializer
+```
+
+8. Start elasticsearch (with ROR installed) and grep for:
+```
+[2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: MyCustomSerializer
+```
 
 ### Troubleshooting 
 Follow these approaches until you find the solution to your problem
