@@ -168,5 +168,32 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-For` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
 
+### Logging out
+Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrytped cookie that represents the users identity and the login form is shown.
+
+However, when the authentication is delegated to a proxy, the logout button needs to become a link to some URL capable to unregister the session a user initiated within the proxy.
+
+For this, ROR for Kibana offers a way to customize the logout button's URL:
+
+1. Find a link that will delete the reverse proxy's user session
+2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.custom_logout_link: https://..../logout`
+
+Now users that gained a session through delegated auth, can also click on the logout button in ROR for kibana and actually exit their session.
+
 ### Caveat
 Enabling proxy auth passthrough will relax the requirement to provide a password. Therefore, don't enable this option if you don't make sure Kibana can **only be accessed through the reverse proxy***.
+
+## Load balancers
+When you run multiple Kibana instances behind a load balancer, a user will have their identity cookie created and encrypted in one instance. 
+
+A fresh cookie encryption key is generated at startup time on every Kibana node. This means that each Kibana instance behind the load balancer will have a different encryption key.
+
+This is a problem because a cookie encrypted by one instance won't be recognised on the other instances.
+
+> Today it's possible to share the cookie encryption key in all the Kibana instances
+
+1. Come up with a string of 32 characters length or more
+2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.cookiePass: 12345678901234567890123456789012` 
+3. Do the above in all Kibana nodes behind the load balancer, and restart them. 
+
+
