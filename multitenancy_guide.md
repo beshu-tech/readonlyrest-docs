@@ -141,7 +141,11 @@ And then Kibana
 $ bin/kibana
 ```
 
-That's it! Now you are ready to point your browser to the Kibana server IP (defauling on port 5601) and you should see a login prompt.
 
+## Loggin in
+Now you are ready to point your browser to the Kibana server IP (defauling on port 5601) and you should see a login prompt.
+You can login as any user i.e. "sales_rw_usr", or "ops_admin" and the password is always "dev".
+
+Maybe just remember to login with a RW user first, so Kibana can create its own default settings.
 
 
