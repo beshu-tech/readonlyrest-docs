@@ -28,12 +28,12 @@ For the scope of this guide, we will assume:
 * You have [installed the ROR plugin for Elasticsearch](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#installing)
 * You have [installed the ROR PRO/Enterprise plugin for Kibana](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#installation)
 
-If you don't have the ROR [PRO](https://readonlyrest.com/pro.html) (or [Enterprise](https://readonlyrest.com/enterprise.html) for Kibana plugin, get yourself a two weeks free trial build!
+If you don't have the ROR [PRO](https://readonlyrest.com/pro.html) (or [Enterprise](https://readonlyrest.com/enterprise.html)) plugin for Kibana, get yourself a two weeks free trial build
 
 
 ## Setup: the Elasticsearch side
 
-Right beside your `elasticsearch.yml`, create a file called `readonlyrest.yml` and write the following settings into it.
+On the same directory with your `elasticsearch.yml` (default: `config/`, create a file called `readonlyrest.yml` and write the following settings into it.
 
 ```yml
 readonlyrest:
