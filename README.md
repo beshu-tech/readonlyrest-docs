@@ -7,7 +7,12 @@
 The documentation of an open source product should also be open source! Found a problem? Edit the file directly from GitHub!
 
 ---
+# Getting started
 
+* [🚀 Kibana Multi-User with ROR PRO](multiuser_guide.md)
+* [🚀 Kibana Multi-Tenancy with ROR Enterprise](multitenancy_guide.md)
+
+---
 [⬅️ Back to the Main Project](github.com/sscarduzio/elasticsearch-readonlyrest-plugin)
 
 
