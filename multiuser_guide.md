@@ -1,6 +1,7 @@
 # Multiuser Elastic Stack with ReadonlyREST PRO
 
-This document will guide you through setting up your Elasticsearch and Kibana stack with ReadonlyREST such that there will be three Kibana users:
+This document will guide you through setting up your Elasticsearch and Kibana stack with ReadonlyREST such that:
+
 * 3 users will be able to login into Kibana using their own set of credentials
 * All users will see the same Kibana dashboards, but may be seeing different subsets of the whole data contained in Elasticsearch. 
 
@@ -9,10 +10,10 @@ For this tutorials, we want to have three users, each of them has a distinct acc
 
 |                                       | "admin" | "rw_usr" | "ro_usr" |
 |---------------------------------------|---------|----------|----------|
-| Can create/edit/delete dashboards     | ✅      | ✅       |          |
+| Can create, edit, delete dashboards     | ✅      | ✅       |          |
 | Can change Kibana settings            | ✅      | ✅       |          |
 | Only sees logstash data from 2017     |         |          | ✅      |
-| Can see "add"/"delete"/"edit" buttons | ✅      | ✅       |          |
+| Can see "add", "delete", "edit" buttons | ✅      | ✅       |          |
 | "dev-tools" Kibana App is hidden       | ✅      | ✅       |          |
 | "readonlyrest" Kibana App is hidden    | ✅      |          |          |
 
@@ -101,7 +102,9 @@ And then Kibana
 $ bin/kibana
 ```
 
-That's it! Now you are ready to point your browser to the Kibana server IP (defauling on port 5601) and you should see a login prompt.
 
+## Loggin in
+Now you are ready to point your browser to the Kibana server IP (defauling on port 5601) and you should see a login prompt.
+You can login as any user i.e. "rw_usr", or "admin" and the password is always "dev".
 
-
+Maybe just remember to login with a RW user first, so Kibana can create its own default settings.
