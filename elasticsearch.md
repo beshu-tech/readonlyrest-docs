@@ -858,7 +858,7 @@ keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass 
 Now copy the `keystore.jks` inside the plugin directory inside the Elasticsearch home. 
 
 ```bash
-cp keystore.jks /elasticsearch/conifg/
+cp keystore.jks /elasticsearch/config/
 ```
 
 **Step 3**
