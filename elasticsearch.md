@@ -85,19 +85,47 @@ ReadonlyREST can be configured to require that all REST requests come through HT
 
 [Letsencrypt](https://letsencrypt.org/) certificates work just fine, once you [make create a JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm).
 
+**IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
+
 ```yml
-# Uncomment if you also installed xpack plugin
-#xpack.security.enabled: false
-
 http.type: ssl_netty4
-readonlyrest:
+```
 
+Now in `readonlyrest.yml` add the following settings:
+
+```yml
+readonlyrest:
     ssl:
       # put the keystore in the same dir with elasticsearch.yml 
       keystore_file: "keystore.jks"
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 ```
+
+### Restrict SSL protocols and ciphers
+Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
+
+```yml
+readonlyrest:
+    ssl:
+      # put the keystore in the same dir with elasticsearch.yml 
+      keystore_file: "keystore.jks"
+      keystore_pass: readonlyrest
+      key_pass: readonlyrest
+      allowed_protocols: [TLSv1.2]
+      allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
+```
+
+ReadonlyREST will log a list of available ciphers and protocols supported by the current JVM at startup.
+
+```
+[2018-01-03T10:09:38,683][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Available ciphers: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA
+[2018-01-03T10:09:38,684][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Restricting to ciphers: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+[2018-01-03T10:09:38,684][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Available SSL protocols: TLSv1,TLSv1.1,TLSv1.2
+[2018-01-03T10:09:38,685][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Restricting to SSL protocols: TLSv1.2
+[2018-0
+```
+
 
 ## Blocks of rules
 Every block **must** have at least the `name` field, and optionally a `type` field valued either "allow" or "forbid". If you omit the `type`, your block will be treated as `type: allow` by default. 
