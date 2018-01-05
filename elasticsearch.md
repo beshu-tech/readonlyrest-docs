@@ -331,6 +331,45 @@ Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authenticat
 
 
 ## Audit & Troubleshooting
+### Interpreting logs
+ReadonlyREST prints a log line for each incoming request (this can be selectively avoided on ACL block level using the `verbosity` rule).
+
+#### Allowed requests
+This is an example of a request that matched an ACL block (allowed) and has been let through to Elasticsearch.
+
+>ALLOWED by { name: '::PERSONAL_GRP::', policy: ALLOW} req={ ID:1667655475--1038482600#1312339, TYP:SearchRequest, CGR:N/A, USR:simone, BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,Authorization,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::PERSONAL_GRP::->[kibana_access->true, kibana_hide_apps->true, auth_key->true, kibana_index->true]], [::Kafka::->[auth_key->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]] }
+
+#### Explanation
+The log line immediately states that this request has been allowed by an ACL block called "::PERSONAL_GRP::".  Immediately follows a summary of the requests' anatomy.
+The format is semi-structured, and it's intended for humans to read quickly, it's not JSON, or anything else.
+
+Similar information gets logged in JSON format into Elasticsearch documents enabling the [audit logs](#audit-logs) feature described later.
+
+Here is a glossary:
+
+* `ID`: ReadonlyREST-level request id
+* `TYP`: String, the name of the Java class that internally represent the request type (very useful for debug)
+* `CGR`: String, the request carries a "current group" header (used for multi-tenancy).
+* `USR`: String, the user name ReadonlyREST was able to extract from Basic Auth, JWT, LDAP, or other methods as specified in the ACL.
+* `BRS`: Boolean, an heuristic attempt to tell if the request comes from a browser.
+* `ACT`: String, the elasticsearch level action associated with the request. For a list of actions, see our [actions rule docs](#action-rule).
+* `OA`: IP Address, originating address of the TCP connection underlying the http session.
+* `IDX`: Strings array: the list of indices affected by this request.
+* `MET`: String, HTTP Method
+* `CNT`: String, HTTP body content. Comes as a summary of its lenght, full body of the request is available in debug mode.
+* `HDR`: String array, list of HTTP headers, headers' content is available in debug mode.
+* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated, This is super useful for knowing what ACL block/rule is forbidding/allowing this request.
+
+In the example, the block `::PERSONAL_GRP::` is allowing the request because all the rules in this block evaluate to `true`.
+
+#### Forbidden requests
+This is an example of a request that gets forbidden by ReadonlyREST ACL.
+```
+FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, CGR:N/A, USR:[no basic auth header], BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::Infosec::->[groups->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]], [::Infosec::->[groups->false]], [::ADMIN_GRP::->[groups->false]], [::Kafka::->[auth_key->false]], [::PERSONAL_GRP::->[groups->false]] }
+```
+The above rule gets forbidden "by default". This means that no ACL block has matched the request, so ReadonlyREST's default policy of rejection takes effect. 
+
+
 
 ### Audit logs
 ReadonlyREST can write events very similarly to Logstash into to a series of indices: `readonlyrest_audit-YYYY-MM-DD`. Every event contains information about a request and how the system has handled it.
