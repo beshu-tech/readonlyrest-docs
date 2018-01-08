@@ -197,3 +197,21 @@ This is a problem because a cookie encrypted by one instance won't be recognised
 3. Do the above in all Kibana nodes behind the load balancer, and restart them. 
 
 
+# Login screen
+It is possible to customise the look of the login screen.
+
+## Add your company logo
+It's recommended to use a transparent PNG, negative logo. Ideally a white foreground, and transparent background.
+
+Open `config/kibana.yml` and append the following:
+```yml
+readonlyrest_kbn.login_custom_logo: 'https://.../logo.png'
+```
+## Add custom CSS/JS
+You have the opportunity to inject HTML code right before the closing head tag (`</head>`).
+
+Open `config/kibana.yml` and append the following:
+```yml
+readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
+```
+
