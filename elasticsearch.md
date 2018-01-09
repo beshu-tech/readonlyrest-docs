@@ -60,7 +60,12 @@ bin/elasticsearch-plugin remove readonlyrest
 3. Install the new version of ReadonlyREST into Elasticsearch.
 
 ```
-bin/elasticsearch-plugin install file://<download_dir>/readonlyrest*.zip
+bin/elasticsearch-plugin install file://<download_dir>/readonlyrest-<ROR_VERSION>_es<ES_VERSION>.zip
+```
+
+e.g.
+```
+bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 ```
 
 4. Restart Elasticsearch.
