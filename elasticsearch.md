@@ -764,6 +764,7 @@ readonlyrest:
       authentication_endpoint: "http://external-website1:8080/auth1"
       success_status_code: 200
       cache_ttl_in_sec: 60
+      validate: false # SSL certificate validation (default to true)
 
     - name: "ext2"
       authentication_endpoint: "http://external-website2:8080/auth2"
@@ -775,6 +776,7 @@ To define an external authentication service the user should specify:
 - `name` for service (then this name is used as id in `service` attribute of `external_authentication` rule)
 - `authentication_endpoint` (GET request)
 - `success_status_code` - authentication response success status code
+- 
 
 Cache can be defined at the service level or/and at the rule level. In the example, both are shown, but you might opt for setting up either.
 
