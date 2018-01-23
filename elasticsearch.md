@@ -21,9 +21,10 @@ readonlyrest:
 
 *An Example of Access Control List (ACL) made of 2 blocks.*
 
-The YAML snippet above, like all of this plugin's settings should be saved inside a file called `readonlyrest.yml` you can create right beside the main YAML configuration file of Elasticsearch.
+The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. 
+Create this file **on the same path where `elasticsearch.yml` is found**.
 
-**PRO TIP**: If you are a subscriber of the PRO/Enterprise Kibana plugin, you can edit and refresh the settings through a GUI.
+**PRO TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana.md).
 
 ## Installing
 To install ReadonlyREST plugin for Elasticsearch:
