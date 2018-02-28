@@ -585,6 +585,30 @@ In this example, the usernames are statically associated to group names.
 ```
 *Example: rules are associated to groups (instead of users) and users-group association is declared separately later under `users:`*
 
+## Environmental variables 
+Anywhere in `readonlyrest.yml` you can use the espression `${MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
+
+For example, here we declare an environment variable, and we write `${LDAP_PASSWORD}` in our settings:
+```bash
+$ export LDAP_PASSWORD=S3cr3tP4ss 
+$ cat readonlyrest.yml
+```
+
+```yml
+....
+ldaps:
+    
+    - name: ldap1
+      host: "ldap1.example.com"
+      port: 389                                                     
+      ssl_enabled: false                                            
+      ssl_trust_all_certs: true                                     
+      bind_dn: "cn=admin,dc=example,dc=com"                         
+      bind_password: "${LDAP_PASSWORD}"                                     
+      search_user_base_DN: "ou=People,dc=example,dc=com"
+....
+```
+And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ## Dynamic variables
 One of the neatest feature in ReadonlyREST is that you can use dynamic variables inside most rules values.
