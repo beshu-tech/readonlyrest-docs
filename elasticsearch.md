@@ -865,12 +865,18 @@ The information about the user name can be extracted from the "claims" inside a 
 
 ```yml
 readonlyrest:
-  access_control_rules:
-  - name: Valid JWT token is present
-    jwt_auth:
-      signature_key: "123456"
-      user_claim: user
-      header_name: Authorization # Default=Authorization
+    access_control_rules:
+    - name: Valid JWT token with a viewer role
+      jwt_auth:
+        name: "jwt_provider_1"
+        roles: ["viewer"]
+    jwt: 
+    - name: jwt_provider_1
+      signature_algo: RSA
+      signature_key: "your_signature"
+      user_claim: email
+      roles_claim: resource_access.client-app.roles # JSON-path style
+      header_name: Authorization
 ```
 The `user_claim` indicates which field in the JSON will be interpreted as the user name.
 The `signature_key` is used shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
