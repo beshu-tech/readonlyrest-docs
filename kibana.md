@@ -3,6 +3,10 @@
 ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html) packages.
 See product descriptions and a comparison chart in the official [ReadonlyREST website](https://readonlyrest.com)
 
+ReadonlyREST plugins for Kibana **always require** ReadonlyREST Free to be installed in the Elasticsearch nodes your Kibana instance(s) will connect to.
+
+It's not mandatory to install ReadonlyREST Free in all Elasticsearch nodes, but only in the ones in where you need the HTTP interface to be secured.
+
 ## After purchasing
 
 You will receive a link to the plugin zip file in an email. Download your zip. 
