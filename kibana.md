@@ -137,7 +137,7 @@ Whatever your configuration ends up being, remember:
 
 * The admin user has `kibana_access: admin` 
 * ALWAYS add this line when using the Kibana plugin : `prompt_for_basic_auth: false`
-* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon  from who is not meant to use it (makes better UX).
+* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon  from who is not meant to use it (makes for a better UX).
 
 
 
@@ -172,7 +172,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-For` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
 
-### Logging out
+### Custom Logout link
 Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrytped cookie that represents the users identity and the login form is shown.
 
 However, when the authentication is delegated to a proxy, the logout button needs to become a link to some URL capable to unregister the session a user initiated within the proxy.
@@ -186,6 +186,59 @@ Now users that gained a session through delegated auth, can also click on the lo
 
 ### Caveat
 Enabling proxy auth passthrough will relax the requirement to provide a password. Therefore, don't enable this option if you don't make sure Kibana can **only be accessed through the reverse proxy***.
+
+
+## JWT Token Forwarding as URL Query Parameter
+It is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.
+
+### Configuration
+To enable this feature in ReadonlyREST, you need to:
+
+* Have JWT authentication configured in ReadonlyREST (modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin). [See how](elasticsearch.md#json-web-token-jwt-auth).
+
+* Specify the query parameter name in `kibana.yml` by adding the line `readonlyrest_kbn.jwt_query_param: "jwt"` as a string, in our case "jwt".
+
+### In Action
+Once Kibana is restarted, you will be able to navigate to a link like this:
+```
+http://kibana:5601/login?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+```
+
+The following will happen:
+
+1. The Kibana plugin will forward the JWT token found in the query parameter into the `Authrization` header in a request to Elasticsearch.
+
+2. Elasticsearch will cryptographically authenticate and resolve the user's identity from the JWT claims.
+
+3. Kibana will write an encrypted cookie in your browser and use that from now on for the length of the autenticated session.
+
+4. When the user presses logout, Kibana will delete the cookie and redirect you to the login form, or whatever link you configured as `readonlyrest_kbn.custom_logout_link`.
+
+#### Deep linking with JWT
+Because the identity is embedded in the link, the JWT authentication can be used in conjunction with `nextUrl` query parameter for sharing deep links inside Kibana apps, or embeddinig visualizations and dashboards inside I-Frames.
+
+##### Anatomy of a JWT deep link
+```
+http://kibana:5601/login?jwt=<the-token>&nextUrl=urlEncode(<kibana-path>)
+```
+
+In Javascript one can compose a JWT deep link as follows:
+
+```js
+var absoluteKibanaPath = '/app/kibana#/visualize/edit/28dcde30-2258-11e8-82a3-af58d04b3c02?_g=()';
+
+var url = 'http://kibana:5601/login?jwt=' + 
+           jwtToken + 
+           '&nextUrl=' + 
+           encodeURI(absoluteKibanaPath);
+           
+console.log("Final JWT deep link: " + url)
+```
+
+The result may look something like this:
+```
+http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+```
 
 ## Load balancers
 When you run multiple Kibana instances behind a load balancer, a user will have their identity cookie created and encrypted in one instance. 
