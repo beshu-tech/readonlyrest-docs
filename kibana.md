@@ -189,7 +189,7 @@ Enabling proxy auth passthrough will relax the requirement to provide a password
 
 
 ## JWT Token Forwarding as URL Query Parameter
-It is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.
+Alternatively to typing in credentials in the standard login form, it is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.
 
 ### Configuration
 To enable this feature in ReadonlyREST, you need to:
@@ -210,12 +210,12 @@ The following will happen:
 
 2. Elasticsearch will cryptographically authenticate and resolve the user's identity from the JWT claims.
 
-3. Kibana will write an encrypted cookie in your browser and use that from now on for the length of the autenticated session.
+3. Kibana will write an encrypted cookie in your browser and use that from now on for the length of the autenticated session. From here onwards, the session management will be identical to the normal login form flow.
 
 4. When the user presses logout, Kibana will delete the cookie and redirect you to the login form, or whatever link you configured as `readonlyrest_kbn.custom_logout_link`.
 
 #### Deep linking with JWT
-Because the identity is embedded in the link, the JWT authentication can be used in conjunction with `nextUrl` query parameter for sharing deep links inside Kibana apps, or embeddinig visualizations and dashboards inside I-Frames.
+Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the call on the fly, the JWT authentication can be used in conjunction with `nextUrl` query parameter for sharing deep links inside Kibana apps, or embeddinig visualizations and dashboards inside I-Frames.
 
 ##### Anatomy of a JWT deep link
 ```
