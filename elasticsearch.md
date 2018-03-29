@@ -11,15 +11,19 @@ There is a dozen rules that can be grouped in sequences of blocks and form a pow
 readonlyrest:
     access_control_rules:
 
-    - name: "Block 1 - Allowing anything from localhost"
-      hosts: [127.0.0.1]
-
     - name: "Block 2 - Other hosts can only read certain indices"
       actions: ["indices:data/read/*"]
       indices: ["logstash-*"] # aliases are taken in account!
+      
+    - name: "Block 1 - Blocking everything from a network"
+      type: forbid
+      hosts: ["10.0.0.0/24"]
 ```
 
 *An Example of Access Control List (ACL) made of 2 blocks.*
+
+> Notice how **the ordering of the ACL blocks is very important!**
+
 
 The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. 
 Create this file **on the same path where `elasticsearch.yml` is found**.
@@ -171,7 +175,11 @@ list of IP addresses, host names or IP networks (in slash notation).
 
 | Rule and example argument                  | Description  |
 | --------------------------------- | ---         |
-| `hosts: [localhost, 10.0.0.0/24]` | a list of origin IP addresses or subnets|
+| Rule and example argument                  | Description  |
+| --------------------------------- | ---         |
+| `hosts: ["10.0.0.0/24"]` | a list of origin IP addresses or subnets |
+| `hosts_local: ["127.0.0.1", "127.0.0.2"]` | a list of destination IP addresses (ES HTTP API can bind to multiple IPs) |
+
 
 ## HTTP Level
 
@@ -196,6 +204,7 @@ This will match the requests with a valid IP address as a value of the `X-Forwar
 | `actions: ["indices:data/read/*"]` | Match if the request action starts with "indices:data/read/" |
 | `kibana_access: ro` | Enables the minimum set of actions necessary for browsers to use Kibana. See below. |
 | `kibana_index: .kibana-user1` | **OPTIONAL: Defaults to `.kibana`** specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)|
+| `snapshots: ["snap_@{user}_*"]` | restrict what snapshots names can be saved or restored |
 
 ### Indices rule
 If a **read request** asks for a some indices they have permissions for and some indices that they do NOT have permission for, the request is **rewritten** to involve only the subset of indices they have permission for.
@@ -337,6 +346,8 @@ Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authenticat
 
 
 ## Audit & Troubleshooting
+The main issues arise from bad ordering or ACL blocks. Remember that the order is important!
+
 ### Interpreting logs
 ReadonlyREST prints a log line for each incoming request (this can be selectively avoided on ACL block level using the `verbosity` rule).
 
