@@ -137,7 +137,52 @@ Whatever your configuration ends up being, remember:
 
 * The admin user has `kibana_access: admin` 
 * ALWAYS add this line when using the Kibana plugin : `prompt_for_basic_auth: false`
-* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon  from who is not meant to use it (makes for a better UX).
+* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
+
+### Rules ordering matters
+
+> Blocks related to the authentication of the users should be at the top of the ACL
+
+One of the most common mistakes is forgetting that the ACL blocks are evaluated in order from the first to the last.
+
+So, some request with credentials can be let through from one of the first blocks and come back to Kibana with no user identity metadata associated.
+
+Take this example of troublesome ACL:
+
+```yml
+    # PROBLEMATIC SETTINGS (EXAMPLE) ⚠️
+    
+    access_control_rules:
+
+    - name: "::FIRST BLOCK::"
+      hosts: ["127.0.0.1"]
+      actions: [...]
+
+    - name: "::ADMIN::"
+      auth_key: admin:dev
+      kibana_access: admin
+```
+The user will be able to login because the login request will be allowed by the first ACL block. But the ACL will not have resolved any metadata about the user identity (credentials checking was ignored)!
+
+This means the response to the Kibana login request will contain no user identity metadata (username, hidden apps, etc) and ReadonlyREST for Kibana won't be able to function correctly.
+
+The solution to this is to reorder the ACL blocks, so the ones that authenticate Kibana users are on the top.
+
+
+```yml
+    # SOLUTION: KIBANA USER AUTH RELATED BLOCKS GO FIRST! ✅👍
+    
+    access_control_rules:
+    
+    - name: "::ADMIN::"
+      auth_key: admin:dev
+      kibana_access: admin
+      
+    - name: "::FIRST BLOCK::"
+      hosts: ["127.0.0.1"]
+      actions: [...]
+
+```
 
 
 
