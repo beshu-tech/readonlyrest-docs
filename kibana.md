@@ -27,8 +27,10 @@ You can install this as a normal Kibana plugin using the `bin/kibana-plugin` uti
 From your Kibana installation, launch the command:
 
 ```bash
-$ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-*.zip
+$ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
 ```
+
+Notice how we need to type in the format `file://` + absolute path (yes, with three slashes).
 
 Kibana "optimization" process is long and buggy, please make sure that the plugin's css file file gets generated, otherwise create it empty (no css is loaded from there anyway).
 To do so, run this command:
