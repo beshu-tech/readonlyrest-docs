@@ -315,7 +315,10 @@ indices:monitor/upgrade
 internal:indices/admin/upgrade
 ```
 ### kibana_access rule
-This rule allows the minimum set of actions necessary for a browser to use Kibana.
+This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. This rule allows a set of actions towards the designated kibana index (see `kibana_index` rule - defaults to ".kibana"), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
+
+The idea is that with one single rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session. 
+
 Possible values:
 
 * `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices. 
