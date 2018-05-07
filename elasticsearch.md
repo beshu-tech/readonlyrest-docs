@@ -930,7 +930,7 @@ Please don't hesitate to [contact us](mailto:info@readonlyrest.com) for a re-lic
 See [commercial license FAQ page](commercial.html) for more information.
 
 # Installation
-1. Download the binary release of the latest version of ReadonlyREST from the [download page](../download.html)
+1. Download the binary release of the latest version of ReadonlyREST from the [download page](https://readonlyrest.com/download.html)
 2. `cd` to the Elasticsearch home
 3. Install the plugin 
 
