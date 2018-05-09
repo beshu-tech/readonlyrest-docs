@@ -882,9 +882,17 @@ The information about the user name can be extracted from the "claims" inside a 
 readonlyrest:
     access_control_rules:
     - name: Valid JWT token with a viewer role
+      kibana_access: ro
       jwt_auth:
         name: "jwt_provider_1"
         roles: ["viewer"]
+        
+    - name: Valid JWT token with a writer role
+      kibana_access: rw
+      jwt_auth:
+        name: "jwt_provider_1"
+        roles: ["writer"]
+        
     jwt: 
     - name: jwt_provider_1
       signature_algo: RSA
