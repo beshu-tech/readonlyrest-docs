@@ -206,6 +206,8 @@ This will match the requests with a valid IP address as a value of the `X-Forwar
 | `kibana_access: ro` | Enables the minimum set of actions necessary for browsers to use Kibana. See below. |
 | `kibana_index: .kibana-user1` | **OPTIONAL: Defaults to `.kibana`** specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)|
 | `snapshots: ["snap_@{user}_*"]` | restrict what snapshots names can be saved or restored |
+| `filter: '{"query_string":{"query":"user:@{user}"}}'` | Document Level Security (DLS) - return only documents that satisfy the boolean query |
+
 
 ### Indices rule
 If a **read request** asks for a some indices they have permissions for and some indices that they do NOT have permission for, the request is **rewritten** to involve only the subset of indices they have permission for.
@@ -327,6 +329,29 @@ Possible values:
 * `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app.
 
 This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards.
+
+## Document Level Security (DLS) - a.k.a. filter rule.
+This rule lets you filter the results of a read request using a boolean query. You can use dynamic variables to inject a user name or some header values in the query, or even environmental variables.
+
+Example 1: users can only read documents in the index "test-dls" that contain a field "user" with value that equals to their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
+
+```yml
+- name: "::USER::"
+  proxy_auth: "*"
+  indices: ["test-dls"]
+  filter: '{"query_string":{"query":"user:@{user}"}}'
+```
+
+Example 2: We don't want the press to access any "classified" documents. 
+```
+- name: "::Press::"
+  groups: ["press"]
+  filter: '{"bool": {"must_not": [{"term": {"access_level": {"value": "classified"}}}]}}'
+```
+ **⚠️IMPORTANT** This rule will only affect "read" requests. It will not be effective preventing clients from "writing" anything anywhere. This behaviour is identical to x-pack and search guard.
+ 
+  
+
 ## Authentication
 Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authentication method is secure only if SSL is enabled.
    
