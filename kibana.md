@@ -79,15 +79,17 @@ This means the configuration will be kept all in one place and if you used Reado
 
 ## Example: multiuser ELK
 
-Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml`:
+Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` and `kibana.yml`:
+This is how you disable X-pack modules:
 
 ```yaml
-# For xpack users: you may only leave monitoring on.
-# xpack.graph.enabled: false
-# xpack.ml.enabled: false
-# xpack.monitoring.enabled: true
-# xpack.security.enabled: false
-# xpack.watcher.enabled: false
+# For X-Pack users: you may only leave monitoring on. 
+# Don't add this if X-Pack is not installed at all
+xpack.graph.enabled: false
+xpack.ml.enabled: false
+xpack.monitoring.enabled: true
+xpack.security.enabled: false
+xpack.watcher.enabled: false
 ```
 
 This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` file, to support ReadonlyREST PRO.
