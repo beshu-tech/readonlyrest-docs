@@ -195,12 +195,12 @@ Activate authentication for the Kibana server: let the Kibana daemon connect to 
 Open up `conf/kibana.yml` and add the following:
 
 ```yaml
-# Same as ES, xpack users: only leave monitoring on.
-# xpack.graph.enabled: false
-# xpack.ml.enabled: false
-# xpack.monitoring.enabled: true
-# xpack.security.enabled: false
-# xpack.watcher.enabled: false
+# This is kibana.yml, but copy the exact same in elasticsearch.yml if you have to use some X-pack features.
+xpack.graph.enabled: false
+xpack.ml.enabled: false
+xpack.monitoring.enabled: true
+xpack.security.enabled: false # this is fundamental!
+xpack.watcher.enabled: false
 
 # Kibana server use ::KIBANA-SRV:: credentials
 elasticsearch.username: "kibana"
