@@ -356,19 +356,21 @@ Example 2: We don't want the press to access any "classified" documents.
 
 The fields rule is able to reduce the set of fields returned by matched queries. You can provide a black list of fields NOT to include (prefixing them using a tilde ~), or a white list of allowed fields.
 
+Example: don't show fields that start with "price" to external users.
+```yml
+- name: "External users - hide prices"
+  fields: ["~price"]
+  indices: ["catalogue_*"]
+  proxy_auth:
+    proxy_auth_config: "proxy1"
+    users: ["ext_*"]
+```
+
 Wildcards are supported using the star character, like in the `actions` or `indices` rules. 
 
 You can only provide a full black list or white list. Grey lists (i.e. `["~a", "b"]`) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
 
  **⚠️IMPORTANT** This rule will only affect "read" requests. **Requests that are not read only, will be rejected**. 
-
-```yml
-- name: "External users - hide prices"
-  proxy_auth:
-    proxy_auth_config: "proxy1"
-    users: ["ext_*"]
-  fields: ["~price"]
-```
 
 ## Authentication
 Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authentication method is secure only if SSL is enabled.
