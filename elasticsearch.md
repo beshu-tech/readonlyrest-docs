@@ -207,6 +207,8 @@ This will match the requests with a valid IP address as a value of the `X-Forwar
 | `kibana_index: .kibana-user1` | **OPTIONAL: Defaults to `.kibana`** specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)|
 | `snapshots: ["snap_@{user}_*"]` | restrict what snapshots names can be saved or restored |
 | `filter: '{"query_string":{"query":"user:@{user}"}}'` | Document Level Security (DLS) - return only documents that satisfy the boolean query |
+| `fields: ["~excluded_fields_prefix_*", "~excluded_field"]` | Field Level Security (FLS) - prevent queries from returning certain fields|
+| `fields: ["allowed_fields_prefix_*"]` | Field Level Security (FLS) - only return certain fields from queries|
 
 
 ### Indices rule
@@ -350,7 +352,23 @@ Example 2: We don't want the press to access any "classified" documents.
 ```
  **⚠️IMPORTANT** This rule will only affect "read" requests. It will not be effective preventing clients from "writing" anything anywhere. This behaviour is identical to x-pack and search guard.
  
-  
+# Field Level Security (FLS) - a.k.a. fields rule
+
+The fields rule is able to reduce the set of fields returned by matched queries. You can provide a black list of fields NOT to include (prefixing them using a tilde ~), or a white list of allowed fields.
+
+Wildcards are supported using the star character, like in the `actions` or `indices` rules. 
+
+You can only provide a full black list or white list. Grey lists (i.e. `["~a", "b"]`) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
+
+ **⚠️IMPORTANT** This rule will only affect "read" requests. **Requests that are not read only, will be rejected**. 
+
+```yml
+- name: "External users - hide prices"
+  proxy_auth:
+    proxy_auth_config: "proxy1"
+    users: ["ext_*"]
+  fields: ["~price"]
+```
 
 ## Authentication
 Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authentication method is secure only if SSL is enabled.
