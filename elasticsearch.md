@@ -207,6 +207,8 @@ This will match the requests with a valid IP address as a value of the `X-Forwar
 | `kibana_access: ro` | Enables the minimum set of actions necessary for browsers to use Kibana. See below. |
 | `kibana_index: .kibana-user1` | **OPTIONAL: Defaults to `.kibana`** specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)|
 | `snapshots: ["snap_@{user}_*"]` | restrict what snapshots names can be saved or restored |
+| `repositories: ["repo_@{user}_*"]` | restrict what repositories can snapshots be saved into |
+
 | `filter: '{"query_string":{"query":"user:@{user}"}}'` | Document Level Security (DLS) - return only documents that satisfy the boolean query |
 | `fields: ["~excluded_fields_prefix_*", "~excluded_field"]` | Field Level Security (FLS) - prevent queries from returning certain fields|
 | `fields: ["allowed_fields_prefix_*"]` | Field Level Security (FLS) - only return certain fields from queries|
