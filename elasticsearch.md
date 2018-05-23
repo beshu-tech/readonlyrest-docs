@@ -189,6 +189,7 @@ list of IP addresses, host names or IP networks (in slash notation).
 | `accept_x-forwarded-for_header: false` | **⚠️DEPRECATED** modifier for `hosts` rule: if the origin IP won't match, check the `X-Forwarded-For` header|
 | `x_forwarded_for: ["192.168.1.0/24"]` | exactly like `hosts`, but looks inside the `X-Forwarded-For` header only (useful when requests come through a load balancer like AWS ELB)|
 | `methods: [GET, DELETE]` | match the HTTP method|
+| `headers: ["headerName1:value","headerName2:value"]` | match the HTTP headers (useful with proxy_auth to simulate groups!)|
 | `uri_re: ^/secret-index/.*` | **☠️HACKY** A regular expression to match the request URI. Hint: superseded by indices!|
 | `maxBodyLength: 0` |**⚠️DEPRECATED**identify a maximum length for HTTP request body.|
 
