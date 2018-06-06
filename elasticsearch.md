@@ -441,7 +441,7 @@ The above rule gets forbidden "by default". This means that no ACL block has mat
 
 
 ### Audit logs
-ReadonlyREST can write events very similarly to Logstash into to a series of indices: `readonlyrest_audit-YYYY-MM-DD`. Every event contains information about a request and how the system has handled it.
+ReadonlyREST can write events very similarly to Logstash into to a series of indices named by default `readonlyrest_audit-YYYY-MM-DD`. Every event contains information about a request and how the system has handled it.
 Here is an example of the data points contained in each audit event. We can leverage all this information to build interesting Kibana dashboards, or any other visualization.
 
 ```json
@@ -497,6 +497,18 @@ readonlyrest:
       auth_key: simone:ro
       kibana_access: ro
 ```
+## Custom audit indices name and time granularity
+It is possible to change the name of the produced audit log indices by specifying a template value as `audit_index_template`.
+
+Example: tell ROR to write on  monthly index.
+
+```yml
+readonlyrest:
+  audit_collector: true
+  audit_index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
+  ...
+```
+
 ## Custom audit log serializer
 
 You can write your own custom audit log serializer class, add it to the ROR plugin class path and configure it through the YAML settings.
