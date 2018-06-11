@@ -497,6 +497,17 @@ readonlyrest:
       auth_key: simone:ro
       kibana_access: ro
 ```
+
+## Extended audit
+If you want to log the request content then an additional serializer is provided. This will log the entire user request within the content field of the audit event. To enable, configure the audit_serializer parameter as below.
+
+```yml
+readonlyrest:
+  audit_collector: true
+  audit_serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
+  ...
+```
+
 ## Custom audit indices name and time granularity
 It is possible to change the name of the produced audit log indices by specifying a template value as `audit_index_template`.
 
