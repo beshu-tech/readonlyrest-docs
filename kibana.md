@@ -42,7 +42,7 @@ $ touch optimize/bundles/readonlyrest_kbn.style.css
 ## Uninstall 
 
 ```bash
-$ bin/kibana-plugin remove readonlyrest
+$ bin/kibana-plugin remove readonlyrest_kbn
 ```
 
 
@@ -51,7 +51,7 @@ $ bin/kibana-plugin remove readonlyrest
 Just uninstall the old version and install the new version.
 
 ```bash
-$ bin/kibana-plugin remove readonlyrest
+$ bin/kibana-plugin remove readonlyrest_kbn
 ```
 
 Install the new version of ReadonlyREST into Kibana.
