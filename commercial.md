@@ -10,14 +10,22 @@ However, It is possible to request a quote for obtaining a commercial license th
 
 ## What is Priority Support?
 
-Priority support covers 2 incidents per quarter, with a max response time of 2 working days. Please remember that the scope of priority support is limited to the resolution of ReadonlyREST issues, not Elasticsearch, your application or infrastructure.
+Priority support is an email based, private support service with the creators of ReadonlyREST, and it covers two (2) incidents per quarter. 
 
-> TIP: if you need more Priority SLA support, just buy more licenses.
+We guarantee a max response time of 2 working days (usually less).
+
+Please remember that the scope of priority support is limited to the resolution of ReadonlyREST issues, not Elasticsearch issues, not your application or infrastructure issues.
+ 
+Any further engagement beyond the above terms requires to either:
+
+* go through the [public forum](https://forum.readonlyrest.com) (outside of SLA terms)
+* be purchased as [consultancy days](mailto:info@readonlyrest.com?subject=ReadonlyREST%20consultancy%20required) ($700 USD / day)
+* the subscriber to buy a secondary Enterprise subscription for that year, so to double their quarterly priority support slots.
 
 ### Am I eligible of Priority support?
-Non paying users, rely only on community support alone. 
+Non paying users, must rely only on community support alone. 
 ReadonlyREST PRO comes with 14 days "onboarding" dedicated support (on the whole ReadonlyREST stack).
-ReadonlyREST Enterprise comes with 14 days "onboarding" dedicated support (on both plugins) AND **one year of priority support** via email or forum.
+ReadonlyREST Enterprise comes with 14 days "onboarding" dedicated support (on both plugins) AND **one year of priority support** via email or forum private messages.
 
 In case you have a specific agreement with Beshu Limited (the company behind ReadonlyREST) for a commercial license that allows you to redistribute ReadonlyREST commercially, the priority SLA support does not cover your commercial customers directly. We will accept support requests from you and your staff only, and within the limits stated in the end user license agreement.
 
@@ -45,7 +53,7 @@ After that, when you actually need support, **open a support topic**. Don't forg
 
 ## Is there a trial version?
 
-There's no free version of the software, but we do offer a 14 day trial period of the full software and your credit card will be charged after the 14th day if you didn't cancel the subscription inthe meanwhile.
+Although there's no free forever version of our Kibana plugins, we do offer a 14 day trial period of the full software and your credit card will be charged after the 14th day if you didn't cancel the subscription inthe meanwhile.
 
 ## Can I get a discount?
 
@@ -70,15 +78,14 @@ Sure, just ask for a discount coupon before deleting your previous subscription.
 
 ## Can I distribute it to my customers?
 
-This is a common requirement for "on-site installs" or "appliances" sold to large corporations.
-The short answer is YES, but only as long as you have one valid, active [Embed]({{brand.base_url}}/embed.html) subscription ongoing.
+The short answer is YES, but only as long as you have one valid, active [Embed](https://readonlyrest.com/embedded/) subscription ongoing.
 You need to make sure your subscription remains active for as long as your product/solution containing ReadonlyREST is being offered for sale.
 
 The reason you cannot distribute ReadonlyREST as a Free user or a PRO subscriber is that the ElasticSearch plugin is released under the GPLv3 license; and the only legal way you could bundle it into a commercial product/solution is by also releaseing all your software under a GPL compatible license.
 
 We recognise this is rarely possible, that's why we agree to release the ElasticSearch plugin and the Kibana plugin under a commercial license that permits you to redistribute them. 
 
-For more legal information, please contact us filing an inquiry for [ReadonlyREST embed]({{brand.base_url}}/embed.html).
+For more legal information, please contact us filing an inquiry for [ReadonlyREST embed](https://readonlyrest.com/embedded/).
 
 
 ## Can you transfer a license?
@@ -102,7 +109,7 @@ Email [info@readonlyrest.com](mailto:info@readonlyrest.com?subject=ReadonlyREST%
 
 ## My credit card is expired/wrong!
 
-Log into the Plasso site for [ReadonlyREST PRO]({{products.pro.buylink}}/login) or  [ReadonlyREST Enterprise]({{products.enterprise.buylink}}/login) with your email address, 
+Log into the Plasso website with your email address, 
 click the Billing tab, enter your card info and hit Save.  
 We can't provide support for the Plasso website and don't have the ability to edit customer info - if you can't log in or change your credit card, 
 you can always let your current subscription expire and purchase a new subscription.
@@ -110,5 +117,5 @@ you can always let your current subscription expire and purchase a new subscript
 ## Can I pay via invoice?
 
 ReadonlyREST PRO is credit card only, no exceptions.
-ReadonlyREST Enterprise can accept payments with credit card. Alternatively we can arrange going through quote/PO/invoice. The latter is a manual process, so [contact](mailto:{{brand.email}}?subject=ReadonlyREST%20billing%20via%20invoice) us if you really can't use the credit card.
+ReadonlyREST Enterprise can accept payments with credit card. Alternatively we can arrange going through quote/PO/invoice. The latter is a manual process, so [contact](mailto:info@readonlyrest.com?subject=ReadonlyREST%20billing%20via%20invoice) us if you really can't use the credit card.
 
