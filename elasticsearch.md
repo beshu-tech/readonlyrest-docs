@@ -972,7 +972,7 @@ The big difference from Linux is that here you can ask for a commercial license 
 Here is a practical summary of what dealing with GPLv3 means:
 
 ## You CAN
-* Sell or give away an **unmodified** version of this code (along with its license and attributions).
+* Distribute for free or commercially a version (partial or total) of this software (along with its license and attributions) as part of a product or solution that is also **released under GPL-compatible license**. Please notify us if you do so.
 * Use a modified version **internally to your company** without making your changes available under the GPLv3 license.
 * Distribute for free or commercially a modified version (partial or total) of this software, provided that the source is contributed back as pull request to 
 the [original project](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin) or publicly made available under the GPLv3 or compatible license.
