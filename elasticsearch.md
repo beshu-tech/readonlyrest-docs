@@ -1108,7 +1108,7 @@ Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` 
    }
  }
  ```
- The `ssl_certificate_verification` bit is necessary for accepting self-signed SSL certificates.
+ The `ssl_certificate_verification` bit is necessary for accepting self-signed SSL certificates. You might also need to add cacert parameter to provide the path to your .cer or .pem file.
 
 ## Secure Metricbeats
 Very similarly to Logstaash, here's a snippet of configuration for [Metricbeats](https://www.elastic.co/downloads/beats/metricbeat) logging agent 
