@@ -98,9 +98,6 @@ This is a typical example of configuration snippet to add at the end of your `re
 
 readonlyrest:
 
-     # IMPORTANT FOR LOGIN/LOGOUT TO WORK
-    prompt_for_basic_auth: false
-
     access_control_rules:
 
     - name: "::LOGSTASH::"
@@ -140,7 +137,6 @@ readonlyrest:
 Whatever your configuration ends up being, remember:
 
 * The admin user has `kibana_access: admin` 
-* ALWAYS add this line when using the Kibana plugin : `prompt_for_basic_auth: false`
 * Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
 
 ### Rules ordering matters
