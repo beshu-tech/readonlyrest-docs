@@ -299,7 +299,7 @@ This is a problem because a cookie encrypted by one instance won't be recognised
 3. Do the above in all Kibana nodes behind the load balancer, and restart them. 
 
 
-# Login screen
+# Login screen tweaking
 It is possible to customise the look of the login screen.
 
 ## Add your company logo
@@ -315,5 +315,23 @@ You have the opportunity to inject HTML code right before the closing head tag (
 Open `config/kibana.yml` and append the following:
 ```yml
 readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
+```
+# Kibana UI tweaking
+With ReadonlyREST Enterprise, it's possible to inject custom CSS and Javascript to achieve a customised user experience for your users/tenants.
+
+## Inject custom CSS in Kibana
+Open `config/kibana.yml` and append the following:
+```yml
+readonlyrest_kbn.kibana_custom_css_inject: '.global-nav { background-color: green }'
+```
+Alternatively, it's possible to load the CSS from a file in the filesystem:
+
+```yml
+#readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
+```
+
+## Inject custom JS in Kibana
+```yml
+readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
 
