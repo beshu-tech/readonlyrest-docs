@@ -176,8 +176,6 @@ list of IP addresses, host names or IP networks (in slash notation).
 
 | Rule and example argument                  | Description  |
 | --------------------------------- | ---         |
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
 | `hosts: ["10.0.0.0/24"]` | a list of origin IP addresses or subnets |
 | `hosts_local: ["127.0.0.1", "127.0.0.2"]` | a list of destination IP addresses (ES HTTP API can bind to multiple IPs) |
 
