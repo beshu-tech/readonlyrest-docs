@@ -98,21 +98,21 @@ readonlyrest:
     # OPS Actual human users...
     ###########################
     - name: "::RO::"
-      auth_key: ro_usr:dev
+      auth_key: ops_ro_usr:dev
       kibana_access: ro
       indices: [ ".kibana", ".kibana-devnull", "logstash-2017*"]
       kibana_hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
       kibana_index: ".kibana_ops"
 
     - name: "::RW::"
-      auth_key: rw_usr:dev
+      auth_key: ops_rw_usr:dev
       kibana_access: rw
       indices: [".kibana", ".kibana-devnull", "logstash-*"]
       kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
       kibana_index: ".kibana_ops"
 
     - name: "::ADMIN::"
-      auth_key: admin_usr:dev
+      auth_key: ops_admin_usr:dev
       kibana_access: admin
       indices: [".kibana", ".kibana-devnull", "logstash-*"]
       kibana_index: ".kibana_ops"
