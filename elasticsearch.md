@@ -1044,18 +1044,25 @@ A small library of typical use cases.
 We have a Logstash agent installed somewhere and we want to ship the logs to our Elasticsearch cluster securely.
 
 ### Elasticsearch side
-**Step 1**
-Obtain a private key and a certificate chain and generate a java keystore in JKS format. You can either use real certs or - if we're testing locally - we can create a self signed certificate. 
+**Step 1: Bring Elasticsearch HTTP interface (port 9200) to HTTPS**
+When you get SSL certificates (i.e. from your IT department, or from LetsEncrypt), you should obtain a private key and a certificate chain.
+In order to use them with ReadonlyREST, we need to wrap them into a JKS (Java key store) file. For the sake of this example, or for your testing, we won't use real SSL certificates, we are going to create a self signed certificate.
 
-For convenience, we'll do with a self-signed certificate. But if you deploy this to a server, use a real one!
+Remember, we'll do with a self-signed certificate for example convenience, but if you deploy this to a server, use a real one!
+
 ```bash
 keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass readonlyrest -validity 360 -keysize 2048
 ```
-**Step 2**
 Now copy the `keystore.jks` inside the plugin directory inside the Elasticsearch home. 
 
 ```bash
 cp keystore.jks /elasticsearch/config/
+```
+
+**IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
+
+```yml
+http.type: ssl_netty4
 ```
 
 **Step 3**
