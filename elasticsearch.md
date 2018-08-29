@@ -31,6 +31,10 @@ Create this file **on the same path where `elasticsearch.yml` is found**.
 **PRO TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana.md).
 
 ## Installing
+It's sufficient to install ReadonlyREST plugin **only in the nodes that expose the HTTP interface** (port 9200). For example, if you have a 9 nodes cluster and you need to secure Kibana (or Logstash), you could leave the existing cluster nodes alone, and run a dedicated instance of Elasticsearch (without data, or master eligibility) with ReadonlyREST installed. Then you can securely connect Kibana (or Logstash) to it.
+
+**EXCEPTION** if you use the `filter` or `fields` rule, you need to install ReadonlyREST plugin in all the data nodes.
+
 To install ReadonlyREST plugin for Elasticsearch:
 
 1. **Obtain the build**: From the [official download page](https://readonlyrest.com/download.html). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
@@ -336,6 +340,8 @@ This rule is often used with the `indices` rule, to limit the data a user is abl
 ## Document Level Security (DLS) - a.k.a. filter rule.
 This rule lets you filter the results of a read request using a boolean query. You can use dynamic variables to inject a user name or some header values in the query, or even environmental variables.
 
+**NB: install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rule to work**
+
 Example 1: users can only read documents in the index "test-dls" that contain a field "user" with value that equals to their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
 
 ```yml
@@ -356,6 +362,8 @@ Example 2: We don't want the press to access any "classified" documents.
 # Field Level Security (FLS) - a.k.a. fields rule
 
 The fields rule is able to reduce the set of fields returned by matched queries. You can provide a black list of fields NOT to include (prefixing them using a tilde ~), or a white list of allowed fields.
+
+**NB: install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rule to work**
 
 Example: don't show fields that start with "price" to external users.
 ```yml
