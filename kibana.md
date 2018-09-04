@@ -327,7 +327,7 @@ readonlyrest_kbn.kibana_custom_css_inject: '.global-nav { background-color: gree
 Alternatively, it's possible to load the CSS from a file in the filesystem:
 
 ```yml
-#readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
+readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 ```
 
 ## Inject custom JS in Kibana
