@@ -3,7 +3,7 @@
 
 ReadonlyREST is a light weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API.
 The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall.
-There is a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
+There are a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
 
 **blocks of rules** and **rules** form a declarative access control list capable of powerful logic chains.
 
@@ -44,6 +44,12 @@ To install ReadonlyREST plugin for Elasticsearch:
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-X.Y.Z_esW.Q.U.zip
 ```
 Notice how we need to type in the format `file://` + absolute path (yes, with three slashes).
+```
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@     WARNING: plugin requires additional permissions     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+```
+When prompted about additional permissions, answer **y**.
 
 3. **Update settings**: Edit Elasticsearch configuration file and add any of the snippets you find in the documentation page
  ```bash
