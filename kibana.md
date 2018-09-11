@@ -39,6 +39,12 @@ To do so, run this command:
 $ touch optimize/bundles/readonlyrest_kbn.style.css
 ```
 
+Or on Windows:
+
+```bash
+type nul > optimize\bundles\readonlyrest_kbn.style.css
+```
+
 ## Uninstall 
 
 ```bash
