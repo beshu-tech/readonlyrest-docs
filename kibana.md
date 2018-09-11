@@ -13,6 +13,31 @@ You will receive a link to the plugin zip file in an email. Download your zip.
 
 You will be able to download it also in the future as long as your subscription is active.
 
+## Version strings
+All our plugins include in their file name a version string. For example the file `readonlyrest-1.16.26_es6.4.0.zip` has a version string `1.16.26_es6.4.0`.
+
+### Reading version strings
+
+Given the version string `1.16.26_es6.4.0`
+
+* ReadonlyREST plugin version `1.16.26`
+* Built for Elasticsearch/Kibana version `6.4.0`
+
+The "es" stands for "Elastic stack" which used to mean the family of products made by Elastic which get released at the same time under the same version number. This was chosen **before** Elastic renamed their X-Pack commercial offer to Elastic Stack. 
+
+So, there is no affiliation between ReadonlyREST and Elastic. 
+
+### Trial builds version strings
+
+Trial builds are valid for 14 days and they will stop working soon after the time is elapsed. Trial builds have a special version string which includes a build-time timestamp. 
+
+I.e. `readonlyrest_kbn_pro-1.16.26-20180911_es6.0.0.zip`
+
+* ReadonlyREST PRO plugin version 1.16.26
+* Build date 11th September 2018, expiring on the 25th.
+* Works only with Kibana version 6.0.0
+
+
 ## When an update is out
 You will receive another email notification that a new deliverable is available.
 
@@ -22,7 +47,7 @@ If the update contains a security fix, it is very important that you take action
 # Installation
 You can install this as a normal Kibana plugin using the `bin/kibana-plugin` utility. 
 
-> Please note: ReadonlyREST for Kibana requires ReadonlyREST for Elasticsearch version 1.16.2 or greater.
+> Please note: the Kibana and Elasticsearch plugins version string need to match. That is, both plugin zip file names need to contain something like 1.16.26_es6.4.0 (or 1.16.26-XXXXXXXX_es6.4.0 in case it's a trial build). 
 
 From your Kibana installation, launch the command:
 
