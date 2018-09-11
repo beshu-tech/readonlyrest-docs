@@ -20,16 +20,16 @@ All our plugins include in their file name a version string. For example the fil
 
 Given the version string `1.16.26_es6.4.0`
 
-* ReadonlyREST plugin version `1.16.26`
-* Built for Elasticsearch/Kibana version `6.4.0`
+* ReadonlyREST plugin code version `1.16.26`
+* Works only with Elasticsearch/Kibana version `6.4.0`
 
 The "es" stands for "Elastic stack" which used to mean the family of products made by Elastic which get released at the same time under the same version number. This was chosen **before** Elastic renamed their X-Pack commercial offer to Elastic Stack. 
 
-So, there is no affiliation between ReadonlyREST and Elastic. 
+To be clear, there is no affiliation between ReadonlyREST and Elastic, or their commercial products.
 
 ### Trial builds version strings
 
-Trial builds are valid for 14 days and they will stop working soon after the time is elapsed. Trial builds have a special version string which includes a build-time timestamp. 
+Trial builds are valid for 14 days after they were built, and they will stop working soon after the time is elapsed. Trial builds have a special version string which includes a build-time timestamp. 
 
 I.e. `readonlyrest_kbn_pro-1.16.26-20180911_es6.0.0.zip`
 
