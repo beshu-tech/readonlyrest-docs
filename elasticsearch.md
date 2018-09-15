@@ -103,7 +103,7 @@ ReadonlyREST can be configured to require that all REST requests come through HT
 
 [Letsencrypt](https://letsencrypt.org/) certificates work just fine, once you [make create a JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm).
 
-**IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
+**⚠️IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
 
 ```yml
 http.type: ssl_netty4
@@ -671,6 +671,36 @@ See below, the dedicated [External BASIC Auth section](#external-basic-auth)
 Used to delegate groups resolution for a user to a JSON microservice.
 See below, the dedicated [Groups Provider Authorization section](#groups_provider_authorization)
 
+---
+
+### `ror_kbn_auth`
+
+For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication.
+
+```yml
+readonlyrest:
+  access_control_rules:
+
+    - name: "ReadonlyREST Enterprise instance #1"
+      ror_kbn_auth:
+        name: "kbn1"
+
+    - name: "ReadonlyREST Enterprise instance #2"
+      ror_kbn_auth:
+        name: "kbn2"
+
+  ror_kbn:
+    - name: kbn1
+      signature_key: "shared_secret_kibana1" # <- use environmental variables for better security!
+
+    - name: kbn2
+      signature_key: "shared_secret_kibana2" # <- use environmental variables for better security!
+```
+
+This authentication and authorization connector represents the secure channel (based on JWT tokens) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
+
+Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
+
 
 ## Ancillary rules
 
@@ -1024,6 +1054,7 @@ readonlyrest:
       kibana_access: rw
       kibana_index: ".kibana_@{x-nginx-user}" 
 ```
+
 
 ## LDAP connector
 
