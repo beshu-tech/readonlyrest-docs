@@ -174,58 +174,105 @@ This makes of HTTP a bad abstraction level to write ACLs in Elasticsearch all to
 >The only **clean and exhaustive** way to implement access control is to reason about requests **AFTER ElasticSearch has parsed** them.
 Only then, the list of affected **indices** and the **action** will be known for sure. See **Elasticsearch level** rules.
 
-## Transport level
+## Transport level rules
 These are the most basic rules. It is possible to allow/forbid requests originating from a 
 list of IP addresses, host names or IP networks (in slash notation).
 
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `hosts: ["10.0.0.0/24"]` | a list of origin IP addresses or subnets |
-| `hosts_local: ["127.0.0.1", "127.0.0.2"]` | a list of destination IP addresses (ES HTTP API can bind to multiple IPs) |
+### hosts
+`hosts: ["10.0.0.0/24"]` 
+Match a request whose **origin** IP address (also called origin address, or `OA` in logs) matches one of the specified IP addresses or subnets.
+
+### hosts_local
+`hosts_local: ["127.0.0.1", "127.0.0.2"]` 
+Match a request whose **destination** IP address (called `DA` in logs) matches one of the specified IP addresses or subnets. This finds application when Elasticsearch HTTP API is bound to multiple IP addresses.
 
 
-## HTTP Level
+## HTTP Level rules
+### `accept_x-forwarded-for_header`
 
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `accept_x-forwarded-for_header: false` | **⚠️DEPRECATED (use x_forwarded_for instead)** modifier for `hosts` rule: if the origin IP won't match, check the `X-Forwarded-For` header|
-| `x_forwarded_for: ["192.168.1.0/24"]` | exactly like `hosts`, but looks inside the `X-Forwarded-For` header only (useful when requests come through a load balancer like AWS ELB)|
-| `methods: [GET, DELETE]` | match the HTTP method|
-| `headers: ["h1:x*y","h2:*xy"]` | match **all** the HTTP headers (useful with proxy_auth to simulate groups!)|
-| `headers_and: ["h1:x*y","h2:*xy"]` | alias for `headers` rule|
-| `headers_or: ["h1:x*y","h2:*xy"]` | match **at least one** the HTTP headers |
-| `uri_re: ^/secret-index/.*` | **☠️HACKY** A regular expression to match the request URI. Hint: superseded by indices!|
-| `maxBodyLength: 0` |**⚠️DEPRECATED**identify a maximum length for HTTP request body.|
+`accept_x-forwarded-for_header: false`
 
-The `x_forwarded_for` rule is the only HTTP level rule that is still recommendeable to use in production. This is because when Elasticsearch is behind a load balancer or reverse proxy, it gives an equivalent of the `hosts` rule (restrict access by origin IP or network).
+ **⚠️DEPRECATED (use `x_forwarded_for instead`)**
+A modifier for `hosts` rule: if the origin IP won't match, fallback to check the `X-Forwarded-For` header
 
-### Load balancers
+### `x_forwarded_for`
+
+`x_forwarded_for: ["192.168.1.0/24"]` 
+
+Behaves exactly like `hosts`, but gets the source IP address (a.k.a. origin address, `OA` in logs) inside the `X-Forwarded-For` header only (useful replacement to `hosts`rule when requests come through a load balancer like AWS ELB)
+
+#### Load balancers
 This is a nice tip if your Elasticsearch is behind a load balancer. If you want to match all the requests that come through the load balancer, use `x_forwarded_for: ["0.0.0.0/0"]`. 
 This will match the requests with a valid IP address as a value of the `X-Forwarded-For` header.
 
-## Elasticsearch level
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `indices: ["sales", "logstash-*"]` | Match if the request involves indices whose name is "sales", starts with "logstash-" or of both. |
-| `actions: ["indices:data/read/*"]` | Match if the request action starts with "indices:data/read/" |
-| `kibana_access: ro` | Enables the minimum set of actions necessary for browsers to use Kibana. See below. |
-| `kibana_index: .kibana-user1` | **OPTIONAL: Defaults to `.kibana`** specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)|
-| `snapshots: ["snap_@{user}_*"]` | restrict what snapshots names can be saved or restored |
-| `repositories: ["repo_@{user}_*"]` | restrict what repositories can snapshots be saved into |
 
-| `filter: '{"query_string":{"query":"user:@{user}"}}'` | Document Level Security (DLS) - return only documents that satisfy the boolean query |
-| `fields: ["~excluded_fields_prefix_*", "~excluded_field"]` | Field Level Security (FLS) - prevent queries from returning certain fields|
-| `fields: ["allowed_fields_prefix_*"]` | Field Level Security (FLS) - only return certain fields from queries|
+### `methods`
+
+`methods: [GET, DELETE]` 
+
+Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP stack does not make any difference between HEAD and GET, so all the HEAD request will appear as GET.
 
 
-### Indices rule
+### `headers`
+
+`headers: ["h1:x*y","h2:*xy"]`
+
+Match if **all** the HTTP headers are found in the request. This is useful used in conjunction with proxy_auth, to carry authorization information (i.e. headers: `x-usr-group: admins`). 
+ 
+### `headers_and` 
+
+`headers_and: ["hdr1:val_*xyz","hdr2:xyz_*"]` 
+
+Alias for `headers` rule
+
+### `headers_or`
+
+`headers_or: ["x-myheader:val*","header2:*xy"]` 
+
+Match if **at least one** the specified HTTP headers `key:value` pairs is matched.
+
+### `uri_re`
+
+`uri_re: ^/secret-index/.*` 
+
+**☠️HACKY (try to use indices/actions rule instead)** 
+
+Specify a regular expression to match the request URI. 
+
+### `maxBodyLength`
+
+`maxBodyLength: 0`
+
+Match requests having a request body length less or equal to an integer. Use `0` to match only requests without body. 
+
+**NB**: Elasticsearch HTTP API breaks the specifications, nad GET requests **might** have a body length greater than zero.
+
+
+## Elasticsearch level rules
+### `indices`
+
+`indices: ["sales", "logstash-*"]` 
+
+Match if the request involves whose name indices whose name is "sales", or starts with "logstash-", or of both.
+
+In ReadonlyREST we roughly classify requests as:
+
+* "read": the request will not change the data or the configuration of the cluster
+* "write": when allowed, the request changes the internal state of the cluster or the data.
+
 If a **read request** asks for a some indices they have permissions for and some indices that they do NOT have permission for, the request is **rewritten** to involve only the subset of indices they have permission for.
 This is behaviour is very useful in Kibana: **different** users can see the **same** dashboards with data from only their own indices.|
 
 If a **write request** wants to write to indices they don't have permission for, the write request is rejected.  
 
-### Action rule
-Each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 5.1.2.
+
+### `actions`
+
+`actions: ["indices:data/read/*"]` 
+
+Match if the request action starts with "indices:data/read/". 
+
+In Elasticsearch, each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 5.1.2.
 ```
 cluster:admin/ingest/pipeline/delete
 cluster:admin/ingest/pipeline/get
@@ -325,63 +372,132 @@ indices:monitor/upgrade
 
 internal:indices/admin/upgrade
 ```
-### kibana_access rule
+
+### `kibana_access`
+
+`kibana_access: ro` 
+
+Enables the minimum set of actions necessary for browsers to use Kibana. 
+
 This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. This rule allows a set of actions towards the designated kibana index (see `kibana_index` rule - defaults to ".kibana"), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
 
 The idea is that with one single rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session. 
 
-Possible values:
+Possible access levels:
 
 * `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices. 
 * `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created. 
 * `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified. 
 * `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app.
 
-This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards.
+This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
-## Document Level Security (DLS) - a.k.a. filter rule.
-This rule lets you filter the results of a read request using a boolean query. You can use dynamic variables to inject a user name or some header values in the query, or even environmental variables.
+### `kibana_index`
+
+`kibana_index: .kibana-user1` 
+
+**Default value is `.kibana`**
+
+ Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)
+ 
+This value directly affects how `kibana_access` works because at all the access levels (yes, even admin), `kibana_access` rule will **not** maatch any _write_ request in indices that are not the designated kibana index.
+
+If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index (default: `.kibana`).
+
+### `snapshots` 
+
+`snapshots: ["snap_@{user}_*"]`
+
+Restrict what snapshots names can be saved or restored
+
+### `repositories`
+
+`repositories: ["repo_@{user}_*"]` 
+
+Restrict what repositories can snapshots be saved into
+
+
+
+### `filter`
+
+`filter: '{"query_string":{"query":"user:@{user}"}}'` 
+
+This rule enables **Document Level Security (DLS)**. 
+
+Return only documents that satisfy the boolean query provided as an argument.
+
+This rule lets you filter the results of a read request using a boolean query. You can use _dynamic variables_  i.e. `@{user}` (see dedicated paragraph) to inject a user name or some header values in the query, or even environmental variables.
 
 **NB: install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rule to work**
 
-Example 1: users can only read documents in the index "test-dls" that contain a field "user" with value that equals to their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
+#### Example: per-user index segmentation
+
+In the index "test-dls", each user can only search documents whose field "user" matches their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
 
 ```yml
-- name: "::USER::"
+- name: "::PER-USER INDEX SEGMENTATION::"
   proxy_auth: "*"
   indices: ["test-dls"]
   filter: '{"query_string":{"query":"user:@{user}"}}'
 ```
 
-Example 2: We don't want the press to access any "classified" documents. 
+#### Example 2: Prevent search of "classified" documents. 
+In this example, we want to avoid that users belonging to group "press" can see any document that has a field "access_level" with the value "classified". And this policy is applied to all indices (no indices rule is specified). 
+
 ```
 - name: "::Press::"
   groups: ["press"]
   filter: '{"bool": {"must_not": [{"term": {"access_level": {"value": "classified"}}}]}}'
 ```
- **⚠️IMPORTANT** This rule will only affect "read" requests. It will not be effective preventing clients from "writing" anything anywhere. This behaviour is identical to x-pack and search guard.
+
+ **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
+
+If you want to allow write requests (i.e. for Kibana sessions), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
  
-# Field Level Security (FLS) - a.k.a. fields rule
+**⚠️IMPORTANT**: Install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rules to work**
 
-The fields rule is able to reduce the set of fields returned by matched queries. You can provide a black list of fields NOT to include (prefixing them using a tilde ~), or a white list of allowed fields.
 
-**NB: install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rule to work**
+### `fields` 
 
-Example: don't show fields that start with "price" to external users.
+This rule enables **Field Level Security (FLS)**
+
+Only return certain fields from queries.
+
+**NB:** You can only provide a full black list or white list. Grey lists (i.e. `["~a", "b"]`) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
+
+####  Whitelist mode
+
+`fields: ["allowed_fields_prefix_*"]` 
+
+If the current is a search request, return all matching documents, but deprived of all the fields, except the ones that start with `allowed_fields_prefix_`. 
+
+If you use whitelist mode, remember to allow the mandatory, internally used fields (the ones that start with underscore, `_*`)
+
+#### Blacklist mode (recommended)
+
+`fields: ["~excluded_fields_prefix_*", "~excluded_field"]` 
+
+If the current is a search request, return all matching documents, but deprived of the `excluded_field` and the ones that start with `excluded_fields_prefix_`. 
+
+#### Example: hide prices from catalogue indices
+
 ```yml
 - name: "External users - hide prices"
   fields: ["~price"]
   indices: ["catalogue_*"]
-  proxy_auth:
-    proxy_auth_config: "proxy1"
-    users: ["ext_*"]
+
 ```
 
-Wildcards are supported using the star character, like in the `actions` or `indices` rules. 
 
-You can only provide a full black list or white list. Grey lists (i.e. `["~a", "b"]`) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
+ **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 
- **⚠️IMPORTANT** This rule will only affect "read" requests. **Requests that are not read only, will be rejected**. 
+If you want to allow write requests (i.e. for Kibana sessions), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
+ 
+**⚠️IMPORTANT**: Install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rules to work**
+
+
+
+
 
 ## Authentication
 Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authentication method is secure only if SSL is enabled.
