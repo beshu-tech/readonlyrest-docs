@@ -310,7 +310,98 @@ The result may look something like this:
 http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
 
-## Load balancers
+# SAML
+ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO (single sign on) and SLO (single log out).
+Here is how to configure it.
+
+## Configure `ror_kbn_auth` bridge
+
+In order for the user identity information to flow securely from Kibana to Elasticsearch, we need to set up the two plugin with a shared secret, that is: an arbitrarily long string.
+
+## Elasticsearch side
+Edit `readonlyrest.yml`
+
+```yml
+readonlyrest:
+    access_control_rules:
+    
+    - name: "::KIBANA-SRV::"
+      auth_key: kibana:kibana
+      
+    ... all usual blocks of rules...
+        
+    - name: "ReadonlyREST Enterprise instance #1"
+      ror_kbn_auth:
+        name: "kbn1"
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: "my_shared_secret_kibana1" # <- use environmental variables for better security!
+```
+
+**⚠️IMPORTANT** the Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
+
+## Kibana side
+
+Edit `kibana.yml` and append:
+
+```yaml
+readonlyrest_kbn.auth:
+  signature_key: "my_shared_secret_kibana1"
+  saml:
+    enabled: true
+    entryPoint: 'https://my-saml-idp/saml2/http-post/sso'
+    kibanaExternalHost: 'my.public.hostname.com' # <-- public URL used by the Identity Provider to call back Kibana with the "assertion" message
+    usernameParameter: 'nameID'
+    groupsParameter: 'memberOf'
+    logoutUrl: 'https://my-saml-idp/saml2/http-post/slo'
+    
+    # advanced parameters
+    # decryptionCert: certs/decrypt.cert
+    # cert: certs/cert.cert
+    # decryptionPvk: zzz
+    # issuer: www
+    # authnContext: xxx
+    # disableRequestedAuthnContext: yyy
+     
+```
+
+## Identity provider side
+
+
+1. Enter the settings of your identity provider, create a new app.
+2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_sso/metadata.xml`
+
+Example response:
+```xml
+<?xml version="1.0"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="onelogin_saml" ID="onelogin_saml">
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/notifylogout"/>
+    <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</NameIDFormat>
+    <AssertionConsumerService index="1" isDefault="true" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/assert"/>
+  </SPSSODescriptor>
+</EntityDescriptor>
+```
+
+3. Create some users and some groups in the identity provider app
+4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set kibana in debug mode so ReadonlyREST will print the user profile).
+5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
+6. If you want to use SAML for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
+ 
+# Load balancers
+
+## Enable healthcheck endpoint 
+
+Normally a load balancer needs a health check URL to see if the instance is still running, you can whitelist this Kibana path so the load balancer avoids a redirection to `/login`.
+
+Edit `kibana.yml`
+
+```yml
+readonlyrest_kbn.whitelistedPaths: [".*/api/status$"]
+
+```
+## Common cookie encryption secret
 When you run multiple Kibana instances behind a load balancer, a user will have their identity cookie created and encrypted in one instance. 
 
 A fresh cookie encryption key is generated at startup time on every Kibana node. This means that each Kibana instance behind the load balancer will have a different encryption key.
