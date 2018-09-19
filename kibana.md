@@ -356,15 +356,22 @@ readonlyrest_kbn.auth:
     groupsParameter: 'memberOf'
     logoutUrl: 'https://my-saml-idp/saml2/http-post/slo'
     
-    # advanced parameters
+    # OPTIONAL advanced parameters
     # decryptionCert: certs/decrypt.cert
     # cert: certs/cert.cert
     # decryptionPvk: zzz
-    # issuer: www
+    # issuer: 
     # authnContext: xxx
-    # disableRequestedAuthnContext: yyy
+    # disableRequestedAuthnContext: true
      
 ```
+* `issuer`: issuer string to supply to identity provider.
+* `disableRequestedAuthnContext`: if truthy, do not request a specific authentication context. This is known to help when authenticating against Active Directory (AD FS) servers.
+* ``
+* `decryptionPvk`: Service Provider Private Key. Private key that will be used to attempt to decrypt any encrypted assertions that are received.
+* `cert`:  IdP Public Key
+* `decryptionCert`: Service Provider Public Key
+
 
 ## Identity provider side
 
