@@ -263,7 +263,7 @@ Create this file **on the same path where `elasticsearch.yml` is found**.
 An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network.
 ReadonlyREST can be configured to require that all REST requests come through HTTPS.
 
-[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once you [make create a JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm).
+[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once they are inide a [JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm). 
 
 **⚠️IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
 
@@ -276,11 +276,13 @@ Now in `readonlyrest.yml` add the following settings:
 ```yml
 readonlyrest:
     ssl:
-      # put the keystore in the same dir with elasticsearch.yml 
       keystore_file: "keystore.jks"
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 ```
+
+The keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
+
 
 ### Restrict SSL protocols and ciphers
 Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
@@ -336,14 +338,13 @@ Please refrain from using HTTP level rules to protect certain indices or limit w
 The level of control at this level is really coarse, especially because Elasticsearch REST API does not always respect RESTful principles. 
 This makes of HTTP a bad abstraction level to write ACLs in Elasticsearch all together.
 
->The only **clean and exhaustive** way to implement access control is to reason about requests **AFTER ElasticSearch has parsed** them.
+The only **clean and exhaustive** way to implement access control is to reason about requests **AFTER ElasticSearch has parsed** them.
 Only then, the list of affected **indices** and the **action** will be known for sure. See **Elasticsearch level** rules.
 
 ## Transport level rules
 These are the most basic rules. It is possible to allow/forbid requests originating from a 
 list of IP addresses, host names or IP networks (in slash notation).
 
----
 
 ### `hosts`
 `hosts: ["10.0.0.0/24"]` 
