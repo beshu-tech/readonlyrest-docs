@@ -1,75 +1,129 @@
 
-# Overview
+# Overview: The ReadonlyREST Suite
 
-ReadonlyREST is a light weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API.
-The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall.
-There are many rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
+ReadonlyREST is a suite of light weight Elasticsearch and Kibana plugins that implement security.
 
-**blocks of rules** and **rules** form a declarative access control list capable of powerful logic chains.
+The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv3 license, or alternatively, a commercial license (see [ReadonlyREST Embedded](https://readonlyrest.com/embedded)) and lays the technological foundations for the companion Kibana plugin which is released in two versions: [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise). 
 
-**⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
+Unlike the Elasticsearch plugin, the Kibana plugins are commercial only. But rely on the Elasticsearch plugin in order to work.
 
-```yml
-readonlyrest:
-    access_control_rules:
+For a description of the Kibana plugins, skip to the [dedicated documentation page](kibana.md) instead.
 
-    - name: "Block 2 - Other hosts can only read certain indices"
-      actions: ["indices:data/read/*"]
-      indices: ["logstash-*"] # aliases are taken in account!
-      
-    - name: "Block 1 - Blocking everything from a network"
-      type: forbid
-      hosts: ["10.0.0.0/24"]
-```
+## ReadonlyREST Free plugin for Elasticsearh
+In this document we are going to describe how to operate the Elasticsearch plugin in all its features.
+Once installed, this plugin will greatly extend the Elasticsearch HTTP API (port 9200), adding numerous extra capabilities:
 
-*An Example of Access Control List (ACL) made of 2 blocks.*
+* **Encryption**: transform the Elasticsearch API from HTTP to HTTPS
+* **Authentication**: require credentials
+* **Authorization**: declar groups of users, permissions and partial access to indices.
+* **Access control**: complex logic can be modeled using an ACL (access control list) written in YAML.
+* **Audit logs**: a trace of the access requests can be logged to file or index (or both).
 
 
-The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. 
-Create this file **on the same path where `elasticsearch.yml` is found**.
-
-**PRO TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana.md).
-
-## Installing
-It's sufficient to install ReadonlyREST plugin **only in the nodes that expose the HTTP interface** (port 9200). For example, if you have a 9 nodes cluster and you need to secure Kibana (or Logstash), you could leave the existing cluster nodes alone, and run a dedicated instance of Elasticsearch (without data, or master eligibility) with ReadonlyREST installed. Then you can securely connect Kibana (or Logstash) to it.
-
-**⚠️IMPORTANT** exception: if you use the `filter` or `fields` rule, you need to install ReadonlyREST plugin in all the data nodes.
+## Installing the plugin
 
 To install ReadonlyREST plugin for Elasticsearch:
 
-1. **Obtain the build**: From the [official download page](https://readonlyrest.com/download.html). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
+### 1. Obtain the build
+From the [official download page](https://readonlyrest.com/download.html). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
 
-2. **Install the build**:
+### Install the build
 
 ```bash
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-X.Y.Z_esW.Q.U.zip
 ```
 Notice how we need to type in the format `file://` + absolute path (yes, with three slashes).
 
-3. **Update settings**: Edit Elasticsearch configuration file and add any of the snippets you find in the documentation page
+### 3.Create settings file
+
+Create and edit the `readonlyrest.yml` settings file in the **same directory where `elasticsearch.yml` is found**:
  
  ```bash
  vim $ES_HOME/conf/readonlyrest.yml
  
  ```
  
-4. **Start Elasticsearch**: Now you should be able to see the logs and ReadonlyREST related lines.
+ Now write some basic settings, just to get started. In this example we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
+
+```yml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Require HTTP Basic Auth"
+      type: allow
+      auth_key: user:password 
+```
+
+### 4. Disable X-Pack security module 
+
+**(applies to ES 6.4.0 or greater)**
+
+ReadonlyREST and X-Pack security module can't run together, so the latter needs to be disabled.
+
+Edit `elasticsearch.yml` and append `xpack.security.enabled: false`.
+
+```bash
+ vim $ES_HOME/conf/elasticsearch.yml
+ 
+ ```
+
+### 5. Start Elasticsearch
+
+```
+bin/elasticsearch
+```
+
+or:
+
+```
+service start elasticsearch
+```
+
+Depending on your environment.
+
+Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+
+```
+[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
+```
+
+### 6. Test everything is working
+
+The following command should succeed, and the response should show a status code 200.
+
+```bash
+curl -vvv -u user:password "http://localhost:9200/_cat/indices"
+
+```
+The following command should not succeed, and the response should show a status code 401
+
+```bash
+curl -vvv "http://localhost:9200/_cat/indices"
+
+```
 
 
-### Upgrading
+## Upgrading the plugin
 
 To upgrade ReadonlyREST for Elasticsearch:
 
-1. Stop Elasticsearch.
+### 1. Stop Elasticsearch.
+Either kill the process manually, or use:
 
-2. Uninstall ReadonlyREST from Elasticsearch:
+```
+service stop elasticsearch
+```
+depending on your environment.
+
+
+### 2. Uninstall ReadonlyREST
 
 ```
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
 
-3. Install the new version of ReadonlyREST into Elasticsearch.
+### 3. Install the new version of ReadonlyREST into Elasticsearch.
 
 ```
 bin/elasticsearch-plugin install file://<download_dir>/readonlyrest-<ROR_VERSION>_es<ES_VERSION>.zip
@@ -81,21 +135,129 @@ e.g.
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 ```
 
-4. Restart Elasticsearch.
+### 4. Restart Elasticsearch.
 
 
-### Removing
 
-1. Stop Elasticsearch.
+```
+bin/elasticsearch
+```
 
-2. Uninstall ReadonlyREST from Elasticsearch:
+or:
+
+```
+service start elasticsearch
+```
+
+Depending on your environment.
+
+Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+
+```
+[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
+```
+
+
+## Removing the plugin
+
+### 1. Stop Elasticsearch.
+Either kill the process manually, or use:
+
+```
+service stop elasticsearch
+```
+
+depending on your environment.
+
+### 2. Uninstall ReadonlyREST from Elasticsearch:
 
 ```
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
-3. Start Elasticsearch.
+### 3. Start Elasticsearch.
 
+
+
+```
+bin/elasticsearch
+```
+
+or:
+
+```
+service start elasticsearch
+```
+
+Depending on your environment.
+
+Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+
+```
+[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
+```
+
+
+
+## Deploying ReadonlyREST in a stable production cluster
+
+Unless some advanced features are being used (see below),this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. 
+Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** (port 9200). 
+
+Installing ReadonlyREST in a dedicated node has numerous advantages:
+
+* No need to restart all nodes, only the one you have installed the plugin into.
+* No need to restart all nodes for updating the security settings
+* No need to restart all nodes when a security update is out
+* Less complexity on the actual cluster nodes.
+
+For example, if we want to move to HTTPS all the traffic coming from Logstash into a 9 nodes Elasticsearch cluster which has been running stable in production for a while, it's not necessary to install ReadonlyREST plugin in all the nodes.
+
+Creating a dedicated, lightweight ES node where to install ReadonlyREST:
+
+1. (Optional) [disable the HTTP interface](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-http.html#_disable_http) from all the existing nodes
+2. Create a new, lightweight, dedicated node without shards, nor master eligibility.
+3. Configure ReadonlyREST with SSL [encryption](#encryption) in the new node
+4. Configure Logstash to connect to the new node directly in HTTPS.
+
+
+### An exception
+
+**⚠️IMPORTANT**  when `filter` or `fields` rules are used, it's required to install ReadonlyREST plugin in all the data nodes. This happens because these rules are implemented at Lucene level.
+
+
+## ACL basics
+
+The core of this plugin is an ACL (access control list). A logic structure very similar to the one found in firewalls. The ACL is part of the plugin configuration, and it's written in YAML.
+
+* The ACL is composed of an _ordered_ sequence of named **blocks**
+* Each block contains some **rules**, and a policy (forbid or allow)
+* HTTP requests run through the blocks, starting from the first,
+* The _first_ block that satisfies _all the rules_ decides if to forbid or allow the request (according to its policy).
+* If none of the block match, the request is rejected
+
+**⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
+
+```yml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Block 1 - only Logstash indices are accessible"
+      type: allow # <-- default policy type is "allow", so this line could be omitted
+      indices: ["logstash-*"] # <-- This is a rule
+      
+    - name: "Block 2 - Blocking everything from a network"
+      type: forbid 
+      hosts: ["10.0.0.0/24"] # <-- this is a rule
+```
+
+*An Example of Access Control List (ACL) made of 2 blocks.*
+
+
+The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. 
+Create this file **on the same path where `elasticsearch.yml` is found**.
+
+**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana.md).
 
 ## Encryption
 An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network.
