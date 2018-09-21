@@ -70,6 +70,7 @@ readonlyrest:
     #####################################################################################
     - name: "::KIBANA-SRV::"
       auth_key: kibana:kibana
+      verbosity: error
 
     ##############################
     # SALES: Actual human users...
