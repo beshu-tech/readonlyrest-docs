@@ -20,7 +20,7 @@ Once installed, this plugin will greatly extend the Elasticsearch HTTP API (port
 * **Audit logs**: a trace of the access requests can be logged to file or index (or both).
 
 
-### Request processing flow
+### Flow of a Search Request
 The following diagram models an instance of Elasticsearch with the ReadonlyREST plugin installed, and configured with SSL encryption and an ACL with at least one "allow" type ACL block.
 
 ![readonlyrest request processing diagram](https://i.imgur.com/VX28w1V.png)
