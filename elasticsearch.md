@@ -20,6 +20,23 @@ Once installed, this plugin will greatly extend the Elasticsearch HTTP API (port
 * **Audit logs**: a trace of the access requests can be logged to file or index (or both).
 
 
+### Request processing flow
+The following diagram models an instance of Elasticsearch with the ReadonlyREST plugin installed, and configured with SSL encryption and an ACL with at least one "allow" type ACL block.
+
+![readonlyrest request processing diagram](https://i.imgur.com/VX28w1V.png)
+
+1. The User Agent (i.e. cURL, Kibana) sends a search request to Elasticsearch using the port 9200 and the HTTPS URL schema.
+2. The HTTPS filter in ReadonlyREST plugin unrwaps the SSL layer and hands over the request to Elasticsearch HTTP stack
+3. The HTTP stack in Elasticsearch parses the HTTP request
+4. The HTTP handler in Elasticsearch extracts the indices, action, request type and creates a `SearchRequest` (internal Elasticsearch format).
+5. The SearchRequest goes through the ACL (access control list), external systems like LDAP can be asynchronously queried, and an exit result is eventually produced.
+6. The exit result is used by the audit log serializer, to write a record to index and/or Elasticsearch log file
+7. If no ACL block was matched, or if a `type: forbid` block was matched, ReadonlyREST does not forward the search request to the search engine, and creates an "unauthorized" HTTP response.
+8. In case the ACL matched an `type: allow` block, the request is forwarded to the search engine
+9. The Elasticsearch code creates a search response containing the results of the query
+10.The search response is converted to an HTTP response by the Elasticsearch code
+11. The HTTP response flows back to ReadonlyREST's HTTPS filter and to the User agent
+
 ## Installing the plugin
 
 To install ReadonlyREST plugin for Elasticsearch:
