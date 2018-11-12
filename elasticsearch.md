@@ -1473,7 +1473,7 @@ readonlyrest:
     jwt: 
     - name: jwt_provider_1
       signature_algo: RSA
-      signature_key: "your_signature"
+      signature_key: "your_signature_min_256_chars"
       user_claim: email
       roles_claim: resource_access.client-app.roles # JSON-path style
       header_name: Authorization
