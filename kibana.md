@@ -336,7 +336,7 @@ readonlyrest:
 
     ror_kbn:
     - name: kbn1
-      signature_key: "my_shared_secret_kibana1" # <- use environmental variables for better security!
+      signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
 **⚠️IMPORTANT** the Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
@@ -347,7 +347,7 @@ Edit `kibana.yml` and append:
 
 ```yaml
 readonlyrest_kbn.auth:
-  signature_key: "my_shared_secret_kibana1"
+  signature_key: "my_shared_secret_kibana1(min 256 chars)"
   saml:
     enabled: true
     entryPoint: 'https://my-saml-idp/saml2/http-post/sso'
