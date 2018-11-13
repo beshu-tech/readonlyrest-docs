@@ -9,7 +9,7 @@ Unlike the Elasticsearch plugin, the Kibana plugins are commercial only. But rel
 
 For a description of the Kibana plugins, skip to the [dedicated documentation page](kibana.md) instead.
 
-## ReadonlyREST Free plugin for Elasticsearh
+## ReadonlyREST Free plugin for Elasticsearch
 In this document we are going to describe how to operate the Elasticsearch plugin in all its features.
 Once installed, this plugin will greatly extend the Elasticsearch HTTP API (port 9200), adding numerous extra capabilities:
 
