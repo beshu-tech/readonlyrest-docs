@@ -1472,7 +1472,7 @@ readonlyrest:
         
     jwt: 
     - name: jwt_provider_1
-      signature_algo: RSA
+      signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC 
       signature_key: "your_signature_min_256_chars"
       user_claim: email
       roles_claim: resource_access.client-app.roles # JSON-path style
@@ -1480,8 +1480,31 @@ readonlyrest:
 ```
 
 The `user_claim` indicates which field in the JSON will be interpreted as the user name.
+
 The `signature_key` is used shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
+
 The `header_name` is used if we expect the JWT Token in a custom header (i.e. [Google Cloud IAP signed headers](https://cloud.google.com/iap/docs/signed-headers-howto))
+
+The `signature_algo` indicates the family of cryptographic algorithms used to validate the JWT.
+
+#### Accepted `signature_algo` values
+The value of this configuration represents the cryptographic family of the JWT protocol. Use the below table to tell what value you should configure, given a JWT token sample. You can decode sample JWT token using an [online tool](https://jwt.io/). 
+
+| Algorithm declared in JWT token  | `signature_algo` value |
+|----------------|------------------------|
+|NONE            |      **None**|
+| HS256          |    **HMAC**|
+| HS384          |    **HMAC**| 
+| HS512         |   **HMAC**| 
+| RS256    |    **RSA**| 
+| RS384    |    **RSA**| 
+| RS512   |     **RSA**| 
+| PS256   |     **RSA**| 
+| PS384   |   **RSA**| 
+| PS512   |   **RSA**| 
+| ES256   |    **EC**| 
+| ES384   |   **EC**| 
+| ES512   |     **EC**| 
 
 # GPLv3 License
 ReadonlyREST Free (Elasticsearch plugin) is released under the GPLv3 license. For what this kind of software concerns, this is identical to GPLv2, that is, you can treat ReadonlyREST as you would treat Linux code.
