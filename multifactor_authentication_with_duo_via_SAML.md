@@ -38,13 +38,15 @@ In SAML Response, set NameID to be the same variable name as configured previous
 ### ReadonlyRest Configuration
 To  configure SAML, both Kibana and Elasticsearch ROR configuration needs to be edited to enable SAML in Duo Gateway.
 
-#### Elasticsearch
-ror_kbn_auth
-For Enterprise customers only, required for SAML authentication.
+#### Configuring the Elasticsearch plugin
+
+Open your `readonlyrest.yml` file or login as a local administrator in your ReadonlyREST Enterprise, and add this extra configuration required for SAML authentication.
 
 ```yml
 readonlyrest:
   access_control_rules:
+
+#    [... all your regular ACL blocks ...]
 
     - name: "ReadonlyREST Enterprise Kibana instance #1"
       ror_kbn_auth:
@@ -65,10 +67,10 @@ readonlyrest:
 #      signature_key: "shared_secret_kibana2(256+chars)" # <- use environmental variables for better security!
 ```
 
-This authentication and authorization connector represents the secure channel (based on JWT tokens) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
+This authentication and authorization connector represents the secure channel (based on JWT tokens) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming SAML identity provider. 
 
 
-#### Kibana
+#### Configuring the Kibana plugin
 Edit $KIBANA_HOME/conf/kibana.yml configuration and append:
 
 ```yml
