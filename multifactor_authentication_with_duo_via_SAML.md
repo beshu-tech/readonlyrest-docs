@@ -91,12 +91,16 @@ The following fields are mapped to the Duo Gateway Application Metadata:
 
 - entryPoint: LoginUrl for the SAML Generic Application
 - usernameParameter: Default SAML Generic Application value is `nameID`
-- logoutUrl: a URL that points to the value found in Metadata > Logout URL
-- decryptionCert: The downloadable certificate in Metadata
-- cert: The downloadable certificate in Metadata
+- logoutUrl: a URL that points to the value found in the screen `Metadata > Logout URL`
+- decryptionCert: The downloadable certificate in Metadata (absolute path)
+- cert: The downloadable certificate in Metadata (absolute path)
 - signature_key: Signing key string for JWT, must match the same key value in elasticsearch ROR config
 - kibanaExternalHost: The Kibana (with ReadonlyREST Enterprise) instance public hostname
+- protocol: protocol schema (http or https) of the external Kibana host
+- issuer: distinctive name of the identity provider (optional)
+- decryptionPvk: service provider private key (string value) (optional)
 
+For more advanced configurations and information, please refer to [passport-saml documentation](https://github.com/bergie/passport-saml)
 
 #### Elasticsearch index in Kibana ROR Dashboard
 Make sure to update signature_key in ROR Dashboard with the value. Otherwise you will get JWT errors while login with SAML.
