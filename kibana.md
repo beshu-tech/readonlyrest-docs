@@ -357,20 +357,18 @@ readonlyrest_kbn.auth:
     logoutUrl: 'https://my-saml-idp/saml2/http-post/slo'
     
     # OPTIONAL advanced parameters
-    # decryptionCert: certs/decrypt.cert
-    # cert: certs/cert.cert
-    # decryptionPvk: zzz
-    # issuer: 
-    # authnContext: xxx
-    # disableRequestedAuthnContext: true
+    # decryptionCert: /etc/ror/integration/certs/pub.crt
+    # cert: /etc/ror/integration/certs/dag.crt
+    # decryptionPvk: /etc/ror/integration/certs/decrypt_pvk.crt
+    # issuer: saml_sso_idp
      
 ```
 * `issuer`: issuer string to supply to identity provider.
 * `disableRequestedAuthnContext`: if truthy, do not request a specific authentication context. This is known to help when authenticating against Active Directory (AD FS) servers.
-* ``
 * `decryptionPvk`: Service Provider Private Key. Private key that will be used to attempt to decrypt any encrypted assertions that are received.
-* `cert`:  IdP Public Key
-* `decryptionCert`: Service Provider Public Key
+* cert: The downloadable certificate in IDP Metadata (file, absolute path)
+
+For advanced SAML options, see [passport-saml documentation](https://github.com/bergie/passport-saml).
 
 
 ## Identity provider side
