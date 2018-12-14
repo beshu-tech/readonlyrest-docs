@@ -655,16 +655,16 @@ In the index "test-dls", each user can only search documents whose field "user" 
 - name: "::PER-USER INDEX SEGMENTATION::"
   proxy_auth: "*"
   indices: ["test-dls"]
-  filter: '{"query_string":{"query":"user:@{user}"}}'
+  filter: '{"bool": { "must": { "match": { "user": "@{user}" }}}}'
 ```
 
 #### Example 2: Prevent search of "classified" documents. 
-In this example, we want to avoid that users belonging to group "press" can see any document that has a field "access_level" with the value "classified". And this policy is applied to all indices (no indices rule is specified). 
+In this example, we want to avoid that users belonging to group "press" can see any document that has a field "access_level" with the value "CLASSIFIED". And this policy is applied to all indices (no indices rule is specified). 
 
 ```
 - name: "::Press::"
   groups: ["press"]
-  filter: '{"bool": {"must_not": [{"term": {"access_level": {"value": "classified"}}}]}}'
+  filter: '{"bool": { "must_not": { "match": { "access_level": "CLASSIFIED" }}}}'
 ```
 
  **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
