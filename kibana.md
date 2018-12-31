@@ -457,3 +457,99 @@ readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
 
+# Tenancy index templating
+When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.
+
+The issue is that "user1"'s user experience will be really raw as they will see a completely blank Kibana tenancy. Not even a default index pattern will be present. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana_access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
+
+To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy.
+
+## How to use tenancy templating
+
+An administrator will need to create the template tenancy, populate it with the default Kibana objects (index-patterns, dashboards) and configure ReadonlyREST Enterprise to take the index template it in use. Let's see this step by step:
+
+### Create the template tenancy
+
+Let's start to add to our access control list (found in $ES_HOME/config/readonlyrest.yml, or ReadonlyREST App in Kibana) a local user "administrator" that will belong to two tenancies: the default one (stored in .kibana index), and the template one (stored in .kibana_template index).
+
+```yml
+readonlyrest:
+  audit_collector: true
+
+  access_control_rules:
+
+  - name: "::KIBANA-SRV::"
+    auth_key: kibana:kibana
+    verbosity: error
+
+  - name: "Admin Tenancy"
+    groups: ["Admins"]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: ".kibana"
+  
+  - name: "Template Tenancy"
+    groups: ["Template"]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: ".kibana_template"
+      
+ users:
+ - name: administrator
+   auth_key: administrator:dev
+   groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
+     
+```
+NB: If you know what you are doing, you can  add a tenancy with kibana_index: ".kibana_template" adding a LDAP/SAML group to your administrative user. 
+
+## Configure the template tenancy
+Now login as administrator in Kibana, hop into the "Template" tenancy, and start configuring the default UX for your future tenants. Add all the index patterns, create or import all the dashboards you want.
+
+## Configure the template tenancy index in ReadonlyREST Enterprise
+Open kibana.yml and add the following line:
+
+```yml
+readonlyrest_kbn.kibanaIndexTemplate: ".kibana_template"
+```
+
+Now, ReadonlyREST Enterprise will look for the ".kibana_template" index, and try to copy over all its documents every time a new kibana index is initialised to support a new tenancy.
+
+## Try it out
+
+Restart Kibana with the new setting. Add a new tenancy to the ACL:
+
+```yml
+readonlyrest:
+  audit_collector: true
+
+  access_control_rules:
+
+  - name: "::KIBANA-SRV::"
+    auth_key: kibana:kibana
+    verbosity: error
+
+  - name: "Admin Tenancy"
+    groups: ["Admins"]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: ".kibana"
+  
+  - name: "Template Tenancy"
+    groups: ["Template"]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: ".kibana_template"
+    
+  # Newly added tenant!
+  - name: user1
+    auth_key: user1:passwd
+    kibana_access: rw
+    kibana_index: ".kibana_user1"
+      
+ users:
+ - name: administrator
+   auth_key: administrator:dev
+   groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
+````
+
+Now try to login as user1, and ReadonlyREST Enterprise should initialise the index ".kibana_user1" with all the index patterns and dashboards contained in the template tenancy.
