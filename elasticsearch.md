@@ -1081,6 +1081,11 @@ This will show you the whole request context (including the action and indices f
 Logs are good for auditing the activity on the REST API. You can configure them by editing `$ES_HOME/config/logging.yml` (Elasticsearch 2.x) or `$ES_HOME/config/l4j2.properties` [file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#logging) (Elasticsearch 5.x)
 
 For example, you can **enable the debug log** globally by setting the `rootLogger`to `debug`.
+
+```
+rootLogger.level = debug
+```
+
 This is really useful especially to debug the activity of LDAP and other external connectors.
 
 #### Trick: log requests to different files
