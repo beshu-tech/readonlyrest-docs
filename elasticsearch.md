@@ -804,9 +804,10 @@ For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoE
 `proxy_auth: "*"` 
 
 Delegated authentication. Trust that a reverse proxy has taken care of authenticating the request and has written the resolved user name into the  `X-Forwarded-User` header. The value "*" in the example, will let this rule match any username value contained in the `X-Forwarded-User` header. 
-If you are using this technique for authentication in **Kibana**, don't forget to add this snippet to `conf/kibana.yml`: 
 
-`elasticsearch.requestHeadersWhitelist: ['x-forwarded-user'] ` 
+If you are using this technique for authentication using our **Kibana** plugins, don't forget to add this snippet to `conf/kibana.yml`: 
+
+`readonlyrest_kbn.proxy_auth_passthrough: true ` 
 
 So that Kibana will forward the necessary headers to Elasticsearch.
 
