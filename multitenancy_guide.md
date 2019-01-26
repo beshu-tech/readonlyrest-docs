@@ -76,21 +76,21 @@ readonlyrest:
     ##############################
     # SALES: Actual human users...
     ##############################
-    - name: "::RO::"
+    - name: "::RO_SALES::"
       auth_key: sales_ro_usr:dev1
       kibana_access: ro
       indices: [ ".kibana_sales", "logstash-2018*"]
       kibana_hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
       kibana_index: ".kibana_sales"
 
-    - name: "::RW::"
+    - name: "::RW_SALES::"
       auth_key: sales_rw_usr:dev2
       kibana_access: rw
       indices: [".kibana_sales", "logstash-*"]
       kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
       kibana_index: ".kibana_sales"
 
-    - name: "::ADMIN::"
+    - name: "::ADMIN_SALES::"
       auth_key: sales_admin_usr:dev3
       kibana_access: admin
       indices: [".kibana_sales", "logstash-*"]
@@ -99,21 +99,21 @@ readonlyrest:
     ###########################
     # OPS Actual human users...
     ###########################
-    - name: "::RO::"
+    - name: "::RO_OPS::"
       auth_key: ops_ro_usr:dev4
       kibana_access: ro
       indices: [ ".kibana_ops", "logstash-2018*"]
       kibana_hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
       kibana_index: ".kibana_ops"
 
-    - name: "::RW::"
+    - name: "::RW_OPS::"
       auth_key: ops_rw_usr:dev5
       kibana_access: rw
       indices: [".kibana_ops", "logstash-*"]
       kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
       kibana_index: ".kibana_ops"
 
-    - name: "::ADMIN::"
+    - name: "::ADMIN_OPS::"
       auth_key: ops_admin_usr:dev6
       kibana_access: admin
       indices: [".kibana_ops", "logstash-*"]
