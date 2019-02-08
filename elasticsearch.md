@@ -603,6 +603,8 @@ Possible access levels:
 * `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified. 
 * `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app.
 
+**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, just remove the `kibana_access` rule entirely.
+
 This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
 ---
