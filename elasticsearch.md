@@ -1389,6 +1389,11 @@ readonlyrest:
       success_status_code: 200
       cache_ttl_in_sec: 60
       validate: false # SSL certificate validation (default to true)
+      http_connection_settings:
+        connection_timeout_in_sec: 5           # default 2
+        socket_timeout_in_sec: 3               # default 5
+        connection_request_timeout_in_sec: 3   # default 5  
+        connection_pool_size: 10               # default 30
 
     - name: "ext2"
       authentication_endpoint: "http://external-website2:8080/auth2"
@@ -1444,6 +1449,11 @@ readonlyrest:
       auth_token_passed_as: QUERY_PARAM                        # HEADER OR QUERY_PARAM
       response_groups_json_path: "$..groups[?(@.name)].name"   # see: https://github.com/json-path/JsonPath
       cache_ttl_in_sec: 60
+      http_connection_settings:
+        connection_timeout_in_sec: 5                           # default 2
+        socket_timeout_in_sec: 3                               # default 5
+        connection_request_timeout_in_sec: 3                   # default 5  
+        connection_pool_size: 10                               # default 30
 ```
 
 In example above, a user is authenticated by reverse proxy and then external service is asked for groups for that user. 
