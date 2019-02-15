@@ -98,13 +98,13 @@ Login credentials, hidden Kibana apps, etc. are all going to be configured from 
 This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
 
 
-> Again, make sure you have an installed and running  ReadonlyREST for Elasticsearch **1.16.2 or greater**. 
-
+> In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring **to the configuration files in the Elasticsearch plugin**. 
+In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.
 
 
 ## Example: multiuser ELK
 
-Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` and `kibana.yml`:
+Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` (on the Elasticsearch side) and `kibana.yml` (on the Kibana side):
 This is how you disable X-pack modules:
 
 ```yaml
@@ -117,7 +117,7 @@ xpack.security.enabled: false
 xpack.watcher.enabled: false
 ```
 
-This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` file, to support ReadonlyREST PRO.
+This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
 
 ```yaml
 
