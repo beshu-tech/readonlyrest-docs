@@ -70,13 +70,13 @@ readonlyrest:
     - name: "::RW::"
       auth_key: rw_usr:dev
       kibana_access: rw
-      indices: [".kibana", ".kibana-devnull", "logstash-*"]
+      indices: [".kibana", "logstash-*"]
       kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
     - name: "::ADMIN::"
       auth_key: admin_usr:dev
       kibana_access: admin
-      indices: [".kibana", ".kibana-devnull", "logstash-*"]
+      indices: [".kibana", "logstash-*"]
      
 ```
 
