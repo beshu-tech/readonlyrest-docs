@@ -1341,10 +1341,13 @@ readonlyrest:
       connection_timeout_in_sec: 10                             # default 1
       request_timeout_in_sec: 10                                # default 1
       cache_ttl_in_sec: 60                                      # default 0 - cache disabled
-    
+
+    # High availability LDAP settings (using "hosts", rather than "host")
     - name: ldap2
-      host: "ldap2.example2.com"
-      port: 636
+      hosts:                                                        # HA style, alternative to "host"
+      - "ldaps://ssl-ldap2.foo.com:636"                             # can use ldap:// or ldaps:// (for ssl)
+      - "ldaps://ssl-ldap3.foo.com:636"                             # the port is declared in line
+      ha: "ROUND_ROBIN"                                             # optional, default "FAILOVER"
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
