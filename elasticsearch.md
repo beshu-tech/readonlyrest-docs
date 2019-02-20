@@ -1,7 +1,10 @@
 
 # Overview: The ReadonlyREST Suite
 
-ReadonlyREST is a suite of light weight Elasticsearch and Kibana plugins that implement security.
+ReadonlyREST is a light weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API.
+The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall.
+There are a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
+
 
 The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv3 license, or alternatively, a commercial license (see [ReadonlyREST Embedded](https://readonlyrest.com/embedded)) and lays the technological foundations for the companion Kibana plugin which is released in two versions: [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise). 
 
@@ -50,6 +53,12 @@ From the [official download page](https://readonlyrest.com/download.html). Selec
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-X.Y.Z_esW.Q.U.zip
 ```
 Notice how we need to type in the format `file://` + absolute path (yes, with three slashes).
+```
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@     WARNING: plugin requires additional permissions     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+```
+When prompted about additional permissions, answer **y**.
 
 ### 3.Create settings file
 
