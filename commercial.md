@@ -10,7 +10,7 @@ However, It is possible to request a quote for obtaining a commercial license th
 
 ## What is Priority Support?
 
-Priority support is an email based, private support service with the creators of ReadonlyREST, and it covers two (2) incidents per quarter. Email [support@readonlyrest.com](mailto:support@readonlyrest.com?subject=ReadonlyREST%20refund%20required).
+Priority support is an email based, private support service with the creators of ReadonlyREST, and it covers two (2) incidents per quarter. Email [support@readonlyrest.com](mailto:support@readonlyrest.com).
 
 We guarantee a max response time of 2 working days (usually less). 
 
