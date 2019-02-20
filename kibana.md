@@ -417,7 +417,7 @@ This is a problem because a cookie encrypted by one instance won't be recognised
 > Today it's possible to share the cookie encryption key in all the Kibana instances
 
 1. Come up with a string of 32 characters length or more
-2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.cookiePass: 12345678901234567890123456789012` 
+2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.cookiePass: "12345678901234567890123456789012"` 
 3. Do the above in all Kibana nodes behind the load balancer, and restart them. 
 
 
