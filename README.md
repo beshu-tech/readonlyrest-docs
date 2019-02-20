@@ -13,7 +13,7 @@ The documentation of an open source product should also be open source! Found a 
 * [🚀 Kibana Multi-Tenancy with ROR Enterprise](multitenancy_guide.md)
 
 ---
-[⬅️ Back to the Main Project](github.com/sscarduzio/elasticsearch-readonlyrest-plugin)
+[⬅️ Back to the Main Project](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin)
 
 
 

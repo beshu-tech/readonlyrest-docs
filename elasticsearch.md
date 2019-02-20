@@ -1,45 +1,54 @@
 
-# Overview
+# Overview: The ReadonlyREST Suite
 
 ReadonlyREST is a light weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API.
 The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall.
 There are a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
 
-**blocks of rules** and **rules** form a declarative access control list capable of powerful logic chains.
 
-```yml
-readonlyrest:
-    access_control_rules:
+The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv3 license, or alternatively, a commercial license (see [ReadonlyREST Embedded](https://readonlyrest.com/embedded)) and lays the technological foundations for the companion Kibana plugin which is released in two versions: [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise). 
 
-    - name: "Block 2 - Other hosts can only read certain indices"
-      actions: ["indices:data/read/*"]
-      indices: ["logstash-*"] # aliases are taken in account!
-      
-    - name: "Block 1 - Blocking everything from a network"
-      type: forbid
-      hosts: ["10.0.0.0/24"]
-```
+Unlike the Elasticsearch plugin, the Kibana plugins are commercial only. But rely on the Elasticsearch plugin in order to work.
 
-*An Example of Access Control List (ACL) made of 2 blocks.*
+For a description of the Kibana plugins, skip to the [dedicated documentation page](kibana.md) instead.
 
-> Notice how **the ordering of the ACL blocks is very important!**
+## ReadonlyREST Free plugin for Elasticsearch
+In this document we are going to describe how to operate the Elasticsearch plugin in all its features.
+Once installed, this plugin will greatly extend the Elasticsearch HTTP API (port 9200), adding numerous extra capabilities:
+
+* **Encryption**: transform the Elasticsearch API from HTTP to HTTPS
+* **Authentication**: require credentials
+* **Authorization**: declar groups of users, permissions and partial access to indices.
+* **Access control**: complex logic can be modeled using an ACL (access control list) written in YAML.
+* **Audit logs**: a trace of the access requests can be logged to file or index (or both).
 
 
-The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. 
-Create this file **on the same path where `elasticsearch.yml` is found**.
+### Flow of a Search Request
+The following diagram models an instance of Elasticsearch with the ReadonlyREST plugin installed, and configured with SSL encryption and an ACL with at least one "allow" type ACL block.
 
-**PRO TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana.md).
+![readonlyrest request processing diagram](https://i.imgur.com/VX28w1V.png)
 
-## Installing
-It's sufficient to install ReadonlyREST plugin **only in the nodes that expose the HTTP interface** (port 9200). For example, if you have a 9 nodes cluster and you need to secure Kibana (or Logstash), you could leave the existing cluster nodes alone, and run a dedicated instance of Elasticsearch (without data, or master eligibility) with ReadonlyREST installed. Then you can securely connect Kibana (or Logstash) to it.
+1. The User Agent (i.e. cURL, Kibana) sends a search request to Elasticsearch using the port 9200 and the HTTPS URL schema.
+2. The HTTPS filter in ReadonlyREST plugin unrwaps the SSL layer and hands over the request to Elasticsearch HTTP stack
+3. The HTTP stack in Elasticsearch parses the HTTP request
+4. The HTTP handler in Elasticsearch extracts the indices, action, request type and creates a `SearchRequest` (internal Elasticsearch format).
+5. The SearchRequest goes through the ACL (access control list), external systems like LDAP can be asynchronously queried, and an exit result is eventually produced.
+6. The exit result is used by the audit log serializer, to write a record to index and/or Elasticsearch log file
+7. If no ACL block was matched, or if a `type: forbid` block was matched, ReadonlyREST does not forward the search request to the search engine, and creates an "unauthorized" HTTP response.
+8. In case the ACL matched an `type: allow` block, the request is forwarded to the search engine
+9. The Elasticsearch code creates a search response containing the results of the query
+10.The search response is converted to an HTTP response by the Elasticsearch code
+11. The HTTP response flows back to ReadonlyREST's HTTPS filter and to the User agent
 
-**EXCEPTION** if you use the `filter` or `fields` rule, you need to install ReadonlyREST plugin in all the data nodes.
+## Installing the plugin
 
 To install ReadonlyREST plugin for Elasticsearch:
 
-1. **Obtain the build**: From the [official download page](https://readonlyrest.com/download.html). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
+### 1. Obtain the build
+From the [official download page](https://readonlyrest.com/download.html). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
 
-2. **Install the build**:
+### Install the build
+
 ```bash
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-X.Y.Z_esW.Q.U.zip
 ```
@@ -51,62 +60,238 @@ Notice how we need to type in the format `file://` + absolute path (yes, with th
 ```
 When prompted about additional permissions, answer **y**.
 
-3. **Update settings**: Edit Elasticsearch configuration file and add any of the snippets you find in the documentation page
+### 3.Create settings file
+
+Create and edit the `readonlyrest.yml` settings file in the **same directory where `elasticsearch.yml` is found**:
+ 
  ```bash
  vim $ES_HOME/conf/readonlyrest.yml
  
  ```
  
-4. **Start Elasticsearch**: Now you should be able to see the logs and ReadonlyREST related lines.
+ Now write some basic settings, just to get started. In this example we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
+
+```yml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Require HTTP Basic Auth"
+      type: allow
+      auth_key: user:password 
+```
+
+### 4. Disable X-Pack security module 
+
+**(applies to ES 6.4.0 or greater)**
+
+ReadonlyREST and X-Pack security module can't run together, so the latter needs to be disabled.
+
+Edit `elasticsearch.yml` and append `xpack.security.enabled: false`.
+
+```bash
+ vim $ES_HOME/conf/elasticsearch.yml
+ 
+ ```
+
+### 5. Start Elasticsearch
+
+```
+bin/elasticsearch
+```
+
+or:
+
+```
+service start elasticsearch
+```
+
+Depending on your environment.
+
+Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+
+```
+[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
+```
+
+### 6. Test everything is working
+
+The following command should succeed, and the response should show a status code 200.
+
+```bash
+curl -vvv -u user:password "http://localhost:9200/_cat/indices"
+
+```
+The following command should not succeed, and the response should show a status code 401
+
+```bash
+curl -vvv "http://localhost:9200/_cat/indices"
+
+```
 
 
-### Upgrading
+## Upgrading the plugin
 
 To upgrade ReadonlyREST for Elasticsearch:
 
-1. Stop Elasticsearch.
+### 1. Stop Elasticsearch.
+Either kill the process manually, or use:
 
-2. Uninstall ReadonlyREST from Elasticsearch:
+```
+service stop elasticsearch
+```
+depending on your environment.
+
+
+### 2. Uninstall ReadonlyREST
 
 ```
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
 
-3. Install the new version of ReadonlyREST into Elasticsearch.
+### 3. Install the new version of ReadonlyREST into Elasticsearch.
 
 ```
 bin/elasticsearch-plugin install file://<download_dir>/readonlyrest-<ROR_VERSION>_es<ES_VERSION>.zip
 ```
 
 e.g.
+
 ```
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 ```
 
-4. Restart Elasticsearch.
+### 4. Restart Elasticsearch.
 
 
-### Removing
 
-1. Stop Elasticsearch.
+```
+bin/elasticsearch
+```
 
-2. Uninstall ReadonlyREST from Elasticsearch:
+or:
+
+```
+service start elasticsearch
+```
+
+Depending on your environment.
+
+Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+
+```
+[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
+```
+
+
+## Removing the plugin
+
+### 1. Stop Elasticsearch.
+Either kill the process manually, or use:
+
+```
+service stop elasticsearch
+```
+
+depending on your environment.
+
+### 2. Uninstall ReadonlyREST from Elasticsearch:
 
 ```
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
-3. Start Elasticsearch.
+### 3. Start Elasticsearch.
 
+
+
+```
+bin/elasticsearch
+```
+
+or:
+
+```
+service start elasticsearch
+```
+
+Depending on your environment.
+
+Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+
+```
+[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
+```
+
+
+
+## Deploying ReadonlyREST in a stable production cluster
+
+Unless some advanced features are being used (see below),this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. 
+Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** (port 9200). 
+
+Installing ReadonlyREST in a dedicated node has numerous advantages:
+
+* No need to restart all nodes, only the one you have installed the plugin into.
+* No need to restart all nodes for updating the security settings
+* No need to restart all nodes when a security update is out
+* Less complexity on the actual cluster nodes.
+
+For example, if we want to move to HTTPS all the traffic coming from Logstash into a 9 nodes Elasticsearch cluster which has been running stable in production for a while, it's not necessary to install ReadonlyREST plugin in all the nodes.
+
+Creating a dedicated, lightweight ES node where to install ReadonlyREST:
+
+1. (Optional) [disable the HTTP interface](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-http.html#_disable_http) from all the existing nodes
+2. Create a new, lightweight, dedicated node without shards, nor master eligibility.
+3. Configure ReadonlyREST with SSL [encryption](#encryption) in the new node
+4. Configure Logstash to connect to the new node directly in HTTPS.
+
+
+### An exception
+
+**⚠️IMPORTANT**  when `filter` or `fields` rules are used, it's required to install ReadonlyREST plugin in all the data nodes. This happens because these rules are implemented at Lucene level.
+
+
+## ACL basics
+
+The core of this plugin is an ACL (access control list). A logic structure very similar to the one found in firewalls. The ACL is part of the plugin configuration, and it's written in YAML.
+
+* The ACL is composed of an _ordered_ sequence of named **blocks**
+* Each block contains some **rules**, and a policy (forbid or allow)
+* HTTP requests run through the blocks, starting from the first,
+* The _first_ block that satisfies _all the rules_ decides if to forbid or allow the request (according to its policy).
+* If none of the block match, the request is rejected
+
+**⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
+
+```yml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Block 1 - only Logstash indices are accessible"
+      type: allow # <-- default policy type is "allow", so this line could be omitted
+      indices: ["logstash-*"] # <-- This is a rule
+      
+    - name: "Block 2 - Blocking everything from a network"
+      type: forbid 
+      hosts: ["10.0.0.0/24"] # <-- this is a rule
+```
+
+*An Example of Access Control List (ACL) made of 2 blocks.*
+
+
+The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. 
+Create this file **on the same path where `elasticsearch.yml` is found**.
+
+**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana.md).
 
 ## Encryption
 An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network.
 ReadonlyREST can be configured to require that all REST requests come through HTTPS.
 
-[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once you [make create a JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm).
+[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once they are inide a [JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm). 
 
-**IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
+**⚠️IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
 
 ```yml
 http.type: ssl_netty4
@@ -117,11 +302,13 @@ Now in `readonlyrest.yml` add the following settings:
 ```yml
 readonlyrest:
     ssl:
-      # put the keystore in the same dir with elasticsearch.yml 
       keystore_file: "keystore.jks"
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 ```
+
+The keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
+
 
 ### Restrict SSL protocols and ciphers
 Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
@@ -161,9 +348,9 @@ Keep in mind that ReadonlyREST ACL is a white list, so by default all request ar
       type: allow
       # In real life now you should increase the specificity by adding rules here (otherwise this block will allow all requests!)
 ```
-*Example: the most simple allow block.*
+*Example: the simplest example of an _allow_ block.*
 
-> **IMPORTANT**: If no blocks are configured, ReadonlyREST rejects all requests.
+**⚠️IMPORTANT**: if no blocks are configured, ReadonlyREST rejects all requests.
 
  
 # Rules
@@ -177,59 +364,135 @@ Please refrain from using HTTP level rules to protect certain indices or limit w
 The level of control at this level is really coarse, especially because Elasticsearch REST API does not always respect RESTful principles. 
 This makes of HTTP a bad abstraction level to write ACLs in Elasticsearch all together.
 
->The only **clean and exhaustive** way to implement access control is to reason about requests **AFTER ElasticSearch has parsed** them.
+The only **clean and exhaustive** way to implement access control is to reason about requests **AFTER ElasticSearch has parsed** them.
 Only then, the list of affected **indices** and the **action** will be known for sure. See **Elasticsearch level** rules.
 
-## Transport level
+## Transport level rules
 These are the most basic rules. It is possible to allow/forbid requests originating from a 
 list of IP addresses, host names or IP networks (in slash notation).
 
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `hosts: ["10.0.0.0/24"]` | a list of origin IP addresses or subnets |
-| `hosts_local: ["127.0.0.1", "127.0.0.2"]` | a list of destination IP addresses (ES HTTP API can bind to multiple IPs) |
+
+### `hosts`
+`hosts: ["10.0.0.0/24"]` 
+Match a request whose **origin** IP address (also called origin address, or `OA` in logs) matches one of the specified IP addresses or subnets.
+
+---
+
+### `hosts_local`
+`hosts_local: ["127.0.0.1", "127.0.0.2"]` 
+Match a request whose **destination** IP address (called `DA` in logs) matches one of the specified IP addresses or subnets. This finds application when Elasticsearch HTTP API is bound to multiple IP addresses.
 
 
-## HTTP Level
+## HTTP Level rules
 
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `accept_x-forwarded-for_header: false` | **⚠️DEPRECATED** modifier for `hosts` rule: if the origin IP won't match, check the `X-Forwarded-For` header|
-| `x_forwarded_for: ["192.168.1.0/24"]` | exactly like `hosts`, but looks inside the `X-Forwarded-For` header only (useful when requests come through a load balancer like AWS ELB)|
-| `methods: [GET, DELETE]` | match the HTTP method|
-| `headers: ["headerName1:value","headerName2:value"]` | match the HTTP headers (useful with proxy_auth to simulate groups!)|
-| `uri_re: ^/secret-index/.*` | **☠️HACKY** A regular expression to match the request URI. Hint: superseded by indices!|
-| `maxBodyLength: 0` |**⚠️DEPRECATED**identify a maximum length for HTTP request body.|
+### `accept_x-forwarded-for_header`
 
-The `x_forwarded_for` rule is the only HTTP level rule that is still recommendeable to use in production. This is because when Elasticsearch is behind a load balancer or reverse proxy, it gives an equivalent of the `hosts` rule (restrict access by origin IP or network).
+`accept_x-forwarded-for_header: false`
 
-### Load balancers
+ **⚠️DEPRECATED (use `x_forwarded_for instead`)**
+A modifier for `hosts` rule: if the origin IP won't match, fallback to check the `X-Forwarded-For` header
+
+---
+
+### `x_forwarded_for`
+
+`x_forwarded_for: ["192.168.1.0/24"]` 
+
+Behaves exactly like `hosts`, but gets the source IP address (a.k.a. origin address, `OA` in logs) inside the `X-Forwarded-For` header only (useful replacement to `hosts`rule when requests come through a load balancer like AWS ELB)
+
+#### Load balancers
 This is a nice tip if your Elasticsearch is behind a load balancer. If you want to match all the requests that come through the load balancer, use `x_forwarded_for: ["0.0.0.0/0"]`. 
 This will match the requests with a valid IP address as a value of the `X-Forwarded-For` header.
 
-## Elasticsearch level
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `indices: ["sales", "logstash-*"]` | Match if the request involves indices whose name is "sales", starts with "logstash-" or of both. |
-| `actions: ["indices:data/read/*"]` | Match if the request action starts with "indices:data/read/" |
-| `kibana_access: ro` | Enables the minimum set of actions necessary for browsers to use Kibana. See below. |
-| `kibana_index: .kibana-user1` | **OPTIONAL: Defaults to `.kibana`** specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)|
-| `snapshots: ["snap_@{user}_*"]` | restrict what snapshots names can be saved or restored |
-| `repositories: ["repo_@{user}_*"]` | restrict what repositories can snapshots be saved into |
+---
 
-| `filter: '{"query_string":{"query":"user:@{user}"}}'` | Document Level Security (DLS) - return only documents that satisfy the boolean query |
-| `fields: ["~excluded_fields_prefix_*", "~excluded_field"]` | Field Level Security (FLS) - prevent queries from returning certain fields|
-| `fields: ["allowed_fields_prefix_*"]` | Field Level Security (FLS) - only return certain fields from queries|
+### `methods`
+
+`methods: [GET, DELETE]` 
+
+Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP stack does not make any difference between HEAD and GET, so all the HEAD request will appear as GET.
+
+---
+
+### `headers`
+
+`headers: ["h1:x*y","h2:*xy"]`
+
+Match if **all** the HTTP headers are found in the request. This is useful used in conjunction with proxy_auth, to carry authorization information (i.e. headers: `x-usr-group: admins`). 
+ 
+---
+
+### `headers_and` 
+
+`headers_and: ["hdr1:val_*xyz","hdr2:xyz_*"]` 
+
+Alias for `headers` rule
+
+---
+
+### `headers_or`
+
+`headers_or: ["x-myheader:val*","header2:*xy"]` 
+
+Match if **at least one** the specified HTTP headers `key:value` pairs is matched.
+
+---
+
+### `uri_re`
+
+`uri_re: ^/secret-index/.*` 
+
+**☠️HACKY (try to use indices/actions rule instead)** 
+
+Specify a regular expression to match the request URI. 
+
+---
+
+### `maxBodyLength`
+
+`maxBodyLength: 0`
+
+Match requests having a request body length less or equal to an integer. Use `0` to match only requests without body. 
+
+**NB**: Elasticsearch HTTP API breaks the specifications, nad GET requests **might** have a body length greater than zero.
+
+---
+
+### `api_keys`
+
+`api_keys: [123456, abcdefg]` 
+
+A list of api keys expected in the header ```X-Api-Key``` 
 
 
-### Indices rule
+
+## Elasticsearch level rules
+### `indices`
+
+`indices: ["sales", "logstash-*"]` 
+
+Match if the request involves whose name indices whose name is "sales", or starts with "logstash-", or of both.
+
+In ReadonlyREST we roughly classify requests as:
+
+* "read": the request will not change the data or the configuration of the cluster
+* "write": when allowed, the request changes the internal state of the cluster or the data.
+
 If a **read request** asks for a some indices they have permissions for and some indices that they do NOT have permission for, the request is **rewritten** to involve only the subset of indices they have permission for.
 This is behaviour is very useful in Kibana: **different** users can see the **same** dashboards with data from only their own indices.|
 
 If a **write request** wants to write to indices they don't have permission for, the write request is rejected.  
 
-### Action rule
-Each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 5.1.2.
+
+---
+
+### `actions`
+
+`actions: ["indices:data/read/*"]` 
+
+Match if the request action starts with "indices:data/read/". 
+
+In Elasticsearch, each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 5.1.2.
 ```
 cluster:admin/ingest/pipeline/delete
 cluster:admin/ingest/pipeline/get
@@ -329,89 +592,326 @@ indices:monitor/upgrade
 
 internal:indices/admin/upgrade
 ```
-### kibana_access rule
+
+---
+
+### `kibana_access`
+
+`kibana_access: ro` 
+
+Enables the minimum set of actions necessary for browsers to use Kibana. 
+
 This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. This rule allows a set of actions towards the designated kibana index (see `kibana_index` rule - defaults to ".kibana"), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
 
 The idea is that with one single rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session. 
 
-Possible values:
+Possible access levels:
 
 * `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices. 
 * `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created. 
 * `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified. 
 * `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app.
 
-This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards.
+**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, just remove the `kibana_access` rule entirely.
 
-## Document Level Security (DLS) - a.k.a. filter rule.
-This rule lets you filter the results of a read request using a boolean query. You can use dynamic variables to inject a user name or some header values in the query, or even environmental variables.
+This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
+
+---
+
+### `kibana_index`
+
+`kibana_index: .kibana-user1` 
+
+**Default value is `.kibana`**
+
+ Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in kibana.yml.)
+ 
+This value directly affects how `kibana_access` works because at all the access levels (yes, even admin), `kibana_access` rule will **not** maatch any _write_ request in indices that are not the designated kibana index.
+
+If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index (default: `.kibana`).
+
+---
+
+### `snapshots` 
+
+`snapshots: ["snap_@{user}_*"]`
+
+Restrict what snapshots names can be saved or restored
+
+---
+
+### `repositories`
+
+`repositories: ["repo_@{user}_*"]` 
+
+Restrict what repositories can snapshots be saved into
+
+---
+
+### `filter`
+
+`filter: '{"query_string":{"query":"user:@{user}"}}'` 
+
+This rule enables **Document Level Security (DLS)**. That is: return only the documents that satisfy the boolean query provided as an argument.
+
+This rule lets you filter the results of a read request using a boolean query. You can use _dynamic variables_  i.e. `@{user}` (see dedicated paragraph) to inject a user name or some header values in the query, or even environmental variables.
 
 **NB: install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rule to work**
 
-Example 1: users can only read documents in the index "test-dls" that contain a field "user" with value that equals to their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
+#### Example: per-user index segmentation
+
+In the index "test-dls", each user can only search documents whose field "user" matches their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
 
 ```yml
-- name: "::USER::"
+- name: "::PER-USER INDEX SEGMENTATION::"
   proxy_auth: "*"
   indices: ["test-dls"]
-  filter: '{"query_string":{"query":"user:@{user}"}}'
+  filter: '{"bool": { "must": { "match": { "user": "@{user}" }}}}'
 ```
 
-Example 2: We don't want the press to access any "classified" documents. 
+#### Example 2: Prevent search of "classified" documents. 
+In this example, we want to avoid that users belonging to group "press" can see any document that has a field "access_level" with the value "CLASSIFIED". And this policy is applied to all indices (no indices rule is specified). 
+
 ```
 - name: "::Press::"
   groups: ["press"]
-  filter: '{"bool": {"must_not": [{"term": {"access_level": {"value": "classified"}}}]}}'
+  filter: '{"bool": { "must_not": { "match": { "access_level": "CLASSIFIED" }}}}'
 ```
- **⚠️IMPORTANT** This rule will only affect "read" requests. It will not be effective preventing clients from "writing" anything anywhere. This behaviour is identical to x-pack and search guard.
+
+ **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
+
+If you want to allow write requests (i.e. for Kibana sessions), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
  
-# Field Level Security (FLS) - a.k.a. fields rule
+**⚠️IMPORTANT**: Install ReadonlyREST plugin in **all the cluster nodes that contain data*** in order for _filter_ and _fields_ rules to work
 
-The fields rule is able to reduce the set of fields returned by matched queries. You can provide a black list of fields NOT to include (prefixing them using a tilde ~), or a white list of allowed fields.
 
-**NB: install ReadonlyREST plugin in all the cluster nodes that contain data in order for _filter_ and _fields_ rule to work**
+---
 
-Example: don't show fields that start with "price" to external users.
+### `fields` 
+
+This rule enables **Field Level Security (FLS)**. That is: only return certain fields from queries.
+
+**NB:** You can only provide a full black list or white list. Grey lists (i.e. `["~a", "b"]`) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
+
+####  Whitelist mode
+
+`fields: ["allowed_fields_prefix_*", "_*"]` 
+
+If the current is a search request, return all matching documents, but deprived of all the fields, except the ones that start with `allowed_fields_prefix_` or with underscore. 
+
+If you use whitelist mode, remember to allow the mandatory, internally used fields (the ones that start with underscore, `_*`). 
+
+#### Blacklist mode (recommended)
+
+`fields: ["~excluded_fields_prefix_*", "~excluded_field"]` 
+
+If the current is a search request, return all matching documents, but deprived of the `excluded_field` and the ones that start with `excluded_fields_prefix_`. 
+
+#### Example: hide prices from catalogue indices
+
 ```yml
 - name: "External users - hide prices"
   fields: ["~price"]
   indices: ["catalogue_*"]
-  proxy_auth:
-    proxy_auth_config: "proxy1"
-    users: ["ext_*"]
+
 ```
 
-Wildcards are supported using the star character, like in the `actions` or `indices` rules. 
+ **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 
-You can only provide a full black list or white list. Grey lists (i.e. `["~a", "b"]`) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
+If you want to allow write requests (i.e. for Kibana sessions), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
+ 
+**⚠️IMPORTANT**: Install ReadonlyREST plugin in **all the cluster nodes that contain data*** in order for _filter_ and _fields_ rules to work
 
- **⚠️IMPORTANT** This rule will only affect "read" requests. **Requests that are not read only, will be rejected**. 
+
 
 ## Authentication
 Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authentication method is secure only if SSL is enabled.
    
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `auth_key: sales:p455wd` | Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). Configure this value *in clear text*. Clients will need to provide the header e.g. ```Authorization: Basic c2FsZXM6cDQ1NXdk``` where "c2FsZXM6cDQ1NXdk" is Base64 for "sales:p455wd". |
-| `auth_key_sha1: 6cef1...9145a0` |  **⚠️DEPRECATED**  Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` *hashed in [SHA1](http://www.sha1-online.com/)* Clients will need to provide the usual Authorization header. |
-| `auth_key_sha256: 280ac6f...94bf9` | Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` *hashed in [SHA256](http://www.xorbin.com/tools/sha256-hash-calculator)*. Clients will need to provide the usual Authorization header. |
-| `proxy_auth: "*"` | Delegated auth. Trust that a reverse proxy has taken care of authenticating the request and has written the resolved user name into the  `X-Forwarded-User` header. The value "*" in example, will let this rule match any value of `X-Forwarded-User` header. If you are using this technique for authentication in **Kibana**, don't forget to add this snippet to `conf/kibana.yml`: `elasticsearch.requestHeadersWhitelist: ['authorization', 'x-forwarded-user'] ` so Kibana forwards the right header to Elasticsearch. |
-| `api_keys: [123456, abcdefg]` |a list of api keys expected in the header ```X-Api-Key``` |
-| `groups: ["group1", "group2"]` | Limit access to members of specific user groups. See [User management](#user-management-with-groups)|
-| `session_max_idle: 1h` | browser session timeout (via cookie). Example values 1w (one week), 10s (10 seconds), 7d (7 days), etc. NB: not available for Elasticsearch 2.x|
-| `ldap_auth` | see below ldap section|
-| `jwt_auth` | see below JSON Web Tokens section|
+### `auth_key`
+
+`auth_key: sales:p455wd` 
+
+Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). Configure this value *in clear text*. Clients will need to provide the header e.g. ```Authorization: Basic c2FsZXM6cDQ1NXdk``` where "c2FsZXM6cDQ1NXdk" is Base64 for "sales:p455wd". 
+
+**⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha256`, or `auth_key_unix`.
+
+---
+
+###  `auth_key_sha256`
+
+ `auth_key_sha256: 280ac6f...94bf9` 
+ 
+ Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` *hashed in [SHA256](http://www.xorbin.com/tools/sha256-hash-calculator)*. Clients will need to provide the usual Authorization header. |
+
+---
+
+### `auth_key_unix`
+
+` auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 # Hashed for "test:test"`
+
+**⚠️IMPORTANT** this hashing algorithm is **very CPU intensive**, so we implemented a caching mechanism around it. However, this will not protect Elasticsearch from a DoS attack with a high number of requests with random credentials.
+
+This method is based on `/etc/shadow` file syntax. 
+
+If you configured sha512 encryption with 65535 rounds on your system the hash in /etc/shadow for the account
+`test:test` will be `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` 
+
+```yml
+readonlyrest:
+    access_control_rules:
+    - name: Accept requests from users in group team1 on index1
+      groups: ["team1"]
+      indices: ["index1"]
+    
+    users:
+    - username: test
+      auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 #test:test
+      groups: ["team1"]
+
+```
+
+You can generate the hash with **mkpasswd** Linux command, you need whois package `apt-get install whois` (or equivalent)
+
+`mkpasswd -m sha-512 -R 65534`
+
+Also you can generate the hash with a python script (works on Linux):
+
+```python
+#!/usr/bin/python
+import crypt
+import random
+import sys
+import string
+
+def sha512_crypt(password, salt=None, rounds=None):
+    if salt is None:
+        rand = random.SystemRandom()
+        salt = ''.join([rand.choice(string.ascii_letters + string.digits)
+                        for _ in range(8)])
+
+    prefix = '$6$'
+    if rounds is not None:
+        rounds = max(1000, min(999999999, rounds or 5000))
+        prefix += 'rounds={0}$'.format(rounds)
+    return crypt.crypt(password, prefix + salt)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        print sha512_crypt(sys.argv[1], rounds=65635)
+    else:
+        print "Argument is missing, <password>"
+```
+
+**Finally you have to put your username at the begining of the hash with ":" separator**
+`test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
+
+For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` (the password is identical to the username in this example).
+
+---
+
+### `proxy_auth: "*"` 
+ 
+`proxy_auth: "*"` 
+
+Delegated authentication. Trust that a reverse proxy has taken care of authenticating the request and has written the resolved user name into the  `X-Forwarded-User` header. The value "*" in the example, will let this rule match any username value contained in the `X-Forwarded-User` header. 
+
+If you are using this technique for authentication using our **Kibana** plugins, don't forget to add this snippet to `conf/kibana.yml`: 
+
+`readonlyrest_kbn.proxy_auth_passthrough: true ` 
+
+So that Kibana will forward the necessary headers to Elasticsearch.
+
+---
+### `groups`
+
+`groups: ["group1", "group2"]` 
+
+Limit access to members of specific user groups. See [User management](#user-management-with-groups).
+
+---
+
+### `session_max_idle`
+
+`session_max_idle: 1h`
+
+**⚠️DEPRECATED** Browser session timeout (via cookie). Example values 1w (one week), 10s (10 seconds), 7d (7 days), etc. NB: not available for Elasticsearch 2.x.
+
+---
+
+### `ldap_auth`
+
+See below, the dedicated [LDAP section](#ldap-connector)
+
+---
+
+### `jwt_auth` 
+
+See below, the dedicated [JSON Web Tokens section](#json-web-token-jwt-auth)
+
+---
+
+### `external-basic-auth`
+
+Used to delegate authentication to another server that supports HTTP Basic Auth.
+See below, the dedicated [External BASIC Auth section](#external-basic-auth)
+
+---
+
+### `groups_provider_authorization `
+
+Used to delegate groups resolution for a user to a JSON microservice.
+See below, the dedicated [Groups Provider Authorization section](#groups_provider_authorization)
+
+---
+
+### `ror_kbn_auth`
+
+For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication.
+
+```yml
+readonlyrest:
+  access_control_rules:
+
+    - name: "ReadonlyREST Enterprise instance #1"
+      ror_kbn_auth:
+        name: "kbn1"
+
+    - name: "ReadonlyREST Enterprise instance #2"
+      ror_kbn_auth:
+        name: "kbn2"
+
+  ror_kbn:
+    - name: kbn1
+      signature_key: "shared_secret_kibana1" # <- use environmental variables for better security!
+
+    - name: kbn2
+      signature_key: "shared_secret_kibana2" # <- use environmental variables for better security!
+```
+
+This authentication and authorization connector represents the secure channel (based on JWT tokens) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
+
+Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
+
 
 ## Ancillary rules
-| Rule and example argument                  | Description  |
-| --------------------------------- | ---         |
-| `verbosity: error` | Don't spam elasticsearch log file with successful requests (that match this block). Defaults to `info` |
 
+### `verbosity`
+
+`verbosity: error`
+
+Don't spam elasticsearch log file printing log lines for requests that match this block. Defaults to `info`.
 
 
 ## Audit & Troubleshooting
-The main issues arise from bad ordering or ACL blocks. Remember that the order is important!
+The main issues seen in support cases:
 
+* Bad ordering or ACL blocks. Remember that the ACL is evaluated sequentially, block by block. And the first block whose rules all match is accepted.
+* Users don't know how to read the `HIS` field in the logs, which instead is crucial because it contains a trace of the evaluation of rules and blocks.
+* LDAP configuration: LDAP is tricky to configure in any system. Configure ES root logger to `DEBUG` editing `$ES_HOME/config/l4j2.properties` to see a trace of the LDAP messages.
+
+
+ 
 ### Interpreting logs
 ReadonlyREST prints a log line for each incoming request (this can be selectively avoided on ACL block level using the `verbosity` rule).
 
@@ -434,7 +934,7 @@ Here is a glossary:
 * `USR`: String, the user name ReadonlyREST was able to extract from Basic Auth, JWT, LDAP, or other methods as specified in the ACL.
 * `BRS`: Boolean, an heuristic attempt to tell if the request comes from a browser.
 * `ACT`: String, the elasticsearch level action associated with the request. For a list of actions, see our [actions rule docs](#action-rule).
-* `OA`: IP Address, originating address of the TCP connection underlying the http session.
+* `OA`: IP Address, originating address (source address) of the TCP connection underlying the http session.
 * `IDX`: Strings array: the list of indices affected by this request.
 * `MET`: String, HTTP Method
 * `CNT`: String, HTTP body content. Comes as a summary of its lenght, full body of the request is available in debug mode.
@@ -449,7 +949,6 @@ This is an example of a request that gets forbidden by ReadonlyREST ACL.
 FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, CGR:N/A, USR:[no basic auth header], BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::Infosec::->[groups->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]], [::Infosec::->[groups->false]], [::ADMIN_GRP::->[groups->false]], [::Kafka::->[auth_key->false]], [::PERSONAL_GRP::->[groups->false]] }
 ```
 The above rule gets forbidden "by default". This means that no ACL block has matched the request, so ReadonlyREST's default policy of rejection takes effect. 
-
 
 
 ### Audit logs
@@ -493,7 +992,6 @@ Note how the successful requests matched by the first rule (Kibana) will not be 
 Audit log in facts, obey the verbosity setting the same way regular text logs do.
 
 ```yml
-http.type: ssl_netty4
 readonlyrest:
     
     audit_collector: true
@@ -532,6 +1030,8 @@ readonlyrest:
   ...
 ```
 
+**⚠️IMPORTANT**: notice the single quotes inside the double quoted expression. This is the same syntax used for [Java's SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+
 ## Custom audit log serializer
 
 You can write your own custom audit log serializer class, add it to the ROR plugin class path and configure it through the YAML settings.
@@ -539,6 +1039,7 @@ You can write your own custom audit log serializer class, add it to the ROR plug
 ### Implementation
 1. Create a new Java project in your IDE
 2. Create a class like this:
+
 ```java
 import tech.beshu.ror.ResponseContext;
 import tech.beshu.ror.requestcontext.AuditLogSerializer;
@@ -566,12 +1067,14 @@ import java.util.Map;
 6.  mv CUSTOMSERIALIZER.jar plugins/readonlyrest/
 
 7. Your config/readonlyrest.yml should start like this
+
 ```yml
 readonlyrest:
     audit_serializer: MyCustomSerializer
 ```
 
 8. Start elasticsearch (with ROR installed) and grep for:
+
 ```
 [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: MyCustomSerializer
 ```
@@ -590,12 +1093,17 @@ This will show you the whole request context (including the action and indices f
 Logs are good for auditing the activity on the REST API. You can configure them by editing `$ES_HOME/config/logging.yml` (Elasticsearch 2.x) or `$ES_HOME/config/l4j2.properties` [file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#logging) (Elasticsearch 5.x)
 
 For example, you can **enable the debug log** globally by setting the `rootLogger`to `debug`.
+
+```
+rootLogger.level = debug
+```
+
 This is really useful especially to debug the activity of LDAP and other external connectors.
 
 #### Trick: log requests to different files
 Here is a `l4j2.properties` snippet for ES 5.x that logs all the received requests as a new line in a separate file:
 
-```
+```properties
 #Plugin readonly rest separate access logging file definition
 appender.access_log_rolling.type = RollingFile
 appender.access_log_rolling.name = access_log_rolling
@@ -620,7 +1128,6 @@ logger.access_log_rolling.filter.regex.onMatch = DENY
 logger.access_log_rolling.filter.regex.onMisMatch = ACCEPT
 
 ``` 
-
 
 # Users and Groups
 Sometimes we want to make allow/forbid decisions according to the username associated to a HTTP request. The extraction of the user identity (username) can be done via HTTP Basic Auth (Authorization header) or 
@@ -681,12 +1188,14 @@ In this example, the usernames are statically associated to group names.
       auth_key_sha256: e0bba5fda92dbb0570fd2e729a3c8ed6b1d52b380581f32427a38e396ba28ec6 #claire:p455key
       groups: ["team1", "team5"]
 ```
+
 *Example: rules are associated to groups (instead of users) and users-group association is declared separately later under `users:`*
 
 ## Environmental variables 
 Anywhere in `readonlyrest.yml` you can use the espression `${MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
 
 For example, here we declare an environment variable, and we write `${LDAP_PASSWORD}` in our settings:
+
 ```bash
 $ export LDAP_PASSWORD=S3cr3tP4ss 
 $ cat readonlyrest.yml
@@ -743,11 +1252,13 @@ readonlyrest:
       kibana_index: ".kibana_@{x-nginx-user}" 
 ```
 
+
 ## LDAP connector
 
 In this example, users credentials are validate via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
 
 **Simpler: authentication and authorization in one rule**
+
 ```yml
 readonlyrest:
     
@@ -787,9 +1298,12 @@ readonlyrest:
       group_search_filter: "(objectClass=group)(cn=application*)"   # optional, default (cn=*)
       group_name_attribute: "cn"                                    # optional, default "cn"
     
+    # High availability LDAP settings (using "hosts", rather than "host")
     - name: ldap2
-      host: "ldap2.example2.com"
-      port: 636
+      hosts:                                                        # HA style, alternative to "host"
+      - "ldaps://ssl-ldap2.foo.com:636"                             # can use ldap:// or ldaps:// (for ssl)
+      - "ldaps://ssl-ldap3.foo.com:636"                             # the port is declared in line
+      ha: "ROUND_ROBIN"                                             # optional, default "FAILOVER"
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
@@ -836,10 +1350,13 @@ readonlyrest:
       connection_timeout_in_sec: 10                             # default 1
       request_timeout_in_sec: 10                                # default 1
       cache_ttl_in_sec: 60                                      # default 0 - cache disabled
-    
+
+    # High availability LDAP settings (using "hosts", rather than "host")
     - name: ldap2
-      host: "ldap2.example2.com"
-      port: 636
+      hosts:                                                        # HA style, alternative to "host"
+      - "ldaps://ssl-ldap2.foo.com:636"                             # can use ldap:// or ldaps:// (for ssl)
+      - "ldaps://ssl-ldap3.foo.com:636"                             # the port is declared in line
+      ha: "ROUND_ROBIN"                                             # optional, default "FAILOVER"
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
@@ -848,9 +1365,10 @@ readonlyrest:
 - `search_user_base_DN` should refer to the base Distinguished Name of the users to be authenticated.
 - `search_groups_base_DN` should refer to the base Distinguished Name of the groups to which these users may belong.
 - By default, users in `search_user_base_DN` should contain a `uid` LDAP attribute referring to a unique ID for the user within the base DN. An alternative attribute name can be specified via the optional `user_id_attribute` configuration item.
-- By default, groups in `search_groups_base_DN` should contain a `uniqueMember` LDAP attribute referring to the full DNs of the users that belong to the group. (There may be any number of occurrences of this attribute within a particular group, as any number of users may belong to the group.) An alternative attribute name can be specified via the optional `unique_member_atttribute` configuration item.
+- By default, groups in `search_groups_base_DN` should contain a `uniqueMember` LDAP attribute referring to the full DNs of the users that belong to the group. (There may be any number of occurrences of this attribute within a particular group, as any number of users may belong to the group.) An alternative attribute name can be specified via the optional `unique_member_attribute` configuration item.
 - `group_name_attribute` is the LDAP group object attribute that contains the names of the ROR groups
-- `group_search_filter` is the LDAP search filter (or filters) to limit the user groups returned by LDAP. This filter will be joined (with `&`) with `unique_member_atttribute=user_dn` filter resulting in this LDAP search filter: (&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute=user_dn)). Examples:
+- `group_search_filter` is the LDAP search filter (or filters) to limit the user groups returned by LDAP. This filter will be joined (with `&`) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: (&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute=user_dn)). Examples:
+
 ```
 group_search_filter: "(objectClass=group)"
 group_search_filter: "(objectClass=group)(cn=application*)"
@@ -888,6 +1406,11 @@ readonlyrest:
       success_status_code: 200
       cache_ttl_in_sec: 60
       validate: false # SSL certificate validation (default to true)
+      http_connection_settings:
+        connection_timeout_in_sec: 5           # default 2
+        socket_timeout_in_sec: 3               # default 5
+        connection_request_timeout_in_sec: 3   # default 5  
+        connection_pool_size: 10               # default 30
 
     - name: "ext2"
       authentication_endpoint: "http://external-website2:8080/auth2"
@@ -899,7 +1422,6 @@ To define an external authentication service the user should specify:
 - `name` for service (then this name is used as id in `service` attribute of `external_authentication` rule)
 - `authentication_endpoint` (GET request)
 - `success_status_code` - authentication response success status code
-- 
 
 Cache can be defined at the service level or/and at the rule level. In the example, both are shown, but you might opt for setting up either.
 
@@ -944,6 +1466,11 @@ readonlyrest:
       auth_token_passed_as: QUERY_PARAM                        # HEADER OR QUERY_PARAM
       response_groups_json_path: "$..groups[?(@.name)].name"   # see: https://github.com/json-path/JsonPath
       cache_ttl_in_sec: 60
+      http_connection_settings:
+        connection_timeout_in_sec: 5                           # default 2
+        socket_timeout_in_sec: 3                               # default 5
+        connection_request_timeout_in_sec: 3                   # default 5  
+        connection_pool_size: 10                               # default 30
 ```
 
 In example above, a user is authenticated by reverse proxy and then external service is asked for groups for that user. 
@@ -978,15 +1505,39 @@ readonlyrest:
         
     jwt: 
     - name: jwt_provider_1
-      signature_algo: RSA
-      signature_key: "your_signature"
+      signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC 
+      signature_key: "your_signature_min_256_chars"
       user_claim: email
       roles_claim: resource_access.client-app.roles # JSON-path style
       header_name: Authorization
 ```
+
 The `user_claim` indicates which field in the JSON will be interpreted as the user name.
+
 The `signature_key` is used shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
+
 The `header_name` is used if we expect the JWT Token in a custom header (i.e. [Google Cloud IAP signed headers](https://cloud.google.com/iap/docs/signed-headers-howto))
+
+The `signature_algo` indicates the family of cryptographic algorithms used to validate the JWT.
+
+#### Accepted `signature_algo` values
+The value of this configuration represents the cryptographic family of the JWT protocol. Use the below table to tell what value you should configure, given a JWT token sample. You can decode sample JWT token using an [online tool](https://jwt.io/). 
+
+| Algorithm declared in JWT token  | `signature_algo` value |
+|----------------|------------------------|
+|NONE            |      **None**|
+| HS256          |    **HMAC**|
+| HS384          |    **HMAC**| 
+| HS512         |   **HMAC**| 
+| RS256    |    **RSA**| 
+| RS384    |    **RSA**| 
+| RS512   |     **RSA**| 
+| PS256   |     **RSA**| 
+| PS384   |   **RSA**| 
+| PS512   |   **RSA**| 
+| ES256   |    **EC**| 
+| ES384   |   **EC**| 
+| ES512   |     **EC**| 
 
 # GPLv3 License
 ReadonlyREST Free (Elasticsearch plugin) is released under the GPLv3 license. For what this kind of software concerns, this is identical to GPLv2, that is, you can treat ReadonlyREST as you would treat Linux code.
@@ -1006,7 +1557,7 @@ the [original project](https://github.com/sscarduzio/elasticsearch-readonlyrest-
 * Modify the code for a paying client without immediately contributing your changes back to this project's GitHub as a pull request, or alternatively publicly release said fork under GPLv3 or compatible license.
 
 ## GPLv3 license FAQ
- **1. Q**: I sell a proprietary software solution that already includes many other OSS components (i.e. Elasticsearch). Can I bundle also ReadonlyREST into it?
+**1. Q**: I sell a proprietary software solution that already includes many other OSS components (i.e. Elasticsearch). Can I bundle also ReadonlyREST into it?
 > **A**: No, GPLv3 does not allow it. But hey, no problem, just go for the [Enterprise subscription](../enterprise.html).
 
 **2. Q**: I have a SaaS and we want to use a version of ReadonlyREST for Elasticsearch (as is, or modified), do I need a commercial license?
@@ -1026,11 +1577,13 @@ See [commercial license FAQ page](commercial.html) for more information.
 3. Install the plugin 
 
 **Elasticsearch 5.x**
+
 ```bash
  bin/elasticsearch-plugin install file:///download-folder/readonlyrest-1.13.2_es5.1.2.zip
 ```
 
 **Elasticsearch 2.x**
+
  ```bash
  bin/plugin install file:///download-folder/readonlyrest-1.13.2_es5.1.2.zip
 ```
@@ -1041,9 +1594,11 @@ See [commercial license FAQ page](commercial.html) for more information.
 You need to have installed: git, maven, Java 8 JDK, zip. So use apt-get or brew to get them.
 
 1. Clone the repo 
+
 ```bash
 git clone https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
 ```
+
 2. `cd elasticsearch-readonlyrest-plugin`
 3. Launch the build script `bin/build.sh`
 
@@ -1116,6 +1671,7 @@ Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` 
  
  ### Logstash side
  Edit the logstash configuration file and fix the output block as follows:
+ 
  ```ruby
  output {
    elasticsearch {
@@ -1127,7 +1683,8 @@ Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` 
    }
  }
  ```
- The `ssl_certificate_verification` bit is necessary for accepting self-signed SSL certificates. You might also need to add cacert parameter to provide the path to your .cer or .pem file.
+
+The `ssl_certificate_verification` bit is necessary for accepting self-signed SSL certificates. You might also need to add cacert parameter to provide the path to your .cer or .pem file.
 
 ## Secure Metricbeats
 Very similarly to Logstaash, here's a snippet of configuration for [Metricbeats](https://www.elastic.co/downloads/beats/metricbeat) logging agent 
@@ -1135,13 +1692,13 @@ configuration of metricbeat - elasticsearch section
 
 ### On the Metricbeats side
 
-```
+```yml
 output.elasticsearch:
   output.elasticsearch:
   username: metricbeat
   password: hereyourpasswordformetricbeat
   protocol: https
-  hosts: ["xx.xx.xx.xx:9x00"]
+  hosts: ["xx.xx.xx.xx:9200"]
   worker: 1
   index: "log_metricbeat-%{+yyyy.MM}"
   template.enabled: false
@@ -1169,5 +1726,5 @@ Of course, if you do not use ssl, disable it.
     - name: "metricbeat can write and create its own indices"
       auth_key_sha1: fd2e44724a234234454324253094080986e8fda
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
-      indices: ["metricbeat-*",  "log_metricbeat*"]
+      indices: ["metricbeat-*", "log_metricbeat*"]
 ```
