@@ -876,6 +876,7 @@ readonlyrest:
     - name: "ReadonlyREST Enterprise instance #1"
       ror_kbn_auth:
         name: "kbn1"
+        roles: ["SAML_GRP_1"]
 
     - name: "ReadonlyREST Enterprise instance #2"
       ror_kbn_auth:
