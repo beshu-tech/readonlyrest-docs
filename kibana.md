@@ -29,12 +29,12 @@ To be clear, there is no affiliation between ReadonlyREST and Elastic, or their 
 
 ### Trial builds version strings
 
-Trial builds are valid for 14 days after they were built, and they will stop working soon after the time is elapsed. Trial builds have a special version string which includes a build-time timestamp. 
+Trial builds are valid for 30 days after they were built, and they will stop working soon after the time is elapsed. Trial builds have a special version string which includes a build-time timestamp. 
 
 I.e. `readonlyrest_kbn_pro-1.16.26-20180911_es6.0.0.zip`
 
 * ReadonlyREST PRO plugin version 1.16.26
-* Build date 11th September 2018, expiring on the 25th.
+* Build date 11th September 2018, expiring on the 11th of October 2018.
 * Works only with Kibana version 6.0.0
 
 
