@@ -501,7 +501,7 @@ readonlyrest:
     kibana_index: ".kibana_template"
       
  users:
- - name: administrator
+ - username: administrator
    auth_key: administrator:dev
    groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
      
