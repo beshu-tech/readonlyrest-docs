@@ -168,7 +168,7 @@ readonlyrest:
 Whatever your configuration ends up being, remember:
 
 * The admin user has `kibana_access: admin` 
-* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX). 
+* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
 
 ### Rules ordering matters
 
