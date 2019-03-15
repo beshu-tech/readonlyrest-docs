@@ -215,7 +215,18 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
 
 ```
 
-
+### Kibana App strings
+`kibana_hide_apps`
+* kibana:discover
+* kibana:visualize
+* timelion
+* readonlyrest_kbn
+* canvas
+* apm
+* infra:home
+* infra:logs
+* kibana:dev_tools
+* kibana:management
 
 ## Kibana configuration
 
