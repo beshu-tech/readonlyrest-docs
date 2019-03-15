@@ -168,7 +168,7 @@ readonlyrest:
 Whatever your configuration ends up being, remember:
 
 * The admin user has `kibana_access: admin` 
-* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
+* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX). 
 
 ### Rules ordering matters
 
@@ -215,7 +215,18 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
 
 ```
 
-
+### Kibana App strings
+`kibana_hide_apps`
+* kibana:discover
+* kibana:visualize
+* timelion
+* readonlyrest_kbn
+* canvas
+* apm
+* infra:home
+* infra:logs
+* kibana:dev_tools
+* kibana:management
 
 ## Kibana configuration
 
