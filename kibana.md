@@ -461,7 +461,7 @@ With ReadonlyREST Enterprise, it's possible to inject custom CSS and Javascript 
 ## Inject custom CSS in Kibana
 Open `config/kibana.yml` and append the following:
 ```yml
-readonlyrest_kbn.kibana_custom_css_inject: '.global-nav { background-color: green }'
+readonlyrest_kbn.kibana_custom_css_inject: '.global-nav, kbnGlobalNav { background-color: green }'
 ```
 Alternatively, it's possible to load the CSS from a file in the filesystem:
 
