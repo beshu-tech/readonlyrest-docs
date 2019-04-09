@@ -107,6 +107,22 @@ This means the configuration will be kept all in one place and if you used Reado
 > In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring **to the configuration files in the Elasticsearch plugin**. 
 In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.
 
+## Clusterwide Settings vs readonlyrest.yml
+Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
+
+When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. 
+
+When an Elasticsearch node restarts, the order of settings evaluation is the following:
+1. Attempt to find valid settings in readonlyrest.yml
+2. If none is found, look inside elasticsearch.yml
+3. Once successfully bootstrapped using file-based settings, attempt to read ".readonlyrest" index
+4. If the index exists and contains valid settings, override file based settings with the ones from the index.
+5. Pressing "save" in the cluster wide settings app, will **not overwrite the readonlyrest.yml** file.
+
+Best practices:
+* Create a readonlyrest.yml containing basic "fallback" security settings, maybe with just an administrator local, so you can still login if in index settings get corrupted.
+* Build and update your production security settings from the Kibana app (will be saved in index)
+* Protect the ".readonlyrest" Kibana index with an ACL rule
 
 ## Example: multiuser ELK
 
