@@ -230,9 +230,17 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
       actions: [...]
 
 ```
+### Session cookie expiration
+When a user logs in, ReadonlyREST will write an encrypted cookie in the browser. This cookie has an time to live that can be tweaked with the following configuration key in `kibana.yml`.
+
+```yml
+readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
+```
 
 ### Kibana App strings
-`kibana_hide_apps`
+
+Examples of valid arguments for the `kibana_hide_apps: [...]` rule (readonlyrest.yml) 
+
 * kibana:discover
 * kibana:visualize
 * timelion
