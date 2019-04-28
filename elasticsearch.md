@@ -723,6 +723,74 @@ If you want to allow write requests (i.e. for Kibana sessions), just duplicate t
 **⚠️IMPORTANT**: Install ReadonlyREST plugin in **all the cluster nodes that contain data*** in order for _filter_ and _fields_ rules to work
 
 
+### Configuring an ACL with filter/fields rules when using Kibana
+A normal Kibana session interacts with Elasticsearch using a mix of actions which we can roughly group in two macro categories of "read" and "write" actions. 
+However the `fields` and `filter´ rules will **only match read requests**. This means that a complete Kibana session cannot anymore be entirely matched by a single ACL block like it normally would. 
+
+For example, this ACL block would perfectly support a complete Kibana session. That is, 100% of the actions (browser HTTP requests) would be allowed by this ACL block.
+
+```yaml
+    - name: "::RW_USER::"
+      auth_key: rw_user:pwd
+      kibana_access: rw
+      indices: ["r*", ".kibana"]
+```
+
+However, when we introduce a filter (or fields) rule, this block will be able to match only some of the actions (only the "read" ones).
+```yaml
+    - name: "::RW_USER::"
+      auth_key: rw_user:pwd
+      kibana_access: rw
+      indices: ["r*", ".kibana"]
+      filter: '{"query_string":{"query":"DestCountry:FR"}}'  # <-- will reject all write requests! :(
+```
+
+The solution is to duplicate the block. The first one will intercept (and filter!) the read requests. The second one will intercept the remaining actions. Both ACL blocks together will entirely support a whole Kibana session.
+
+```yaml
+    - name: "::RW_USER (filter read requests)::"  
+      auth_key: rw_user:pwd
+      kibana_access: rw
+      indices: ["r*"]  # <-- DO NOT FILTER THE .kibana INDEX!
+      filter: '{"query_string":{"query":"DestCountry:FR"}}' 
+      
+    - name: "::RW_USER (allow remaining requests)::"
+      auth_key: rw_user:pwd
+      kibana_access: rw
+      indices: ["r*", ".kibana"]
+```
+
+**NB:** Look at how we **make sure that the requests to ".kibana" won't get filtered** by specifying an `indices` rule in the first block.
+
+Here is another example, a bit more complex. Look at how we can duplicate the "PERSONAL_GRP" ACL block so that the read requests to the "r*" indices can be filtered, and all the other requests can be intercepted by the second rule (which is identical to the one we had before the duplication).
+
+Before adding the `filter` rule:
+```yml
+  - name: "::PERSONAL_GRP::"
+      groups: ["Personal"]
+      kibana_access: rw
+      indices: ["r*", ".kibana_@{user}"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
+      kibana_index: ".kibana_@{user}"
+```
+
+After adding the `filter` rule (using the block duplication strategy).
+```yaml
+    - name: "::PERSONAL_GRP (FILTERED SEARCH)::"
+      groups: ["Personal"]
+      kibana_access: rw
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
+      indices: [ "r*" ]
+      filter: '{"query_string":{"query":"DestCountry:FR"}}'
+      kibana_index: ".kibana_@{user}"
+      
+    - name: "::PERSONAL_GRP::"
+      groups: ["Personal"]
+      kibana_access: rw
+      indices: ["r*", ".kibana_@{user}"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
+      kibana_index: ".kibana_@{user}"
+```
 
 ## Authentication
 Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authentication method is secure only if SSL is enabled.
