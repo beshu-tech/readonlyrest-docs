@@ -389,22 +389,26 @@ Edit `kibana.yml` and append:
 ```yaml
 readonlyrest_kbn.auth:
   signature_key: "my_shared_secret_kibana1(min 256 chars)"
-  saml:
+  saml_serv1:
     enabled: true
-    entryPoint: 'https://my-saml-idp/saml2/http-post/sso'
+    type: saml,
+    issuer: ror
+    buttonName: "Partner's SSO Login"
+    entryPoint: 'https://my-saml-idp/saml2/http-post/sso' # <-- identity Provider's URL, to request to sign on
     kibanaExternalHost: 'my.public.hostname.com' # <-- public URL used by the Identity Provider to call back Kibana with the "assertion" message
+    protocol: http # <-- is the Kibana server listening for "http" "https" connections? Default: http
     usernameParameter: 'nameID'
     groupsParameter: 'memberOf'
     logoutUrl: 'https://my-saml-idp/saml2/http-post/slo'
     
-    # OPTIONAL advanced parameters
+    # OPTIONAL, advanced parameters
     # decryptionCert: /etc/ror/integration/certs/pub.crt
     # cert: /etc/ror/integration/certs/dag.crt
     # decryptionPvk: /etc/ror/integration/certs/decrypt_pvk.crt
     # issuer: saml_sso_idp
      
 ```
-* `issuer`: issuer string to supply to identity provider.
+* `issuer`: issuer string to supply to identity provider during sign on request. Defaults to 'ror'
 * `disableRequestedAuthnContext`: if truthy, do not request a specific authentication context. This is known to help when authenticating against Active Directory (AD FS) servers.
 * `decryptionPvk`: Service Provider Private Key. Private key that will be used to attempt to decrypt any encrypted assertions that are received.
 * cert: The downloadable certificate in IDP Metadata (file, absolute path)
