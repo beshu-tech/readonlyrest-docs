@@ -420,7 +420,7 @@ For advanced SAML options, see [passport-saml documentation](https://github.com/
 
 
 1. Enter the settings of your identity provider, create a new app.
-2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_sso/metadata.xml`
+2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_sso_saml_serv1/metadata.xml`
 
 Example response:
 ```xml
