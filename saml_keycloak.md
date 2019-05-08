@@ -60,5 +60,6 @@ readonlyrest_kbn:
       logoutUrl: "http://127.0.0.1:8080/auth/realms/master/broker/saml/endpoint"
  ```
  
+ Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` (on the elasticsearch side). Security settings can also be changed via the ReadonlyREST Kibana app.
  
  
