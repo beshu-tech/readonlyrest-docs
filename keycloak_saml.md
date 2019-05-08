@@ -30,7 +30,7 @@ This tutorial was created using KeyCloak 6.0.1.
 
 You should now have setup a SAML client called "ror" (keep this ID or change the "issuer" setting in kibana.yml) in the "master" realm.
 
-
+![keycloak_screenshot](keycloak_saml_client_ror.png)
 
 ### Install ReadonlyREST Enterprise for Kibana
 
