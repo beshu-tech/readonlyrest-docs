@@ -11,7 +11,8 @@ But with some more enterprisy requirements:
 
 * Users need to be able to change their passwords independently
 * Users need to verify their emails
-* Group managers need to be able to add, remove, block users. But nothing more.
+* Group managers need to be able to add, remove, block (only) their users.
+* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/3.2/server_admin/topics/authentication/otp-policies.html) is a requirement.
 
 
 ## What is Keycloak
