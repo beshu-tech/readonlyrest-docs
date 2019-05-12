@@ -1,3 +1,7 @@
+🚀**NEW**: check out [our guide](keycloak_saml.md) on how to level up on **identity management** with ReadonlyREST Enterprise and [KeyCloak](https://www.keycloak.org/)
+
+----
+
 # Kibana Plugin overview
 
 ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html) packages.
