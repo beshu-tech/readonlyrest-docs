@@ -241,6 +241,16 @@ When a user logs in, ReadonlyREST will write an encrypted cookie in the browser.
 readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
 ```
 
+### Clearing Session History 
+By default, all the session data like search history, dev tool commands history, etc, will be wiped out from the browser whenever a new user is logged in, or a user changes tenancy. To override this behaviour, use this setting:
+
+```yml
+readonlyrest_kbn.clearSessionOnEvents: ["never"]
+```
+
+Possible values: `"login", "tenancyHop", "never"`.
+
+
 ### Kibana App strings
 
 Examples of valid arguments for the `kibana_hide_apps: [...]` rule (readonlyrest.yml) 
