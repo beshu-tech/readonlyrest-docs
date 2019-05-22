@@ -1627,10 +1627,10 @@ the [original project](https://github.com/sscarduzio/elasticsearch-readonlyrest-
 
 ## GPLv3 license FAQ
 **1. Q**: I sell a proprietary software solution that already includes many other OSS components (i.e. Elasticsearch). Can I bundle also ReadonlyREST into it?
-> **A**: No, GPLv3 does not allow it. But hey, no problem, just go for the [Enterprise subscription](../enterprise.html).
+> **A**: No, GPLv3 does not allow it. But hey, no problem, just go for the [Enterprise subscription](https://readonlyrest.com/enterprise).
 
 **2. Q**: I have a SaaS and we want to use a version of ReadonlyREST for Elasticsearch (as is, or modified), do I need a commercial license?
-> **A**: No, you don't. Go for it! However if you are using Kibana, consider the [Enterprise offer](../enterprise.html) which includes multi-tenancy. 
+> **A**: No, you don't. Go for it! However if you are using Kibana, consider the [Enterprise offer](https://readonlyrest.com/enterprise) which includes multi-tenancy. 
 
 **3. Q**: I'm a consultant and I will charge my customer for modifying this software and they will not sell it as a product or part of their product.
 > **A**: This is fine with GPLv3. 
