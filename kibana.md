@@ -405,7 +405,7 @@ readonlyrest_kbn.auth:
   signature_key: "my_shared_secret_kibana1(min 256 chars)"
   saml_serv1:
     enabled: true
-    type: saml,
+    type: saml
     issuer: ror
     buttonName: "Partner's SSO Login"
     entryPoint: 'https://my-saml-idp/saml2/http-post/sso' # <-- identity Provider's URL, to request to sign on
