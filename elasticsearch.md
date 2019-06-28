@@ -418,7 +418,7 @@ Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP 
 
 `headers: ["h1:x*y","h2:*xy"]`
 
-Match if **all** the HTTP headers are found in the request. This is useful used in conjunction with proxy_auth, to carry authorization information (i.e. headers: `x-usr-group: admins`). 
+Match if **all** the HTTP headers are found in the request. This is useful used in conjunction with [proxy_auth](elasticsearch.md#proxy_auth-), to carry authorization information (i.e. headers: `x-usr-group: admins`). 
  
 ---
 
