@@ -108,7 +108,8 @@ Login credentials, hidden Kibana apps, etc. are all going to be configured from 
 This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
 
 
-> In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring **to the configuration files in the Elasticsearch plugin**. 
+> In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring to the configuration files **in the Elasticsearch plugin** (our Kibana plugins do not need a "readonlyrest.yml").
+
 In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.
 
 ## Clusterwide Settings vs readonlyrest.yml
@@ -127,6 +128,16 @@ Best practices:
 * Create a readonlyrest.yml containing basic "fallback" security settings, maybe with just an administrator local, so you can still login if in index settings get corrupted.
 * Build and update your production security settings from the Kibana app (will be saved in index)
 * Protect the ".readonlyrest" Kibana index with an ACL rule
+
+### Loading settings: order of precedence
+As you read, there are two possible places where the settings can be read from: 
+
+* `readonlyrest.yml` a file the user needs to create in the same directory where `elasticsearch.yml` is found.
+* `.readonlyrest` index. Our Kibana plugins' GUI (PRO/Enterprise) is programmed to write this index.
+
+When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
+
+![config loading diagram](ror_config_loading_diagram.png)
 
 ## Example: multiuser ELK
 
@@ -292,7 +303,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well. 
 
-1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#proxy_auth-)) in ROR for ES documentation.
+1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#authentication)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-For` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
