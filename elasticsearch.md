@@ -520,6 +520,12 @@ cluster:admin/snapshot/status
 
 cluster:admin/tasks/cancel
 
+cluster:admin/xpack/rollup/get
+cluster:admin/xpack/rollup/put
+cluster:admin/xpack/rollup/stop
+cluster:admin/xpack/rollup/delete
+cluster:admin/xpack/rollup/start
+
 cluster:monitor/allocation/explain
 cluster:monitor/health
 cluster:monitor/main
@@ -531,6 +537,8 @@ cluster:monitor/stats
 cluster:monitor/task
 cluster:monitor/task/get
 cluster:monitor/tasks/lists
+cluster:monitor/xpack/rollup/get
+cluster:monitor/xpack/rollup/get/caps
 
 indices:admin/aliases
 indices:admin/aliases/exists
@@ -567,6 +575,8 @@ indices:admin/types/exists
 indices:admin/upgrade
 indices:admin/validate/query
 
+indices:admin/xpack/rollup/search
+
 indices:data/read/explain
 indices:data/read/field_stats
 indices:data/read/get
@@ -577,6 +587,7 @@ indices:data/read/scroll
 indices:data/read/scroll/clear
 indices:data/read/search
 indices:data/read/tv
+indices:data/read/xpack/rollup/get/index/caps
 
 indices:data/write/bulk
 indices:data/write/delete
