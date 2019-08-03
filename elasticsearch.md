@@ -902,6 +902,25 @@ If you are using this technique for authentication using our **Kibana** plugins,
 So that Kibana will forward the necessary headers to Elasticsearch.
 
 ---
+### `users`
+
+`users: ["root", "*@mydomain.com"]` 
+
+Limit access to  of specific users whose username is contained or matches the patterns in the array. This rule is independent from the authentication mathod chosen, so it will work well in conjunction LDAP, JWT, proxy_auth, and all others.
+
+For example:
+
+```yaml
+readonlyrest:
+  access_control_rules:
+    - name: "JWT auth for viewer role, limited to certain usernames"
+      kibana_access: ro
+      users: ["root", "*@mydomain.com"]
+      jwt_auth:
+        name: "jwt_provider_1"
+        roles: ["viewer"]
+```
+---
 ### `groups`
 
 `groups: ["group1", "group2"]` 
