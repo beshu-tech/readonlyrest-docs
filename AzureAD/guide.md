@@ -77,39 +77,84 @@ readonlyrest_kbn:
 
 ## Azure AD configuration
 1. Login in your Microsoft Azure dashboard, and head to Enterprise Applications.
+
+
 ![Azure Dashboard](azure_dashboard.png)
 
+
+---
 2. Click on "Non-gallery application".
+
+
 ![Azure Enterprise apps](azure_enterprise_apps.png)
 
+
+---
 3. Create a new app called "Readonlyrest Enterprise".
+
+
 ![Azure App Name](azure_app_name.png)
 
+
+
+---
 4. Click "Single Sign On" to configure the app for SAML.
+
+
 ![Azure ror app](azure_ror_app.png)
 
+
+
+---
 5. Insert URLs and data about our Kibana server as shown in the picture. And press SAVE.
+
+
 ![Azure ror basic saml settings](azure_ror_basic_saml.png)
 
+
+
+
+---
 6. Download the base64 encoded "pem" file, and place it under the **absolute path** `/etc/kibana/config/cert.pem`.
+
+
 ![Azure ror cert](azure_cert.png)
 
+
+---
 7 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.
+
+
 ![Azure ror app users](azure_ror_app_users.png)
+
 
 
 ## Testing if this all works.
 1. Now point your browser to your Kibana installation (in the example https://localhost:5601).
 You should now see a new blue button that says "Azure AD SAML SSO". 
+
 ![ROR login](ror_ent_login.png)
 
+
+---
 2. Press it, and you should see the Azure AD login page. Place your credentials here, or pick an already authenticated identity to enter Kibana.
 
-3. ![Azure Login](azure_login.png)
 
+![Azure Login](azure_login.png)
+
+
+
+---
 4. You will now be redirected to Kibana, logged in as your Azure AD identity.
+
+
 ![Azure Login](kibana_welcome.png)
 
+
+
+---
 5. You can now logout from the "ReadonlyREST SAML SSO" Azure AD Enterprise app by pressing the exit button right beside the username in the bottom right corner.
+
+
 ![Azure Login](logout.png)
 
