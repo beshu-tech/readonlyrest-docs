@@ -88,9 +88,12 @@ readonlyrest_kbn:
 ![Azure ror app](azure_ror_app.png)
 
 5. Insert URLs and data about our Kibana server as shown in the picture. And press SAVE.
-![Azureror basic saml settings](azure_ror_basic_saml.png)
+![Azure ror basic saml settings](azure_ror_basic_saml.png)
 
-6 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.
+6. Download the base64 encoded "pem" file, and place it under the **absolute path** `/etc/kibana/config/cert.pem`.
+![Azure ror cert](azure_ror_cert.png)
+
+7 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.
 ![Azure ror app users](azure_ror_app_users.png)
 
 
