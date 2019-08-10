@@ -67,6 +67,7 @@ readonlyrest_kbn:
       type: saml
       issuer: 'ror'
       protocol: 'https'
+      cert: '/etc/kibana/config/cert.pem' # <-- will download later from Azure enterprise app dashboard
       entryPoint: 'https://login.microsoftonline.com/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2'
       kibanaExternalHost: 'localhost:5601'
       usernameParameter: 'http://schemas.microsoft.com/identity/claims/displayname'
@@ -91,7 +92,7 @@ readonlyrest_kbn:
 ![Azure ror basic saml settings](azure_ror_basic_saml.png)
 
 6. Download the base64 encoded "pem" file, and place it under the **absolute path** `/etc/kibana/config/cert.pem`.
-![Azure ror cert](azure_ror_cert.png)
+![Azure ror cert](azure_cert.png)
 
 7 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.
 ![Azure ror app users](azure_ror_app_users.png)
