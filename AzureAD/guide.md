@@ -17,8 +17,19 @@ Once ReadonlyREST Free plugin is installed, configure an ACL for accepting SAML 
 Now head to the Kibana directory, and install a trial (or full) version of ReadonlyREST Enterprise, which can be freely downloaded from [our download page](https://readonlyrest.com/download). For [installation instructions](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#installation), see our Kibana plugin guide.
 
 Azure AD only speaks with "https" websites, so make sure your Kibana web server is configured to serve pages in https. See a guide from Elastic on how to enable SSL 
+
+### Conventions and assumptions in this guide
+
+This tutorial assumes that Kibana runs in https://localhost:5601, which is clearly only valid if you are trying this authentication system in your local computer.
+
+And it also assumes you used something like [mkcert](https://blog.filippo.io/mkcert-valid-https-certificates-for-localhost/) to let your browser trust SSL certificates for localhost URLs. 
+
+In the real world, when you are configuring Kibana in production, make sure:
+1. You have a valid SSL certificate for the Kibana server
+2. You replace all the references to `localhost:5601` with the publicly reachable host name of your actual Kibana server.
+
 ## ReadonlyREST Configuration
-Now you should have the `$ES_HOME/config/readonlyrest.yml` file configured to accept SAML sessions from kibana using the `ror_kbn_auth` rule. I.e.
+Now, **on the Elasticsearch side**, you should have the `$ES_HOME/config/readonlyrest.yml` file configured to accept SAML sessions from kibana using the `ror_kbn_auth` rule. I.e.
 
 ```yml
 readonlyrest:
@@ -39,7 +50,8 @@ readonlyrest:
 ```
 
 
-Now, for our Kibana plugin to speak with Azure AD, your `$KBN_HOME/config/kibana.yml` should look something like:
+
+**On the Kibana side**, we will now configure our Kibana plugin to speak with Azure AD. Open your `$KBN_HOME/config/kibana.yml`, it should look something like:
 
 ```yml
 xpack.security.enabled: false
@@ -49,7 +61,7 @@ elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
 # elasticsearch.ssl.verificationMode: none  # <-- uncomment if your Elasticsearch uses "https" with self signed certificates
 
-server.ssl.enabled: true
+server.ssl.enabled: true # <-- It's mandatory for Azure AD that we enable SSL in our Kibana server!
 server.ssl.certificate: '/etc/kibana/ssl_cert/localhost.pem'
 server.ssl.key: '/etc/kibana/ssl_cert/localhost-key.pem'
 
@@ -74,6 +86,45 @@ readonlyrest_kbn:
       groupsParameter: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/groups'
 
 ```
+
+### Notes about ReadonlyREST Kibana settings
+The `issuer` parameter is important and should be ideantical to what you wrote in the field _(1) Basic SAML Configuration - Identifier (Entity ID)_  in the Azure AD settings.
+
+The `entryPoint` value should be copied from the field _(4) Set up ReadonlyREST Enterprise - Login URL_ in Azure AD settings.
+
+The `kibanaExternalHost` only accepts the browser facing hostname (or IP address) and optionally the port of our Kibana server. Do not put any "https://" prefix here.
+
+The `cert` is an **absolute** path to the **base64** version of the certificate ReadonlyREST Enterprise will use to verify the signature of the SAML assertion coming from Azure AD. This file can be downloaded from : _(3) SAML Signing Certificate - Certificate (Base64)_
+
+The `groupsParameter` and `usernameParameter` values represent the JSON fields names from the SAML assertion object coming from Azure AD. They represent the field names we take the username and groups information from.
+
+An example of SAML assertion object coming from Azure AD after successful authentication looks like so:
+
+```json
+{
+  "http://schemas.microsoft.com/claims/authnmethodsreferences": "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
+  "http://schemas.microsoft.com/identity/claims/displayname": "Simone Scarduzio",
+  "http://schemas.microsoft.com/identity/claims/identityprovider": "https://sts.windows.net/88af1572-1347-45b6-8f65-xxxxxxxxx/",
+  "http://schemas.microsoft.com/identity/claims/objectidentifier": "486abf50-a61f-40e9-8a37-3ff6a6eeda26",
+  "http://schemas.microsoft.com/identity/claims/tenantid": "88af1572-1347-45b6-8f65-xxxxxxxxxxxx",
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups": [
+    "00f22de3-0d59-4867-8e1a-xxxxxxxxxxxx",
+    "dbe4ff5a-deba-419f-a653-xxxxxxxxxxxx",
+    "3c19b288-263c-4dd1-9947-xxxxxxxxxxxx"
+  ],
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/wids": "62e90394-69f5-4237-9190-xxxxxxxxxxxx",
+  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname": "Simone",
+  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": "Simone@ror-enterprise-test.com",
+  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname": "Scarduzio",
+  "issuer": "https://sts.windows.net/88af1572-1347-45b6-8f65-xxxxxxxxxxxx/",
+  "nameID": "Simone@ror-enterprise-test.com",
+  "nameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+  "sessionIndex": "_97f290ee-2ff6-445f-a0c6-xxxxxxxxxxxx",
+  "user": "Simone Scarduzio"
+}
+```
+
+
 
 ## Azure AD configuration
 1. Login in your Microsoft Azure dashboard, and head to Enterprise Applications.
