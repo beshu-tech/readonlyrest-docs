@@ -209,3 +209,70 @@ You should now see a new blue button that says "Azure AD SAML SSO".
 
 ![Azure Login](logout.png)
 
+
+## Authorization using Azure AD groups
+Users in Azure AD can belong to groups. The list of group associated to a user is useful information for ReadonlyREST Enterprise for identifying sets of users that we want to authorize to:
+
+* see certain indices
+* perform certain actions over certain indices
+* belong to a tenancy
+* have read or read/write permission to a tenancy
+* have administrative rights over ReadonlyREST cluster-wide security settings
+* many more things, or even a combination of all these.
+
+### Example: ReadonlyREST Admins group
+Suppose we would like to authorise the group "ReadonlyREST Admins" to access the administrative dashboard that can oversee all the indices, and we want to grant them access to an "admin" tenancy that contains dashboards based on the real time [ReadonlyREST audit logs](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#audit-logs) indices.
+
+#### Creating and assigning the group in Azure Ad
+Let's go to Azure and make sure the "ReadonlyREST Admins" group is created, and one or more users - including ours - belongs to it.
+
+![Azure Create Groups](azure_create_group.png)
+
+
+#### Finding the new group's Azure object ID
+From ReadonlyREST settings, we will refer to the newly created group using its associated object ID provided by Azure platform. To discover it, navigate the Azure AD dashboard to:
+
+_Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups 
+> [your user] - Groups_
+
+![Azure Show Groups](azure_groups_list.png)
+
+The object ID of the new group is "3f8ebed8-f742-42a6-94ba-2d57550fc3cf", let's take note of this. We will use it in our ACL.
+
+#### Using ReadonlyREST ACL to authorize the group
+
+Let's head back to Elasticsearch, and open `readonlyrest.yml`. Let's now add the authorization.
+
+```yml
+readonlyrest:
+    access_control_rules:
+    
+    - name: "::KIBANA-SRV::"
+      auth_key: kibana:kibana
+      
+        
+    - name: "Azure AD - ReadonlyREST Admins group"
+      kibana_index: ".kibana_admin_tenancy"
+      indices: [".kibana_admin_tenancy", "readonlyrest-audit*"]
+      kibana_access: "admin"
+      ror_kbn_auth:
+        roles: ["3f8ebed8-f742-42a6-94ba-2d57550fc3cf"]
+        name: "kbn1"
+   
+        
+    - name: "Azure AD - Anyone else"
+      indices: [".kibana_generic_tenancy", "readonlyrest-audit*"]
+      kibana_index: ".kibana_generic_tenancy"
+      kibana_access: "rw"
+      kibana_hide_apps: ["readonlyrest_kbn"]
+      ror_kbn_auth:
+        name: "kbn1"
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
+```
+
+Now we have two ACL blocks dedicated to Azure AD: one will match for users that belong to "ReadonlyREST Admins" (a.k.a object ID `3f8ebed8-f742-42a6-94ba-2d57550fc3cf`), the other will match for Azure AD users that do not belong to the group.
+
+The key here is the use of the `roles` option in the `ror_kbn_auth` rule, as an extra constraint so that the ACL block is only matched when the user has the "3f8ebed8-f742-42a6-94ba-2d57550fc3cf" string in the list of their groups.
