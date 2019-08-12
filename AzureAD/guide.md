@@ -232,8 +232,7 @@ Let's go to Azure and make sure the "ReadonlyREST Admins" group is created, and 
 #### Finding the new group's Azure object ID
 From ReadonlyREST settings, we will refer to the newly created group using its associated object ID provided by Azure platform. To discover it, navigate the Azure AD dashboard to:
 
-`Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups 
-> [your user] - Groups`
+`Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups > [your user] - Groups`
 
 ![Azure Show Groups](azure_groups_list.png)
 
