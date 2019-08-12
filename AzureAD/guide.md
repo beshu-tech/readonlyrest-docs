@@ -90,11 +90,11 @@ readonlyrest_kbn:
 ### Notes about ReadonlyREST Kibana settings
 The `issuer` parameter is important and should be ideantical to what you wrote in the field _(1) Basic SAML Configuration - Identifier (Entity ID)_  in the Azure AD settings.
 
-The `entryPoint` value should be copied from the field _(4) Set up ReadonlyREST Enterprise - Login URL_ in Azure AD settings.
+The `entryPoint` value should be copied from the field `(4) Set up ReadonlyREST Enterprise > Login URL` in Azure AD settings.
 
 The `kibanaExternalHost` only accepts the browser facing hostname (or IP address) and optionally the port of our Kibana server. Do not put any "https://" prefix here.
 
-The `cert` is an **absolute** path to the **base64** version of the certificate ReadonlyREST Enterprise will use to verify the signature of the SAML assertion coming from Azure AD. This file can be downloaded from : _(3) SAML Signing Certificate - Certificate (Base64)_
+The `cert` is an **absolute** path to the **base64** version of the certificate ReadonlyREST Enterprise will use to verify the signature of the SAML assertion coming from Azure AD. This file can be downloaded from : `(3) SAML Signing Certificate > Certificate (Base64)`
 
 The `groupsParameter` and `usernameParameter` values represent the JSON fields names from the SAML assertion object coming from Azure AD. They represent the field names we take the username and groups information from.
 
@@ -232,8 +232,8 @@ Let's go to Azure and make sure the "ReadonlyREST Admins" group is created, and 
 #### Finding the new group's Azure object ID
 From ReadonlyREST settings, we will refer to the newly created group using its associated object ID provided by Azure platform. To discover it, navigate the Azure AD dashboard to:
 
-_Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups 
-> [your user] - Groups_
+`Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups 
+> [your user] - Groups`
 
 ![Azure Show Groups](azure_groups_list.png)
 
