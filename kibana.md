@@ -540,7 +540,7 @@ An administrator will need to create the template tenancy, populate it with the 
 
 ### Create the template tenancy
 
-Let's start to add to our access control list (found in $ES_HOME/config/readonlyrest.yml, or ReadonlyREST App in Kibana) a local user "administrator" that will belong to two tenancies: the default one (stored in .kibana index), and the template one (stored in .kibana_template index).
+Let's start to add to our access control list (found in $ES_PATH_CONF/config/readonlyrest.yml, or ReadonlyREST App in Kibana) a local user "administrator" that will belong to two tenancies: the default one (stored in .kibana index), and the template one (stored in .kibana_template index).
 
 ```yml
 readonlyrest:
