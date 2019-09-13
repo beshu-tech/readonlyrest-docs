@@ -320,6 +320,16 @@ For this, ROR for Kibana offers a way to customize the logout button's URL:
 
 Now users that gained a session through delegated auth, can also click on the logout button in ROR for kibana and actually exit their session.
 
+### Custom Login link
+When you delegate authentication to an external service, you can tell ReadonlyREST to skip the classic login form entirely and redirect users to your proxy or identity provider's login screen. 
+
+To enable this:
+
+1. Find your authentication proxy or identity proviedr login URL for the ROR app
+2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.custom_login_link: "https://../login"`
+
+The advantage of this approach is a streamlined user experience for users that login with an external IdP. The disadvantage is that you give up the possibility to login as a local user in ROR, as the login form will be always skipped.
+
 ### Caveat
 Enabling proxy auth passthrough will relax the requirement to provide a password. Therefore, don't enable this option if you don't make sure Kibana can **only be accessed through the reverse proxy***.
 
