@@ -1351,6 +1351,43 @@ readonlyrest:
       kibana_index: ".kibana_@{x-nginx-user}" 
 ```
 
+### Dynamic variables from JWT claims
+The JWT token is an authentication string passed generally as a header or a query parameter to the web browser. If you squint, you can see it's a concatenation of three base64 encoded strings. If you base64 decode the middle string, you can see the "claims object". That is, the object containing the current user's metadata.
+
+Here is an example of JWT claims object.
+
+```json
+{
+  "user": "jdoe",
+  "display_name": "John Doe",
+  "department": "infosec",
+  "allowedIndices": ["x", "y"]
+}
+```
+
+Here follow some examples of how to use JWT claims as dynamic variables in ReadonlyREST ACL blocks, notice the "jwt:" prefix:
+
+``` yaml
+# Using JWT claims as dynamic variables
+indices: [ ".kibana_@{jwt:department}", "otherIdx" ] 
+# claims = { "user": "u1", "department": "infosec"}
+# -> indices: [".kibana_infosec", "otherIdx"]
+
+# Using nested values in JWT using JSONPATH as dynamic variables
+indices: [ ".kibana_@{jwt:jsonpath.to.department}", "otherIdx"]  
+# claims = { "jsonpath": {"to": { "department": "infosec" }}} 
+# -> indices: [".kibana_infosec", "otherIdx"]
+
+# Referencing array-typed values from JWT claims will expand in a list of strings
+indices: [ ".kibana_@explode{jwt:allowedIndices}", "otherIdx"]  
+# claims = {"username": "u1", "allowedIndices":  ["x", "y"] } 
+# -> indices: [".kibana_x", ".kibana_y", "otherIdx"]
+
+# Explode operator will generate an array of strings from a comma-separated string
+indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]  
+# HTTP Headers: [{ "x-indices_csv_string": "a,b"}]
+# -> indices: ["logstash_a*", "logstash_b*", "otherIdx"]
+```
 
 ## LDAP connector
 
