@@ -266,16 +266,26 @@ Possible values: `"login", "tenancyHop", "never"`.
 
 Examples of valid arguments for the `kibana_hide_apps: [...]` rule (readonlyrest.yml) 
 
-* kibana:discover
-* kibana:visualize
-* timelion
-* readonlyrest_kbn
-* canvas
-* apm
-* infra:home
-* infra:logs
-* kibana:dev_tools
-* kibana:management
+|hide-app key|App name|App url|
+|---|---|---|
+|kibana:discover| Discover| http://kibana-url:5601/app/kibana#/discover|
+|kibana:visualize| Visualize| http://kibana-url:5601/app/kibana#/visualize|
+|kibana:dashboard| Dashboard| http://kibana-url:5601/app/kibana#/dashboards|
+|timelion| Timelion| http://kibana-url:5601/app/timelion|
+|canvas| Canvas| http://kibana-url:5601/app/canvas|
+|maps| Maps| http://kibana-url:5601/app/maps|
+|code| Code (Beta)| http://kibana-url:5601/app/code|
+|readonlyrest_kbn| ReadonlyREST| http://kibana-url:5601/app/readonlyrest_kbn|
+|ml| Machine Learning| http://kibana-url:5601/app/ml|
+|infra:home| Infrastructure| http://kibana-url:5601/app/infra#/infrastructure/inventory?_g=()|
+|infra:logs| Logs| http://kibana-url:5601/app/infra#/logs?_g=()|
+|apm| APM| http://kibana-url:5601/app/apm|
+|uptime| Uptime| http://kibana-url:5601/app/uptime#/|
+|siem| SIEM| http://kibana-url:5601/app/siem|
+|graph| Graph| http://kibana-url:5601/app/graph|
+|kibana:dev_tools| Dev Tools| http://kibana-url:5601/app/kibana#/dev_tools|
+|monitoring| Stack Monitoring| http://kibana-url:5601/app/monitoring|
+|kibana:management| Management| http://kibana-url:5601/app/kibana#/management|
 
 ## Kibana configuration
 
