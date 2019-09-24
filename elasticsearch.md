@@ -706,7 +706,7 @@ This rule enables **Field Level Security (FLS)**. That is: only return certain f
 
 ####  Whitelist mode
 
-`fields: ["allowed_fields_prefix_*", "_*"]` 
+`fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]` 
 
 If the current is a search request, return all matching documents, but deprived of all the fields, except the ones that start with `allowed_fields_prefix_` or with underscore. 
 
@@ -714,7 +714,7 @@ If you use whitelist mode, remember to allow the mandatory, internally used fiel
 
 #### Blacklist mode (recommended)
 
-`fields: ["~excluded_fields_prefix_*", "~excluded_field"]` 
+`fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]` 
 
 If the current is a search request, return all matching documents, but deprived of the `excluded_field` and the ones that start with `excluded_fields_prefix_`. 
 
