@@ -492,116 +492,103 @@ If a **write request** wants to write to indices they don't have permission for,
 
 Match if the request action starts with "indices:data/read/". 
 
-In Elasticsearch, each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 5.1.2.
+In Elasticsearch, each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 7.3.2.
 ```
-cluster:admin/ingest/pipeline/delete
-cluster:admin/ingest/pipeline/get
-cluster:admin/ingest/pipeline/put
-cluster:admin/ingest/pipeline/simulate
+ "cluster:admin/ingest/pipeline/delete" 
+ "cluster:admin/ingest/pipeline/get" 
+ "cluster:admin/ingest/pipeline/put" 
+ "cluster:admin/ingest/pipeline/simulate" 
+ "cluster:admin/reindex/rethrottle" 
+ "cluster:admin/repository/delete" 
+ "cluster:admin/repository/get" 
+ "cluster:admin/repository/put" 
+ "cluster:admin/repository/verify" 
+ "cluster:admin/reroute" 
+ "cluster:admin/script/delete" 
+ "cluster:admin/script/get" 
+ "cluster:admin/script/put" 
+ "cluster:admin/settings/update" 
+ "cluster:admin/snapshot/create" 
+ "cluster:admin/snapshot/delete" 
+ "cluster:admin/snapshot/get" 
+ "cluster:admin/snapshot/restore" 
+ "cluster:admin/snapshot/status" 
+ "cluster:admin/tasks/cancel" 
+ "cluster:admin/tasks/test" 
+ "cluster:admin/tasks/testunblock" 
+ 
+ "cluster:monitor/allocation/explain" 
+ "cluster:monitor/health" 
+ "cluster:monitor/main" 
+ "cluster:monitor/nodes/hot_threads" 
+ "cluster:monitor/nodes/info" 
+ "cluster:monitor/nodes/liveness" 
+ "cluster:monitor/nodes/stats" 
+ "cluster:monitor/remote/info" 
+ "cluster:monitor/state" 
+ "cluster:monitor/stats" 
+ "cluster:monitor/task" 
+ "cluster:monitor/task/get" 
+ "cluster:monitor/tasks/lists" 
+ 
+ "indices:admin/aliases" 
+ "indices:admin/aliases/exists" 
+ "indices:admin/aliases/get" 
+ "indices:admin/analyze" 
+ "indices:admin/cache/clear" 
+ "indices:admin/close" 
+ "indices:admin/create" 
+ "indices:admin/delete" 
+ "indices:admin/exists" 
+ "indices:admin/flush" 
+ "indices:admin/forcemerge" 
+ "indices:admin/get" 
+ "indices:admin/mapping/put" 
+ "indices:admin/mappings/fields/get" 
+ "indices:admin/mappings/get" 
+ "indices:admin/open" 
+ "indices:admin/refresh" 
+ "indices:admin/rollover" 
+ "indices:admin/settings/update" 
+ "indices:admin/shards/search_shards" 
+ "indices:admin/shrink" 
+ "indices:admin/synced_flush" 
+ "indices:admin/template/delete" 
+ "indices:admin/template/get" 
+ "indices:admin/template/put" 
+ "indices:admin/types/exists" 
+ "indices:admin/upgrade" 
+ "indices:admin/validate/query" 
+ "indices:data/read/explain" 
+ "indices:data/read/field_caps" 
+ "indices:data/read/field_stats" 
+ "indices:data/read/get" 
+ "indices:data/read/mget" 
+ "indices:data/read/msearch" 
+ 
+ "indices:data/read/msearch/template" 
+ "indices:data/read/mtv" 
+ "indices:data/read/scroll" 
+ "indices:data/read/scroll/clear" 
+ "indices:data/read/search" 
+ "indices:data/read/search/template" 
+ "indices:data/read/tv" 
+ "indices:data/write/bulk" 
+ "indices:data/write/delete" 
+ "indices:data/write/delete/byquery" 
+ "indices:data/write/index" 
+ "indices:data/write/reindex" 
+ "indices:data/write/update" 
+ "indices:data/write/update/byquery" 
+ "indices:monitor/recovery" 
+ "indices:monitor/segments" 
+ "indices:monitor/settings/get" 
+ "indices:monitor/shard_stores" 
+ "indices:monitor/stats" 
+ "indices:monitor/upgrade" 
+ 
+ "internal:indices/admin/upgrade" 
 
-cluster:admin/repository/delete
-cluster:admin/repository/get
-cluster:admin/repository/put
-cluster:admin/repository/verify
-
-cluster:admin/reroute
-
-cluster:admin/script/delete
-cluster:admin/script/get
-cluster:admin/script/put
-
-cluster:admin/settings/update
-
-cluster:admin/snapshot/create
-cluster:admin/snapshot/delete
-cluster:admin/snapshot/get
-cluster:admin/snapshot/restore
-cluster:admin/snapshot/status
-
-cluster:admin/tasks/cancel
-
-cluster:admin/xpack/rollup/get
-cluster:admin/xpack/rollup/put
-cluster:admin/xpack/rollup/stop
-cluster:admin/xpack/rollup/delete
-cluster:admin/xpack/rollup/start
-
-cluster:monitor/allocation/explain
-cluster:monitor/health
-cluster:monitor/main
-cluster:monitor/nodes/hot_threads
-cluster:monitor/nodes/info
-cluster:monitor/nodes/stats
-cluster:monitor/state
-cluster:monitor/stats
-cluster:monitor/task
-cluster:monitor/task/get
-cluster:monitor/tasks/lists
-cluster:monitor/xpack/rollup/get
-cluster:monitor/xpack/rollup/get/caps
-
-indices:admin/aliases
-indices:admin/aliases/exists
-indices:admin/aliases/get
-
-indices:admin/analyze
-indices:admin/cache/clear
-indices:admin/close
-indices:admin/create
-indices:admin/delete
-indices:admin/exists
-indices:admin/flush
-indices:admin/forcemerge
-indices:admin/get
-
-indices:admin/mapping/put
-
-indices:admin/mappings/fields/get
-indices:admin/mappings/get
-
-indices:admin/open
-indices:admin/refresh
-indices:admin/rollover
-indices:admin/settings/update
-indices:admin/shards/search_shards
-indices:admin/shrink
-indices:admin/synced_flush
-
-indices:admin/template/delete
-indices:admin/template/get
-indices:admin/template/put
-
-indices:admin/types/exists
-indices:admin/upgrade
-indices:admin/validate/query
-
-indices:admin/xpack/rollup/search
-
-indices:data/read/explain
-indices:data/read/field_stats
-indices:data/read/get
-indices:data/read/mget
-indices:data/read/msearch
-indices:data/read/mtv
-indices:data/read/scroll
-indices:data/read/scroll/clear
-indices:data/read/search
-indices:data/read/tv
-indices:data/read/xpack/rollup/get/index/caps
-
-indices:data/write/bulk
-indices:data/write/delete
-indices:data/write/index
-indices:data/write/update
-
-indices:monitor/recovery
-indices:monitor/segments
-indices:monitor/settings/get
-indices:monitor/shard_stores
-indices:monitor/stats
-indices:monitor/upgrade
-
-internal:indices/admin/upgrade
 ```
 
 ---
