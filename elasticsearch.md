@@ -440,11 +440,11 @@ Match if **at least one** the specified HTTP headers `key:value` pairs is matche
 
 ### `uri_re`
 
-`uri_re: ^/secret-index/.*` 
+`uri_re: ["^/secret-index/.*", "^/some-index/.*"]`
 
 **☠️HACKY (try to use indices/actions rule instead)** 
 
-Specify a regular expression to match the request URI. 
+Match if **at least one** specifed regular expression matches requested URI.
 
 ---
 
@@ -1458,7 +1458,9 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 One of the neatest feature in ReadonlyREST is that you can use dynamic variables inside most rules values.
 The variables you can currently replace into rules values are these:
 
-* `@{user}` gets replaced with the username of the successfully authenticated user
+* `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is authentication rule (of course it must be rule different from the one containing given variable).
+* `@{user}` old style user variable definition. Preferred approach is to use `@{acl:user}`.
+* `@{acl:current_group}` gets replaced with user's current group. Usually resolved by authorization rule defined in block, but value can be also retrieved by means of kibana plugin. This variable doesn't specify usage requirements.
 * `@{xyz}` gets replaced with any `xyz` HTTP header included in the incoming request (useful when reverse proxies handle authentication)
  
 ### Indices from user name
@@ -1470,9 +1472,25 @@ readonlyrest:
 
     - name: "Users can see only their logstash indices i.e. alice can see alice_logstash-20170922"
       ldap_authentication:
-        name: "myLDAP" 
-      indices: ["@{user}_logstash-*"]
-    
+        name: "myLDAP"
+      indices: ["@{acl:user}_logstash-*"]
+
+    # LDAP connector settings omitted, see LDAP section below..
+```
+
+### Uri regex matching user's current group
+You can let users authorize externally, i.e. via LDAP, and use their group inside the `uri_re` rule.
+
+```yml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Users can access uri with value containing user's current group, i.e. user with group 'g1' can access: '/path/g1/some_thing'"
+      ldap_authorization:
+        name: "ldap1"
+        groups: ["g1", "g2", "g3"]
+      uri_re: ["^/path/@{acl:current_group}/.*"]
+
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
