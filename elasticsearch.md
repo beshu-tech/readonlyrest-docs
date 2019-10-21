@@ -330,7 +330,7 @@ readonlyrest:
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 ```
-Similar to `ssl` for HTTP, keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
+Similar to `ssl` for HTTP, the keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
 This config must be added to all nodes taking part in encrypted communication within cluster.  
 
 ### Certificate verification 
@@ -346,7 +346,7 @@ under `ssl_internode` section. This option is applicable only for internode ssl.
    
 ### Client authentication 
 
-By default client authentication is disabled. When enabled, server asks client about its certificate, so ES is able to verify client's identity. It can be enabled by means of:
+By default the client authentication is disabled. When enabled, the server asks the client about its certificate, so ES is able to verify the client's identity. It can be enabled by means of:
 
 ```yml
 client_authentication: true
