@@ -287,11 +287,13 @@ Create this file **on the same path where `elasticsearch.yml` is found**.
 
 ## Encryption
 An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network.
-ReadonlyREST can be configured to require that all REST requests come through HTTPS.
+[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once they are inside a [JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm). 
+ReadonlyREST can be configured to encrypt network traffic on two independent levels:
 
-[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once they are inide a [JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm). 
+### External REST API
 
-**⚠️IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
+It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.  
+**⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and append this one line:
 
 ```yml
 http.type: ssl_netty4
@@ -309,6 +311,50 @@ readonlyrest:
 
 The keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
 
+### Internode communication - transport module
+
+This option encrypts communication between nodes forming Elasticsearch cluster. 
+
+**⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and append this one line:
+
+```yml
+http.type: ror_ssl_internode
+```
+
+In `readonlyrest.yml` following settings must be added (it's just example configuration presenting most important properties):
+
+```yml
+readonlyrest:
+    ssl_internode:
+      keystore_file: "keystore.jks"
+      keystore_pass: readonlyrest
+      key_pass: readonlyrest
+```
+Similar to `ssl` for HTTP, the keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
+This config must be added to all nodes taking part in encrypted communication within cluster.  
+
+### Certificate verification 
+
+By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.  
+It is useful on local/test environment, where security is not the most important concern. On production environment it is adviced to enable this option.
+It can be done by means of:
+
+```yml
+certificate_verification: true
+```
+under `ssl_internode` section. This option is applicable only for internode ssl.
+   
+### Client authentication 
+
+By default the client authentication is disabled. When enabled, the server asks the client about its certificate, so ES is able to verify the client's identity. It can be enabled by means of:
+
+```yml
+client_authentication: true
+```
+under `ssl` or `ssl_internode` section. This option is applicable for both ssl configuration types.
+
+Both `certificate_verification` and `client_authentication` can be enabled with single property `verification`.
+ Using this property is deprecated and allowed because of backward compatibility support. Specialized properties make configuration more readable and explicit. 
 
 ### Restrict SSL protocols and ciphers
 Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
