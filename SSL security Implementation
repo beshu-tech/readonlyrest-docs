@@ -1,0 +1,50 @@
+SSL Encryption overview
+
+Security enables to encrypt traffic to the Elasticsearch cluster by Encrypting HTTP to HTTPS Client Communications at REST layer using Readonlyrest open-source plugin for enabling SSL in elasticsearch to achieve the below
+•	Encryption of data transmitted over the wires
+•	Certificate based pod authentication - preventing unauthorized nodes/pods from establishing a connection with the cluster.
+Al communication by default is through HTTP protocol from external client to elasticsearch and this is eccrypted to HTTPS using SSL security by Readonlyrest plugin and the connection is validated using openssl certificates
+
+
+Enable SSL
+openssl certificates needs to be generated since the cluster setup requires interpod validation and openshift generated certificates doesn't work.
+ Using openssl Certificate
+1.	Server key and server certificate signing request are generated.
+2.	CSR request is signed with  CA
+3.	Get server singed certificate
+4.	Convert the PEM file to PKCS12 and to jks file using java keytool 
+5.	Configure the .jks file location in readonlyrest plugin yml file
+6.	SSL certificates are mounted as volume inside container during startup
+Readonly REST plugin
+Step 1: Readonly REST supports Java Keystore(.jks) certiifcates only so all the certificates should changes to .jks format
+
+
+     A. Creating openssl certificates
+          1. Private key generation
+openssl req -nodes -newkey rsa:4096 -sha256 -keyout /usr/share/elasticsearch/config/elastic.key -subj "/CN=${MEMBER_HOST}"
+
+  2. Creating a signing request
+export RANDFILE=/usr/share/elasticsearch/config/.rnd
+openssl req -new -key /usr/share/elasticsearch/config/elastic.key -subj "/CN=${MEMBER_HOST}" -config /tmp/openssl.cnf  -out /usr/share/elasticsearch/config/elastic.csr
+ 3. Sign with root CA
+openssl x509 -req -in /usr/share/elasticsearch/config/elastic.csr -CA /usr/share/elasticsearch/config/ca.pem -CAkey /usr/share/elasticsearch/config/ca.key -CAcreateserial -days 3650 -extensions v3_req -extfile /tmp/openssl.cnf -out /usr/share/elasticsearch/config/elasticcertificate.pem
+B. Convert the openssl PEM to PKCS#12
+openssl pkcs12 -inkey /usr/share/elasticsearch/config/elastic.key -in /usr/share/elasticsearch/config/elasticcertificate.pem -export -out /usr/share/elasticsearch/config/certificate.p12 -password pass:"readonlyrest"
+C. Import certificate using java keytool from PKCS#12 to .JKS
+keytool -importkeystore -noprompt -srckeystore /usr/share/elasticsearch/config/certificate.p12 -srcstoretype pkcs12 -destkeystore /usr/share/elasticsearch/config/cacert.jks -storepass "readonlyrest" -srcstorepass "readonlyrest"
+ 
+Step 2: Configure elasticsearch.yml
+The netty settings to be added to the Elasticsearch.yml configuration file
+http.type: ssl_netty4
+
+Step 3: Configure Readonlrest.yml
+Enabling SSL in thr readonlyrest.yml
+readonlyrest:
+    ssl:
+       keystore_file: "/elasticsearch/plugins/readonlyrest/keystore.jks"
+       keystore_pass: readonlyrest
+       key_pass: readonlyrest
+ 
+Step 4: Restart elsticsearch and test
+elasticsearch.url: curl -v -cert elastic.jks -cacert ca.pem -keys elastic.key 'https://localhost:9200'
+User Management using Roles and user access and its applicable on all the indices
