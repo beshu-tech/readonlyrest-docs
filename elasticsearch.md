@@ -318,7 +318,7 @@ This option encrypts communication between nodes forming Elasticsearch cluster.
 **⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and append this one line:
 
 ```yml
-http.type: ror_ssl_internode
+transport.type: ror_ssl_internode
 ```
 
 In `readonlyrest.yml` following settings must be added (it's just example configuration presenting most important properties):
