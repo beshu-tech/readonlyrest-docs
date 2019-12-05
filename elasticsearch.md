@@ -1408,7 +1408,7 @@ logger.access_log_rolling.additivity = false
 logger.access_log_rolling.filter.regex.type = RegexFilter
 logger.access_log_rolling.filter.regex.regex = .*USR:(kibana|beat|logstash),.*
 logger.access_log_rolling.filter.regex.onMatch = DENY
-logger.access_log_rolling.filter.regex.onMisMatch = ACCEPT
+logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
 
 ``` 
 
