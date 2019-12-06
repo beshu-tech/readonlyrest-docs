@@ -49,6 +49,7 @@ Because ReadonlyREST is not compatible with XPack Security module please **make 
 
 ```yml
 xpack.security.enabled: false
+```
 
 
 ## Setup: the Elasticsearch side
