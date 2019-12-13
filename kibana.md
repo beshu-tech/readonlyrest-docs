@@ -547,6 +547,13 @@ readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
 
+## Map groups to aliases
+You can provide a function, mapping group names to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
+```yml
+readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
+```
+**⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group name will be used as fallback.
+Also, if the mapping function is not specified, the original group name value will be used.
 # Tenancy index templating
 When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.
 
@@ -637,7 +644,7 @@ readonlyrest:
     kibana_index: ".kibana_user1"
       
  users:
- - name: administrator
+ - username: administrator
    auth_key: administrator:dev
    groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
 ````
