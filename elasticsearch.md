@@ -1319,155 +1319,51 @@ readonlyrest:
 
 You can write your own custom audit log serializer class, add it to the ROR plugin class path and configure it through the YAML settings.
 
-### (I) Implementation (scala)
-1. Create a new Scala project in your IDE
-2. Add maven ROR audit dependency to build.sbt
-    ```sbtshell
-    libraryDependencies += "tech.beshu.ror" %% "audit" % ROR_VERSION
-    ```
-3. Create custom class extending AuditLogSerializer (like in example below):
-    ```scala
-    package tech.beshu.ror.audit.instances
- 
-    import java.time.ZoneId
-    import java.time.format.DateTimeFormatter
-    
-    import org.json.JSONObject
-    import tech.beshu.ror.audit.AuditResponseContext._
-    import tech.beshu.ror.audit.{AuditLogSerializer, AuditRequestContext, AuditResponseContext}
-    import scala.collection.JavaConverters._
-    
-    import scala.concurrent.duration.FiniteDuration
-    
-    class MyCustomSerializer extends AuditLogSerializer {
-    
-      private val timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneId.of("GMT"))
-    
-      override def onResponse(responseContext: AuditResponseContext): Option[JSONObject] = responseContext match {
-        case Allowed(requestContext, verbosity, reason) =>
-          verbosity match {
-            case Verbosity.Info =>
-              Some(createEntry(matched = true, "ALLOWED", reason, responseContext.duration, requestContext, None))
-            case Verbosity.Error =>
-              None
-          }
-        case ForbiddenBy(requestContext, _, reason) =>
-          Some(createEntry(matched = true, "FORBIDDEN", reason, responseContext.duration, requestContext, None))
-        case Forbidden(requestContext) =>
-          Some(createEntry(matched = false, "FORBIDDEN", "default", responseContext.duration, requestContext, None))
-        case Errored(requestContext, cause) =>
-          Some(createEntry(matched = false, "ERRORED", "error", responseContext.duration, requestContext, Some(cause)))
-      }
-    
-      private def createEntry(matched: Boolean,
-                              finalState: String,
-                              reason: String,
-                              duration: FiniteDuration,
-                              requestContext: AuditRequestContext,
-                              error: Option[Throwable]) = {
-        new JSONObject()
-          .put("match", matched)
-          .put("block", reason)
-          .put("id", requestContext.id)
-          .put("final_state", finalState)
-          .put("@timestamp", timestampFormatter.format(requestContext.timestamp))
-          .put("processingMillis", duration.toMillis)
-          .put("error_type", error.map(_.getClass.getSimpleName).orNull)
-          .put("error_message", error.map(_.getMessage).orNull)
-          .put("content_len", requestContext.contentLength)
-          .put("content_len_kb", requestContext.contentLength / 1024)
-          .put("type", requestContext.`type`)
-          .put("origin", requestContext.remoteAddress)
-          .put("destination", requestContext.localAddress)
-          .put("xff", requestContext.headers.get("X-Forwarded-For").orNull)
-          .put("task_id", requestContext.taskId)
-          .put("req_method", requestContext.httpMethod)
-          .put("headers", requestContext.headers.keys.toList.asJava)
-          .put("path", requestContext.uriPath)
-          .put("user", requestContext.loggedInUserName.orNull)
-          .put("impersonated_by", requestContext.impersonatedByUserName.orNull)
-          .put("action", requestContext.action)
-          .put("indices", if (requestContext.involvesIndices) requestContext.indices.toList.asJava else List.empty.asJava)
-          .put("acl_history", requestContext.history)
-      }
-    }
-    ``` 
+We provided 2 project examples with custom serializers (in Scala and Java). You can use them as an example to write yours in one of those languages.
 
-### (II) Implementation (java)
-1. Create a new Scala project in your IDE
-2. Add maven ROR audit dependency to your favourite dependencies manager (like eg. Gradle):
-    ```gradle
-    implementation 'tech.beshu.ror:audit:ROR_VERSION'
-    ```
-3. Create custom class extending AuditLogSerializer (like in example below):
-    ```java
-    import org.json.JSONObject;
-    import scala.Option;
-    import tech.beshu.ror.audit.AuditLogSerializer;
-    import tech.beshu.ror.audit.AuditResponseContext;
-    
-    public class MyCustomSerializer implements AuditLogSerializer {
-      @Override
-      public Option<JSONObject> onResponse(AuditResponseContext responseContext) {
-        return Option.apply(
-            new JSONObject()
-                .put("id", responseContext.requestContext().id())
-                .put("@timestamp", responseContext.requestContext().timestamp().toEpochMilli())
-                .put("processingMillis", responseContext.duration().toMillis())
-        );
-      }
-    }
-    ```
+### Create custom audit log serializer in Scala
 
-### (III) Implementation (deprecated)
-1. Create a new Java project in your IDE
-2. Create a class like this:
-
-    ```java
-    import tech.beshu.ror.ResponseContext;
-    import tech.beshu.ror.requestcontext.AuditLogSerializer;
-    
-    import java.util.HashMap;
-    import java.util.Map;
-    
-    public static class MySerializer implements AuditLogSerializer {
-    
-        @Override
-        public Map<String, ?> createLoggableEntry(ResponseContext context) {
-          Map<String, Object> theMap = new HashMap<>();
-          theMap.put("indices", context.getRequestContext().getIndices());
-          return theMap;
-        }
-      }
-    ```
-
-3. Satisfy the two tech.beshu.* imports above by copy-pasting the two classes from ROR core code base into your project (they have no other dependency).
-
-### Building and configuration
-
-1. Build a jar with your favourite build tool (like SBT, Gradle, Maven, etc)
-
-or do it by hand like this:
-
-1. Find the MyCustomSerializer.class somewhere in your build directory
-
-2. ` jar cvf CUSTOMSERIALIZER.jar MyCustomSerializer.class`
-
+1. Checkout https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
+   `git clone git@github.com:sscarduzio/elasticsearch-readonlyrest-plugin.git`
+2. Install SBT
+   `https://www.scala-sbt.org/download.html`
+3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/` 
+4. Modify or create own serializer class. Example one:
+   `tech.beshu.ror.audit.instances.ScalaCustomAuditLogSerializer`
+5. Build serializer JAR:
+   `sbt assembly`
+6. Jar can be find in:
+   `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/target/scala-2.13/ror-custom-scala-serializer-1.0.0.jar`
+   
+### Create custom audit log serializer in Java
+1. Checkout https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
+   `git clone git@github.com:sscarduzio/elasticsearch-readonlyrest-plugin.git`
+2. Install Maven
+   `https://maven.apache.org/install.html`
+3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-java-serializer/`
+4. Modify or create own serializer class. Example one:
+   `tech.beshu.ror.audit.instances.JavaCustomAuditLogSerializer` 
+5. Build serializer JAR:
+   `mvn package`
+6. Jar can be find in:
+   `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-java-serializer/target/ror-custom-java-serializer-1.0.0.jar`
+   
 ### Configuration
 
-1. mv CUSTOMSERIALIZER.jar plugins/readonlyrest/
+1. mv ror-custom-java-serializer-1.0.0.jar plugins/readonlyrest/
 
 2. Your config/readonlyrest.yml should start like this
 
     ```yml
     readonlyrest:
-        audit_serializer: MyCustomSerializer
+        audit_collector: true
+        audit_serializer: "tech.beshu.ror.audit.instances.JavaCustomAuditLogSerializer"
     ```
 
 3. Start elasticsearch (with ROR installed) and grep for:
 
     ```
-    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: MyCustomSerializer
+    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: tech.beshu.ror.audit.instances.JavaCustomAuditLogSerializer
     ```
 
 ### Troubleshooting 
