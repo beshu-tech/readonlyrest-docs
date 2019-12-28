@@ -1328,8 +1328,9 @@ We provided 2 project examples with custom serializers (in Scala and Java). You 
 2. Install SBT
    `https://www.scala-sbt.org/download.html`
 3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/` 
-4. Modify or create own serializer class. Example one:
-   `tech.beshu.ror.audit.instances.ScalaCustomAuditLogSerializer`
+4. Create own serializer:
+ * from scratch (example class `ScalaCustomFromScratchAuditLogSerializer`)
+ * extending default one (example class `ScalaCustomExtendingDefaultAuditLogSerializer`)
 5. Build serializer JAR:
    `sbt assembly`
 6. Jar can be find in:
@@ -1341,8 +1342,9 @@ We provided 2 project examples with custom serializers (in Scala and Java). You 
 2. Install Maven
    `https://maven.apache.org/install.html`
 3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-java-serializer/`
-4. Modify or create own serializer class. Example one:
-   `tech.beshu.ror.audit.instances.JavaCustomAuditLogSerializer` 
+4. Create own serializer:
+ * from scratch (example class `JavaCustomFromScratchAuditLogSerializer`)
+ * extending default one (example class `JavaCustomExtendingDefaultAuditLogSerializer`)
 5. Build serializer JAR:
    `mvn package`
 6. Jar can be find in:
@@ -1357,13 +1359,13 @@ We provided 2 project examples with custom serializers (in Scala and Java). You 
     ```yml
     readonlyrest:
         audit_collector: true
-        audit_serializer: "tech.beshu.ror.audit.instances.JavaCustomAuditLogSerializer"
+        audit_serializer: "JavaCustomExtendingDefaultAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
     ```
 
 3. Start elasticsearch (with ROR installed) and grep for:
 
     ```
-    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: tech.beshu.ror.audit.instances.JavaCustomAuditLogSerializer
+    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: JavaCustomExtendingDefaultAuditLogSerializer
     ```
 
 ### Troubleshooting 
