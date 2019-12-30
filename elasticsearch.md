@@ -1329,8 +1329,8 @@ We provided 2 project examples with custom serializers (in Scala and Java). You 
    `https://www.scala-sbt.org/download.html`
 3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/` 
 4. Create own serializer:
- * from scratch (example class `ScalaCustomFromScratchAuditLogSerializer`)
- * extending default one (example class `ScalaCustomExtendingDefaultAuditLogSerializer`)
+ * from scratch (example can be found in class `ScalaCustomAuditLogSerializer`)
+ * extending default one (example can be found in class `ScalaCustomAuditLogSerializer`)
 5. Build serializer JAR:
    `sbt assembly`
 6. Jar can be find in:
@@ -1343,8 +1343,8 @@ We provided 2 project examples with custom serializers (in Scala and Java). You 
    `https://maven.apache.org/install.html`
 3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-java-serializer/`
 4. Create own serializer:
- * from scratch (example class `JavaCustomFromScratchAuditLogSerializer`)
- * extending default one (example class `JavaCustomExtendingDefaultAuditLogSerializer`)
+ * from scratch (example can be found in class `JavaCustomAuditLogSerializer`)
+ * extending default one (example can be found in class `JavaCustomAuditLogSerializer`)
 5. Build serializer JAR:
    `mvn package`
 6. Jar can be find in:
@@ -1359,13 +1359,13 @@ We provided 2 project examples with custom serializers (in Scala and Java). You 
     ```yml
     readonlyrest:
         audit_collector: true
-        audit_serializer: "JavaCustomExtendingDefaultAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
+        audit_serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
     ```
 
 3. Start elasticsearch (with ROR installed) and grep for:
 
     ```
-    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: JavaCustomExtendingDefaultAuditLogSerializer
+    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: JavaCustomAuditLogSerializer
     ```
 
 ### Troubleshooting 
