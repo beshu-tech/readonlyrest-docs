@@ -502,17 +502,17 @@ readonlyrest_kbn.whitelistedPaths: [".*/api/status$"]
 
 ## Session management with multiple Kibana instances
 
-Each Kibana node stores user sessions in in-memory cache. This might cause problems with multiple Kibana instances behind a load balancer (especially without sticky sessions), as there is no synchronization between nodes.
-To avoid this, session synchronization using ES index should be enabled with following steps:
+Each Kibana node stores user sessions in-memory. This will cause problems when using multiple Kibana instances behind a load balancer (especially without sticky sessions), as there would be no synchronization between nodes' sessions cache.
+To avoid this, session synchronization via an Elasticsearch index should be enabled. Follow these steps:
 
-1. Come up with a string of 32 characters length or more (this is common cookie encryption key called `cookiePass`)
+1. Come up with a string of at least 32 characters length or more to be used as the shared cookie encryption key, called `cookiePass`.
 2. Open up `conf/kibana.yml` and add: 
     * `readonlyrest_kbn.cookiePass: "generatedStringIn1step"` (example: "12345678901234567890123456789012")
     * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
     * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
     * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
     
-3. Add above config in all Kibana nodes behind the load balancer, and restart them. 
+3. Add the above config in all Kibana nodes behind the load balancer, and restart them. 
 
 # Login screen tweaking
 It is possible to customise the look of the login screen.
