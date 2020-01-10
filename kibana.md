@@ -499,20 +499,20 @@ Edit `kibana.yml`
 readonlyrest_kbn.whitelistedPaths: [".*/api/status$"]
 
 ```
-## Common cookie encryption secret
-**WARNING⚠️: this only works with Kibana 5.x. Use sticky sessions in your load balancer instead**
-When you run multiple Kibana instances behind a load balancer, a user will have their identity cookie created and encrypted in one instance. 
 
-A fresh cookie encryption key is generated at startup time on every Kibana node. This means that each Kibana instance behind the load balancer will have a different encryption key.
+## Session management with multiple Kibana instances
 
-This is a problem because a cookie encrypted by one instance won't be recognised on the other instances.
+Each Kibana node stores user sessions in in-memory cache. This might cause problems with multiple Kibana instances behind a load balancer (especially without sticky sessions), as there is no synchronization between nodes.
+To avoid this, session synchronization using ES index should be enabled with following steps:
 
-> Today it's possible to share the cookie encryption key in all the Kibana instances
-
-1. Come up with a string of 32 characters length or more
-2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.cookiePass: "12345678901234567890123456789012"` 
-3. Do the above in all Kibana nodes behind the load balancer, and restart them. 
-
+1. Come up with a string of 32 characters length or more (this is common cookie encryption key called `cookiePass`)
+2. Open up `conf/kibana.yml` and add: 
+    * `readonlyrest_kbn.cookiePass: "generatedStringIn1step"` (example: "12345678901234567890123456789012")
+    * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
+    * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
+    * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
+    
+3. Add above config in all Kibana nodes behind the load balancer, and restart them. 
 
 # Login screen tweaking
 It is possible to customise the look of the login screen.
