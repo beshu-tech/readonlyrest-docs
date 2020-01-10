@@ -500,7 +500,6 @@ readonlyrest_kbn.whitelistedPaths: [".*/api/status$"]
 
 ```
 ## Common cookie encryption secret
-**WARNING⚠️: this only works with Kibana 5.x. Use sticky sessions in your load balancer instead**
 When you run multiple Kibana instances behind a load balancer, a user will have their identity cookie created and encrypted in one instance. 
 
 A fresh cookie encryption key is generated at startup time on every Kibana node. This means that each Kibana instance behind the load balancer will have a different encryption key.
