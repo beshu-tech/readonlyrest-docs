@@ -99,7 +99,10 @@ $ touch optimize/bundles/readonlyrest_kbn.style.css
 
 Restart Kibana.
 
+## Using RoR with a reverse proxy
 
+RoR - just like Kibana itself - is meant to be used either with a proxy or without one, but not both simultaneously. If you decide to set the 
+`server.basePath` property in `kibana.yml` be sure to access RoR via a proxy, as it will not work properly when accessed directly.
 
 # Configuration
 
@@ -496,20 +499,20 @@ Edit `kibana.yml`
 readonlyrest_kbn.whitelistedPaths: [".*/api/status$"]
 
 ```
-## Common cookie encryption secret
-**WARNING⚠️: this only works with Kibana 5.x. Use sticky sessions in your load balancer instead**
-When you run multiple Kibana instances behind a load balancer, a user will have their identity cookie created and encrypted in one instance. 
 
-A fresh cookie encryption key is generated at startup time on every Kibana node. This means that each Kibana instance behind the load balancer will have a different encryption key.
+## Session management with multiple Kibana instances
 
-This is a problem because a cookie encrypted by one instance won't be recognised on the other instances.
+Each Kibana node stores user sessions in-memory. This will cause problems when using multiple Kibana instances behind a load balancer (especially without sticky sessions), as there would be no synchronization between nodes' sessions cache.
+To avoid this, session synchronization via an Elasticsearch index should be enabled. Follow these steps:
 
-> Today it's possible to share the cookie encryption key in all the Kibana instances
-
-1. Come up with a string of 32 characters length or more
-2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.cookiePass: "12345678901234567890123456789012"` 
-3. Do the above in all Kibana nodes behind the load balancer, and restart them. 
-
+1. Come up with a string of at least 32 characters length or more to be used as the shared cookie encryption key, called `cookiePass`.
+2. Open up `conf/kibana.yml` and add: 
+    * `readonlyrest_kbn.cookiePass: "generatedStringIn1step"` (example: "12345678901234567890123456789012")
+    * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
+    * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
+    * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
+    
+3. Add the above config in all Kibana nodes behind the load balancer, and restart them. 
 
 # Login screen tweaking
 It is possible to customise the look of the login screen.
@@ -547,6 +550,13 @@ readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
 
+## Map groups to aliases
+You can provide a function, mapping group names to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
+```yml
+readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
+```
+**⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group name will be used as fallback.
+Also, if the mapping function is not specified, the original group name value will be used.
 # Tenancy index templating
 When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.
 
@@ -637,7 +647,7 @@ readonlyrest:
     kibana_index: ".kibana_user1"
       
  users:
- - name: administrator
+ - username: administrator
    auth_key: administrator:dev
    groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
 ````
