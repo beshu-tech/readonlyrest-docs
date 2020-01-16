@@ -287,11 +287,13 @@ Create this file **on the same path where `elasticsearch.yml` is found**.
 
 ## Encryption
 An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network.
-ReadonlyREST can be configured to require that all REST requests come through HTTPS.
+[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once they are inside a [JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm). 
+ReadonlyREST can be configured to encrypt network traffic on two independent levels:
 
-[Letsencrypt](https://letsencrypt.org/) certificates work just fine, once they are inide a [JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm). 
+### External REST API
 
-**⚠️IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
+It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.  
+**⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and append this one line:
 
 ```yml
 http.type: ssl_netty4
@@ -309,6 +311,50 @@ readonlyrest:
 
 The keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
 
+### Internode communication - transport module
+
+This option encrypts communication between nodes forming Elasticsearch cluster. 
+
+**⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and append this one line:
+
+```yml
+transport.type: ror_ssl_internode
+```
+
+In `readonlyrest.yml` following settings must be added (it's just example configuration presenting most important properties):
+
+```yml
+readonlyrest:
+    ssl_internode:
+      keystore_file: "keystore.jks"
+      keystore_pass: readonlyrest
+      key_pass: readonlyrest
+```
+Similar to `ssl` for HTTP, the keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
+This config must be added to all nodes taking part in encrypted communication within cluster.  
+
+### Certificate verification 
+
+By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.  
+It is useful on local/test environment, where security is not the most important concern. On production environment it is adviced to enable this option.
+It can be done by means of:
+
+```yml
+certificate_verification: true
+```
+under `ssl_internode` section. This option is applicable only for internode ssl.
+   
+### Client authentication 
+
+By default the client authentication is disabled. When enabled, the server asks the client about its certificate, so ES is able to verify the client's identity. It can be enabled by means of:
+
+```yml
+client_authentication: true
+```
+under `ssl` or `ssl_internode` section. This option is applicable for both ssl configuration types.
+
+Both `certificate_verification` and `client_authentication` can be enabled with single property `verification`.
+ Using this property is deprecated and allowed because of backward compatibility support. Specialized properties make configuration more readable and explicit. 
 
 ### Restrict SSL protocols and ciphers
 Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
@@ -440,11 +486,11 @@ Match if **at least one** the specified HTTP headers `key:value` pairs is matche
 
 ### `uri_re`
 
-`uri_re: ^/secret-index/.*` 
+`uri_re: ["^/secret-index/.*", "^/some-index/.*"]`
 
 **☠️HACKY (try to use indices/actions rule instead)** 
 
-Specify a regular expression to match the request URI. 
+Match if **at least one** specifed regular expression matches requested URI.
 
 ---
 
@@ -479,7 +525,13 @@ In ReadonlyREST we roughly classify requests as:
 * "write": when allowed, the request changes the internal state of the cluster or the data.
 
 If a **read request** asks for a some indices they have permissions for and some indices that they do NOT have permission for, the request is **rewritten** to involve only the subset of indices they have permission for.
-This is behaviour is very useful in Kibana: **different** users can see the **same** dashboards with data from only their own indices.|
+This is behaviour is very useful in Kibana: **different** users can see the **same** dashboards with data from only their own indices.
+
+When the subset of indices is empty, it means that user are not allowed to access requested indices. In multitenancy environment we should consider two options:
+* requested indices don't exist
+* requested indices exist but belong to another user  
+
+For both these cases ROR is going to return HTTP 404 or empty response. The same behaviour will be observed for ES with ROR disabled (for nonexistent index). If some index does exist, but belongs to another user, ROR is going to pretend that the index doesn't exist and the response is the same like the index actually did not exist. 
 
 If a **write request** wants to write to indices they don't have permission for, the write request is rejected.  
 
@@ -492,116 +544,254 @@ If a **write request** wants to write to indices they don't have permission for,
 
 Match if the request action starts with "indices:data/read/". 
 
-In Elasticsearch, each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 5.1.2.
+In Elasticsearch, each request carries only one action. Here is a complete list of valid action strings as of Elasticsearch 7.3.2.
 ```
-cluster:admin/ingest/pipeline/delete
-cluster:admin/ingest/pipeline/get
-cluster:admin/ingest/pipeline/put
-cluster:admin/ingest/pipeline/simulate
+ "cluster:admin/data_frame/delete" 
+ "cluster:admin/data_frame/preview" 
+ "cluster:admin/data_frame/put" 
+ "cluster:admin/data_frame/start" 
+ "cluster:admin/data_frame/stop" 
+ "cluster:admin/data_frame/update" 
+ "cluster:admin/ilm/_move/post" 
+ "cluster:admin/ilm/delete" 
+ "cluster:admin/ilm/get" 
+ "cluster:admin/ilm/operation_mode/get" 
+ "cluster:admin/ilm/put" 
+ "cluster:admin/ilm/start" 
+ "cluster:admin/ilm/stop" 
+ "cluster:admin/ingest/pipeline/delete" 
+ "cluster:admin/ingest/pipeline/get" 
+ "cluster:admin/ingest/pipeline/put" 
+ "cluster:admin/ingest/pipeline/simulate" 
+ "cluster:admin/nodes/reload_secure_settings" 
+ "cluster:admin/persistent/completion" 
+ "cluster:admin/persistent/remove" 
+ "cluster:admin/persistent/start" 
+ "cluster:admin/persistent/task_test" 
+ "cluster:admin/persistent/test" 
+ "cluster:admin/persistent/update_status" 
+ "cluster:admin/reindex/rethrottle" 
+ "cluster:admin/repository/_cleanup" 
+ "cluster:admin/repository/delete" 
+ "cluster:admin/repository/get" 
+ "cluster:admin/repository/put" 
+ "cluster:admin/repository/verify" 
+ "cluster:admin/reroute" 
+ "cluster:admin/script/delete" 
+ "cluster:admin/script/get" 
+ "cluster:admin/script/put" 
+ "cluster:admin/settings/update" 
+ "cluster:admin/slm/delete" 
+ "cluster:admin/slm/execute" 
+ "cluster:admin/slm/get" 
+ "cluster:admin/slm/put" 
+ "cluster:admin/slm/stats" 
+ "cluster:admin/snapshot/create" 
+ "cluster:admin/snapshot/delete" 
+ "cluster:admin/snapshot/get" 
+ "cluster:admin/snapshot/restore" 
+ "cluster:admin/snapshot/status" 
+ "cluster:admin/tasks/cancel" 
+ "cluster:admin/tasks/test" 
+ "cluster:admin/tasks/testunblock" 
+ 
+ "cluster:admin/voting_config/add_exclusions" 
+ "cluster:admin/voting_config/clear_exclusions" 
+ 
+ "cluster:admin/xpack/ccr/auto_follow_pattern/delete" 
+ "cluster:admin/xpack/ccr/auto_follow_pattern/get" 
+ "cluster:admin/xpack/ccr/auto_follow_pattern/put" 
+ "cluster:admin/xpack/ccr/pause_follow" 
+ "cluster:admin/xpack/ccr/resume_follow" 
+ "cluster:admin/xpack/deprecation/info" 
+ "cluster:admin/xpack/deprecation/nodes/info" 
+ "cluster:admin/xpack/license/basic_status" 
+ "cluster:admin/xpack/license/delete" 
+ "cluster:admin/xpack/license/put" 
+ "cluster:admin/xpack/license/start_basic" 
+ "cluster:admin/xpack/license/start_trial" 
+ "cluster:admin/xpack/license/trial_status" 
+ "cluster:admin/xpack/ml/calendars/delete" 
+ "cluster:admin/xpack/ml/calendars/events/delete" 
+ "cluster:admin/xpack/ml/calendars/events/post" 
+ "cluster:admin/xpack/ml/calendars/jobs/update" 
+ "cluster:admin/xpack/ml/calendars/put" 
+ "cluster:admin/xpack/ml/data_frame/analytics/delete" 
+ "cluster:admin/xpack/ml/data_frame/analytics/estimate_memory_usage" 
+ "cluster:admin/xpack/ml/data_frame/analytics/put" 
+ "cluster:admin/xpack/ml/data_frame/analytics/start" 
+ "cluster:admin/xpack/ml/data_frame/analytics/stop" 
+ "cluster:admin/xpack/ml/datafeed/start" 
+ "cluster:admin/xpack/ml/datafeed/stop" 
+ "cluster:admin/xpack/ml/datafeeds/delete" 
+ "cluster:admin/xpack/ml/datafeeds/preview" 
+ "cluster:admin/xpack/ml/datafeeds/put" 
+ "cluster:admin/xpack/ml/datafeeds/update" 
+ "cluster:admin/xpack/ml/delete_expired_data" 
+ "cluster:admin/xpack/ml/filters/delete" 
+ "cluster:admin/xpack/ml/filters/get" 
+ "cluster:admin/xpack/ml/filters/put" 
+ "cluster:admin/xpack/ml/filters/update" 
+ "cluster:admin/xpack/ml/job/close" 
+ "cluster:admin/xpack/ml/job/data/post" 
+ "cluster:admin/xpack/ml/job/delete" 
+ "cluster:admin/xpack/ml/job/flush" 
+ "cluster:admin/xpack/ml/job/forecast" 
+ "cluster:admin/xpack/ml/job/forecast/delete" 
+ "cluster:admin/xpack/ml/job/model_snapshots/delete" 
+ "cluster:admin/xpack/ml/job/model_snapshots/revert" 
+ "cluster:admin/xpack/ml/job/model_snapshots/update" 
+ "cluster:admin/xpack/ml/job/open" 
+ "cluster:admin/xpack/ml/job/persist" 
+ "cluster:admin/xpack/ml/job/put" 
+ "cluster:admin/xpack/ml/job/update" 
+ "cluster:admin/xpack/ml/job/validate" 
+ "cluster:admin/xpack/ml/job/validate/detector" 
+ "cluster:admin/xpack/ml/upgrade_mode" 
+ "cluster:admin/xpack/monitoring/bulk" 
+ "cluster:admin/xpack/rollup/delete" 
+ "cluster:admin/xpack/rollup/put" 
+ "cluster:admin/xpack/rollup/start" 
+ "cluster:admin/xpack/rollup/stop" 
+ "cluster:admin/xpack/security/api_key/create" 
+ 
+ "cluster:admin/xpack/upgrade" 
+ "cluster:admin/xpack/upgrade/info" 
+ "cluster:admin/xpack/watcher/service" 
+ "cluster:admin/xpack/watcher/watch/ack" 
+ "cluster:admin/xpack/watcher/watch/activate" 
+ "cluster:admin/xpack/watcher/watch/delete" 
+ "cluster:admin/xpack/watcher/watch/execute" 
+ "cluster:admin/xpack/watcher/watch/put" 
+ 
+ "cluster:internal/xpack/ml/datafeed/isolate" 
+ "cluster:internal/xpack/ml/job/finalize_job_execution" 
+ "cluster:internal/xpack/ml/job/kill/process" 
+ "cluster:internal/xpack/ml/job/update/process" 
+ 
+ "cluster:monitor/allocation/explain" 
+ "cluster:monitor/ccr/follow_info" 
+ "cluster:monitor/ccr/follow_stats" 
+ "cluster:monitor/ccr/stats" 
+ "cluster:monitor/data_frame/get" 
+ "cluster:monitor/data_frame/stats/get" 
+ "cluster:monitor/health" 
+ "cluster:monitor/main" 
+ "cluster:monitor/nodes/hot_threads" 
+ "cluster:monitor/nodes/info" 
+ "cluster:monitor/nodes/stats" 
+ "cluster:monitor/nodes/usage" 
+ "cluster:monitor/remote/info" 
+ "cluster:monitor/state" 
+ "cluster:monitor/stats" 
+ "cluster:monitor/task" 
+ "cluster:monitor/task/get" 
+ "cluster:monitor/tasks/lists" 
+ "cluster:monitor/xpack/analytics/stats" 
+ "cluster:monitor/xpack/info" 
+ "cluster:monitor/xpack/license/get" 
+ "cluster:monitor/xpack/ml/calendars/events/get" 
+ "cluster:monitor/xpack/ml/calendars/get" 
+ "cluster:monitor/xpack/ml/data_frame/analytics/get" 
+ "cluster:monitor/xpack/ml/data_frame/analytics/stats/get" 
+ "cluster:monitor/xpack/ml/data_frame/evaluate" 
+ "cluster:monitor/xpack/ml/datafeeds/get" 
+ "cluster:monitor/xpack/ml/datafeeds/stats/get" 
+ "cluster:monitor/xpack/ml/findfilestructure" 
+ "cluster:monitor/xpack/ml/info/get" 
+ "cluster:monitor/xpack/ml/job/get" 
+ "cluster:monitor/xpack/ml/job/model_snapshots/get" 
+ "cluster:monitor/xpack/ml/job/results/buckets/get" 
+ "cluster:monitor/xpack/ml/job/results/categories/get" 
+ "cluster:monitor/xpack/ml/job/results/influencers/get" 
+ "cluster:monitor/xpack/ml/job/results/overall_buckets/get" 
+ "cluster:monitor/xpack/ml/job/results/records/get" 
+ "cluster:monitor/xpack/ml/job/stats/get" 
+ "cluster:monitor/xpack/rollup/get" 
+ "cluster:monitor/xpack/rollup/get/caps" 
+ "cluster:monitor/xpack/sql/stats/dist" 
+ "cluster:monitor/xpack/ssl/certificates/get" 
+ "cluster:monitor/xpack/usage" 
+ "cluster:monitor/xpack/watcher/stats/dist" 
+ "cluster:monitor/xpack/watcher/watch/get" 
+ 
+ "indices:admin/aliases" 
+ "indices:admin/aliases/get" 
+ "indices:admin/analyze" 
+ "indices:admin/cache/clear" 
+ "indices:admin/close" 
+ "indices:admin/create" 
+ "indices:admin/delete" 
+ "indices:admin/flush" 
+ "indices:admin/forcemerge" 
+ "indices:admin/freeze" 
+ "indices:admin/get" 
+ "indices:admin/ilm/explain" 
+ "indices:admin/ilm/remove_policy" 
+ "indices:admin/ilm/retry" 
+ "indices:admin/mapping/put" 
+ "indices:admin/mappings/fields/get" 
+ "indices:admin/mappings/get" 
+ "indices:admin/open" 
+ "indices:admin/refresh" 
+ "indices:admin/reload_analyzers" 
+ "indices:admin/resize" 
+ "indices:admin/rollover" 
+ "indices:admin/settings/update" 
+ "indices:admin/shards/search_shards" 
+ "indices:admin/shrink" 
+ "indices:admin/synced_flush" 
+ "indices:admin/template/delete" 
+ "indices:admin/template/get" 
+ "indices:admin/template/put" 
+ "indices:admin/upgrade" 
+ "indices:admin/validate/query" 
+ "indices:admin/xpack/ccr/forget_follower" 
+ "indices:admin/xpack/ccr/put_follow" 
+ "indices:admin/xpack/ccr/unfollow" 
+ "indices:admin/xpack/rollup/search" 
+ 
+ "indices:data/read/explain" 
+ "indices:data/read/field_caps" 
+ "indices:data/read/get" 
+ "indices:data/read/mget" 
+ "indices:data/read/msearch" 
+ "indices:data/read/msearch/template" 
+ "indices:data/read/mtv" 
+ "indices:data/read/rank_eval" 
+ "indices:data/read/scroll" 
+ "indices:data/read/scroll/clear" 
+ "indices:data/read/search" 
+ "indices:data/read/search/template" 
+ "indices:data/read/sql" 
+ "indices:data/read/sql/close_cursor" 
+ "indices:data/read/sql/translate" 
+ "indices:data/read/tv" 
+ "indices:data/read/xpack/ccr/shard_changes" 
+ "indices:data/read/xpack/graph/explore" 
+ "indices:data/read/xpack/rollup/get/index/caps" 
+ "indices:data/write/bulk" 
+ "indices:data/write/bulk_shard_operations[s]" 
+ "indices:data/write/delete" 
+ "indices:data/write/delete/byquery" 
+ "indices:data/write/index" 
+ "indices:data/write/reindex" 
+ "indices:data/write/update" 
+ "indices:data/write/update/byquery" 
+ "indices:monitor/recovery" 
+ "indices:monitor/segments" 
+ "indices:monitor/settings/get" 
+ "indices:monitor/shard_stores" 
+ "indices:monitor/stats" 
+ "indices:monitor/upgrade"
+ 
+ "internal:admin/ccr/internal_repository/delete" 
+ "internal:admin/ccr/internal_repository/put" 
+ "internal:admin/ccr/restore/file_chunk/get" 
+ "internal:admin/ccr/restore/session/clear" 
+ "internal:admin/ccr/restore/session/put" 
+ "internal:indices/admin/upgrade" 
 
-cluster:admin/repository/delete
-cluster:admin/repository/get
-cluster:admin/repository/put
-cluster:admin/repository/verify
-
-cluster:admin/reroute
-
-cluster:admin/script/delete
-cluster:admin/script/get
-cluster:admin/script/put
-
-cluster:admin/settings/update
-
-cluster:admin/snapshot/create
-cluster:admin/snapshot/delete
-cluster:admin/snapshot/get
-cluster:admin/snapshot/restore
-cluster:admin/snapshot/status
-
-cluster:admin/tasks/cancel
-
-cluster:admin/xpack/rollup/get
-cluster:admin/xpack/rollup/put
-cluster:admin/xpack/rollup/stop
-cluster:admin/xpack/rollup/delete
-cluster:admin/xpack/rollup/start
-
-cluster:monitor/allocation/explain
-cluster:monitor/health
-cluster:monitor/main
-cluster:monitor/nodes/hot_threads
-cluster:monitor/nodes/info
-cluster:monitor/nodes/stats
-cluster:monitor/state
-cluster:monitor/stats
-cluster:monitor/task
-cluster:monitor/task/get
-cluster:monitor/tasks/lists
-cluster:monitor/xpack/rollup/get
-cluster:monitor/xpack/rollup/get/caps
-
-indices:admin/aliases
-indices:admin/aliases/exists
-indices:admin/aliases/get
-
-indices:admin/analyze
-indices:admin/cache/clear
-indices:admin/close
-indices:admin/create
-indices:admin/delete
-indices:admin/exists
-indices:admin/flush
-indices:admin/forcemerge
-indices:admin/get
-
-indices:admin/mapping/put
-
-indices:admin/mappings/fields/get
-indices:admin/mappings/get
-
-indices:admin/open
-indices:admin/refresh
-indices:admin/rollover
-indices:admin/settings/update
-indices:admin/shards/search_shards
-indices:admin/shrink
-indices:admin/synced_flush
-
-indices:admin/template/delete
-indices:admin/template/get
-indices:admin/template/put
-
-indices:admin/types/exists
-indices:admin/upgrade
-indices:admin/validate/query
-
-indices:admin/xpack/rollup/search
-
-indices:data/read/explain
-indices:data/read/field_stats
-indices:data/read/get
-indices:data/read/mget
-indices:data/read/msearch
-indices:data/read/mtv
-indices:data/read/scroll
-indices:data/read/scroll/clear
-indices:data/read/search
-indices:data/read/tv
-indices:data/read/xpack/rollup/get/index/caps
-
-indices:data/write/bulk
-indices:data/write/delete
-indices:data/write/index
-indices:data/write/update
-
-indices:monitor/recovery
-indices:monitor/segments
-indices:monitor/settings/get
-indices:monitor/shard_stores
-indices:monitor/stats
-indices:monitor/upgrade
-
-internal:indices/admin/upgrade
 ```
 
 ---
@@ -706,7 +896,7 @@ This rule enables **Field Level Security (FLS)**. That is: only return certain f
 
 ####  Whitelist mode
 
-`fields: ["allowed_fields_prefix_*", "_*"]` 
+`fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]` 
 
 If the current is a search request, return all matching documents, but deprived of all the fields, except the ones that start with `allowed_fields_prefix_` or with underscore. 
 
@@ -714,7 +904,7 @@ If you use whitelist mode, remember to allow the mandatory, internally used fiel
 
 #### Blacklist mode (recommended)
 
-`fields: ["~excluded_fields_prefix_*", "~excluded_field"]` 
+`fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]` 
 
 If the current is a search request, return all matching documents, but deprived of the `excluded_field` and the ones that start with `excluded_fields_prefix_`. 
 
@@ -1049,6 +1239,15 @@ FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, 
 ```
 The above rule gets forbidden "by default". This means that no ACL block has matched the request, so ReadonlyREST's default policy of rejection takes effect. 
 
+#### Requests finished with `INDEX NOT FOUND`
+
+This is an example of such request:
+
+```
+INDEX NOT FOUND req={  ID:501806845-1996085406#74,  TYP:GetIndexRequest,  CGR:N/A,  USR:dev1 (attempted),  BRS:true,  KDX:null,  ACT:indices:admin/get,  OA:172.20.0.1/32,  XFF:null,  DA:172.20.0.2/32,  IDX:nonexistent*,  MET:GET,  PTH:/nonexistent*/_alias/,  CNT:<N/A>,  HDR:Accept-Encoding=gzip,deflate, Authorization=<OMITTED>, Connection=Keep-Alive, Host=localhost:32773, User-Agent=Apache-HttpClient/4.5.2 (Java/1.8.0_162), content-length=0,  HIS:[CONTAINER ADMIN-> RULES:[auth_key->false]], [dev1 indexes-> RULES:[auth_key->true, indices->false], RESOLVED:[user=dev1]], [dev2 aliases-> RULES:[auth_key->false]], [dev3 - no indices rule-> RULES:[auth_key->false]]  }
+```
+
+The state above is only possible for read-only ES requests for blocks containing `indices` rule. If all other rules within the block are matched, but only `indices` rule is mismatched, the final state of the block is forbidden due to index not found.  
 
 ### Audit logs
 ReadonlyREST can write events very similarly to Logstash into to a series of indices named by default `readonlyrest_audit-YYYY-MM-DD`. Every event contains information about a request and how the system has handled it.
@@ -1135,48 +1334,54 @@ readonlyrest:
 
 You can write your own custom audit log serializer class, add it to the ROR plugin class path and configure it through the YAML settings.
 
-### Implementation
-1. Create a new Java project in your IDE
-2. Create a class like this:
+We provided 2 project examples with custom serializers (in Scala and Java). You can use them as an example to write yours in one of those languages.
 
-```java
-import tech.beshu.ror.ResponseContext;
-import tech.beshu.ror.requestcontext.AuditLogSerializer;
+### Create custom audit log serializer in Scala
 
-import java.util.HashMap;
-import java.util.Map;
+1. Checkout https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
+   `git clone git@github.com:sscarduzio/elasticsearch-readonlyrest-plugin.git`
+2. Install SBT
+   `https://www.scala-sbt.org/download.html`
+3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/` 
+4. Create own serializer:
+ * from scratch (example can be found in class `ScalaCustomAuditLogSerializer`)
+ * extending default one (example can be found in class `ScalaCustomAuditLogSerializer`)
+5. Build serializer JAR:
+   `sbt assembly`
+6. Jar can be find in:
+   `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/target/scala-2.13/ror-custom-scala-serializer-1.0.0.jar`
+   
+### Create custom audit log serializer in Java
+1. Checkout https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
+   `git clone git@github.com:sscarduzio/elasticsearch-readonlyrest-plugin.git`
+2. Install Maven
+   `https://maven.apache.org/install.html`
+3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-java-serializer/`
+4. Create own serializer:
+ * from scratch (example can be found in class `JavaCustomAuditLogSerializer`)
+ * extending default one (example can be found in class `JavaCustomAuditLogSerializer`)
+5. Build serializer JAR:
+   `mvn package`
+6. Jar can be find in:
+   `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-java-serializer/target/ror-custom-java-serializer-1.0.0.jar`
+   
+### Configuration
 
-  public static class MySerializer implements AuditLogSerializer {
+1. mv ror-custom-java-serializer-1.0.0.jar plugins/readonlyrest/
 
-    @Override
-    public Map<String, ?> createLoggableEntry(ResponseContext context) {
-      Map<String, Object> theMap = new HashMap<>();
-      theMap.put("indices", context.getRequestContext().getIndices());
-      return theMap;
-    }
-  }
+2. Your config/readonlyrest.yml should start like this
 
-```
-3. Satisfy the two tech.beshu.* imports above by copy-pasting the two classes from ROR core code base into your project (they have no other dependency).
+    ```yml
+    readonlyrest:
+        audit_collector: true
+        audit_serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
+    ```
 
-4. Find the MyCustomSerializer.class somewhere in your build directory
+3. Start elasticsearch (with ROR installed) and grep for:
 
-5. ` jar cvf CUSTOMSERIALIZER.jar MyCustomSerializer.class`
-
-6.  mv CUSTOMSERIALIZER.jar plugins/readonlyrest/
-
-7. Your config/readonlyrest.yml should start like this
-
-```yml
-readonlyrest:
-    audit_serializer: MyCustomSerializer
-```
-
-8. Start elasticsearch (with ROR installed) and grep for:
-
-```
-[2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: MyCustomSerializer
-```
+    ```
+    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: JavaCustomAuditLogSerializer
+    ```
 
 ### Troubleshooting 
 Follow these approaches until you find the solution to your problem
@@ -1224,7 +1429,7 @@ logger.access_log_rolling.additivity = false
 logger.access_log_rolling.filter.regex.type = RegexFilter
 logger.access_log_rolling.filter.regex.regex = .*USR:(kibana|beat|logstash),.*
 logger.access_log_rolling.filter.regex.onMatch = DENY
-logger.access_log_rolling.filter.regex.onMisMatch = ACCEPT
+logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
 
 ``` 
 
@@ -1320,7 +1525,9 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 One of the neatest feature in ReadonlyREST is that you can use dynamic variables inside most rules values.
 The variables you can currently replace into rules values are these:
 
-* `@{user}` gets replaced with the username of the successfully authenticated user
+* `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is authentication rule (of course it must be rule different from the one containing given variable).
+* `@{user}` old style user variable definition. Preferred approach is to use `@{acl:user}`.
+* `@{acl:current_group}` gets replaced with user's current group. Usually resolved by authorization rule defined in block, but value can be also retrieved by means of kibana plugin. This variable doesn't specify usage requirements.
 * `@{xyz}` gets replaced with any `xyz` HTTP header included in the incoming request (useful when reverse proxies handle authentication)
  
 ### Indices from user name
@@ -1332,9 +1539,25 @@ readonlyrest:
 
     - name: "Users can see only their logstash indices i.e. alice can see alice_logstash-20170922"
       ldap_authentication:
-        name: "myLDAP" 
-      indices: ["@{user}_logstash-*"]
-    
+        name: "myLDAP"
+      indices: ["@{acl:user}_logstash-*"]
+
+    # LDAP connector settings omitted, see LDAP section below..
+```
+
+### Uri regex matching user's current group
+You can let users authorize externally, i.e. via LDAP, and use their group inside the `uri_re` rule.
+
+```yml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Users can access uri with value containing user's current group, i.e. user with group 'g1' can access: '/path/g1/some_thing'"
+      ldap_authorization:
+        name: "ldap1"
+        groups: ["g1", "g2", "g3"]
+      uri_re: ["^/path/@{acl:current_group}/.*"]
+
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
