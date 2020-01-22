@@ -517,7 +517,18 @@ A list of api keys expected in the header ```X-Api-Key```
 
 `indices: ["sales", "logstash-*"]` 
 
-Match if the request involves whose name indices whose name is "sales", or starts with "logstash-", or of both.
+Matches if the request involves a set of indices whose name is "sales", or starts with  the string "logstash-", or a combination of both.
+
+If a request involves a wildcard (i.e. "logstash-*", "*"), this is first expanded to the list of available indices, and then treated normally as follows:
+
+* Requests that do not involve any indices (cluster admin, etc) result in a "match".
+* Requests that involve only allowed indices result in a "match".
+* Requests that involve a mix of allowed and prohibited indices, are rewritten to only involve allowed indices, and result in a "match".
+* Requests that involve only prohibited indices result in a "no match". And the ACL evaluation moves on to the next block.
+
+The rejection message and HTTP status code returned to the requester are chosen carefully with the main intent to make ES behave like the prohibited indices do not exist at all.
+
+#### In detail, with examples
 
 In ReadonlyREST we roughly classify requests as:
 
