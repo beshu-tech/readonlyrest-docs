@@ -351,7 +351,7 @@ By default the client authentication is disabled. When enabled, the server asks 
 ```yml
 client_authentication: true
 ```
-under `ssl` or `ssl_internode` section. This option is applicable for both ssl configuration types.
+under `ssl` section. This option is applicable only for REST API external ssl.
 
 Both `certificate_verification` and `client_authentication` can be enabled with single property `verification`.
  Using this property is deprecated and allowed because of backward compatibility support. Specialized properties make configuration more readable and explicit. 
@@ -380,6 +380,18 @@ ReadonlyREST will log a list of available ciphers and protocols supported by the
 [2018-0
 ```
 
+### Custom truststore
+ReadonlyREST allows using custom truststore, replacing (provided by JRE) default one. Custom truststore can be set with:
+
+ ```yml
+truststore_file: "truststore.jks"
+truststore_pass: truststorepass
+ ```  
+
+under `ssl` or `ssl_internode` section.
+This option is applicable for both ssl modes - external ssl and internode ssl.
+The truststore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml` (like keystore). 
+When not specifed, ReadonlyREST uses default truststore.
 
 ## Blocks of rules
 Every block **must** have at least the `name` field, and optionally a `type` field valued either "allow" or "forbid". If you omit the `type`, your block will be treated as `type: allow` by default. 
