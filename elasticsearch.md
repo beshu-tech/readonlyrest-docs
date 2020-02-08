@@ -544,6 +544,8 @@ When the subset of indices is empty, it means that user are not allowed to acces
 
 For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled (for nonexistent index). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. 
 
+It's also worth to mentioned here, that when `prompt_for_basic_auth: true` (current default) is configured, ROR is going to return HTTP 401 error code instead of HTTP 404. It is relevant for ROR free version users who take advantage of Kibana's behaviour which shows the native browser basic auth dialog, when it receives HTTP 401 response.
+
 If a **write request** wants to write to indices they don't have permission for, the write request is rejected.
 
 Examples:
