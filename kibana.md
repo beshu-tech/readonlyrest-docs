@@ -402,23 +402,25 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 # Audit log
 The audit log feature is widely described in [📖docs for Elasticsearch plugin](elasticsearch.md#audit-logs). 
 Kibana plugin has predefined dashboard representing collected audit data.
+
 ## Loading visualization
-Visualization loading button is located in _Audit_ tab. 
+In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
+
 ![audit log tab](audit_tab.png)
 
-Click _Load_ button to load visualization.
-_Override_ checkbox allows you to load current version saved objects. 
-It will override your's current settings. 
+Click the  _Load_ button to load the dashboard and visualizations.
+An _Override_ checkbox allows to reload the default dashboard and visualizations. 
+It will override any previously loaded audit log dashboard.
 
 ![loading visualization](load_audit_dashboard.png)
 
-Loading audit log dashboard imports predefined saved objects: 
-* index pattern for `readonlyrest_audit-*`
-* dashboard `ReadonlyREST Audit Log`
-* visualizations
+In detail, this feature creates three Kibana "saved objects": 
+* an index pattern for `readonlyrest_audit-*`
+* a dashboard called `ReadonlyREST Audit Log`
+* some visualizations
 
 ## Dashboard
-Dashboard, by default has few basic visualizations. 
+The audit log dashboard, by default, has only a few basic visualizations. 
 They cover security, access logs, and performance metrics.
 
 # SAML
