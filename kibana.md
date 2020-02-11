@@ -399,10 +399,10 @@ The result may look something like this:
 http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
 
-## Audit log
-Audit log feature is wide described in [📖docs for Elasticsearch plugin](elasticsearch.md#audit-logs). 
+# Audit log
+The audit log feature is widely described in [📖docs for Elasticsearch plugin](elasticsearch.md#audit-logs). 
 Kibana plugin has predefined dashboard representing collected audit data.
-### Loading visualization
+## Loading visualization
 Visualization loading button is located in _Audit_ tab. 
 ![audit log tab](audit_tab.png)
 
@@ -412,14 +412,14 @@ It will override your's current settings.
 
 ![loading visualization](load_audit_dashboard.png)
 
-Currently loading dashboard will fetch tou your's kibana
+Loading audit log dashboard imports predefined saved objects: 
 * index pattern for `readonlyrest_audit-*`
 * dashboard `ReadonlyREST Audit Log`
 * visualizations
 
-### Dashboard
+## Dashboard
 Dashboard, by default has few basic visualizations. 
-They're covers security, accessibility, performance, and performance diagrams.
+They cover security, access logs, and performance metrics.
 
 # SAML
 ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO (single sign on) and SLO (single log out).
