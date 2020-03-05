@@ -47,7 +47,6 @@ You will receive another email notification that a new deliverable is available.
 
 If the update contains a security fix, it is very important that you take action and **update the plugin immediately**.
 
-
 # Installation
 You can install this as a normal Kibana plugin using the `bin/kibana-plugin` utility. 
 
@@ -65,19 +64,20 @@ $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_p
 
 # ReadonlyREST Enterprise (30 days trial) edition
 $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>"
-
 ```
+
 If you are a PRO or Enterprise subscriber, the link will include an extra parameter "token" which can only be used in association with the provided email address. 
 
 **NB: This URL is personal, and should be handled as a secret.**
-``
+
+```bash
 # ReadonlyREST PRO (Official) edition
 $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&email=<your_email_address>&token=<your_secret_token>"
 
 # ReadonlyREST Enterprise (30 days trial) edition
 $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>&token=<your_secret_token>"
-
 ```
+
 You can obtain official links with personal secret tokens using our self service [download form](https://readonlyrest.com/download/), once your email address has been recognized as active subscriber.
 
 ## Install from zip file
