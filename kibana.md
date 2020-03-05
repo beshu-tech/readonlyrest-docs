@@ -51,28 +51,42 @@ If the update contains a security fix, it is very important that you take action
 # Installation
 You can install this as a normal Kibana plugin using the `bin/kibana-plugin` utility. 
 
-> Please note: the Kibana and Elasticsearch plugins version string need to match. That is, both plugin zip file names need to contain something like 1.16.26_es6.4.0 (or 1.16.26-XXXXXXXX_es6.4.0 in case it's a trial build). 
+## Install via URL
+This installation method is more practical if your Kibana server is connected to the internet.
 
-From your Kibana installation, launch the command:
+According to what edition of ReadonlyREST you want to install, from your Kibana installation, launch one of the commands:
+
+```bash
+# ReadonlyREST Free edition
+$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&email=<your_email_address>"
+
+# ReadonlyREST PRO (30 days trial) edition
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&email=<your_email_address>"
+
+# ReadonlyREST Enterprise (30 days trial) edition
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>"
+
+```
+If you are a PRO or Enterprise subscriber, the link will include an extra parameter "token" which can only be used in association with the provided email address. 
+
+**NB: This URL is personal, and should be handled as a secret.**
+``
+# ReadonlyREST PRO (Official) edition
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&email=<your_email_address>&token=<your_secret_token>"
+
+# ReadonlyREST Enterprise (30 days trial) edition
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>&token=<your_secret_token>"
+
+```
+You can obtain official links with personal secret tokens using our self service [download form](https://readonlyrest.com/download/), once your email address has been recognized as active subscriber.
+
+## Install from zip file
 
 ```bash
 $ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
 ```
 
 Notice how we need to type in the format `file://` + absolute path (yes, with three slashes).
-
-Kibana "optimization" process is long and buggy, please make sure that the plugin's css file file gets generated, otherwise create it empty (no css is loaded from there anyway).
-To do so, run this command:
-
-```bash
-$ touch optimize/bundles/readonlyrest_kbn.style.css
-```
-
-Or on Windows:
-
-```bash
-type nul > optimize\bundles\readonlyrest_kbn.style.css
-```
 
 ## Uninstall 
 
