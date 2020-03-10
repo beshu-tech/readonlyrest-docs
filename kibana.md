@@ -132,7 +132,7 @@ In general, by design, we tend to concentrate all configuration within the main 
 ## Clusterwide Settings vs readonlyrest.yml
 Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
 
-When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. 
+When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. You can customize a name of the index by setting `readonlyrest.settings_index: .my_custom_readonlyrest` in `elasticsearch.yml` file (remember to set the same value for all your ES nodes).
 
 When an Elasticsearch node restarts, the order of settings evaluation is the following:
 1. Attempt to find valid settings in readonlyrest.yml
