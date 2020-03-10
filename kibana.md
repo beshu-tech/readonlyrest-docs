@@ -336,7 +336,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-For` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
 
 ### Custom Logout link
-Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrytped cookie that represents the users identity and the login form is shown.
+Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrypted cookie that represents the users identity and the login form is shown.
 
 However, when the authentication is delegated to a proxy, the logout button needs to become a link to some URL capable to unregister the session a user initiated within the proxy.
 
@@ -352,7 +352,7 @@ When you delegate authentication to an external service, you can tell ReadonlyRE
 
 To enable this:
 
-1. Find your authentication proxy or identity proviedr login URL for the ROR app
+1. Find your authentication proxy or identity provider login URL for the ROR app
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.custom_login_link: "https://../login"`
 
 The advantage of this approach is a streamlined user experience for users that login with an external IdP. The disadvantage is that you give up the possibility to login as a local user in ROR, as the login form will be always skipped.
@@ -379,16 +379,16 @@ http://kibana:5601/login?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj
 
 The following will happen:
 
-1. The Kibana plugin will forward the JWT token found in the query parameter into the `Authrization` header in a request to Elasticsearch.
+1. The Kibana plugin will forward the JWT token found in the query parameter into the `Authorization` header in a request to Elasticsearch.
 
 2. Elasticsearch will cryptographically authenticate and resolve the user's identity from the JWT claims.
 
-3. Kibana will write an encrypted cookie in your browser and use that from now on for the length of the autenticated session. From here onwards, the session management will be identical to the normal login form flow.
+3. Kibana will write an encrypted cookie in your browser and use that from now on for the length of the authenticated session. From here onwards, the session management will be identical to the normal login form flow.
 
 4. When the user presses logout, Kibana will delete the cookie and redirect you to the login form, or whatever link you configured as `readonlyrest_kbn.custom_logout_link`.
 
 #### Deep linking with JWT
-Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the call on the fly, the JWT authentication can be used in conjunction with `nextUrl` query parameter for sharing deep links inside Kibana apps, or embeddinig visualizations and dashboards inside I-Frames.
+Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the call on the fly, the JWT authentication can be used in conjunction with `nextUrl` query parameter for sharing deep links inside Kibana apps, or embedding visualizations and dashboards inside I-Frames.
 
 ##### Anatomy of a JWT deep link
 ```
@@ -527,7 +527,7 @@ Example response:
  
 # Load balancers
 
-## Enable healthcheck endpoint 
+## Enable health check endpoint 
 
 Normally a load balancer needs a health check URL to see if the instance is still running, you can whitelist this Kibana path so the load balancer avoids a redirection to `/login`.
 
@@ -546,6 +546,7 @@ To avoid this, session synchronization via an Elasticsearch index should be enab
 1. Come up with a string of at least 32 characters length or more to be used as the shared cookie encryption key, called `cookiePass`.
 2. Open up `conf/kibana.yml` and add: 
     * `readonlyrest_kbn.cookiePass: "generatedStringIn1step"` (example: "12345678901234567890123456789012")
+    * `readonlyrest_kbn.cookieName` (custom cookie name - this property is optional, if not specified default cookie name would be `rorCookie`)
     * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
     * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
     * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
@@ -553,7 +554,7 @@ To avoid this, session synchronization via an Elasticsearch index should be enab
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them. 
 
 # Login screen tweaking
-It is possible to customise the look of the login screen.
+It is possible to customize the look of the login screen.
 
 ## Add your company logo
 It's recommended to use a transparent PNG, negative logo. Ideally a white foreground, and transparent background.
