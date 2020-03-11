@@ -190,13 +190,13 @@ readonlyrest:
     - name: "::RO::"
       auth_key: ro:dev
       kibana_access: ro
-      indices: [ ".kibana", ".kibana-devnull", "logstash-*"]
+      indices: [ ".kibana", "logstash-*"]
       kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
     - name: "::RW::"
       auth_key: rw:dev
       kibana_access: rw
-      indices: [".kibana", ".kibana-devnull", "logstash-*"]
+      indices: [".kibana", "logstash-*"]
       kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
 
