@@ -550,6 +550,7 @@ To avoid this, session synchronization via an Elasticsearch index should be enab
     * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
     * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
     * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
+    * `readonlyrest_kbn.sessions_probe_interval_seconds: 15` (default 10s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
     
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them. 
 
