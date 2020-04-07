@@ -1877,7 +1877,9 @@ readonlyrest:
 - By default, users in `search_user_base_DN` should contain a `uid` LDAP attribute referring to a unique ID for the user within the base DN. An alternative attribute name can be specified via the optional `user_id_attribute` configuration item.
 - By default, groups in `search_groups_base_DN` should contain a `uniqueMember` LDAP attribute referring to the full DNs of the users that belong to the group. (There may be any number of occurrences of this attribute within a particular group, as any number of users may belong to the group.) An alternative attribute name can be specified via the optional `unique_member_attribute` configuration item.
 - `group_name_attribute` is the LDAP group object attribute that contains the names of the ROR groups
-- `group_search_filter` is the LDAP search filter (or filters) to limit the user groups returned by LDAP. This filter will be joined (with `&`) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: (&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute=user_dn)). Examples:
+- `group_search_filter` is the LDAP search filter (or filters) to limit the user groups returned by LDAP. By default, this filter will be joined (with `&`) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: (&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute=user_dn)). The `unique_member_attribute` can be set to use the value of `user_id_attribute` by setting `group_attribute_is_dn: false`. 
+
+Examples:
 
 ```
 group_search_filter: "(objectClass=group)"
