@@ -462,6 +462,10 @@ Behaves exactly like `hosts`, but gets the source IP address (a.k.a. origin addr
 This is a nice tip if your Elasticsearch is behind a load balancer. If you want to match all the requests that come through the load balancer, use `x_forwarded_for: ["0.0.0.0/0"]`. 
 This will match the requests with a valid IP address as a value of the `X-Forwarded-For` header.
 
+#### DNS lookup caching
+
+It's worth to note that resolutions of DNS are going to be cached by JVM. By default properly resolved IPs will be cached forever (until next restart of Elasticsearch). It's not always a desired behaviour, but it could be easily configured by adding JVM options: `sun.net.inetaddr.ttl=TTL_VALUE` (or/and `sun.net.inetaddr.negative.ttl=TTL_VALUE`). More details about the problem can be found here: https://www.ibm.com/support/pages/understanding-tuning-and-testing-inetaddress-class-and-cache
+
 ---
 
 ### `methods`
