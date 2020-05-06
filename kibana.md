@@ -326,14 +326,14 @@ elasticsearch.password: "kibana"
 And of course also make sure `elasticsearch.url` points to the designated Elasticsearch instance (check also the http or https)
 
 ## Proxy Auth
-ROR for Elasticsearch can delegate authentication to a reverse proxy which will enforce some kind of authentication, and pass the successfully authenticated user's name inside a `X-Forwarded-For` header.
+ROR for Elasticsearch can delegate authentication to a reverse proxy which will enforce some kind of authentication, and pass the successfully authenticated user's name inside a `X-Forwarded-User` header.
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well. 
 
 1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#proxy_auth-)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
-Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-For` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
+Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
 
 ### Custom Logout link
 Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrypted cookie that represents the users identity and the login form is shown.
