@@ -531,7 +531,7 @@ A list of api keys expected in the header ```X-Api-Key```
 
 Matches if the request involves a set of indices whose name is "sales", or starts with  the string "logstash-", or a combination of both.
 
-If a request involves a wildcard (i.e. "logstash-*", "*"), this is first expanded to the list of available indices, and then treated normally as follows:
+If a request involves a wildcard (i.e. "logstash-\*", "\*"), this is first expanded to the list of available indices, and then treated normally as follows:
 
 * Requests that do not involve any indices (cluster admin, etc) result in a "match".
 * Requests that involve only allowed indices result in a "match".
