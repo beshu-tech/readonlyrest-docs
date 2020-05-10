@@ -1,3 +1,13 @@
+##### What's new in 1.19.5
+
+*   **🚀New** (ES) 7.6.2, 6.8.8 support
+*   **🧐Enhancement** (ES) kibana_access can be explicitly set to unrestricted
+*   **🧐Enhancement** (ES) LDAP connection pool improvement
+*   **🐞Fix** (ES) better LDAP request timeout handling
+*   **🐞Fix** (ES) remote indices searching bug
+*   **🐞Fix** (ES) cross cluster search support for _field_caps request
+*   **🐞Fix** (ES) create and delete templates handling
+
 ##### What's new in 1.19.4
 
 *   **🐞Fix** (ES) Interpolating config with environment variables in SSL section
