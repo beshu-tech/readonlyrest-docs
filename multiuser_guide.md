@@ -12,7 +12,7 @@ For this tutorials, we want to have three users, each of them has a distinct acc
 |---------------------------------------|---------|----------|----------|
 | Can create, edit, delete dashboards     | ✅      | ✅       |          |
 | Can change Kibana settings            | ✅      | ✅       |          |
-| Only sees logstash data from 2017     |         |          | ✅      |
+| Only sees logstash data from 2019     |         |          | ✅      |
 | Can see "add", "delete", "edit" buttons | ✅      | ✅       |          |
 | "dev-tools" Kibana App is hidden       | ✅      | ✅       |          |
 | "readonlyrest" Kibana App is hidden    | ✅      |          |          |
