@@ -524,6 +524,76 @@ Example response:
 4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set kibana in debug mode so ReadonlyREST will print the user profile).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
 6. If you want to use SAML for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
+
+# OpenID Connect (OIDC)
+ReadonlyREST Enterprise support OpenID Connect for authentication and authorization. 
+
+> soon we will create a specific guide only for OpenID, like the ones we have for SAML
+
+Here is how to configure it.
+
+## Configure `ror_kbn_auth` bridge
+
+This part is identical as seen in SAML connectors. In order for the user identity information to flow securely from Kibana to Elasticsearch, we need to set up the two plugin with a shared secret, that is: an arbitrarily long string.
+
+## Elasticsearch side
+Edit `readonlyrest.yml`
+
+```yml
+readonlyrest:
+    access_control_rules:
+    
+    - name: "::KIBANA-SRV::"
+      auth_key: kibana:kibana
+      
+    ... all usual blocks of rules...
+        
+    - name: "ReadonlyREST Enterprise instance #1"
+      ror_kbn_auth:
+        name: "kbn1"
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
+```
+
+**⚠️IMPORTANT** the Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
+
+## Kibana side
+
+We will assume the OpenID identity provider responds to port 8080 of localhost. In our example, we used Keycloak, an open source implementation of OpenID Connect identity provide.
+
+Edit `kibana.yml` and append:
+
+```yaml
+readonlyrest_kbn.auth:
+  signature_key: "my_shared_secret_kibana1(min 256 chars)"
+  oidc_kc: 
+            buttonName: "KeyCloak OpenID"
+            type: "oidc"
+            issuer: 'http://localhost:8080/auth/realms/ror'
+            authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth'
+            tokenURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/token'
+            userInfoURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/userinfo'
+            clientID: 'ror_oidc'
+            clientSecret: '9f1d39c8-a211-460a-84b6-0a4a1499c455'
+            scope: 'openid profile roles role_list email'
+            usernameParameter: 'preferred_username'
+            groupsParameter: 'groups'
+            logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout'
+
+     
+```
+
+## Identity provider side
+
+1. Enter the settings interface of your identity provider, and create a new OpenID app .
+2. The redirect URL should be configured as `http://localhost:5601/*`  assuming kibana is listening on localhost and on the default port.
+3. Create some users and some groups in the identity provider if not present.
+4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set readonlyrest_kbn.logLevel: debug` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).
+5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
+6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
+ 
  
 # Load balancers
 
