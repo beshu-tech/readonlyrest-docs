@@ -9,7 +9,7 @@
 *   **🚨Security Fix** (ES) create and delete templates handling
 *   **🐞Fix** (KBN) Regression in proxy_auth_passthrough
 *   **🧐Enhancement** (KBN) whitelistedPaths now accepts basic auth credentials
-*   **🧐Enhancement** (KBN) Dump logout button, [new ROR Panel](https://forum.readonlyrest.com/t/new-logout-button-design-new-ror-panel/1476) ![ror bar](https://i.imgur.com/xQYatWI.png)
+*   **🧐Enhancement** (KBN) Dump logout button, [new ROR Panel](https://forum.readonlyrest.com/t/new-logout-button-design-new-ror-panel/1476)
 *   **🧐Enhancement** (KBN) removed ROR from Kibana sidebar. Admins have a link in new panel.
 *   **🧐Enhancement** (KBN) avoid show login form redirecting from SAML IdP
 *   **🚀New** (KBN) [OpenID Connect (OIDC) authentication connector](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#openid-connect-oidc)
