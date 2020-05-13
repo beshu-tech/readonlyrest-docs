@@ -2,8 +2,8 @@
 
 *   **🚀New** (ES) 7.6.2, 6.8.8 support
 *   **🧐Enhancement** (ES/KBN) kibana_access can be explicitly set to unrestricted
-*   **🧐Enhancement** (ES) LDAP connection pool improvement
-*   **🐞Fix** (ES) better LDAP request timeout handling
+*   **🧐Enhancement** (ES) [LDAP connection pool improvement](https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485)
+*   **🐞Fix** (ES) [better LDAP request timeout handling](https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485)
 *   **🐞Fix** (ES) remote indices searching bug
 *   **🐞Fix** (ES) cross cluster search support for _field_caps request
 *   **🚨Security Fix** (ES) create and delete templates handling
