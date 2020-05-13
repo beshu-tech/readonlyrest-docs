@@ -627,6 +627,17 @@ To avoid this, session synchronization via an Elasticsearch index should be enab
 # Login screen tweaking
 It is possible to customize the look of the login screen.
 
+## Two column layout
+By default,the login form appears in a single column view. 
+![one column](blob:https://imgur.com/f7514ca2-7f8f-4f96-aecd-09e7ea636b62)
+
+But once title and subtitle are configured, it will switch to two columns for making room to the new text.
+```
+readonlyrest_kbn.login_title: "Some Title"
+readonlyrest_kbn.login_subtitle: "Longer text <b>any HTML is supported<b/> including ifrmaes"
+```
+![two columns](https://i.imgur.com/Sqf1GIL.png)
+
 ## Add your company logo
 It's recommended to use a transparent PNG, negative logo. Ideally a white foreground, and transparent background.
 
