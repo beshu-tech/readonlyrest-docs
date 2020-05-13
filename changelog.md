@@ -1,3 +1,19 @@
+##### What's new in 1.19.5
+
+*   **🚀New** (ES) 7.6.2, 6.8.8 support
+*   **🧐Enhancement** (ES/KBN) kibana_access can be explicitly set to unrestricted
+*   **🧐Enhancement** (ES) [LDAP connection pool improvement](https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485)
+*   **🐞Fix** (ES) [better LDAP request timeout handling](https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485)
+*   **🐞Fix** (ES) remote indices searching bug
+*   **🐞Fix** (ES) cross cluster search support for _field_caps request
+*   **🚨Security Fix** (ES) create and delete templates handling
+*   **🐞Fix** (KBN) fix regression in proxy_auth_passthrough
+*   **🧐Enhancement** (KBN) New logout/tenancy selector
+*   **🧐Enhancement** (KBN) avoid show login form redirecting from SAML IdP
+*   **🚀New** (KBN) OpenID Connect (OIDC) authentication connectorC
+*   **🚀New** (KBN) login_title, login_subtitle enable 2 column login page
+*   **🚨Security Fix** (KBN) server-side navigation prevention to hidden apps
+
 ##### What's new in 1.19.4
 
 *   **🐞Fix** (ES) Interpolating config with environment variables in SSL section
