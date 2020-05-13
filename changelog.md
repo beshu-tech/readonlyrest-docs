@@ -7,11 +7,13 @@
 *   **🐞Fix** (ES) remote indices searching bug
 *   **🐞Fix** (ES) cross cluster search support for _field_caps request
 *   **🚨Security Fix** (ES) create and delete templates handling
-*   **🐞Fix** (KBN) fix regression in proxy_auth_passthrough
-*   **🧐Enhancement** (KBN) New logout/tenancy selector
+*   **🐞Fix** (KBN) Regression in proxy_auth_passthrough
+*   **🧐Enhancement** (KBN) whitelistedPaths now accepts basic auth credentials
+*   **🧐Enhancement** (KBN) Dump logout button, [new ROR Panel](https://forum.readonlyrest.com/t/new-logout-button-design-new-ror-panel/1476) ![ror bar](https://i.imgur.com/xQYatWI.png)
+*   **🧐Enhancement** (KBN) removed ROR from Kibana sidebar. Admins have a link in new panel.
 *   **🧐Enhancement** (KBN) avoid show login form redirecting from SAML IdP
-*   **🚀New** (KBN) OpenID Connect (OIDC) authentication connectorC
-*   **🚀New** (KBN) login_title, login_subtitle enable 2 column login page
+*   **🚀New** (KBN) [OpenID Connect (OIDC) authentication connector](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#openid-connect-oidc)
+*   **🚀New** (KBN) [login_title, login_subtitle enable 2 column login page](https://forum.readonlyrest.com/t/ror-enterprise-show-support-contact-on-login-page/1508/2)
 *   **🚨Security Fix** (KBN) server-side navigation prevention to hidden apps
 
 ##### What's new in 1.19.4
