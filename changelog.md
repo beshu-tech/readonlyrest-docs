@@ -16,6 +16,8 @@
 *   **🚀New** (KBN) [login_title, login_subtitle enable 2 column login page](https://forum.readonlyrest.com/t/ror-enterprise-show-support-contact-on-login-page/1508/2)
 *   **🚨Security Fix** (KBN) server-side navigation prevention to hidden apps
 
+* * *
+
 ##### What's new in 1.19.4
 
 *   **🐞Fix** (ES) Interpolating config with environment variables in SSL section
