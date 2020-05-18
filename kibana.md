@@ -108,6 +108,7 @@ Install the new version of ReadonlyREST into Kibana.
 ```bash
 $ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-*.zip
 
+# Only for older versions (until Kibana early 6.x)
 $ touch optimize/bundles/readonlyrest_kbn.style.css
 ```
 
