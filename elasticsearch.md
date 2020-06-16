@@ -47,7 +47,7 @@ To install ReadonlyREST plugin for Elasticsearch:
 ### 1. Obtain the build
 From the [official download page](https://readonlyrest.com/download.html). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
 
-### Install the build
+### 2. Install the build
 
 ```bash
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-X.Y.Z_esW.Q.U.zip
