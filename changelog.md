@@ -1,3 +1,20 @@
+##### What's new in 1.20.0
+*   **🚀New** 7.7.1, 7.8.0 support
+*   **🧐Enhancement** (KBN) tidy up audit page
+*   **🧐Enhancement** (KBN FREE) clearly inform when features are not available
+*   **🧐Enhancement** (KBN) ship license report of libraries
+*   **🧐Enhancement** (ES) filter rule performance improvement
+*   **🐞Fix** (KBN) proxy_auth: avoid logout-login loop
+*   **🐞Fix** (KBN) 404 error on font CSS file
+*   **🐞Fix** (ES) [wildcard in filter query issue](https://forum.readonlyrest.com/t/wildcard-in-dls-filter-gives-error/1551)
+*   **🐞Fix** (ES) [forbidden /_snapshot issue](https://forum.readonlyrest.com/t/get-snapshot-permission-issue/1594)
+*   **🐞Fix** (ES) /_mget handling by indices rule when no index from a list is found
+*   **🐞Fix** (ES) available groups order in metadata response should match the order in which groups appear in ACL
+*   **🐞Fix** (ES) .readonlyrest and audit index - removed usage of explicit index type
+*   **🐞Fix** (ES) [tasks leak bug](https://forum.readonlyrest.com/t/lots-of-active-tasks-in-cat-tasks/1593)
+  
+* * *
+
 ##### What's new in 1.19.5
 *   **🚀New** 7.7.0, 7.6.2, 6.8.9, 6.8.8 support
 *   **🧐Enhancement** (ES/KBN) kibana_access can be explicitly set to unrestricted
