@@ -1352,7 +1352,7 @@ The main issues seen in support cases:
 
 * Bad ordering or ACL blocks. Remember that the ACL is evaluated sequentially, block by block. And the first block whose rules all match is accepted.
 * Users don't know how to read the `HIS` field in the logs, which instead is crucial because it contains a trace of the evaluation of rules and blocks.
-* LDAP configuration: LDAP is tricky to configure in any system. Configure ES root logger to `DEBUG` editing `$ES_PATH_CONF/config/l4j2.properties` to see a trace of the LDAP messages.
+* LDAP configuration: LDAP is tricky to configure in any system. Configure ES root logger to `DEBUG` editing `$ES_PATH_CONF/config/log4j2.properties` to see a trace of the LDAP messages.
 
 
  
@@ -1549,7 +1549,7 @@ This will show you the whole request context (including the action and indices f
 
 **Step 2: enable debug logs**
 
-Logs are good for auditing the activity on the REST API. You can configure them by editing `$ES_PATH_CONF/config/logging.yml` (Elasticsearch 2.x) or `$ES_PATH_CONF/config/l4j2.properties` [file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#logging) (Elasticsearch 5.x)
+Logs are good for auditing the activity on the REST API. You can configure them by editing `$ES_PATH_CONF/config/logging.yml` (Elasticsearch 2.x) or `$ES_PATH_CONF/config/log4j2.properties` [file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#logging) (Elasticsearch 5.x)
 
 For example, you can **enable the debug log** globally by setting the `rootLogger`to `debug`.
 
@@ -1560,7 +1560,7 @@ rootLogger.level = debug
 This is really useful especially to debug the activity of LDAP and other external connectors.
 
 #### Trick: log requests to different files
-Here is a `l4j2.properties` snippet for ES 5.x that logs all the received requests as a new line in a separate file:
+Here is a `log4j2.properties` snippet for ES 5.x that logs all the received requests as a new line in a separate file:
 
 ```properties
 #Plugin readonly rest separate access logging file definition
