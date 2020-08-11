@@ -1,3 +1,18 @@
+##### What's new in 1.21.0
+*   **🧐Enhancement** (ES) [cluster API support improvements](https://forum.readonlyrest.com/t/settings-problems/1616)
+*   **🐞Fix** (ES) X-Pack _async_search support
+*   **🐞Fix** (ES) _rollover request handling
+*   **🐞Fix** (ES) [handling numeric ssl configuration properties](https://forum.readonlyrest.com/t/numeric-passphrases-invalid-ssl-config/1512)
+*   **🐞Fix** (KBN) multitenancy+reporting regression fix (for 7.6.x and earlier)
+*   **🐞Fix** (KBN) "x-" headers should be forwarded in /login route when proxy passthrough is enabled
+*   **🐞Fix** [(KBN) Logout now redirects to login screen when using proxy](https://forum.readonlyrest.com/t/kibana-ror-1-19-5-issue/1576/24)
+*   **🐞Fix** (KBN) SAML metadata.xml endpoint not responding
+*   **🐞Fix** (KBN) NAT/reverse proxy support for SAML
+*   **🐞Fix** (KBN) SAML login redirect error
+*   **🐞Fix** (ES) _readonlyrest/metadata/current_user should be always allowed by filter/fields rule
+  
+* * *
+
 ##### What's new in 1.20.0
 *   **🚀New** 7.7.1, 7.8.0 support
 *   **🧐Enhancement** (KBN) tidy up audit page
