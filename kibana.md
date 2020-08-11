@@ -156,9 +156,9 @@ When the ES plugin boots up, it follows some logic to evaluate where to read the
 
 ![config loading diagram](ror_config_loading_diagram.png)
 
-### Malformed configuration index 
-When configuration index contains invalid configuration format, 
-then neither configuration from file or from index can be loaded,
+### Malformed in-index settings 
+If for some reason the in-index settings get corrupted and ROR can't parse them, 
+then neither settings from file or in-index settings can be loaded,
 so ES can't start.
 In this case ES would print message like:
 ```
@@ -168,9 +168,9 @@ Loading ReadonlyREST settings from index failed: Settings config content is malf
                     ^
 ```
 To recover from this state, 
-set `force_load_from_file` in `readonlyrest.yml` on one node `es1`.
+set `force_load_from_file: true` in `readonlyrest.yml` on one node `es1`.
 
-Example recovery config:
+Example recovery settings:
 ```yaml
 readonlyrest:
   force_load_from_file: true
@@ -179,11 +179,11 @@ readonlyrest:
     auth_key: admin:dev
     indices: ["*"]
 ```
-Then remove config index manually.
+Then remove in-index settings index manually.
 ```bash
 curl -X DELETE "admin:dev@es1:9200/.readonlyrest?pretty"
 ```
-Now you can restore yours configuration to `readonlyrest.yml`, and restart node.
+Now you can restore your settings to `readonlyrest.yml`, and restart node.
 
 ## Example: multiuser ELK
 
