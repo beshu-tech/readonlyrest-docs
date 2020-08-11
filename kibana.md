@@ -143,7 +143,6 @@ When an Elasticsearch node restarts, the order of settings evaluation is the fol
 5. Pressing "save" in the cluster wide settings app, will **not overwrite the readonlyrest.yml** file.
 
 Best practices:
-* Create a readonlyrest.yml containing basic "fallback" security settings, maybe with just an administrator local, so you can still login if in index settings get corrupted.
 * Build and update your production security settings from the Kibana app (will be saved in index)
 * Protect the ".readonlyrest" Kibana index with an ACL rule
 
@@ -156,6 +155,35 @@ As you read, there are two possible places where the settings can be read from:
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
 ![config loading diagram](ror_config_loading_diagram.png)
+
+### Malformed in-index settings 
+If for some reason the in-index settings get corrupted and ROR can't parse them, 
+then neither settings from file or in-index settings can be loaded,
+so ES can't start.
+In this case ES would print message like:
+```
+Loading ReadonlyREST settings from index failed: Settings config content is malformed. Details: while scanning a quoted scalar
+ in 'reader', line 9, column 17:
+          auth_key: "admin:container
+                    ^
+```
+To recover from this state, 
+set `force_load_from_file: true` in `readonlyrest.yml` on one node `es1`.
+
+Example recovery settings:
+```yaml
+readonlyrest:
+  force_load_from_file: true
+  access_control_rules:
+  - name: "::ADMIN recover::"
+    auth_key: admin:dev
+    indices: ["*"]
+```
+Then remove in-index settings index manually.
+```bash
+curl -X DELETE "admin:dev@es1:9200/.readonlyrest?pretty"
+```
+Now you can restore your settings to `readonlyrest.yml`, and restart node.
 
 ## Example: multiuser ELK
 
