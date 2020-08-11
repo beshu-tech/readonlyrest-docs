@@ -29,7 +29,7 @@ The following diagram models an instance of Elasticsearch with the ReadonlyREST 
 ![readonlyrest request processing diagram](https://i.imgur.com/VX28w1V.png)
 
 1. The User Agent (i.e. cURL, Kibana) sends a search request to Elasticsearch using the port 9200 and the HTTPS URL schema.
-2. The HTTPS filter in ReadonlyREST plugin unrwaps the SSL layer and hands over the request to Elasticsearch HTTP stack
+2. The HTTPS filter in ReadonlyREST plugin unwraps the SSL layer and hands over the request to Elasticsearch HTTP stack
 3. The HTTP stack in Elasticsearch parses the HTTP request
 4. The HTTP handler in Elasticsearch extracts the indices, action, request type and creates a `SearchRequest` (internal Elasticsearch format).
 5. The SearchRequest goes through the ACL (access control list), external systems like LDAP can be asynchronously queried, and an exit result is eventually produced.
