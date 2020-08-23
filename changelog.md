@@ -1,3 +1,13 @@
+##### What's new in 1.22.0
+*   **🚀New** (ES) 7.9.0 support
+*   **🧐Enhancement** (ES) aliases API handling
+*   **🐞Fix** (ES) [adding aliases issue](https://forum.readonlyrest.com/t/actions-still-forbidden-to-unrestricted-user/1659)
+*   **🐞Fix** (ES) potential memory leak for ES 7.7.x and above
+*   **🐞Fix** (ES) cross cluster search issue fix for X-Pack _async_search action
+*   **🐞Fix** (ES) XFF entry in audit issue
+
+* * *
+
 ##### What's new in 1.21.0
 *   **🧐Enhancement** (ES) [cluster API support improvements](https://forum.readonlyrest.com/t/settings-problems/1616)
 *   **🐞Fix** (ES) X-Pack _async_search support
