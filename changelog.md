@@ -5,6 +5,9 @@
 *   **🐞Fix** (ES) potential memory leak for ES 7.7.x and above
 *   **🐞Fix** (ES) cross cluster search issue fix for X-Pack _async_search action
 *   **🐞Fix** (ES) XFF entry in audit issue
+*   **🐞Fix** (KBN) SAML certificate loading
+*   **🐞Fix** (KBN) SAML loading groups from assertion
+*   **🐞Fix** (KBN) fix reporting in pre-7.7.0
 
 * * *
 
