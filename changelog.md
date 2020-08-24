@@ -1,6 +1,7 @@
 ##### What's new in 1.22.0
 *   **🚀New** (ES) 7.9.0 support
 *   **🧐Enhancement** (ES) aliases API handling
+*   **🧐Enhancement** (ES) dynamic variables support in fields rule
 *   **🐞Fix** (ES) [adding aliases issue](https://forum.readonlyrest.com/t/actions-still-forbidden-to-unrestricted-user/1659)
 *   **🐞Fix** (ES) potential memory leak for ES 7.7.x and above
 *   **🐞Fix** (ES) cross cluster search issue fix for X-Pack _async_search action
