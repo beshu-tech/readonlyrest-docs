@@ -1,3 +1,8 @@
+##### What's new in 1.22.1
+*   **🐞Fix** (ES) missing handling of aliases API for ES 7.9.0
+  
+* * *
+
 ##### What's new in 1.22.0
 *   **🚀New** (ES) 7.9.0 support
 *   **🧐Enhancement** (ES) aliases API handling
