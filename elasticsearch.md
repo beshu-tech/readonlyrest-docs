@@ -544,6 +544,18 @@ If a request involves a wildcard (i.e. "logstash-\*", "\*"), this is first expan
 
 The rejection message and HTTP status code returned to the requester are chosen carefully with the main intent to make ES behave like the prohibited indices do not exist at all.
 
+The rule has also extended version:
+
+```
+indices:
+  patterns: ["sales", "logstash-*"]` 
+  must_involve_indices: false
+```
+
+The definition above has the same meaning as the shortest version shown at the beginning of this section. 
+By default the rule will be matched when a request doesn't involve indices (eg. /_cat/nodes request). But we can change the behaviour 
+by configuring `must_involve_indices: true` - in this case the request above will be rejected by the rule.
+
 #### In detail, with examples
 
 In ReadonlyREST we roughly classify requests as:
