@@ -478,15 +478,17 @@ Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP 
 
 ### `headers`
 
-`headers: ["h1:x*y","h2:*xy"]`
+`headers: ["h1:x*y","~h2:*xy"]`
 
-Match if **all** the HTTP headers are found in the request. This is useful used in conjunction with [proxy_auth](elasticsearch.md#proxy_auth-), to carry authorization information (i.e. headers: `x-usr-group: admins`). 
+Match if **all** the HTTP headers in the request match the defined patterns in headers rule. This is useful in conjunction with [proxy_auth](elasticsearch.md#proxy_auth-), to carry authorization information (i.e. headers: `x-usr-group: admins`). 
+
+The `~` sign is a pattern negation, so eg. `~h2:*xy` means: match if h2 header's value matches the pattern *xy, or `h2` is not present at all.
  
 ---
 
 ### `headers_and` 
 
-`headers_and: ["hdr1:val_*xyz","hdr2:xyz_*"]` 
+`headers_and: ["hdr1:val_*xyz","~hdr2:xyz_*"]` 
 
 Alias for `headers` rule
 
@@ -494,7 +496,7 @@ Alias for `headers` rule
 
 ### `headers_or`
 
-`headers_or: ["x-myheader:val*","header2:*xy"]` 
+`headers_or: ["x-myheader:val*","~header2:*xy"]` 
 
 Match if **at least one** the specified HTTP headers `key:value` pairs is matched.
 
