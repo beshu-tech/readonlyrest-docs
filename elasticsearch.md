@@ -544,7 +544,7 @@ If a request involves a wildcard (i.e. "logstash-\*", "\*"), this is first expan
 
 The rejection message and HTTP status code returned to the requester are chosen carefully with the main intent to make ES behave like the prohibited indices do not exist at all.
 
-The rule has also extended version:
+The rule has also an extended version:
 
 ```
 indices:
