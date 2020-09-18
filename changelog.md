@@ -1,3 +1,16 @@
+##### What's new in 1.23.0
+*   **🚀New** (ES) introduced must_involve_indices option for indices rule
+*   **🧐Enhancement** (ES) negation support in headers rules
+*   **🧐Enhancement** (ES) [x-pack rollup API handling](https://forum.readonlyrest.com/t/actions-still-forbidden-to-unrestricted-user/1659)
+*   **🐞Fix** (KBN) deep links query parameters are now handled
+*   **🐞Fix** (KBN) make sure default kibana index is always discovered (fixes reporting in 6.x)
+*   **🐞Fix** (ES) [settings file permission issue with JDK 1.8.0 25.262-b10](https://forum.readonlyrest.com/t/readonlyrest-for-elastic-wont-start-1-18-8-es6-8-1/1652)
+*   **🐞Fix** (ES) /_cluster/allocation/explain request should not be forbidden if matched block doesn't have indices rules
+*   **🐞Fix** (ES) remote address extracting issue
+*   **🐞Fix** (ES) [fixed TYP audit field for some request types](https://forum.readonlyrest.com/t/match-wrong-index-in-forbid-block/1653/2)
+  
+* * *
+
 ##### What's new in 1.22.1
 *   **🐞Fix** (ES) missing handling of aliases API for ES 7.9.0
   
