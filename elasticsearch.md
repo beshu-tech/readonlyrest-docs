@@ -482,7 +482,7 @@ Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP 
 
 Match if **all** the HTTP headers in the request match the defined patterns in headers rule. This is useful in conjunction with [proxy_auth](elasticsearch.md#proxy_auth-), to carry authorization information (i.e. headers: `x-usr-group: admins`). 
 
-The `~` sign is a pattern negation, so eg. `~h2:*xy` means: match if `h2` header's value doesn't apply `*xy` pattern or `h2` is not present at all.
+The `~` sign is a pattern negation, so eg. `~h2:*xy` means: match if h2 header's value matches the pattern *xy, or `h2` is not present at all.
  
 ---
 
