@@ -55,6 +55,8 @@ This installation method is more practical if your Kibana server is connected to
 
 According to what edition of ReadonlyREST you want to install, from your Kibana installation, launch one of the commands:
 
+Please note that this will always download the latest version of Kibana plugin available for the current supported Elasticsearch version.
+
 ```bash
 # ReadonlyREST Free edition
 $ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&email=<your_email_address>"
@@ -66,7 +68,35 @@ $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_p
 $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>"
 ```
 
+If you want to download the latest version of plugin for a specific version of Elasticsearch, then use query parameter esVersion to specify your required Elasticsearch version.
+
+```bash
+# ReadonlyREST Free edition for Elasticsearch 7.6.1
+$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&esVersion=7.6.1&email=<your_email_address>"
+
+# ReadonlyREST PRO (30 days trial) edition for Elasticsearch 7.6.1
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&esVersion=7.6.1&email=<your_email_address>"
+
+# ReadonlyREST Enterprise (30 days trial) edition for Elasticsearch 7.6.1
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&esVersion=7.6.1&email=<your_email_address>"
+```
+
+If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter pluginVersion along with esVersion.
+
+```bash
+# ReadonlyREST Free edition - version 1.22.0 for Elasticsearch 7.6.1
+$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
+
+# ReadonlyREST PRO (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
+
+# ReadonlyREST Enterprise (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
+$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
+```
+
 If you are a PRO or Enterprise subscriber, the link will include an extra parameter "token" which can only be used in association with the provided email address. 
+
+You can append required plugin version and Elasticsearch version query parameters to download specific version as described above.
 
 **NB: This URL is personal, and should be handled as a secret.**
 
