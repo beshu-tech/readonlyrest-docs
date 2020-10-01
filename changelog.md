@@ -1,3 +1,8 @@
+##### What's new in 1.23.1
+*   **🐞Fix** (KBN) fix code 500 error on login in Kibana
+
+* * *
+
 ##### What's new in 1.23.0
 *   **🚀New** (ES) introduced must_involve_indices option for indices rule
 *   **🧐Enhancement** (ES) negation support in headers rules
