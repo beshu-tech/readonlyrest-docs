@@ -1,7 +1,17 @@
 # changelog
 
+
+### What's new in 1.24.0
+
+* **🚨Security Fix** \(ES\) search template handling fix
+* **🧐Enhancement** \(ES\) full support for ES Snapshots and Restore APIs
+* **🐞Fix** \(KBN\) fix crash in error handling
+* **🐞Fix** \(ES\) don't remove ES response warning headers
+* **🐞Fix** \(ES\) issue when entropy of /dev/random could have been exhausted when using JwtToken rule
+
 ### What's new in 1.23.1
 
+* **🚀New** \(ES\) 7.9.2 support
 * **🐞Fix** \(KBN\) fix code 500 error on login in Kibana
 
 ### What's new in 1.23.0
