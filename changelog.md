@@ -1,5 +1,10 @@
 # changelog
 
+
+### What's new in 1.24.0
+
+* **🐞Fix** \(KBN\) fix crash in error handling
+
 ### What's new in 1.23.1
 
 * **🐞Fix** \(KBN\) fix code 500 error on login in Kibana
