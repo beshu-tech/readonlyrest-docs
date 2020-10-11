@@ -8,7 +8,6 @@
 * **🐞Fix** \(KBN\) fix crash in error handling
 * **🐞Fix** \(ES\) don't remove ES response warning headers
 * **🐞Fix** \(ES\) issue when entropy of /dev/random could have been exhausted when using JwtToken rule
-* **🐞Fix** \(ES\) 
 
 ### What's new in 1.23.1
 
