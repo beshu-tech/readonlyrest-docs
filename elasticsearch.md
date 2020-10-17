@@ -1124,13 +1124,45 @@ Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authenticat
 
 Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). Configure this value _in clear text_. Clients will need to provide the header e.g. `Authorization: Basic c2FsZXM6cDQ1NXdk` where "c2FsZXM6cDQ1NXdk" is Base64 for "sales:p455wd".
 
-**⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha256`, or `auth_key_unix`.
+**⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
 
-#### `auth_key_sha256`
+#### `auth_key_sha512`
 
-`auth_key_sha256: 280ac6f...94bf9`
+`auth_key_sha512: 280ac6f...94bf9`
 
-Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` _hashed in_ [_SHA256_](http://www.xorbin.com/tools/sha256-hash-calculator). Clients will need to provide the usual Authorization header. \|
+Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` _hashed in_ [_SHA512_](https://md5calc.com/hash/sha512). Clients will need to provide the usual Authorization header. 
+
+There are also available other rules with less secure SHA algorithms `auth_key_sha256` and `auth_key_sha1`.
+
+The rules support also alternative syntax, where only password is hashed, eg:
+
+`auth_key_sha512: "admin:280ac6f...94bf9"`
+
+In the example below `admin` is a username and `280ac6f...94bf9` is
+hashed secret.
+
+#### `auth_key_pbkdf2`
+
+`auth_key_pbkdf2: "KhIxF5EEYkH5GPX51zTRIR4cHqhpRVALSmTaWE18mZEL2KqCkRMeMU4GR848mGq4SDtNvsybtJ/sZBuX6oFaSg=="` # logstash:logstash 
+
+`auth_key_pbkdf2: "logstash:JltDNAoXNtc7MIBs2FYlW0o1f815ucj+bel3drdAk2yOufg2PNfQ51qr0EQ6RSkojw/DzrDLFDeXONumzwKjOA=="` # logstash:logstash
+
+Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). 
+The value is hashed in the same way as it's done in
+`auth_key_sha512` rule, but it uses [_PBKDF2_](https://en.wikipedia.org/wiki/PBKDF2) 
+key derivation function. At the moment there is no way to configure
+it, so during hash generation user has to take into consideration
+following PBKDF2 input parameters values:
+
+| Input parameter | Value | Comment |
+| --------------- | ----- | ------- |
+| Pseudorandom function | HmacSHA512 | |
+| Salt | use hashed value as a salt | eg. hashed value = `logstash:logstash`, use `logstash:logstash` as the salt |
+| Iterations count | 10000 | |
+| Derived key length | 512 | bits |
+<br>
+
+The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) (notice that salt have to base Base64 encoded).
 
 #### `auth_key_unix`
 
