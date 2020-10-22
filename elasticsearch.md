@@ -1317,7 +1317,7 @@ appender.access_log_rolling.policies.time.type = TimeBasedTriggeringPolicy
 appender.access_log_rolling.policies.time.interval = 1
 appender.access_log_rolling.policies.time.modulate = true
 
-logger.access_log_rolling.name = org.elasticsearch.plugin.readonlyrest.acl
+logger.access_log_rolling.name = tech.beshu.ror
 logger.access_log_rolling.level = info
 logger.access_log_rolling.appenderRef.access_log_rolling.ref = access_log_rolling
 logger.access_log_rolling.additivity = false
