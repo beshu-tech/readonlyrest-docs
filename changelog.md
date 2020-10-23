@@ -4,6 +4,7 @@
 ### What's new in 1.24.0
 
 * **🚨Security Fix** \(ES\) search template handling fix
+* **🚀New** \(ES\) 7.9.3 & 6.8.13 support
 * **🧐Enhancement** \(ES\) full support for ES Snapshots and Restore APIs
 * **🐞Fix** \(KBN\) fix crash in error handling
 * **🐞Fix** \(ES\) don't remove ES response warning headers
