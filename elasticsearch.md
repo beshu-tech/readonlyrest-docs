@@ -1138,8 +1138,8 @@ The rules support also alternative syntax, where only password is hashed, eg:
 
 `auth_key_sha512: "admin:280ac6f...94bf9"`
 
-In the example below `admin` is a username and `280ac6f...94bf9` is
-hashed secret.
+In the example below `admin` is the username and `280ac6f...94bf9` is
+the hashed secret.
 
 #### `auth_key_pbkdf2`
 
@@ -1151,7 +1151,7 @@ Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authenticat
 The value is hashed in the same way as it's done in
 `auth_key_sha512` rule, but it uses [_PBKDF2_](https://en.wikipedia.org/wiki/PBKDF2) 
 key derivation function. At the moment there is no way to configure
-it, so during hash generation user has to take into consideration
+it, so during the hash generation, the user has to take into consideration the
 following PBKDF2 input parameters values:
 
 | Input parameter | Value | Comment |
@@ -1162,7 +1162,7 @@ following PBKDF2 input parameters values:
 | Derived key length | 512 | bits |
 <br>
 
-The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) (notice that salt have to base Base64 encoded).
+The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) (notice that the salt has to base Base64 encoded).
 
 #### `auth_key_unix`
 
