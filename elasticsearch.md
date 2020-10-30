@@ -241,7 +241,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** when `filter` or `fields` rules are used, it's required to install ReadonlyREST plugin in all the data nodes. This happens because these rules are implemented at Lucene level.
+**⚠️IMPORTANT** when `fields` rule is used, it's required to install ReadonlyREST plugin in all the data nodes. This happens because this rule is partly implemented at Lucene level.
 
 ### ACL basics
 
@@ -762,8 +762,6 @@ This rule enables **Document Level Security \(DLS\)**. That is: return only the 
 
 This rule lets you filter the results of a read request using a boolean query. You can use _dynamic variables_ i.e. `@{user}` \(see dedicated paragraph\) to inject a user name or some header values in the query, or even environmental variables.
 
-**NB: install ReadonlyREST plugin in all the cluster nodes that contain data in order for** _**filter**_ **and** _**fields**_ **rule to work**
-
 **Example: per-user index segmentation**
 
 In the index "test-dls", each user can only search documents whose field "user" matches their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
@@ -793,23 +791,29 @@ If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate
 
 #### `fields`
 
-This rule enables **Field Level Security \(FLS\)**. That is: only return certain fields from queries.
+This rule enables **Field Level Security \(FLS\)**. That is: 
 
-**NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
+* return only allowed fields in response containing field names with associated values - applies to Document API (Get, Multi get) and Search API (Search, Async search, SQL, Multi search).
+* do not let using not allowed fields in Query DSL requests - applies to Search API. 
 
+
+Field rule definition consists of two parts:
+
+- non empty list of field names with specified access mode. Supports wildcards and user runtime variables.
+- field rule mode - 
 **Whitelist mode**
 
 `fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
 If the current is a search request, return all matching documents, but deprived of all the fields, except the ones that start with `allowed_fields_prefix_` or with underscore.
 
-If you use whitelist mode, remember to allow the mandatory, internally used fields \(the ones that start with underscore, `_*`\).
-
 **Blacklist mode \(recommended\)**
 
 `fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
 If the current is a search request, return all matching documents, but deprived of the `excluded_field` and the ones that start with `excluded_fields_prefix_`.
+
+**NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
 
 **Example: hide prices from catalogue indices**
 
