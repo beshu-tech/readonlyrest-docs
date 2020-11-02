@@ -1,3 +1,7 @@
+---
+description: SAML SSO Integration with Keycloak as an identity provider.
+---
+
 # Keycloak
 
 This document will guide you through the task of setting up an excellent, open source identity provider \([KeyCloak](https://www.keycloak.org)\) to work as an external authenticator and authorizer system for your ELK stack. The scenario is the usual:
@@ -23,7 +27,7 @@ This tutorial was created using KeyCloak 8.0.1.
 
 1. Download the standalone version of Keycloak from their official website
 2. Run Keycloak: run `bin/standalone.sh` or equivalent for your platform.
-3. Navigate to [http://localhost:8080](http://localhost:8080) and configure the admin user's credentials **don't forget to fill the email address!**.
+3. Navigate to [http://localhost:8080](http://localhost:8080) and configure the admin user's credentials **don't forget to fill the email address!**
 4. Login as admin
 5. Follow the explanation below, or \(if your KC version is the same or close enough to this\) use the import function to load this [configuration file](https://github.com/beshu-tech/readonlyrest-docs/tree/d77c4981b29a843fc82f89c4272fdddaab390d89/keycloak_601_ror_SAML.json)
 
