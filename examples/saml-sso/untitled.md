@@ -626,19 +626,21 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 
 * Create a random 256-character signature\_key. This key will be shared between Kibana and Elasticsearch.
 * Please note that the kbn1 identifier must match in the ror\_kbn\_auth and ror\_kbn sections; however, any names can be used for them.
-*  readonlyrest:  
-   access\_control\_rules:
+```yml
+readonlyrest:  
+   access_control_rules:
 
    - name: "::KIBANA-SRV::"  
-   auth\_key: kibana:kibana
+     auth_key: kibana:kibana
 
    - name: "ADFS Users"  
-   ror\_kbn\_auth:  
-   name: "kbn1"
+     ror_kbn_auth:  
+       name: "kbn1"
 
-   ror\_kbn:  
+   ror_kbn:  
    - name: kbn1  
-   signature\_key: "VEGj@YLLhsAigspnNi2Xsopsqja\_nrKUqU\_\_eQW9VQ2!9p!RoeHwc-G.y-MVJtYYcDFCH.e3W2BKcZsoynJaHyjjXyh7kDHjsYKPkczvai-xCzP@Ez3QW23ZBFuReA7kPAqnc6pQ3VeNeFf3sWNoKeJAt\_d9J7aFwEvCP2Gb-kQcA8YR\*wNWHQuo-jwmmo2Qqpu\_Fq3aKFCbNFWUbK@BVwmmKezxn3h687mAkuyhV4.hnfrjVjF-Rphjqmy4.tB8"
+     signature_key: "VEGj@YLLhsAigspnNi2Xsopsqja_nrKUqU__eQW9VQ2!9p!RoeHwc-G.y-MVJtYYcDFCH.e3W2BKcZsoynJaHyjjXyh7kDHjsYKPkczvai-xCzP@Ez3QW23ZBFuReA7kPAqnc6pQ3VeNeFf3sWNoKeJAt_d9J7aFwEvCP2Gb-kQcA8YR*wNWHQuo-jwmmo2Qqpu_Fq3aKFCbNFWUbK@BVwmmKezxn3h687mAkuyhV4.hnfrjVjF-Rphjqmy4.tB8"
+```
 
 1. Restart **Elasticsearch** **Windows Service**. This can be done in the **Services** MMC snapin.
 
