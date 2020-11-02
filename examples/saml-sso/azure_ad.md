@@ -1,4 +1,8 @@
-# ReadonlyREST Enterprise + Azure Ad via SAML
+---
+description: Integration with the managed cloud service Microsoft Azure Active Directory.
+---
+
+# Microsoft Azure AD
 
 [Azure Active Directory \(Azure AD\)](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis) is Microsoft’s cloud-based identity and access management \([IAM](https://en.wikipedia.org/wiki/Identity_management)\) service. And it can be used as a SAML Single Sign-On \(SSO\) \[identity provider \(IdP\)\]\([https://en.wikipedia.org/wiki/Identity\_provider\_\(SAML](https://en.wikipedia.org/wiki/Identity_provider_%28SAML)\)\) for a pool of exiting users to sign in and access resources in external service providers like [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise/).
 
@@ -127,31 +131,31 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Login in your Microsoft Azure dashboard, and head to Enterprise Applications.
 
-![Azure Dashboard](../../../.gitbook/assets/azure_dashboard.png)
+![Azure Dashboard](../../.gitbook/assets/azure_dashboard.png)
 
 1. Click on "Non-gallery application".
 
-![Azure Enterprise apps](../../../.gitbook/assets/azure_enterprise_apps.png)
+![Azure Enterprise apps](../../.gitbook/assets/azure_enterprise_apps.png)
 
 1. Create a new app called "Readonlyrest Enterprise".
 
-![Azure App Name](../../../.gitbook/assets/azure_app_name.png)
+![Azure App Name](../../.gitbook/assets/azure_app_name.png)
 
 1. Click "Single Sign On" to configure the app for SAML.
 
-![Azure ror app](../../../.gitbook/assets/azure_ror_app.png)
+![Azure ror app](../../.gitbook/assets/azure_ror_app.png)
 
 1. Insert URLs and data about our Kibana server as shown in the picture. And press SAVE.
 
-![Azure ror basic saml settings](../../../.gitbook/assets/azure_ror_basic_saml.png)
+![Azure ror basic saml settings](../../.gitbook/assets/azure_ror_basic_saml.png)
 
 1. Download the base64 encoded "pem" file, and place it under the **absolute path** `/etc/kibana/config/cert.pem`.
 
-![Azure ror cert](../../../.gitbook/assets/azure_cert.png)
+![Azure ror cert](../../.gitbook/assets/azure_cert.png)
 
 7 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.
 
-![Azure ror app users](../../../.gitbook/assets/azure_ror_app_users.png)
+![Azure ror app users](../../.gitbook/assets/azure_ror_app_users.png)
 
 ## Testing if this all works.
 
@@ -159,19 +163,19 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
    You should now see a new blue button that says "Azure AD SAML SSO".
 
-![ROR login](../../../.gitbook/assets/ror_ent_login.png)
+![ROR login](../../.gitbook/assets/ror_ent_login.png)
 
 1. Press it, and you should see the Azure AD login page. Place your credentials here, or pick an already authenticated identity to enter Kibana.
 
-![Azure Login](../../../.gitbook/assets/azure_login.png)
+![Azure Login](../../.gitbook/assets/azure_login.png)
 
 1. You will now be redirected to Kibana, logged in as your Azure AD identity.
 
-![Azure Login](../../../.gitbook/assets/kibana_welcome.png)
+![Azure Login](../../.gitbook/assets/kibana_welcome.png)
 
 1. You can now logout from the "ReadonlyREST SAML SSO" Azure AD Enterprise app by pressing the exit button right beside the username in the bottom right corner.
 
-![Azure Login](../../../.gitbook/assets/logout.png)
+![Azure Login](../../.gitbook/assets/logout.png)
 
 ## Authorization using Azure AD groups
 
@@ -192,7 +196,7 @@ Suppose we would like to authorise the group "ReadonlyREST Admins" to access the
 
 Let's go to Azure and make sure the "ReadonlyREST Admins" group is created, and one or more users - including ours - belongs to it.
 
-![Azure Create Groups](../../../.gitbook/assets/azure_create_group.png)
+![Azure Create Groups](../../.gitbook/assets/azure_create_group.png)
 
 #### Finding the new group's Azure object ID
 
@@ -200,7 +204,7 @@ From ReadonlyREST settings, we will refer to the newly created group using its a
 
 `Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups > [your user] - Groups`
 
-![Azure Show Groups](../../../.gitbook/assets/azure_groups_list.png)
+![Azure Show Groups](../../.gitbook/assets/azure_groups_list.png)
 
 The object ID of the new group is "3f8ebed8-f742-42a6-94ba-2d57550fc3cf", let's take note of this. We will use it in our ACL.
 
