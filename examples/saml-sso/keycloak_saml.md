@@ -1,4 +1,4 @@
-# Keycloak integration SAML SSO
+# Keycloak
 
 This document will guide you through the task of setting up an excellent, open source identity provider \([KeyCloak](https://www.keycloak.org)\) to work as an external authenticator and authorizer system for your ELK stack. The scenario is the usual:
 

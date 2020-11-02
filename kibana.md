@@ -1,6 +1,6 @@
-# Kibana
+# Kibana plugins
 
-🚀**NEW**: check out [our guide](examples/keycloak_saml.md) on how to level up on **identity management** with ReadonlyREST Enterprise and [KeyCloak](https://www.keycloak.org/)
+🚀**NEW**: check out [our guide](examples/saml-sso/keycloak_saml.md) on how to level up on **identity management** with ReadonlyREST Enterprise and [KeyCloak](https://www.keycloak.org/)
 
 ## Kibana Plugin overview
 
@@ -179,7 +179,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](../.gitbook/assets/ror_config_loading_diagram.png)
+![config loading diagram](.gitbook/assets/ror_config_loading_diagram.png)
 
 #### Malformed in-index settings
 
@@ -482,11 +482,11 @@ The audit log feature is widely described in [📖docs for Elasticsearch plugin]
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](../.gitbook/assets/audit_tab.png)
+![audit log tab](.gitbook/assets/audit_tab.png)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](../.gitbook/assets/load_audit_dashboard.png)
+![loading visualization](.gitbook/assets/load_audit_dashboard.png)
 
 In detail, this feature creates three Kibana "saved objects":
 

@@ -1,4 +1,4 @@
-# Integrating ReadonlyREST Enterprise via SAML with Duo Security \(MFA\)
+# Duo Security MFA
 
 This tutorial is a step by step guide for the integration between [DUO](https://duo.com) multi factor authentication provider and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise).
 

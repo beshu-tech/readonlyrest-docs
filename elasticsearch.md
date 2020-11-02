@@ -1,4 +1,4 @@
-# Elasticsearch
+# Elasticsearch plugin
 
 ## Overview: The ReadonlyREST Suite
 
