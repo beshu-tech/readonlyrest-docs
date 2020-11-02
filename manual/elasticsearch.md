@@ -1,4 +1,4 @@
-# elasticsearch
+# Elasticsearch
 
 ## Overview: The ReadonlyREST Suite
 
@@ -678,7 +678,7 @@ Match if the request action starts with "indices:data/read/".
 
 In Elasticsearch, each request carries only one action. We extracted from Elasticsearch source code the full list of valid action strings as of all Elasticsearch versions. Please see the [dedicated section to find the actions list of your specific Elasticsearch version](https://github.com/beshu-tech/readonlyrest-docs/tree/master/actionstrings).
 
-Example actions (see above for the full list):
+Example actions \(see above for the full list\):
 
 ```text
  "cluster:admin/data_frame/delete" 
@@ -913,7 +913,7 @@ Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authenticat
 
 `auth_key_sha512: 280ac6f...94bf9`
 
-Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` _hashed in_ [_SHA512_](https://md5calc.com/hash/sha512). Clients will need to provide the usual Authorization header. 
+Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` _hashed in_ [_SHA512_](https://md5calc.com/hash/sha512). Clients will need to provide the usual Authorization header.
 
 There are also available other rules with less secure SHA algorithms `auth_key_sha256` and `auth_key_sha1`.
 
@@ -921,31 +921,24 @@ The rules support also alternative syntax, where only password is hashed, eg:
 
 `auth_key_sha512: "admin:280ac6f...94bf9"`
 
-In the example below `admin` is the username and `280ac6f...94bf9` is
-the hashed secret.
+In the example below `admin` is the username and `280ac6f...94bf9` is the hashed secret.
 
 #### `auth_key_pbkdf2`
 
-`auth_key_pbkdf2: "KhIxF5EEYkH5GPX51zTRIR4cHqhpRVALSmTaWE18mZEL2KqCkRMeMU4GR848mGq4SDtNvsybtJ/sZBuX6oFaSg=="` # logstash:logstash 
+`auth_key_pbkdf2: "KhIxF5EEYkH5GPX51zTRIR4cHqhpRVALSmTaWE18mZEL2KqCkRMeMU4GR848mGq4SDtNvsybtJ/sZBuX6oFaSg=="` \# logstash:logstash
 
-`auth_key_pbkdf2: "logstash:JltDNAoXNtc7MIBs2FYlW0o1f815ucj+bel3drdAk2yOufg2PNfQ51qr0EQ6RSkojw/DzrDLFDeXONumzwKjOA=="` # logstash:logstash
+`auth_key_pbkdf2: "logstash:JltDNAoXNtc7MIBs2FYlW0o1f815ucj+bel3drdAk2yOufg2PNfQ51qr0EQ6RSkojw/DzrDLFDeXONumzwKjOA=="` \# logstash:logstash
 
-Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). 
-The value is hashed in the same way as it's done in
-`auth_key_sha512` rule, but it uses [_PBKDF2_](https://en.wikipedia.org/wiki/PBKDF2) 
-key derivation function. At the moment there is no way to configure
-it, so during the hash generation, the user has to take into consideration the
-following PBKDF2 input parameters values:
+Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is hashed in the same way as it's done in `auth_key_sha512` rule, but it uses [_PBKDF2_](https://en.wikipedia.org/wiki/PBKDF2) key derivation function. At the moment there is no way to configure it, so during the hash generation, the user has to take into consideration the following PBKDF2 input parameters values:
 
 | Input parameter | Value | Comment |
-| --------------- | ----- | ------- |
-| Pseudorandom function | HmacSHA512 | |
+| :--- | :--- | :--- |
+| Pseudorandom function | HmacSHA512 |  |
 | Salt | use hashed value as a salt | eg. hashed value = `logstash:logstash`, use `logstash:logstash` as the salt |
-| Iterations count | 10000 | |
+| Iterations count | 10000 |  |
 | Derived key length | 512 | bits |
-<br>
 
-The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) (notice that the salt has to base Base64 encoded).
+The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
 
 #### `auth_key_unix`
 
@@ -1261,7 +1254,7 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
 
    `https://www.scala-sbt.org/download.html`
 
-3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/` 
+3. Find and go to: `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/`
 4. Create own serializer:
    * from scratch \(example can be found in class `ScalaCustomAuditLogSerializer`\)
    * extending default one \(example can be found in class `ScalaCustomAuditLogSerializer`\)
@@ -1847,7 +1840,7 @@ Here is a practical summary of what dealing with GPLv3 means:
 
 * Distribute for free or commercially a version \(partial or total\) of this software \(along with its license and attributions\) as part of a product or solution that is also **released under GPL-compatible license**. Please notify us if you do so.
 * Use a modified version **internally to your company** without making your changes available under the GPLv3 license.
-* Distribute for free or commercially a modified version \(partial or total\) of this software, provided that the source is contributed back as pull request to 
+* Distribute for free or commercially a modified version \(partial or total\) of this software, provided that the source is contributed back as pull request to
 
   the [original project](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin) or publicly made available under the GPLv3 or compatible license.
 

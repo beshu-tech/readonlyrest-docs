@@ -1,4 +1,4 @@
-# ReadonlyREST Enterprise + Keycloak integration via SAML SSO
+# Keycloak integration SAML SSO
 
 This document will guide you through the task of setting up an excellent, open source identity provider \([KeyCloak](https://www.keycloak.org)\) to work as an external authenticator and authorizer system for your ELK stack. The scenario is the usual:
 
@@ -33,19 +33,19 @@ If you imported the JSON file, you should have a "ror" realm, and a SAML client 
 
 First we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
-![keycloak\_screenshot](.gitbook/assets/kc_saml_conf_realm.png)
+![keycloak\_screenshot](../../.gitbook/assets/kc_saml_conf_realm.png)
 
 Then, let's create a SAML client for this realm:
 
-![keycloak\_screenshot](.gitbook/assets/kc_saml_create_saml_client.png)
+![keycloak\_screenshot](../../.gitbook/assets/kc_saml_create_saml_client.png)
 
 Then, configure the SAML client according to your Kibana URL, in this example, Kibana responds to "[https://localhost:5601/k](https://localhost:5601/k)"
 
-![keycloak\_screenshot](.gitbook/assets/kc_saml_configure_saml_client.png)
+![keycloak\_screenshot](../../.gitbook/assets/kc_saml_configure_saml_client.png)
 
 Now that the client is saved, let's observe the "configure" tab, here we will extract the two logout and login endpoints that we will use for configuring our SAML connector in "kibana.yml".
 
-![keycloak\_screenshot](.gitbook/assets/kc_saml_extract_config_from_client.png)
+![keycloak\_screenshot](../../.gitbook/assets/kc_saml_extract_config_from_client.png)
 
 ### Install ReadonlyREST Enterprise for Kibana
 

@@ -96,7 +96,7 @@ Your purchase gets you access to downloading the PRO and/or Enterprise software.
 
 Yes, up to two weeks after purchase. Let us know the reason and maybe we can help but either way it's not a problem. Email [finance@readonlyrest.com](mailto:finance@readonlyrest.com?subject=ReadonlyREST%20refund%20required).
 
-
 ## Can I pay via invoice?
+
 ReadonlyREST PRO and Enterprise can accept payments with credit card. Alternatively we can arrange going through quote, purchase order and invoice. The latter is a manual process, so please [contact](mailto:finance@readonlyrest.com?subject=ReadonlyREST%20billing%20via%20invoice) us.
 

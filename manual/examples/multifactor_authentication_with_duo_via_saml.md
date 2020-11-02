@@ -1,4 +1,4 @@
-# DUO.com Integrating with ReadonlyREST Enterprise using SAML 
+# Integrating ReadonlyREST Enterprise via SAML with Duo Security \(MFA\)
 
 This tutorial is a step by step guide for the integration between [DUO](https://duo.com) multi factor authentication provider and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise).
 
@@ -21,7 +21,7 @@ Follow the instructions for Duo Gateway \([https://duo.com/docs/dag-linux](https
 
 Once the Duo Gateway is installed, open a browser and point to its web interface to configure it. When you configure the authentication sources, be sure to set the correct username attribute. Keep in mind this value because it will be mapped directly to whatever has been configured in the actual Duo.com dashboard, under `Gateway > Applications` \(which we are just about to configure\).
 
-![Source](.gitbook/assets/duo-dag-config.png)
+![Source](../../.gitbook/assets/duo-dag-config.png)
 
 ### Configure Application in Duo Admin Dashboard
 
@@ -33,7 +33,7 @@ This will create a generic SAML provider. Set these fields:
 * EntityID: Set an existing entity name or use the same as Service Provider Name
 * Assertion Consumer Service: The SAML Url assertion found in metadata.xml, the url format is `<kibanaExternalHost>/ror_kbn_sso/assert`. 
 
-![SP](.gitbook/assets/duo-saml-sp.png)
+![SP](../../.gitbook/assets/duo-saml-sp.png)
 
 In SAML Response, set NameID to be the same variable name as configured previously in the authentication source. Leave the default values for the remaining settings. Click `Save Application` and scroll up and download the configuration file.
 
