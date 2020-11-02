@@ -47,23 +47,23 @@ _Please note that Azure Spot Instances cannot be resized after creation._
 4. Name your virtual machine appropriately, and choose the details for your instance, as shown in the example below.
 5. You can use the default hard drive sizes and **Standard HDD** disks for this environment.
 
-* ![](.gitbook/assets/2.png)
+* ![](../../.gitbook/assets/2.png)
 
 1. The default **Networking** options will also work here.
 
-* ![](.gitbook/assets/3.png)
+* ![](../../.gitbook/assets/3.png)
 
 1. As will the default **Management** options.
 
-* ![](.gitbook/assets/4.png)
+* ![](../../.gitbook/assets/4.png)
 
 1. No additional **Advanced** options are necessary.
 
-* ![](.gitbook/assets/5.png)
+* ![](../../.gitbook/assets/5.png)
 
 1. If you would like to tag your VMs for later categorization and tracking, you can do so here.
 
-* ![](.gitbook/assets/6.png)
+* ![](../../.gitbook/assets/6.png)
 
 1. Finally, create the VM.
 
@@ -78,25 +78,25 @@ After the two VMs have been provisioned, the next step is to set up directory se
 1. Once you are logged into lc-win2019-02, choose **Add Roles and Features** on the **Server Manager** screen.
 2. Select **Role-based or feature-based installation**.
 
-* ![](.gitbook/assets/9.png)
+* ![](../../.gitbook/assets/9.png)
 
 1. Select the correct server from the server pool.
 
-* ![](.gitbook/assets/10.png)
+* ![](../../.gitbook/assets/10.png)
 
 1. Select **Active Directory Domain Services,** and add the additional features as prompted.
 2. No additional features are necessary since the default options work.
 
-* ![](.gitbook/assets/13.png)
+* ![](../../.gitbook/assets/13.png)
 
 1. Click **Next** on the **Active Directory Domain Services** informational screen.
 
-* ![](.gitbook/assets/14.png)
+* ![](../../.gitbook/assets/14.png)
 
 1. Finally, select **Restart the destination server automatically if required**. Click **Yes** when prompted, and then click **Install.**
 2. Once installation has finished, click on **Close.**
 
-* ![](.gitbook/assets/17.png)
+* ![](../../.gitbook/assets/17.png)
 
 ### 
 
@@ -106,45 +106,45 @@ If DNS has not been installed already, the role installation screen may pop up i
 
 1. Click on **Promote this server to a domain controller,** which will allow you to see the **Deployment Configuration** screen.
 
-* ![](.gitbook/assets/18.png)
+* ![](../../.gitbook/assets/18.png)
 
 1. Name the domain. In this case, use ad.lc-test.local.
 
 * This name was arbitrarily chosen. Using a subdomain such as “ad” instead of your actual domain \(i.e., \[lc-test.local\]\(http://lc-test.local\) by itself\) is recommended.
-* ![](.gitbook/assets/19.png)
+* ![](../../.gitbook/assets/19.png)
 
 1. Select **Windows Server 2016** as the **functional level**. For the **domain controller capabilities**, choose **Domain Name System \(DNS\) server**. Set a Directory Services Restore Mode \(DSRM\) **password.**
 
-* ![](.gitbook/assets/20.png)
+* ![](../../.gitbook/assets/20.png)
 
 1. The following **DNS Options** warning message can be disregarded:
 
-* ![](.gitbook/assets/21.png)
+* ![](../../.gitbook/assets/21.png)
 
 1. Set the **NetBIOS domain name**, which is usually the short name prior to the host name \(e.g., AD\), and click **Next.**
 
-* ![](.gitbook/assets/22.png)
+* ![](../../.gitbook/assets/22.png)
 
 1. Use the default paths, and click on **Next.**
 
-* ![](.gitbook/assets/23.png)
+* ![](../../.gitbook/assets/23.png)
 
 1. On the **Review Options** screen, click **Next** if everything looks correct.
 
-* ![](.gitbook/assets/24.png)
+* ![](../../.gitbook/assets/24.png)
 
 1. On the **Prerequisites Check** screen, click **Install.**
 
 * You’ll see a number of warnings related to the fact that this is a test environment. They can be safely ignored.
-* ![](.gitbook/assets/25.png)
+* ![](../../.gitbook/assets/25.png)
 
 1. When you click **Close**, you will have a successful configuration.
 
-* ![](.gitbook/assets/26.png)
+* ![](../../.gitbook/assets/26.png)
 
 1. Click **Close** on the restart prompt.
 
-* ![](.gitbook/assets/27.png)
+* ![](../../.gitbook/assets/27.png)
 
 ### 
 
@@ -153,23 +153,23 @@ If DNS has not been installed already, the role installation screen may pop up i
 1. Click on the **DNS Services** role, add the additional features as requested, and click **Next.**
 2. If you are using DHCP for the server \(this is not recommended for a production service\), then you will see the validation warning shown below. It can be disregarded. Click on **Continue** and **Install.**
 
-* ![](.gitbook/assets/30.png)
+* ![](../../.gitbook/assets/30.png)
 
 1. Click **Next** on the **Features** screen, since no additional features are necessary.
 
-* ![](.gitbook/assets/31.png)
+* ![](../../.gitbook/assets/31.png)
 
 1. Click **Next** on the informational **DNS Server** screen.
 
-* ![](.gitbook/assets/32.png)
+* ![](../../.gitbook/assets/32.png)
 
 1. Click **Install** on the **Confirmation** screen.
 
-* ![](.gitbook/assets/33.png)
+* ![](../../.gitbook/assets/33.png)
 
 1. Select **Restart the destination server automatically if required,** and click **Install.** Finally, click **Close,** and you will have a successful installation.
 
-* ![](.gitbook/assets/34.png)
+* ![](../../.gitbook/assets/34.png)
 
 ### 
 
@@ -179,31 +179,31 @@ Next we need to join the second server—the one hosting Elasticsearch and Kiban
 
 1. Open an RDP connection to the second server. Then, open **Notepad** as an Administrator, and open the file C:\Windows\System32\drivers\etc\hosts.
 
-* ![](.gitbook/assets/35.png)
+* ![](../../.gitbook/assets/35.png)
 
 1. Add the IP address and hostnames for the domain controller.
 
 * These will reflect the IP addresses and hostnames you chose for your configuration:
   * **FQDN**: 10.0.0.5 - ad.lc-test.local
   * **NetBIOS**: 10.0.0.5 - ad
-* ![](.gitbook/assets/36.png)
+* ![](../../.gitbook/assets/36.png)
 
 1. Additionally, you will need to change your network adapter DNS to point to your domain server; in this case, it is 10.0.0.5.
 2. If the system restarted, open an RDP connection, and then open the **System** screen under the **Control Pane** and select **Advanced System** settings.
 
-* ![](.gitbook/assets/39.png)
+* ![](../../.gitbook/assets/39.png)
 
 1. Click on **Change** to add this server to the domain.
 
-* ![](.gitbook/assets/40.png)
+* ![](../../.gitbook/assets/40.png)
 
 1. Enter the domain \(e.g., ad.lc-test.local\).
 
-* ![](.gitbook/assets/41.png)
+* ![](../../.gitbook/assets/41.png)
 
 1. Click on **OK,** and enter the credentials of the account that has privileges enabling it to add the domain.
 
-* ![](.gitbook/assets/42.png)
+* ![](../../.gitbook/assets/42.png)
 
 1. Restart the server after joining it to the domain.
 
@@ -247,23 +247,23 @@ $Users.GetEnumerator\(\) \| ForEach-Object {
 1. Click on **Active Directory Certificate Services,** and add the additional features as prompted.
 2. Since no additional features are necessary, allow defaults, and click on **Next.**
 
-* ![](.gitbook/assets/45.png)
+* ![](../../.gitbook/assets/45.png)
 
 1. On the **Active Directory Certificate Services** informational screen, click **Next** to continue.
 
-* ![](.gitbook/assets/46.png)
+* ![](../../.gitbook/assets/46.png)
 
 1. Select the **Certification Authority** role services, and click **Next.**
 
-* ![](.gitbook/assets/47.png)
+* ![](../../.gitbook/assets/47.png)
 
 1. Select **Restart the destination server automatically if required,** and click on **Install.**
 
-* ![](.gitbook/assets/48.png)
+* ![](../../.gitbook/assets/48.png)
 
 1. Finally, click on **Close** when the installation has been completed.
 
-* ![](.gitbook/assets/49.png)
+* ![](../../.gitbook/assets/49.png)
 
 ### 
 
@@ -271,47 +271,47 @@ $Users.GetEnumerator\(\) \| ForEach-Object {
 
 1. Click on **Configure Active Directory Certificate Services.**
 
-* ![](.gitbook/assets/50.png)
+* ![](../../.gitbook/assets/50.png)
 
 1. Select the default administrative user for AD CS credentials.
 
-* ![](.gitbook/assets/51.png)
+* ![](../../.gitbook/assets/51.png)
 
 1. Under **Role Services**, check **Certification Authority,** and click Next.
 
-* ![](.gitbook/assets/52.png)
+* ![](../../.gitbook/assets/52.png)
 
 1. Select **Enterprise CA,** and click on **Next.**
 
-* ![](.gitbook/assets/53.png)
+* ![](../../.gitbook/assets/53.png)
 
 1. Click on **Root CA**, then click on **Next.**
 
-* ![](.gitbook/assets/54.png)
+* ![](../../.gitbook/assets/54.png)
 
 1. Click on **Create a new private key,** and then click on **Next.**
 
-* ![](.gitbook/assets/55.png)
+* ![](../../.gitbook/assets/55.png)
 
 1. Select **RSA\#Microsoft Software Key Storage Provider**, a default key length of **2048**, and a hash algorithm of **SHA256.** Click **Next.**
 
-* ![](.gitbook/assets/56.png)
+* ![](../../.gitbook/assets/56.png)
 
 1. Use the defaults given for the CA Name, and click on **Next.**
 
-* ![](.gitbook/assets/57.png)
+* ![](../../.gitbook/assets/57.png)
 
 1. Select a validity period of 5 years, and click on **Next.**
 
-* ![](.gitbook/assets/58.png)
+* ![](../../.gitbook/assets/58.png)
 
 1. Leave the default database locations in place, and click on **Next.**
 
-* ![](.gitbook/assets/59.png)
+* ![](../../.gitbook/assets/59.png)
 
 1. Click on **Configure** and **Close** when the configuration process has been completed.
 
-* ![](.gitbook/assets/60.png)
+* ![](../../.gitbook/assets/60.png)
 
 ## Installing and Configuring Active Directory Federation Services \(AD FS\)
 
@@ -321,23 +321,23 @@ Previously, it was recommended that AD FS should not be installed on the same se
 
 1. Open the **Certification Authority** MMC snapin, right-click on **Certificate Templates,** and click on **Manage.**
 
-* ![](.gitbook/assets/61.png)
+* ![](../../.gitbook/assets/61.png)
 
 1. Select **Duplicate Template** on the **Web Server** template.
 
-* ![](.gitbook/assets/62.png)
+* ![](../../.gitbook/assets/62.png)
 
 1. Enter “SSL Certificates” in the box labeled **Template display name** on the **General** tab.
 
-* ![](.gitbook/assets/63.png)
+* ![](../../.gitbook/assets/63.png)
 
 1. On the **Security** tab, click on **Enroll** and **Allow for Authenticated Users,** and, finally, **Apply** the configuration.
 
-* ![](.gitbook/assets/64.png)
+* ![](../../.gitbook/assets/64.png)
 
 1. Right-click on **Certificate Templates → New → Certificate Template to Issue.**
 
-* ![](.gitbook/assets/65.png)
+* ![](../../.gitbook/assets/65.png)
 
 1. Select **SSL Certificates** from the **Certificate Template** list, and click **OK.**
 
@@ -347,19 +347,19 @@ Previously, it was recommended that AD FS should not be installed on the same se
 
 1. Open the Certificates MMC snapin for the Local Computer. Navigate to **Personal → Certificates,** and right-click to open **All Tasks → Request New Certificate.**
 
-* ![](.gitbook/assets/68.png)
+* ![](../../.gitbook/assets/68.png)
 
 1. Click **Next** on the **Before you Begin** screen.
 
-* ![](.gitbook/assets/69.png)
+* ![](../../.gitbook/assets/69.png)
 
 1. Click **Next** on the **Select Certificate Enrollment Policy** screen.
 
-* ![](.gitbook/assets/70.png)
+* ![](../../.gitbook/assets/70.png)
 
 1. Select **SSL Certificates,** and click on **More information is required to enroll for this certificate.** Select **Click here to configure settings** to configure the certificate.
 
-* ![](.gitbook/assets/71.png)
+* ![](../../.gitbook/assets/71.png)
 
 1. Add the following details on the **Certificate Properties Subject** screen, then click **OK**:
    * **Subject Name**
@@ -368,29 +368,29 @@ Previously, it was recommended that AD FS should not be installed on the same se
      * **DNS**: lc-win2019-02.ad.lc-test.local
      * **DNS**: enterpriseregistration.ad.lc-test.local
 
-* ![](.gitbook/assets/72.png)
+* ![](../../.gitbook/assets/72.png)
 
 1. Click on **Enroll** to request the certificate, then click **Finish**.
 
-* ![](.gitbook/assets/73.png)
+* ![](../../.gitbook/assets/73.png)
 
 ### Setting up Active Directory Federation Services
 
 1. Select the **Active Directory Federation Services** role, and click **Next.**
 
-* ![](.gitbook/assets/74.png)
+* ![](../../.gitbook/assets/74.png)
 
 1. Click **Next** on **Select Features**, since no additional features are needed.
 
-* ![](.gitbook/assets/75.png)
+* ![](../../.gitbook/assets/75.png)
 
 1. Click **Next** on the **Active Directory Federation Services** informational screen.
 
-* ![](.gitbook/assets/76.png)
+* ![](../../.gitbook/assets/76.png)
 
 1. Check **Restart the destination server automatically if required,** and click **Install** and **Close** when the installation has completed.
 
-* ![](.gitbook/assets/77.png)
+* ![](../../.gitbook/assets/77.png)
 
 ### 
 
@@ -406,7 +406,7 @@ Add-KdsRootKey -EffectiveTime \(\(Get-Date\).AddHours\(-10\)\)
 
 If you do not take this step, you will see the following error when attempting to add the gMSA account:
 
-![](.gitbook/assets/78.png)
+![](../../.gitbook/assets/78.png)
 
 To create a gMSA account to use with the AD FS service, use the PowerShell script provided below. If you get an “access denied” error when running Install-ADServiceAccount, you may need to restart the server first.
 
@@ -429,40 +429,40 @@ Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceA
 
 1. Click on the link that says **Configure the federation service on this server**.
 
-* ![](.gitbook/assets/79.png)
+* ![](../../.gitbook/assets/79.png)
 
 1. Select **Create the first federation server in a federation server farm,** and click **Next.**
 
-* ![](.gitbook/assets/80.png)
+* ![](../../.gitbook/assets/80.png)
 
 1. On the **Connect to Active Directory Domain Services** screen, leave the default user selected, then click on **Next**.
 
-* ![](.gitbook/assets/81.png)
+* ![](../../.gitbook/assets/81.png)
 
 1. Select the previously created SSL Certificate, and enter “LC Test” for the **Federation Service Display Name.** Click **Next.**
 
-* ![](.gitbook/assets/82.png)
+* ![](../../.gitbook/assets/82.png)
 
 1. On the **Specify Service Account** screen, click on **Select** to use an existing account and locate the sa\_adfs service account that was previously created. Click **Next.**
 
-* ![](.gitbook/assets/83.png)
+* ![](../../.gitbook/assets/83.png)
 
 1. Select **Create a database on this server using Windows Internal Database,** and click **Next**.
 
-* ![](.gitbook/assets/84.png)
+* ![](../../.gitbook/assets/84.png)
 
 1. Click on **Next** under **Review Options.**
 
-* ![](.gitbook/assets/85.png)
+* ![](../../.gitbook/assets/85.png)
 
 1. Verify the **Pre-requisite Checks,** and click on **Configure.**
 
-* ![](.gitbook/assets/86.png)
+* ![](../../.gitbook/assets/86.png)
 
 1. Click on **Close,** and restart the server.
 
 * The warnings shown below can be disregarded for this test instance:
-* ![](.gitbook/assets/87.png)
+* ![](../../.gitbook/assets/87.png)
 
 1. Once the server has restarted, open an Administrative PowerShell session, and run the following command to enable the **IdP Signon Page:**
 
@@ -471,7 +471,7 @@ Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceA
 1. Verify that AD FS metadata is being returned by navigating to the following URL:
 
 * https://{FQDN of AD FS Server}/adfs/fs/federationserverservice.asmx
-* ![](.gitbook/assets/88.png)
+* ![](../../.gitbook/assets/88.png)
 
 ### 
 
@@ -479,7 +479,7 @@ Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceA
 
 1. Open the **AD FS** MMC snapin, right-click on the **Relying Party Trusts** folder, and select **Add Relying Party Trust.**
 
-* ![](.gitbook/assets/89.png)
+* ![](../../.gitbook/assets/89.png)
 
 1. Select **Claims aware,** and click **Start.**
 2. Choose **Enter data about the relying party manually,** and click **Next.**
@@ -499,7 +499,7 @@ Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceA
 
 Though we have not yet configured claims for Kibana, the metadata for the SAML configuration in Kibana would look similar to the following, if you were able to view it:
 
-![](.gitbook/assets/90.png)
+![](../../.gitbook/assets/90.png)
 
 The important section to note concerns the claims issuance policy. We need to return a **NameID** format in the form of an **emailAddress** by entering the following code**:**
 
@@ -511,11 +511,11 @@ Therefore, we need two rules: one to pull back the LDAP attribute from the Activ
 
 1. Click on **Add Rule** on the **Edit Claim Issuance Policy** **for ror** screen.
 
-* ![](.gitbook/assets/91.png)
+* ![](../../.gitbook/assets/91.png)
 
 1. For the first rule, choose **Send LDAP Attributes as Claims,** and click **Next.**
 
-![](.gitbook/assets/92.png)
+![](../../.gitbook/assets/92.png)
 
 1. Choose the AD Attribute to return—in this case, the email address—and click **Finish** on the **Configure Rule** screen of the **Add Transform Claim Rule Wizard.**
    * **Claim rule name**: LDAP Email
@@ -523,11 +523,11 @@ Therefore, we need two rules: one to pull back the LDAP attribute from the Activ
    * **LDAP Attribute**: E-Mail-Addresses
    * **Outgoing Claim Type**: E-Mail Address
 
-![](.gitbook/assets/93.png)
+![](../../.gitbook/assets/93.png)
 
 1. Click on **Add Rule,** then choose the **Transform an Incoming Claim** claim rule template, and click on **Next.**
 
-![](.gitbook/assets/94.png)
+![](../../.gitbook/assets/94.png)
 
 1. Enter the transformation details as listed below, and, on the **Edit Rule** screen, click on **OK.**
    * **Claim rule name**: Email Transform
@@ -536,35 +536,35 @@ Therefore, we need two rules: one to pull back the LDAP attribute from the Activ
    * **Outgoing name ID format**: Email
    * **Pass through all claim values**: Selected
 
-![](.gitbook/assets/95.png)
+![](../../.gitbook/assets/95.png)
 
 1. Click **OK** to save the rules.
 
 * Please note that the order of the rules on the **Edit Claim Issuance Policy** screen is important.
-* ![](.gitbook/assets/96.png)
+* ![](../../.gitbook/assets/96.png)
 
 ### Updating Relying Party Trusts
 
 1. Navigate to the **Relying Party Trusts** folder, right-click on the **ror trust,** and select **Properties.**
 
-![](.gitbook/assets/97.png)
+![](../../.gitbook/assets/97.png)
 
 1. Click on the **Endpoints** tab, select the **SAML Assertion Consumer Endpoints,** and click on **Edit.**
 
-![](.gitbook/assets/98.png)
+![](../../.gitbook/assets/98.png)
 
 1. Click on **Set the trusted URL as default,** and change the Index to 1 from 0. Click **OK.**
 
-![](.gitbook/assets/99.png)
+![](../../.gitbook/assets/99.png)
 
 1. On the **Endpoints** screen, click on **Add SAML,** and enter the **SAML Logout** details as follows:
    * **Endpoint Type**: SAML Logout
    * **Binding**: POST
    * **Trusted URL**: https://{IP Address of Kibana Server}:5601/ror\_kbn\_sso\_saml\_adfs/notifylogout
 
-![](.gitbook/assets/100.png)
+![](../../.gitbook/assets/100.png)
 
-1. Click on **OK** to save the modified properties. ![](.gitbook/assets/101.png)
+1. Click on **OK** to save the modified properties. ![](../../.gitbook/assets/101.png)
 
 ## Installing and Configuring Elasticsearch and the ReadonlyREST Free Plugin
 
@@ -578,27 +578,27 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 
 1. Launch the downloaded installer and click **Next** on the **Locations** screen, leaving the defaults in place.
 
-* ![](.gitbook/assets/102.png)
+* ![](../../.gitbook/assets/102.png)
 
 1. Use the defaults on the **Service** screen, and click **Next.**
 
-* ![](.gitbook/assets/103.png)
+* ![](../../.gitbook/assets/103.png)
 
 1. Use the defaults on the **Configuration** screen, and click **Next.**
 
-* ![](.gitbook/assets/104.png)
+* ![](../../.gitbook/assets/104.png)
 
 1. No additional plugins are necessary; therefore, click **Next.**
 
-* ![](.gitbook/assets/105.png)
+* ![](../../.gitbook/assets/105.png)
 
 1. Leave the **X-Pack** licenses set to **Basic,** and click on **Install.**
 
-* ![](.gitbook/assets/106.png)
+* ![](../../.gitbook/assets/106.png)
 
 1. Click on **Exit.**
 
-* ![](.gitbook/assets/107.png)
+* ![](../../.gitbook/assets/107.png)
 
 ### 
 
@@ -606,7 +606,7 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 
 1. Navigate to the [ReadonlyREST Plugin download page](https://readonlyrest.com/download/) to enter your details. You will receive the download link in your email. Make sure to choose the **Free Elasticsearch Plugin** that matches your Elasticstack version.
 
-* ![](.gitbook/assets/108.png)
+* ![](../../.gitbook/assets/108.png)
 
 1. Download the plugin, open an Administrative command prompt, and navigate to the Elasticsearch program directory. Run the plugin installation by entering the following:
 
@@ -614,11 +614,11 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 
    elasticsearch-plugin.bat install file:///C:/Users/lc-admin.AD/Downloads/readonlyrest-1.19.4\_es7.6.2.zip
 
-* ![](.gitbook/assets/109.png)
+* ![](../../.gitbook/assets/109.png)
 
 1. Navigate to the C:\ProgramData\Elastic\ElasticSearch\config directory, and create the file readonlyrest.yml.
 
-* ![](.gitbook/assets/110.png)
+* ![](../../.gitbook/assets/110.png)
 
 1. Open the readonlyrest.yml file in Notepad to run this very basic configuration that configures the following two different access control rules:
    1. **“**::KIBANA-SRV::**”**—this rule allows the Kibana server to authenticate to Elasticsearch using digest authentication with the username “kibana” and password “kibana.”
@@ -649,19 +649,19 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 1. Locate a recent download of [Kibana](https://artifacts.elastic.co/downloads/kibana/kibana-7.6.2-windows-x86_64.zip), and download the zip package. At the time this article was written, the most recent version was 7.6.2. You may want to check for more updated links as they become available.
 2. Extract the Kibana installation. Note that this is a rather large file. If you have trouble with the default Windows zip extractor, you may want to try a tool such as 7-Zip.
 
-* ![](.gitbook/assets/111.png)
+* ![](../../.gitbook/assets/111.png)
 
 1. Move the extracted folder to C:\kibana. This may require you to rename the folder.
 
-* ![](.gitbook/assets/112.png)
+* ![](../../.gitbook/assets/112.png)
 
 1. Open an administrative command prompt, and navigate to the **Kibana** directory to run the kibana.bat batch file and start **Kibana.**
 
-* ![](.gitbook/assets/113.png)
+* ![](../../.gitbook/assets/113.png)
 
 1. Once Kibana has started, navigate to \[http://localhost:5601\]\(http://localhost:5601\) to verify that Kibana is functional.
 
-* ![](.gitbook/assets/114.png)
+* ![](../../.gitbook/assets/114.png)
 
 ### 
 
@@ -671,33 +671,33 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
 
 1. The easiest way to generate a self-signed certificate using the required format is to use **OpenSSL**. A Windows version of this tool available for download is located [here](https://slproweb.com/products/Win32OpenSSL.html).
 
-* ![](.gitbook/assets/115.png)
+* ![](../../.gitbook/assets/115.png)
 
 1. If **Microsoft Visual C++ 2017 Redistributables \(64-bit\)** is not already installed, click **Yes** to download the installation and run the installer first.
 2. Accept the license agreement, and click on **Install.**
 3. Back on the OpenSSL installation, click on **I accept the agreement**, then click on **Next.**
 
-* ![](.gitbook/assets/120.png)
+* ![](../../.gitbook/assets/120.png)
 
 1. Click **Next** on the **Destination Location** screen.
 
-* ![](.gitbook/assets/121.png)
+* ![](../../.gitbook/assets/121.png)
 
 1. Click **Next** on the **Select Start Menu Folder** screen.
 
-* ![](.gitbook/assets/122.png)
+* ![](../../.gitbook/assets/122.png)
 
 1. Select **The** **Windows system directory** on the **Additional Tasks** screen, and click **Next.**
 
-* ![](.gitbook/assets/123.png)
+* ![](../../.gitbook/assets/123.png)
 
 1. Click on **Install.**
 
-* ![](.gitbook/assets/124.png)
+* ![](../../.gitbook/assets/124.png)
 
 1. Click on **Finish.**
 
-* ![](.gitbook/assets/125.png)
+* ![](../../.gitbook/assets/125.png)
 
 1. Open an administrative command prompt, and run the following command to create the certificates in the specific X509 PEM format that Kibana requires:
 
@@ -706,12 +706,12 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
   req -x509 -sha256 -nodes -days 730 -newkey rsa:2048 -keyout localhost-key.pem -out localhost.pem -subj "/C=US/ST=IL/L=Bloomington/O=lc-test/CN=10.0.0.6"
 
 * Change the subj to one that is more indicative of your installation. Make sure the CN={IP Address} matches the accessible IP of your Elasticsearch/Kibana server.
-* ![](.gitbook/assets/126.png)
+* ![](../../.gitbook/assets/126.png)
 
 1. Locate the newly created pem certificates and copy them to C:\kibana\ssl\_cert.
 
 * The ssl\_cert directory will need to be created first. For our purposes here, it has been arbitrarily named.
-* ![](.gitbook/assets/127.png)
+* ![](../../.gitbook/assets/127.png)
 
 1. Restart Kibana by entering **Ctrl-C** in the running command prompt window and then re-running kibana.bat.
 
@@ -758,15 +758,15 @@ To allow the AD FS server to talk to Kibana, we need to open the 5601 port on th
 
 1. Navigate to your Kibana URL \(https://10.0.0.6:5601\) using Chrome or Firefox. Do not use IE or the SSO button may not show up.
 
-* ![](.gitbook/assets/128.png)
+* ![](../../.gitbook/assets/128.png)
 
 1. Click on ADFS, the button configured in the kibana.yml file, and log in with one of the created AD users. Use the defined mail attribute on the AD account \(an email address\).
 
-* ![](.gitbook/assets/129.png)
+* ![](../../.gitbook/assets/129.png)
 
 1. With a successful login, the Kibana screen will appear, and you will see your SAML authenticated user in the lower right corner.
 
-* ![](.gitbook/assets/130.png)
+* ![](../../.gitbook/assets/130.png)
 
 ## 
 
