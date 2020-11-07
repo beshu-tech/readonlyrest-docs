@@ -1,6 +1,6 @@
-# kibana
+# Kibana plugins
 
-🚀**NEW**: check out [our guide](keycloak_saml.md) on how to level up on **identity management** with ReadonlyREST Enterprise and [KeyCloak](https://www.keycloak.org/)
+🚀**NEW**: check out [our guide](examples/saml-sso/keycloak_saml.md) on how to level up on **identity management** with ReadonlyREST Enterprise and [KeyCloak](https://www.keycloak.org/)
 
 ## Kibana Plugin overview
 

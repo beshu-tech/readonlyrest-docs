@@ -1,5 +1,4 @@
-# changelog
-
+# Changelog
 
 ### What's new in 1.24.0
 

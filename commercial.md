@@ -17,7 +17,7 @@ Please remember that the scope of priority support is limited to the resolution 
 Any further engagement beyond the above terms requires to either:
 
 * go through the [public forum](https://forum.readonlyrest.com) \(outside of SLA terms\)
-* be purchased as [consultancy days](mailto:sales@readonlyrest.com?subject=ReadonlyREST%20consultancy%20required) \($700 USD / day\)
+* be purchased as [consultancy days](mailto:finance@readonlyrest.com?subject=ReadonlyREST%20consultancy%20required) \($700 USD / day\)
 * the subscriber to buy a secondary Enterprise subscription for that year, so to double their quarterly priority support slots.
 
 ### Am I eligible of Priority support?
@@ -64,7 +64,7 @@ Every organization running ReadonlyREST PRO or Enterprise must have a license. T
 
 ## When a subscription lapses
 
-You must have an active subscription to run ReadonlyREST PRO or Enterprise. After a one week grace period, the software will refuse to work and you will not be eligible of priority support.  
+Legally, you must have an active subscription to keep ReadonlyREST PRO or Enterprise running. After a one week grace period, the software will refuse to work and you will not be eligible of priority support.  
 Moreover, you won't have access to any more **security updates** or new features.
 
 ## Can I upgrade to Enterprise?
@@ -79,7 +79,7 @@ The reason you cannot distribute ReadonlyREST as a Free user or a PRO subscriber
 
 We recognise this is rarely possible, that's why we agree to release the ElasticSearch plugin and the Kibana plugin under a commercial license that permits you to redistribute them.
 
-For more legal information, please contact us filing an inquiry for [ReadonlyREST embed](https://readonlyrest.com/embedded/).
+For more legal information, please contact us [filing an inquiry for ReadonlyREST embed](https://readonlyrest.com/contact-us/).
 
 ## Can you transfer a license?
 
@@ -94,14 +94,9 @@ Your purchase gets you access to downloading the PRO and/or Enterprise software.
 
 ## Can I get a refund?
 
-Yes, up to two weeks after purchase. Let us know the reason and maybe we can help but either way it's not a problem. Email [support@readonlyrest.com](mailto:support@readonlyrest.com?subject=ReadonlyREST%20refund%20required).
-
-## My credit card is expired/wrong!
-
-Log into the Chargebee website with your email address, click the Billing information tab, enter your card info and hit Save.  
-We can't provide support for the chargebee website and don't have the ability to edit customer info - if you can't log in or change your credit card, you can always let your current subscription expire and purchase a new subscription.
+Yes, up to two weeks after purchase. Let us know the reason and maybe we can help but either way it's not a problem. Email [finance@readonlyrest.com](mailto:finance@readonlyrest.com?subject=ReadonlyREST%20refund%20required).
 
 ## Can I pay via invoice?
 
-ReadonlyREST PRO is credit card only. ReadonlyREST Enterprise can accept payments with credit card. Alternatively we can arrange going through quote/PO/invoice. The latter is a manual process, so [contact](mailto:sales@readonlyrest.com?subject=ReadonlyREST%20billing%20via%20invoice) us if you really can't use the credit card.
+ReadonlyREST PRO and Enterprise can accept payments with credit card. Alternatively we can arrange going through quote, purchase order and invoice. The latter is a manual process, so please [contact](mailto:finance@readonlyrest.com?subject=ReadonlyREST%20billing%20via%20invoice) us.
 
