@@ -793,25 +793,43 @@ If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate
 
 This rule enables **Field Level Security \(FLS\)**. That is: 
 
-* return only allowed fields in response containing field names with associated values - applies to Document API (Get, Multi get) and Search API (Search, Async search, SQL, Multi search).
-* do not let using not allowed fields in Query DSL requests - applies to Search API. 
+* for responses where fields with values are returned (e.g. Search/Get API) - filter and show only allowed fields
+* make not allowed fields unsearchable - used in Query DSL requests (e.g. Search/MSearch API) do not have impact on search result.
 
+In other words: FLS protects from usage not allowed fields for user. From user's perspective it seems like such fields are nonexistent. 
+
+#####Definition
 
 Field rule definition consists of two parts:
 
-- non empty list of field names with specified access mode. Supports wildcards and user runtime variables.
-- field rule mode - 
+- non empty list of names (whitelisted or blacklisted) fields. Supports wildcards and user runtime variables.
+- FLS engine definition (global setting, optional)
+
+#####Field names
+
+Fields can be defined using two access modes: whitelist and blacklist.
+ 
 **Whitelist mode**
+
+Specifies which fields should be allowed explicitly (other fields from mapping become not allowed implicitly) : 
 
 `fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
-If the current is a search request, return all matching documents, but deprived of all the fields, except the ones that start with `allowed_fields_prefix_` or with underscore.
+Return documents deprived of all the fields, except the ones that:
+ * start with `allowed_fields_prefix_` 
+ * start with underscore
+ * are equal to `allowed_field.nested_field.text`
 
 **Blacklist mode \(recommended\)**
 
+Specifies which fields should not be allowed with special `~` character (other fields from mapping become allowed implicitly): 
+
 `fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
-If the current is a search request, return all matching documents, but deprived of the `excluded_field` and the ones that start with `excluded_fields_prefix_`.
+Return documents but deprived of the fields that:
+  * start with `excluded_fields_prefix_`
+  * are equal to `excluded_field`
+  * are equal to `another_excluded_field.nested_field`
 
 **NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
 
@@ -822,6 +840,76 @@ If the current is a search request, return all matching documents, but deprived 
   fields: ["~price"]
   indices: ["catalogue_*"]
 ```
+
+**⚠️IMPORTANT** Any metadata fields e.g. `_id` or `_index` can not be used in fields rule. 
+
+#####FLS engine configuration
+
+Global, optional property `fls_engine` set under `readonlyrest:` configuration section. 
+ 
+FLS engine specifies how ROR handles field level security internally. Previously FLS was based entirely on lucene - that's why ROR needed to be installed on all nodes to make fields rule work properly.
+Now fields rule is more flexible and part of FLS responsibilities is handled solely by ES. Increasing ES usage and reducing lucene exploitation in FLS implementation makes rule more efficient.
+
+Unfortunately not whole functionality could have been moved to ES. Some cases can be handled only on lower level by lucene.
+That being said, lucene can still be used by fields rule (as kind of a fallback), when ES is not able to handle request properly.
+
+There are two options available:   
+
+* **es_with_lucene** (default)
+
+Default hybrid approach - major part of FLS is handled by ES. Corner cases are passed to lucene to handle. 
+This solution handles all requests properly being more performant than old lucene based approach. As lucene is part of FLS engine, ROR still needs to be installed on all nodes.
+
+* **es**
+
+FLS is handled only by ES, without fallback to lucene. When ES is not able to handle FLS properly, field rule is not matched. 
+Using `es` engine FLS is not available for some type of requests (listed below). Major advantage of this approach is not relying on lucene, so ROR doesn't need to be installed on all nodes.
+If lack of full FLS support is unacceptable and all type of requests needs to be handled properly (rule matching, no rejection) it's advised to use more reliable `es_with_lucene` engine.
+
+Supported by `es` fls engine requests are: 
+
+* all Get/MGet API requests
+* Search/MSearch/AsyncSearch API requests with following restrictions:
+    * not using script fields
+    * not using query
+    * used query is one of:
+        * common terms
+        * match bool
+        * match
+        * match phrase
+        * match phrase prefix
+        * exists
+        * fuzzy 
+        * prefix
+        * range
+        * regexp
+        * term
+        * wildcard
+        * terms set
+        * bool
+        * boosting
+        * constant score
+        * dis max
+    * defined query is not using wildcards in field names
+    * defined compound queries using only listed above supported queries as inner queries    
+
+If request doesn't meet above requirements (e.g. it's using `query_string` or script fields), `es` engine would reject it.
+
+Example configuration (ROR using `es_with_lucene` fls engine):
+
+ ```yaml
+readonlyrest:
+  
+  fls_engine: "es_with_lucene"
+  
+  access_control_rules:
+
+    - name: "user_using_fields"
+      auth_key: user:pass
+      fields: ["~someNotAllowedField"]
+ ```
+
+Property `fls_engine` can be omitted, then by default ROR uses `es_with_lucene` fls engine. 
 
 **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 
