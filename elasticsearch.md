@@ -241,7 +241,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** when `fields` rule is used, it's required to install ReadonlyREST plugin in all the data nodes. This happens because this rule is partly implemented at Lucene level.
+**⚠️IMPORTANT** when `fields` rule with `es_with_lucene` FLS engine is used, it's required to install ReadonlyREST plugin in all the data nodes. This happens because this rule is partly implemented at Lucene level.
 
 ### ACL basics
 
