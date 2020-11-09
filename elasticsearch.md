@@ -792,15 +792,15 @@ If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate
 This rule enables **Field Level Security \(FLS\)**. That is: 
 
 * for responses where fields with values are returned (e.g. Search/Get API) - filter and show only allowed fields
-* make not allowed fields unsearchable - used in Query DSL requests (e.g. Search/MSearch API) do not have impact on search result.
+* make not allowed fields unsearchable - used in QueryDSL requests (e.g. Search/MSearch API) do not have impact on search result.
 
 In other words: FLS protects from usage not allowed fields for user. From user's perspective it seems like such fields are nonexistent. 
 
-#####Definition
+**Definition**
 
 Field rule definition consists of two parts:
 
-- non empty list of names (whitelisted or blacklisted) fields. Supports wildcards and user runtime variables.
+- non empty list of fields (whitelisted or blacklisted) names. Supports wildcards and user runtime variables.
 - FLS engine definition (global setting, optional)
 
 **Field names**
@@ -809,7 +809,8 @@ Fields can be defined using two access modes: whitelist and blacklist.
  
 **Whitelist mode**
 
-Specifies which fields should be allowed explicitly (other fields from mapping become not allowed implicitly) : 
+Specifies which fields should be allowed explicitly (other fields from mapping become not allowed implicitly).
+Example:
 
 `fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
@@ -820,7 +821,7 @@ Return documents deprived of all the fields, except the ones that:
 
 **Blacklist mode \(recommended\)**
 
-Specifies which fields should not be allowed prefixed with `~` (other fields from mapping become allowed implicitly): 
+Specifies which fields should not be allowed prefixed with `~` (other fields from mapping become allowed implicitly). Example:
 
 `fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
@@ -848,15 +849,15 @@ Global, optional property `fls_engine` set under `readonlyrest:` configuration s
 FLS engine specifies how ROR handles field level security internally. Previously FLS was based entirely on lucene - that's why ROR needed to be installed on all nodes to make fields rule work properly.
 Now fields rule is more flexible and part of FLS responsibilities is handled solely by ES. Increasing ES usage and reducing lucene exploitation in FLS implementation makes rule more efficient.
 
-Unfortunately not whole FLS functionality could have been moved to ES. Some cases can be handled only on lower level by lucene.
-That being said, lucene can still be used by fields rule when ES is not able to handle request properly (as kind of a fallback).
+Unfortunately not whole FLS functionality can be implemented at ES level. Some cases can be handled only on lower level by lucene.
+Lucene is still used by fields rule when ES is not able to handle request properly (as kind of a fallback).
 
 There are two engines available:   
 
 * **es_with_lucene** (default)
 
-Default hybrid approach - major part of FLS is handled by ES. Corner cases are passed to lucene to handle. 
-This solution handles all requests properly being more performant than old lucene based approach.
+Default hybrid approach - major part of FLS is handled by ES. Corner cases are passed to lucene. 
+This solution handles all requests properly being more performant than old full lucene based approach.
 
  **⚠️IMPORTANT** As lucene is part of this engine, ReadonlyREST plugin still needs to be installed  in all the cluster nodes that contain data.
 
@@ -871,7 +872,6 @@ Supported by `es` fls engine requests are:
 * all Get/MGet API requests
 * Search/MSearch/AsyncSearch API requests with following restrictions:
     * not using script fields
-    * not using query
     * used query is one of:
         * common terms
         * match bool
