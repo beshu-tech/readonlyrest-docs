@@ -787,8 +787,6 @@ In this example, we want to avoid that users belonging to group "press" can see 
 
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
 
-**⚠️IMPORTANT**: Install ReadonlyREST plugin in **all the cluster nodes that contain data\*** in order for _filter_ and _fields_ rules to work
-
 #### `fields`
 
 This rule enables **Field Level Security \(FLS\)**. That is: 
