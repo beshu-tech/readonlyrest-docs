@@ -805,7 +805,7 @@ Field rule definition consists of two parts:
 - non empty list of names (whitelisted or blacklisted) fields. Supports wildcards and user runtime variables.
 - FLS engine definition (global setting, optional)
 
-#####Field names
+**Field names**
 
 Fields can be defined using two access modes: whitelist and blacklist.
  
@@ -822,7 +822,7 @@ Return documents deprived of all the fields, except the ones that:
 
 **Blacklist mode \(recommended\)**
 
-Specifies which fields should not be allowed with special `~` character (other fields from mapping become allowed implicitly): 
+Specifies which fields should not be allowed prefixed with `~` (other fields from mapping become allowed implicitly): 
 
 `fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
@@ -833,7 +833,7 @@ Return documents but deprived of the fields that:
 
 **NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
 
-**Example: hide prices from catalogue indices**
+Example: hide prices from catalogue indices
 
 ```text
 - name: "External users - hide prices"
@@ -843,27 +843,29 @@ Return documents but deprived of the fields that:
 
 **⚠️IMPORTANT** Any metadata fields e.g. `_id` or `_index` can not be used in fields rule. 
 
-#####FLS engine configuration
+**FLS engine configuration**
 
 Global, optional property `fls_engine` set under `readonlyrest:` configuration section. 
  
 FLS engine specifies how ROR handles field level security internally. Previously FLS was based entirely on lucene - that's why ROR needed to be installed on all nodes to make fields rule work properly.
 Now fields rule is more flexible and part of FLS responsibilities is handled solely by ES. Increasing ES usage and reducing lucene exploitation in FLS implementation makes rule more efficient.
 
-Unfortunately not whole functionality could have been moved to ES. Some cases can be handled only on lower level by lucene.
-That being said, lucene can still be used by fields rule (as kind of a fallback), when ES is not able to handle request properly.
+Unfortunately not whole FLS functionality could have been moved to ES. Some cases can be handled only on lower level by lucene.
+That being said, lucene can still be used by fields rule when ES is not able to handle request properly (as kind of a fallback).
 
-There are two options available:   
+There are two engines available:   
 
 * **es_with_lucene** (default)
 
 Default hybrid approach - major part of FLS is handled by ES. Corner cases are passed to lucene to handle. 
-This solution handles all requests properly being more performant than old lucene based approach. As lucene is part of FLS engine, ROR still needs to be installed on all nodes.
+This solution handles all requests properly being more performant than old lucene based approach.
+
+ **⚠️IMPORTANT** As lucene is part of this engine, ReadonlyREST plugin still needs to be installed  in all the cluster nodes that contain data.
 
 * **es**
 
 FLS is handled only by ES, without fallback to lucene. When ES is not able to handle FLS properly, field rule is not matched. 
-Using `es` engine FLS is not available for some type of requests (listed below). Major advantage of this approach is not relying on lucene, so ROR doesn't need to be installed on all nodes.
+In `es` engine FLS is not available for some type of requests (requirements listed below). Major advantage of this approach is not relying on lucene, so ROR doesn't need to be installed on all nodes.
 If lack of full FLS support is unacceptable and all type of requests needs to be handled properly (rule matching, no rejection) it's advised to use more reliable `es_with_lucene` engine.
 
 Supported by `es` fls engine requests are: 
@@ -895,12 +897,12 @@ Supported by `es` fls engine requests are:
 
 If request doesn't meet above requirements (e.g. it's using `query_string` or script fields), `es` engine would reject it.
 
-Example configuration (ROR using `es_with_lucene` fls engine):
+Example configuration (ROR using `es` fls engine):
 
  ```yaml
 readonlyrest:
   
-  fls_engine: "es_with_lucene"
+  fls_engine: "es"
   
   access_control_rules:
 
