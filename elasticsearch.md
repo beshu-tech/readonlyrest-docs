@@ -241,7 +241,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** By default when [`fields` rule](#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
+**⚠️IMPORTANT** By default when `fields` [rule](#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
 
 ### ACL basics
 

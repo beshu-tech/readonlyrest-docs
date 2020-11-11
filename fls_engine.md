@@ -5,7 +5,7 @@ Applicable in context of `fields` [rule](elasticsearch.md#fields)
 FLS engine specifies how ROR handles field level security internally. Previously FLS was based entirely on [Lucene](https://en.wikipedia.org/wiki/Apache_Lucene) - that's why ROR needed to be installed on all nodes to make `fields` rule work properly.
 Now `fields` rule is more flexible and part of FLS responsibilities is handled solely by ES. Increasing ES usage and reducing Lucene exploitation in FLS implementation makes rule more efficient.
 
-Unfortunately, a few FLS functionalities still have to be handled at Lucene level, and cannot benefit of the new ES level implementation (see supported at ES level [requests](#ES limitations) )
+Unfortunately, a few FLS functionalities still have to be handled at Lucene level, and cannot benefit of the new ES level implementation (see supported at ES level [requests](#ES-limitations) )
 Lucene is still used by `fields` rule when ES is not able to handle request properly (as kind of a fallback).
 
 ### Configuration 
@@ -16,15 +16,16 @@ There are two engines available:
 
 * **es_with_lucene** (default)
 
+ **⚠️IMPORTANT** As Lucene is part of this engine, ReadonlyREST plugin still needs to be installed  in all the cluster nodes that contain data.
+
 Default hybrid approach - major part of FLS is handled by ES. Corner cases are passed to Lucene. 
 This solution handles all requests properly being more performant than old full Lucene based approach.
-
- **⚠️IMPORTANT** As Lucene is part of this engine, ReadonlyREST plugin still needs to be installed  in all the cluster nodes that contain data.
 
 * **es**
 
 FLS is handled only by ES, without fallback to Lucene. When ES is not able to handle FLS properly, `fields` rule is not matched. 
 In `es` engine FLS is not available for some type of requests (requirements listed below). Major advantage of this approach is not relying on Lucene, so ROR doesn't need to be installed on all nodes.
+
 If lack of full FLS support is unacceptable and all type of requests needs to be handled properly (rule matching, no rejection) it's advised to use more reliable `es_with_lucene` engine.
 
 ### ES limitations
