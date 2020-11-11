@@ -241,7 +241,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** when `fields` rule with `es_with_lucene` FLS engine is used, it's required to install ReadonlyREST plugin in all the data nodes. This happens because this rule is partly implemented at Lucene level.
+**⚠️IMPORTANT** By default when [`fields` rule](#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
 
 ### ACL basics
 
@@ -794,14 +794,16 @@ This rule enables **Field Level Security \(FLS\)**. That is:
 * for responses where fields with values are returned (e.g. Search/Get API) - filter and show only allowed fields
 * make not allowed fields unsearchable - used in QueryDSL requests (e.g. Search/MSearch API) do not have impact on search result.
 
-In other words: FLS protects from usage not allowed fields for user. From user's perspective it seems like such fields are nonexistent. 
+In other words: FLS protects from usage some not allowed fields for a certain user. From user's perspective it seems like such fields are nonexistent. 
 
 **Definition**
 
 Field rule definition consists of two parts:
 
-- non empty list of fields (whitelisted or blacklisted) names. Supports wildcards and user runtime variables.
-- FLS engine definition (global setting, optional)
+- A non empty list of fields (whitelisted or blacklisted) names. Supports wildcards and user runtime variables.
+- The FLS engine definition (global setting, optional). See: [engine details](fls_engine.md).
+
+**⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](fls_engine.md).  
 
 **Field names**
 
@@ -830,7 +832,7 @@ Return documents but deprived of the fields that:
   * are equal to `excluded_field`
   * are equal to `another_excluded_field.nested_field`
 
-**NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and Elasticsearch will refuse to boot up if this condition is detected.
+**NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and ROR will refuse to boot up if this condition is detected.
 
 Example: hide prices from catalogue indices
 
@@ -840,82 +842,11 @@ Example: hide prices from catalogue indices
   indices: ["catalogue_*"]
 ```
 
-**⚠️IMPORTANT** Any metadata fields e.g. `_id` or `_index` can not be used in fields rule. 
-
-**FLS engine configuration**
-
-Global, optional property `fls_engine` set under `readonlyrest:` configuration section. 
- 
-FLS engine specifies how ROR handles field level security internally. Previously FLS was based entirely on lucene - that's why ROR needed to be installed on all nodes to make fields rule work properly.
-Now fields rule is more flexible and part of FLS responsibilities is handled solely by ES. Increasing ES usage and reducing lucene exploitation in FLS implementation makes rule more efficient.
-
-Unfortunately not whole FLS functionality can be implemented at ES level. Some cases can be handled only on lower level by lucene.
-Lucene is still used by fields rule when ES is not able to handle request properly (as kind of a fallback).
-
-There are two engines available:   
-
-* **es_with_lucene** (default)
-
-Default hybrid approach - major part of FLS is handled by ES. Corner cases are passed to lucene. 
-This solution handles all requests properly being more performant than old full lucene based approach.
-
- **⚠️IMPORTANT** As lucene is part of this engine, ReadonlyREST plugin still needs to be installed  in all the cluster nodes that contain data.
-
-* **es**
-
-FLS is handled only by ES, without fallback to lucene. When ES is not able to handle FLS properly, field rule is not matched. 
-In `es` engine FLS is not available for some type of requests (requirements listed below). Major advantage of this approach is not relying on lucene, so ROR doesn't need to be installed on all nodes.
-If lack of full FLS support is unacceptable and all type of requests needs to be handled properly (rule matching, no rejection) it's advised to use more reliable `es_with_lucene` engine.
-
-Supported by `es` fls engine requests are: 
-
-* all Get/MGet API requests
-* Search/MSearch/AsyncSearch API requests with following restrictions:
-    * not using script fields
-    * used query is one of:
-        * common terms
-        * match bool
-        * match
-        * match phrase
-        * match phrase prefix
-        * exists
-        * fuzzy 
-        * prefix
-        * range
-        * regexp
-        * term
-        * wildcard
-        * terms set
-        * bool
-        * boosting
-        * constant score
-        * dis max
-    * defined query is not using wildcards in field names
-    * defined compound queries using only listed above supported queries as inner queries    
-
-If request doesn't meet above requirements (e.g. it's using `query_string` or script fields), `es` engine would reject it.
-
-Example configuration (ROR using `es` fls engine):
-
- ```yaml
-readonlyrest:
-  
-  fls_engine: "es"
-  
-  access_control_rules:
-
-    - name: "user_using_fields"
-      auth_key: user:pass
-      fields: ["~someNotAllowedField"]
- ```
-
-Property `fls_engine` can be omitted, then by default ROR uses `es_with_lucene` fls engine. 
+**⚠️IMPORTANT** Any metadata fields e.g. `_id` or `_index` can not be used in `fields` rule. 
 
 **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
-
-**⚠️IMPORTANT**: Install ReadonlyREST plugin in **all the cluster nodes that contain data\*** in order for _filter_ and _fields_ rules to work
 
 #### Configuring an ACL with filter/fields rules when using Kibana
 
