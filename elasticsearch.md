@@ -800,15 +800,26 @@ In other words: FLS protects from usage some not allowed fields for a certain us
 
 Field rule definition consists of two parts:
 
-- A non empty list of fields (whitelisted or blacklisted) names. Supports wildcards and user runtime variables.
+- A non empty list of fields (blacklisted or whitelisted) names. Supports wildcards and user runtime variables.
 - The FLS engine definition (global setting, optional). See: [engine details](fls_engine.md).
 
 **⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](fls_engine.md).  
 
 **Field names**
 
-Fields can be defined using two access modes: whitelist and blacklist.
+Fields can be defined using two access modes: blacklist and whitelist.
  
+**Blacklist mode \(recommended\)**
+
+Specifies which fields should not be allowed prefixed with `~` (other fields from mapping become allowed implicitly). Example:
+
+`fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
+
+Return documents but deprived of the fields that:
+  * start with `excluded_fields_prefix_`
+  * are equal to `excluded_field`
+  * are equal to `another_excluded_field.nested_field`
+  
 **Whitelist mode**
 
 Specifies which fields should be allowed explicitly (other fields from mapping become not allowed implicitly).
@@ -820,17 +831,6 @@ Return documents deprived of all the fields, except the ones that:
  * start with `allowed_fields_prefix_` 
  * start with underscore
  * are equal to `allowed_field.nested_field.text`
-
-**Blacklist mode \(recommended\)**
-
-Specifies which fields should not be allowed prefixed with `~` (other fields from mapping become allowed implicitly). Example:
-
-`fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
-
-Return documents but deprived of the fields that:
-  * start with `excluded_fields_prefix_`
-  * are equal to `excluded_field`
-  * are equal to `another_excluded_field.nested_field`
 
 **NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and ROR will refuse to boot up if this condition is detected.
 
