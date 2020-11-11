@@ -24,7 +24,7 @@ This solution handles all requests properly being more performant than old full 
 * **es**
 
 FLS is handled only by ES, without fallback to Lucene. When ES is not able to handle FLS properly, `fields` rule is not matched. 
-In `es` engine FLS is not available for some type of requests (requirements listed below). Major advantage of this approach is not relying on Lucene, so ROR doesn't need to be installed on all nodes.
+In `es` engine FLS is not available for some type of requests (requirements listed below). Major advantage of this approach is not relying on Lucene, so **ROR doesn't need to be installed on all nodes**.
 
 If lack of full FLS support is unacceptable and all type of requests needs to be handled properly (rule matching, no rejection) it's advised to use more reliable `es_with_lucene` engine.
 
