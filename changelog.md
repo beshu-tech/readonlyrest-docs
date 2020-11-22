@@ -7,7 +7,7 @@
 * **🚀New (ES)** [Introduced configuration property defining FLS engine used by fields rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields)
 * **🧐Enhancement** (ES) Fields rule performance improvement
 * **🧐Enhancement** (ES) Resolved index API support
-* **🐞Fix** (ES) ["username" in audit entry when user is authenticated via proxy_auth(https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id)
+* **🐞Fix** (ES) ["username" in audit entry when user is authenticated via proxy_auth](https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id)
 * **🐞Fix (ES)** index resolve action should be treated as readonly action
 * **🐞Fix (ES)** /_snapshot and /_snapshot/_all should behave the same
 
