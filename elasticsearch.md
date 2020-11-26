@@ -950,7 +950,7 @@ Return documents deprived of all the fields, except the ones that:
 
 **NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and ROR will refuse to boot up if this condition is detected.
 
-*Example* Allow only `cluster_name` and `status` field in cluster health response:
+*Example*: allow only `cluster_name` and `status` field in cluster health response:
 
 ```
 - name: "Filter cluster health response"
