@@ -922,9 +922,11 @@ After adding the `filter` rule \(using the block duplication strategy\).
 
 #### `response_fields`
 
-This rule allows filtering Elasticsearch responses using defined list of fields. It works in very similar way to fields rule. However it **doesn't make use of Field Level Security \(FLS\)** and could be applied to every response returned by Elasticsearch.
+This rule allows filtering Elasticsearch responses using defined list of fields. It works in very similar way to `fields` rule. However in contrast to `fields` rule, which filters out document fields, this rule filters out response fields. It **doesn't make use of Field Level Security \(FLS\)** and could be applied to every response returned by Elasticsearch.
 
-It could be configured in two modes: *whitelist* passing only defined fields or *blacklist* filtering out defined fields.
+It could be configured in two modes:
+  * *whitelist* passing only defined fields
+  * *blacklist* filtering out defined fields.
 
 **Blacklist mode**
 
@@ -932,7 +934,7 @@ Specifies which fields should be filtered out with `~` (other fields from mappin
 
 `fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
-Return documents but deprived of the fields that:
+Return response but deprived of the fields that:
   * start with `excluded_fields_prefix_`
   * are equal to `excluded_field`
   * are equal to `another_excluded_field.nested_field`
@@ -943,7 +945,7 @@ In this mode rule is configured to filter out each field that isn't defined in r
 
 `response_fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
-Return documents deprived of all the fields, except the ones that:
+Return response deprived of all the fields, except the ones that:
  * start with `allowed_fields_prefix_`
  * start with underscore
  * are equal to `allowed_field.nested_field.text`
@@ -952,13 +954,41 @@ Return documents deprived of all the fields, except the ones that:
 
 *Example*: allow only `cluster_name` and `status` field in cluster health response:
 
+Without any filtering response from `/_cluster/health` looks more or less like:
+```
+{
+	"cluster_name": "ROR_SINGLE",
+	"status": "yellow",
+	"timed_out": false,
+	"number_of_nodes": 1,
+	"number_of_data_nodes": 1,
+	"active_primary_shards": 2,
+	"active_shards": 2,
+	"relocating_shards": 0,
+	"initializing_shards": 0,
+	"unassigned_shards": 2,
+	"delayed_unassigned_shards": 0,
+	"number_of_pending_tasks": 0,
+	"number_of_in_flight_fetch": 0,
+	"task_max_waiting_in_queue_millis": 0,
+	"active_shards_percent_as_number": 50.0
+}
+```
+but after configuring such rule:
 ```
 - name: "Filter cluster health response"
   uri_re: "^/_cluster/health"
   response_fields: ["cluster_name", "status"]
 ```
+response from above will look like:
+```
+{
+	"cluster_name": "ROR_SINGLE",
+	"status": "yellow"
+}
+```
 
-Any field could be filtered using this rule.
+**NB:** Any field could be filtered using this rule.
 
 ### Authentication
 
