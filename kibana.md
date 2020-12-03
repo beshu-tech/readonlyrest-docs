@@ -203,6 +203,7 @@ readonlyrest:
   - name: "::ADMIN recover::"
     auth_key: admin:dev
     indices: ["*"]
+    ror_internal_api: allow
 ```
 
 Then remove in-index settings index manually.
@@ -254,11 +255,11 @@ readonlyrest:
       indices: [".kibana", "logstash-*"]
       kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
-
     - name: "::ADMIN::"
       auth_key: admin:dev
       # KIBANA ADMIN ACCESS NEEDED TO EDIT SECURITY SETTINGS IN ROR KIBANA APP!
       kibana_access: admin
+      ror_internal_api: allow
 
     - name: "::WEBSITE SEARCH BOX::"
       indices: ["public"]
@@ -282,7 +283,7 @@ So, some request with credentials can be let through from one of the first block
 
 Take this example of troublesome ACL:
 
-```text
+```yaml
     # PROBLEMATIC SETTINGS (EXAMPLE) ⚠️
 
     access_control_rules:
@@ -294,6 +295,7 @@ Take this example of troublesome ACL:
     - name: "::ADMIN::"
       auth_key: admin:dev
       kibana_access: admin
+      ror_internal_api: allow
 ```
 
 The user will be able to login because the login request will be allowed by the first ACL block. But the ACL will not have resolved any metadata about the user identity \(credentials checking was ignored\)!
@@ -302,7 +304,7 @@ This means the response to the Kibana login request will contain no user identit
 
 The solution to this is to reorder the ACL blocks, so the ones that authenticate Kibana users are on the top.
 
-```text
+```yaml
     # SOLUTION: KIBANA USER AUTH RELATED BLOCKS GO FIRST! ✅👍
 
     access_control_rules:
@@ -310,6 +312,7 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
     - name: "::ADMIN::"
       auth_key: admin:dev
       kibana_access: admin
+      ror_internal_api: allow
 
     - name: "::FIRST BLOCK::"
       hosts: ["127.0.0.1"]
@@ -510,7 +513,7 @@ In order for the user identity information to flow securely from Kibana to Elast
 
 Edit `readonlyrest.yml`
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -602,7 +605,7 @@ This part is identical as seen in SAML connectors. In order for the user identit
 
 Edit `readonlyrest.yml`
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -768,7 +771,7 @@ An administrator will need to create the template tenancy, populate it with the 
 
 Let's start to add to our access control list \(found in $ES\_PATH\_CONF/config/readonlyrest.yml, or ReadonlyREST App in Kibana\) a local user "administrator" that will belong to two tenancies: the default one \(stored in .kibana index\), and the template one \(stored in .kibana\_template index\).
 
-```text
+```yaml
 readonlyrest:
   audit_collector: true
 
@@ -783,6 +786,7 @@ readonlyrest:
     verbosity: error
     kibana_access: admin
     kibana_index: ".kibana"
+    ror_internal_api: allow
 
   - name: "Template Tenancy"
     groups: ["Template"]
@@ -816,7 +820,7 @@ Now, ReadonlyREST Enterprise will look for the ".kibana\_template" index, and tr
 
 Restart Kibana with the new setting. Add a new tenancy to the ACL:
 
-```text
+```yaml
 readonlyrest:
   audit_collector: true
 
@@ -831,6 +835,7 @@ readonlyrest:
     verbosity: error
     kibana_access: admin
     kibana_index: ".kibana"
+    ror_internal_api: allow
 
   - name: "Template Tenancy"
     groups: ["Template"]

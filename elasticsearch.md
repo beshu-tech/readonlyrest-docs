@@ -74,7 +74,7 @@ Create and edit the `readonlyrest.yml` settings file in the **same directory whe
 
 Now write some basic settings, just to get started. In this example we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -255,7 +255,7 @@ The core of this plugin is an ACL \(access control list\). A logic structure ver
 
 **⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -289,7 +289,7 @@ http.type: ssl_netty4
 
 Now in `readonlyrest.yml` add the following settings:
 
-```text
+```yaml
 readonlyrest:
     ssl:
       keystore_file: "keystore.jks"
@@ -311,7 +311,7 @@ transport.type: ror_ssl_internode
 
 In `readonlyrest.yml` following settings must be added \(it's just example configuration presenting most important properties\):
 
-```text
+```yaml
 readonlyrest:
     ssl_internode:
       keystore_file: "keystore.jks"
@@ -348,7 +348,7 @@ Both `certificate_verification` and `client_authentication` can be enabled with 
 
 Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
 
-```text
+```yaml
 readonlyrest:
     ssl:
       # put the keystore in the same dir with elasticsearch.yml 
@@ -973,7 +973,7 @@ This method is based on `/etc/shadow` file syntax.
 
 If you configured sha512 encryption with 65535 rounds on your system the hash in /etc/shadow for the account `test:test` will be `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
     - name: Accept requests from users in group team1 on index1
@@ -1086,7 +1086,7 @@ Used to delegate groups resolution for a user to a JSON microservice. See below,
 
 For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication.
 
-```text
+```yaml
 readonlyrest:
   access_control_rules:
 
@@ -1110,6 +1110,34 @@ readonlyrest:
 This authentication and authorization connector represents the secure channel \(based on JWT tokens\) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
 
 Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
+
+### Protecting ROR internals
+
+#### `ror_internal_api`
+
+`ror_internal_api: "allow" # or "forbid"`
+
+ROR plugin has an internal API for an in-index settings management. The settings are stored in `.readonlyrest` index (or [custom one](./kibana.md#configuration)). Moreover, when an audit collector is enabled, audit entries will be stored in the audit index (by default in the index defined by a template `readonlyrest_audit-'yyyy-MM-dd`). All of these indices and the API should be protected and probably only an admin or a superuser should be able to have an access to it. To allow access to the ROR internal `ror_internal_api: "allow"` should be added to the admin/superuser's block. When `ror_internal_api` is not used in a given block, ROR implicitly adds `ror_internal_api: "forbid"` step which will be checked after block is matched.
+
+Example:
+```yaml
+readonlyrest:
+  access_control_rules:
+
+    - name: "admin"
+      verbosity: error
+      auth_key: admin:admin
+      ror_internal_api: allow
+
+    - name: "dev"
+      indices: ["*"]
+      auth_key: dev:dev
+      # <- ROR implicitly assumes that as the last step there is `ror_internal_api: forbid` added
+```
+
+In the example above, a full access to ROR internal API was given to `admin` user. He will be able to manage ROR in-index settings and/or manually change in-index settings and audit index.
+
+On the other hand, `dev` user won't be able to use ROR internal API. He also won't be able manually change in-index settings index and audit index. 
 
 ### Ancillary rules
 
@@ -1218,7 +1246,7 @@ ReadonlyREST can write events very similarly to Logstash into to a series of ind
 
 Here is a configuration example, you can see the `audit_collector: true` setting, which nomally defaults to false. Note how the successful requests matched by the first rule \(Kibana\) will not be written to the audit log, because the verbosity is set to error. Audit log in facts, obey the verbosity setting the same way regular text logs do.
 
-```text
+```yaml
 readonlyrest:
 
     audit_collector: true
@@ -1239,7 +1267,7 @@ readonlyrest:
 
 If you want to log the request content then an additional serializer is provided. This will log the entire user request within the content field of the audit event. To enable, configure the audit\_serializer parameter as below.
 
-```text
+```yaml
 readonlyrest:
   audit_collector: true
   audit_serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
@@ -1252,7 +1280,7 @@ It is possible to change the name of the produced audit log indices by specifyin
 
 Example: tell ROR to write on monthly index.
 
-```text
+```yaml
 readonlyrest:
   audit_collector: true
   audit_index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
@@ -1316,7 +1344,7 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
 1. mv ror-custom-java-serializer-1.0.0.jar plugins/readonlyrest/
 2. Your config/readonlyrest.yml should start like this
 
-   ```text
+   ```yaml
     readonlyrest:
         audit_collector: true
         audit_serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
@@ -1478,7 +1506,7 @@ One of the neatest feature in ReadonlyREST is that you can use dynamic variables
 
 You can let users authenticate externally, i.e. via LDAP, and use their user name string inside the `indices` rule.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -1494,7 +1522,7 @@ readonlyrest:
 
 You can let users authorize externally, i.e. via LDAP, and use their group inside the `uri_re` rule.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -1511,7 +1539,7 @@ readonlyrest:
 
 Imagine that we delegate authentication to a reverse proxy, so we know that only authenticated users will ever reach Elasticsearch. We can tell the reverse proxy \(i.e. Nginx\) to inject a header called `x-nginx-user` containing the username.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -1565,7 +1593,7 @@ In this example, users credentials are validate via LDAP. The groups associated 
 
 **Simpler: authentication and authorization in one rule**
 
-```text
+```yaml
 readonlyrest:
 
     access_control_rules:
@@ -1616,7 +1644,7 @@ readonlyrest:
 
 **Advanced: authentication and authorization in separate rules**
 
-```text
+```yaml
 readonlyrest:
     enable: true
     response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
@@ -1693,7 +1721,7 @@ Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Acc
 
 ReadonlyREST will forward the received `Authorization` header to a website of choice and evaluate the returned HTTP status code to verify the provided credentials. This is useful if you already have a web server with all the credentials configured and the credentials are passed over the `Authorization` header.
 
-```text
+```yaml
 readonlyrest:    
     access_control_rules:
 
@@ -1740,7 +1768,7 @@ Cache can be defined at the service level or/and at the rule level. In the examp
 
 This external authorization connector makes it possible to resolve to what groups a users belong, using an external JSON or XML service.
 
-```text
+```yaml
 readonlyrest:    
     access_control_rules:
 
@@ -1801,7 +1829,7 @@ As usual, the cache behaviour can be defined at service level or/and at rule lev
 
 The information about the user name can be extracted from the "claims" inside a JSON Web Token. Here is an example.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
     - name: Valid JWT token with a viewer role
@@ -2031,7 +2059,7 @@ Of course, if you do not use ssl, disable it.
 
 #### On the Elasticsearch side
 
-```text
+```yaml
  readonlyrest:
      ssl:
        enable: true
