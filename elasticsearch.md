@@ -941,7 +941,7 @@ The above will return the usual response object, but deprived (if found) of the 
 
 **Whitelist mode**
 
-In this mode the rule is configured to filter out each field that isn't defined in rule.
+In this mode rule is configured to filter out each field that isn't defined in the rule.
 
 `response_fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
