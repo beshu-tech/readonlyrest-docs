@@ -922,26 +922,26 @@ After adding the `filter` rule \(using the block duplication strategy\).
 
 #### `response_fields`
 
-This rule allows filtering Elasticsearch responses using defined list of fields. It works in very similar way to `fields` rule. However in contrast to `fields` rule, which filters out document fields, this rule filters out response fields. It **doesn't make use of Field Level Security \(FLS\)** and could be applied to every response returned by Elasticsearch.
+This rule allows filtering Elasticsearch responses using a list of fields. It works in very similar way to `fields` rule. In contrast to `fields` rule, which filters out document fields, this rule filters out response fields. It **doesn't make use of Field Level Security \(FLS\)** and can be applied to every response returned by Elasticsearch.
 
-It could be configured in two modes:
-  * *whitelist* passing only defined fields
-  * *blacklist* filtering out defined fields.
+It can be configured in two modes:
+  * *whitelist* allowing only the defined fields from the response object
+  * *blacklist* filtering out (removing) only the defined fields from the response object
 
 **Blacklist mode**
 
-Specifies which fields should be filtered out with `~` (other fields from mapping become allowed implicitly). Example:
+Specifies which fields should be filtered out by adding the ~ prefix to the field name. Other fields in the response will be implicitly allowed. For example:
 
-`fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
+`response_fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
-Return response but deprived of the fields that:
+The above will return the usual response object, but deprived (if found) of the fields that:
   * start with `excluded_fields_prefix_`
   * are equal to `excluded_field`
   * are equal to `another_excluded_field.nested_field`
 
 **Whitelist mode**
 
-In this mode rule is configured to filter out each field that isn't defined in rule.
+In this mode the rule is configured to filter out each field that isn't defined in rule.
 
 `response_fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
@@ -988,7 +988,7 @@ response from above will look like:
 }
 ```
 
-**NB:** Any field could be filtered using this rule.
+**NB:** Any response field could be filtered using this rule.
 
 ### Authentication
 
