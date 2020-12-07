@@ -988,7 +988,7 @@ response from above will look like:
 }
 ```
 
-**NB:** Any response field could be filtered using this rule.
+**NB:** Any response field can be filtered using this rule.
 
 ### Authentication
 
