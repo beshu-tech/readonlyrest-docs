@@ -1,5 +1,10 @@
 # Changelog
 
+### What's new in 1.25.1
+
+* **🚨Security Fix** (ES) [CVE-2020-25649](https://nvd.nist.gov/vuln/detail/CVE-2020-25649)
+* **🚀New** (ES) 7.10.1 support
+
 ### What's new in 1.25.0
 
 * **🚨Security Fix** (ES) [Common Vulnerabilities and Exposures (CVE)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/1728)
