@@ -9,6 +9,10 @@ This is a closed beta for the current Enterprise subscribers. If you are one of 
 
 We will be grateful for your kind feedback.
 
+## How can I get updates?
+
+Simple: head to [beta.readonlyrest.com](https://beta.readonlyrest.com) and subscribe to the announcements. 
+
 ## What's different?
 
 Kibana is a fast changing piece of software. In the past, it was very frequent that a new Kibana release would break or introduce regressions in our product, and fixing and adapting has been an endless manual work for our team. 
