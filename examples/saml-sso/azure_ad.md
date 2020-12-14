@@ -131,7 +131,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Login in your Microsoft Azure dashboard, and head to Enterprise Applications.
 
-![Azure Dashboard](../../.gitbook/assets/azure_dashboard.png)
+![Azure Dashboard](../../.gitbook/assets/azure_dashboard%20%281%29%20%281%29.png)
 
 1. Click on "Non-gallery application".
 
@@ -139,7 +139,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Create a new app called "Readonlyrest Enterprise".
 
-![Azure App Name](../../.gitbook/assets/azure_app_name.png)
+![Azure App Name](../../.gitbook/assets/azure_app_name%20%281%29.png)
 
 1. Click "Single Sign On" to configure the app for SAML.
 
@@ -147,7 +147,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Insert URLs and data about our Kibana server as shown in the picture. And press SAVE.
 
-![Azure ror basic saml settings](../../.gitbook/assets/azure_ror_basic_saml.png)
+![Azure ror basic saml settings](../../.gitbook/assets/azure_ror_basic_saml%20%281%29.png)
 
 1. Download the base64 encoded "pem" file, and place it under the **absolute path** `/etc/kibana/config/cert.pem`.
 
@@ -163,7 +163,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
    You should now see a new blue button that says "Azure AD SAML SSO".
 
-![ROR login](../../.gitbook/assets/ror_ent_login.png)
+![ROR login](../../.gitbook/assets/ror_ent_login%20%281%29.png)
 
 1. Press it, and you should see the Azure AD login page. Place your credentials here, or pick an already authenticated identity to enter Kibana.
 
@@ -175,7 +175,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. You can now logout from the "ReadonlyREST SAML SSO" Azure AD Enterprise app by pressing the exit button right beside the username in the bottom right corner.
 
-![Azure Login](../../.gitbook/assets/logout.png)
+![Azure Login](../../.gitbook/assets/logout%20%281%29%20%281%29.png)
 
 ## Authorization using Azure AD groups
 

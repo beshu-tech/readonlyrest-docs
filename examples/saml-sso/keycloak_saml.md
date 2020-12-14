@@ -37,7 +37,7 @@ If you imported the JSON file, you should have a "ror" realm, and a SAML client 
 
 First we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
-![keycloak\_screenshot](../../.gitbook/assets/kc_saml_conf_realm.png)
+![keycloak\_screenshot](../../.gitbook/assets/kc_saml_conf_realm%20%281%29%20%281%29.png)
 
 Then, let's create a SAML client for this realm:
 

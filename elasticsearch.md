@@ -241,7 +241,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** By default when `fields` [rule](#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
+**⚠️IMPORTANT** By default when `fields` [rule](elasticsearch.md#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
 
 ### ACL basics
 
@@ -789,48 +789,49 @@ If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate
 
 #### `fields`
 
-This rule enables **Field Level Security \(FLS\)**. That is: 
+This rule enables **Field Level Security \(FLS\)**. That is:
 
-* for responses where fields with values are returned (e.g. Search/Get API) - filter and show only allowed fields
-* make not allowed fields unsearchable - used in QueryDSL requests (e.g. Search/MSearch API) do not have impact on search result.
+* for responses where fields with values are returned \(e.g. Search/Get API\) - filter and show only allowed fields
+* make not allowed fields unsearchable - used in QueryDSL requests \(e.g. Search/MSearch API\) do not have impact on search result.
 
-In other words: FLS protects from usage some not allowed fields for a certain user. From user's perspective it seems like such fields are nonexistent. 
+In other words: FLS protects from usage some not allowed fields for a certain user. From user's perspective it seems like such fields are nonexistent.
 
 **Definition**
 
 Field rule definition consists of two parts:
 
-- A non empty list of fields (blacklisted or whitelisted) names. Supports wildcards and user runtime variables.
-- The FLS engine definition (global setting, optional). See: [engine details](fls_engine.md).
+* A non empty list of fields \(blacklisted or whitelisted\) names. Supports wildcards and user runtime variables.
+* The FLS engine definition \(global setting, optional\). See: [engine details](https://github.com/beshu-tech/readonlyrest-docs/tree/068546c57f723c0d0ed1c3970e9737bd3269e247/fls_engine.md).
 
-**⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](fls_engine.md).  
+**⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](https://github.com/beshu-tech/readonlyrest-docs/tree/068546c57f723c0d0ed1c3970e9737bd3269e247/fls_engine.md).
 
 **Field names**
 
 Fields can be defined using two access modes: blacklist and whitelist.
- 
+
 **Blacklist mode \(recommended\)**
 
-Specifies which fields should not be allowed prefixed with `~` (other fields from mapping become allowed implicitly). Example:
+Specifies which fields should not be allowed prefixed with `~` \(other fields from mapping become allowed implicitly\). Example:
 
 `fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
 Return documents but deprived of the fields that:
-  * start with `excluded_fields_prefix_`
-  * are equal to `excluded_field`
-  * are equal to `another_excluded_field.nested_field`
-  
+
+* start with `excluded_fields_prefix_`
+* are equal to `excluded_field`
+* are equal to `another_excluded_field.nested_field`
+
 **Whitelist mode**
 
-Specifies which fields should be allowed explicitly (other fields from mapping become not allowed implicitly).
-Example:
+Specifies which fields should be allowed explicitly \(other fields from mapping become not allowed implicitly\). Example:
 
 `fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
 Return documents deprived of all the fields, except the ones that:
- * start with `allowed_fields_prefix_` 
- * start with underscore
- * are equal to `allowed_field.nested_field.text`
+
+* start with `allowed_fields_prefix_` 
+* start with underscore
+* are equal to `allowed_field.nested_field.text`
 
 **NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and ROR will refuse to boot up if this condition is detected.
 
@@ -842,7 +843,7 @@ Example: hide prices from catalogue indices
   indices: ["catalogue_*"]
 ```
 
-**⚠️IMPORTANT** Any metadata fields e.g. `_id` or `_index` can not be used in `fields` rule. 
+**⚠️IMPORTANT** Any metadata fields e.g. `_id` or `_index` can not be used in `fields` rule.
 
 **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 

@@ -14,4 +14,5 @@
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
 * [Changelog](changelog.md)
+* [\[Beta\] Enterprise New Platform](beta-new-platform.md)
 
