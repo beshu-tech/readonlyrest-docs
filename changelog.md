@@ -1,5 +1,9 @@
 # Changelog
 
+### What's new in 1.25.2
+
+* **🐞Fix** \(ES\) [removed verbose logging](https://forum.readonlyrest.com/t/elastic-message-cannot-extract-fields-for-query-after-readonlyrest-installation/1749)
+
 ### What's new in 1.25.1
 
 * **🚨Security Fix** \(ES\) [CVE-2020-25649](https://nvd.nist.gov/vuln/detail/CVE-2020-25649)
