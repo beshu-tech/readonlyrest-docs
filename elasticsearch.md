@@ -1778,7 +1778,7 @@ The simplest configuration of LDAP using server discovery is:
 ```
 It is using system DNS to get `_ldap._tcp` SRV records which should contain hostnames and ports to connect to.
 
-Server discovery could be personalised using few **optional** configuration parameters
+Server discovery could be personalised using few **optional** configuration parameters:
 * `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
 * `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default system DNS is used.
 * `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in cache. Default is 1h.
