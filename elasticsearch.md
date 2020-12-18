@@ -213,12 +213,6 @@ service start elasticsearch
 
 Depending on your environment.
 
-Now you should be able to see the logs and ReadonlyREST related lines like the one below:
-
-```text
-[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
-```
-
 ### Deploying ReadonlyREST in a stable production cluster
 
 Unless some advanced features are being used \(see below\),this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** \(port 9200\).
