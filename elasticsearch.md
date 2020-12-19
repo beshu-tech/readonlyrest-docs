@@ -1661,6 +1661,7 @@ readonlyrest:
       port: 389                                                     # optional, default 389
       ssl_enabled: false                                            # optional, default true
       ssl_trust_all_certs: true                                     # optional, default false
+      ignore_ldap_connectivity_problems: true                       # optional, default false
       bind_dn: "cn=admin,dc=example,dc=com"                         # optional, skip for anonymous bind
       bind_password: "password"                                     # optional, skip for anonymous bind
       search_user_base_DN: "ou=People,dc=example,dc=com"
@@ -1717,6 +1718,7 @@ readonlyrest:
       port: 389                                                 # default 389
       ssl_enabled: false                                        # default true
       ssl_trust_all_certs: true                                 # default false
+      ignore_ldap_connectivity_problems: true                   # optional, default false
       bind_dn: "cn=admin,dc=example,dc=com"                     # skip for anonymous bind
       bind_password: "password"                                 # skip for anonymous bind
       search_user_base_DN: "ou=People,dc=example,dc=com"
@@ -1746,7 +1748,7 @@ readonlyrest:
 * By default, groups in `search_groups_base_DN` should contain a `uniqueMember` LDAP attribute referring to the full DNs of the users that belong to the group. \(There may be any number of occurrences of this attribute within a particular group, as any number of users may belong to the group.\) An alternative attribute name can be specified via the optional `unique_member_attribute` configuration item.
 * `group_name_attribute` is the LDAP group object attribute that contains the names of the ROR groups
 * `group_search_filter` is the LDAP search filter \(or filters\) to limit the user groups returned by LDAP. By default, this filter will be joined \(with `&`\) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: \(&YOUR\_GROUP\_SEARCH\_FILTER\(unique\_member\_attribute=user\_dn\)\). The `unique_member_attribute` can be set to use the value of `user_id_attribute` by setting `group_attribute_is_dn: false`.
-
+* `ignore_ldap_connectivity_problems` set to true allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default ROR starts only after it's able to connect to each server.
 Examples:
 
 ```text
