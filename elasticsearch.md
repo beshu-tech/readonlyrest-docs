@@ -1749,6 +1749,7 @@ readonlyrest:
 * `group_name_attribute` is the LDAP group object attribute that contains the names of the ROR groups
 * `group_search_filter` is the LDAP search filter \(or filters\) to limit the user groups returned by LDAP. By default, this filter will be joined \(with `&`\) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: \(&YOUR\_GROUP\_SEARCH\_FILTER\(unique\_member\_attribute=user\_dn\)\). The `unique_member_attribute` can be set to use the value of `user_id_attribute` by setting `group_attribute_is_dn: false`.
 * `ignore_ldap_connectivity_problems` set to true allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default ROR starts only after it's able to connect to each server.
+
 Examples:
 
 ```text
