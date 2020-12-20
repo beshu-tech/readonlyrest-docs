@@ -1767,20 +1767,20 @@ Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Acc
 
 #### LDAP Server discovery
 
-It is possible for LDAP module to get all LDAP hostnames from DNS server rather than from configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
+It is possible for the LDAP connector to get all LDAP hostnames from DNS server rather than from configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
 
-The simplest configuration of LDAP using server discovery is:
+The simplest configuration example of an LDAP connector instance using server discovery is:
 ```
     - name: ldap
       server_discovery: true                                        
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
-It is using system DNS to get `_ldap._tcp` SRV records which should contain hostnames and ports to connect to.
+This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value wil be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
 
-Server discovery could be personalised using few **optional** configuration parameters:
+The server discovery mechanism can be optionally configured further, by adding a few more configuration parameters, all of which are optional:
 * `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
-* `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default system DNS is used.
+* `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default the system DNS is used.
 * `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in cache. Default is 1h.
 * `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used.
 
