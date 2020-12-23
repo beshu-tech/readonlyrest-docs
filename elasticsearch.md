@@ -1957,7 +1957,7 @@ http.type: ssl_netty4
 * user = logstash
 * password = logstash
 
-**Step 4** Hash the credentials string `logstash:logstash` using SHA256. The simplest way is to paste the string in an [online tool](http://www.xorbin.com/tools/sha256-hash-calculator) You should have obtained "4338fa3ea95532196849ae27615e14dda95c77b1".
+**Step 4** Hash the credentials string `logstash:logstash` using SHA256. The simplest way is to paste the string in an [online tool](http://www.xorbin.com/tools/sha256-hash-calculator) You should have obtained "280ac6f756a64a80143447c980289e7e4c6918b92588c8095c7c3f049a13fbf9".
 
 **Step 5** Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` and append the following lines:
 
