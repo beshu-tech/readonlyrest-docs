@@ -1631,7 +1631,7 @@ indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
 
 ### LDAP connector
 
-In this example, users credentials are validate via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
+In this example, users credentials are validated via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
 
 **Simpler: authentication and authorization in one rule**
 
@@ -1681,6 +1681,12 @@ readonlyrest:
       - "ldaps://ssl-ldap2.foo.com:636"                             # can use ldap:// or ldaps:// (for ssl)
       - "ldaps://ssl-ldap3.foo.com:636"                             # the port is declared in line
       ha: "ROUND_ROBIN"                                             # optional, default "FAILOVER"
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+
+    # Server discovery variant
+    - name: ldap3
+      server_discovery: true                                        # Using _ldaps._tcp SRV DNS record for getting LDAP addresses
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
@@ -1761,6 +1767,37 @@ group_search_filter: "(cn=*)" # basically no group filtering
 \(An example OpenLDAP configuration file can be found in our tests: /src/test/resources/test\_example.ldif\)
 
 Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Accept requests from users in group team2 on index2` rule\)
+
+#### LDAP Server discovery
+
+It is possible for the LDAP connector to get all LDAP hostnames from DNS server rather than from configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
+
+The simplest configuration example of an LDAP connector instance using server discovery is:
+```
+    - name: ldap
+      server_discovery: true                                        
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+```
+This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value wil be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
+
+The server discovery mechanism can be optionally configured further, by adding a few more configuration parameters, all of which are optional:
+* `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
+* `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default the system DNS is used.
+* `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in cache. Default is 1h.
+* `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used.
+
+Example:
+```
+    - name: ldap
+      server_discovery:
+        record_name: "_ldap._tcp.example.com"
+        dns_url: "dns://192.168.1.100"
+        ttl: "3 hours"
+        use_ssl: true                                    
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+```
 
 ### External Basic Auth
 
