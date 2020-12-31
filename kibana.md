@@ -4,7 +4,7 @@
 
 ## Kibana Plugin overview
 
-ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html) packages. See product descriptions and a comparison chart in the official [ReadonlyREST website](https://readonlyrest.com)
+ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html), and [ReadonlyREST Free](https://readonlyrest.com/free) packages. See product descriptions and a comparison chart in the official [ReadonlyREST website](https://readonlyrest.com)
 
 ReadonlyREST plugins for Kibana **always require** ReadonlyREST Free to be installed in the Elasticsearch nodes your Kibana instance\(s\) will connect to.
 
@@ -486,7 +486,7 @@ In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automa
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](.gitbook/assets/load_audit_dashboard.png)
+![loading visualization](.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 
