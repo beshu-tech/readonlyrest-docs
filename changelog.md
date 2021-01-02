@@ -1,15 +1,40 @@
 # Changelog
 
+### What's new in 1.26.0
+
+* **🚨Security Fix** \(ES\) [CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35490) & [CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35491) (removed Jackson dependency from ROR core)
+* **🚀New** \(ES\) [New response_fields rule](https://forum.readonlyrest.com/t/ror-1-18-9-enterprise-es-7-2-0-enable-cluster-health-without-authentication/1567)
+* **🚀New** \(ES\) [Support for LDAP server discovery using _ldaps._tcp SRV record](https://forum.readonlyrest.com/t/does-ror-support-dc-locator/1211)
+* **🚀 New** \(ES\) [New configuration option allowing to ignore LDAP connectivity problems](https://forum.readonlyrest.com/t/ror-cannot-start-if-ldap-is-not-available/1748)
+* **🧐Enhancement** \(ES\) Full support for ILM API
+* **🧐Enhancement** \(KBN\) Enforce read-after-write consistency between kibana nodes
+* **🧐Enhancement** \(KBN ENT\) OIDC custom claims incorporated in "assertion" claim
+* **🧐Enhancement** \(KBN ENT\) OIDC support for configurable kibanaExternalHost (good for Docker)
+* **🧐Enhancement** \(KBN ENT\) ROR adds "ror-user_<username>" class to "body" tag for easy per-user CSS/JS
+* **🧐Enhancement** \(KBN ENT/PRO\) ROR adds "ror-group_<currentGroup>" class to "body" tag for easy per-group CSS/JS
+* **🐞Fix** \(ES\) [ROR authentication endpoint action](https://forum.readonlyrest.com/t/es-7-4-2-ror-1-18-9-rradmin-refreshsettings-by-block-default/1388)
+* **🐞Fix** \(ES\) "username" in audit entry when request is rejected
+
+### What's new in 1.25.2
+
+* **🐞Fix** \(ES\) [removed verbose logging](https://forum.readonlyrest.com/t/elastic-message-cannot-extract-fields-for-query-after-readonlyrest-installation/1749)
+
+### What's new in 1.25.1
+
+* **🚨Security Fix** \(ES\) [CVE-2020-25649](https://nvd.nist.gov/vuln/detail/CVE-2020-25649)
+* **🚀New** \(ES\) 7.10.1 support
+
 ### What's new in 1.25.0
 
-* **🚨Security Fix** (ES) [Common Vulnerabilities and Exposures (CVE)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/1728)
-* **🚀New** (ES) [auth_key_pbkdf2 rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#auth_key_pbkdf2)
-* **🚀New (ES)** [Introduced configuration property defining FLS engine used by fields rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields)
-* **🧐Enhancement** (ES) Fields rule performance improvement
-* **🧐Enhancement** (ES) Resolved index API support
-* **🐞Fix** (ES) ["username" in audit entry when user is authenticated via proxy_auth](https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id)
-* **🐞Fix (ES)** index resolve action should be treated as readonly action
-* **🐞Fix (ES)** /_snapshot and /_snapshot/_all should behave the same
+* **🚨Security Fix** \(ES\) [Common Vulnerabilities and Exposures \(CVE\)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/1728)
+* **🚀New** \(ES\) 7.10.0 support
+* **🚀New** \(ES\) [auth\_key\_pbkdf2 rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#auth_key_pbkdf2)
+* **🚀New** \(ES\) [Introduced configuration property defining FLS engine used by fields rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields)
+* **🧐Enhancement** \(ES\) Fields rule performance improvement
+* **🧐Enhancement** \(ES\) Resolved index API support
+* **🐞Fix** \(ES\) ["username" in audit entry when user is authenticated via proxy\_auth](https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id)
+* **🐞Fix** \(ES\) index resolve action should be treated as readonly action
+* **🐞Fix** \(ES\) /\_snapshot and /\_snapshot/\_all should behave the same
 
 ### What's new in 1.24.0
 

@@ -213,12 +213,6 @@ service start elasticsearch
 
 Depending on your environment.
 
-Now you should be able to see the logs and ReadonlyREST related lines like the one below:
-
-```text
-[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
-```
-
 ### Deploying ReadonlyREST in a stable production cluster
 
 Unless some advanced features are being used \(see below\),this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** \(port 9200\).
@@ -241,7 +235,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** By default when `fields` [rule](#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
+**⚠️IMPORTANT** By default when `fields` [rule](elasticsearch.md#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
 
 ### ACL basics
 
@@ -791,8 +785,8 @@ If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate
 
 This rule enables **Field Level Security \(FLS\)**. That is:
 
-* for responses where fields with values are returned (e.g. Search/Get API) - filter and show only allowed fields
-* make not allowed fields unsearchable - used in QueryDSL requests (e.g. Search/MSearch API) do not have impact on search result.
+* for responses where fields with values are returned \(e.g. Search/Get API\) - filter and show only allowed fields
+* make not allowed fields unsearchable - used in QueryDSL requests \(e.g. Search/MSearch API\) do not have impact on search result.
 
 In other words: FLS protects from usage some not allowed fields for a certain user. From user's perspective it seems like such fields are nonexistent.
 
@@ -800,10 +794,10 @@ In other words: FLS protects from usage some not allowed fields for a certain us
 
 Field rule definition consists of two parts:
 
-- A non empty list of fields (blacklisted or whitelisted) names. Supports wildcards and user runtime variables.
-- The FLS engine definition (global setting, optional). See: [engine details](fls_engine.md).
+* A non empty list of fields \(blacklisted or whitelisted\) names. Supports wildcards and user runtime variables.
+* The FLS engine definition \(global setting, optional\). See: [engine details](https://github.com/beshu-tech/readonlyrest-docs/tree/068546c57f723c0d0ed1c3970e9737bd3269e247/fls_engine.md).
 
-**⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](fls_engine.md).  
+**⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](https://github.com/beshu-tech/readonlyrest-docs/tree/068546c57f723c0d0ed1c3970e9737bd3269e247/fls_engine.md).
 
 **Field names**
 
@@ -811,26 +805,27 @@ Fields can be defined using two access modes: blacklist and whitelist.
 
 **Blacklist mode \(recommended\)**
 
-Specifies which fields should not be allowed prefixed with `~` (other fields from mapping become allowed implicitly). Example:
+Specifies which fields should not be allowed prefixed with `~` \(other fields from mapping become allowed implicitly\). Example:
 
 `fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
 Return documents but deprived of the fields that:
-  * start with `excluded_fields_prefix_`
-  * are equal to `excluded_field`
-  * are equal to `another_excluded_field.nested_field`
+
+* start with `excluded_fields_prefix_`
+* are equal to `excluded_field`
+* are equal to `another_excluded_field.nested_field`
 
 **Whitelist mode**
 
-Specifies which fields should be allowed explicitly (other fields from mapping become not allowed implicitly).
-Example:
+Specifies which fields should be allowed explicitly \(other fields from mapping become not allowed implicitly\). Example:
 
 `fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
 Return documents deprived of all the fields, except the ones that:
- * start with `allowed_fields_prefix_`
- * start with underscore
- * are equal to `allowed_field.nested_field.text`
+
+* start with `allowed_fields_prefix_` 
+* start with underscore
+* are equal to `allowed_field.nested_field.text`
 
 **NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and ROR will refuse to boot up if this condition is detected.
 
@@ -2072,7 +2067,7 @@ http.type: ssl_netty4
 * user = logstash
 * password = logstash
 
-**Step 4** Hash the credentials string `logstash:logstash` using SHA256. The simplest way is to paste the string in an [online tool](http://www.xorbin.com/tools/sha256-hash-calculator) You should have obtained "4338fa3ea95532196849ae27615e14dda95c77b1".
+**Step 4** Hash the credentials string `logstash:logstash` using SHA256. The simplest way is to paste the string in an [online tool](http://www.xorbin.com/tools/sha256-hash-calculator) You should have obtained "280ac6f756a64a80143447c980289e7e4c6918b92588c8095c7c3f049a13fbf9".
 
 **Step 5** Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` and append the following lines:
 
