@@ -1,5 +1,9 @@
 # Changelog
 
+### What's new in 1.26.1
+
+* **🐞Fix** \(ES\) wrong behaviour of kibana_action for ROR actions when ADMIN value is set
+
 ### What's new in 1.26.0
 
 * **🚨Security Fix** \(ES\) [CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35490) & [CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35491) (removed Jackson dependency from ROR core)
