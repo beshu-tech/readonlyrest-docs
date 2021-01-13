@@ -622,6 +622,36 @@ readonlyrest:
 
 **⚠️IMPORTANT** the Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
 
+If you have configured OIDC with the `groupsParameter` ( *See below* ), you can also restrict ACL to specific groups: 
+
+````
+readonlyrest:
+    access_control_rules:
+
+    - name: "::KIBANA-SRV::"
+      auth_key: kibana:kibana
+
+    ... all usual blocks of rules...
+
+    - name: "ReadonlyREST Enterprise instance #1 for group 1"
+      ror_kbn_auth:
+        name: "kbn1"
+        groups: ["group1"]
+        
+    - name: "ReadonlyREST Enterprise instance #1 for group 2"
+      ror_kbn_auth:
+        name: "kbn1"
+        groups: ["group2"]
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
+````
+
+
+
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](./elasticsearch.md#Dynamic variables from JWT claims) for more information. ( Do not forget the prepend the assertion keyword before your jsonpath.)
+
 ### Kibana side
 
 We will assume the OpenID identity provider responds to port 8080 of localhost. In our example, we used Keycloak, an open source implementation of OpenID Connect identity provide.
@@ -653,7 +683,7 @@ readonlyrest_kbn.auth:
 3. Create some users and some groups in the identity provider if not present.
 4. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs\).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
-6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
+6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.)
 
 ## Load balancers
 
