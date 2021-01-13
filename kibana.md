@@ -650,7 +650,7 @@ readonlyrest:
 
 
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](./elasticsearch.md#Dynamic variables from JWT claims) for more information. ( Do not forget the prepend the assertion keyword before your jsonpath.)
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](./elasticsearch.md#Dynamic variables from JWT claims) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
