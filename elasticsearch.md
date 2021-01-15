@@ -785,6 +785,8 @@ In this example, we want to avoid that users belonging to group "press" can see 
 
 **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 
+**⚠️IMPORTANT** Beginning with version 1.27.0 all ROR internal requests from kibana will not match blocks containing `filter` and/or `fields` rules.
+
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
 
 #### `fields`
@@ -846,6 +848,8 @@ Example: hide prices from catalogue indices
 **⚠️IMPORTANT** Any metadata fields e.g. `_id` or `_index` can not be used in `fields` rule.
 
 **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
+
+**⚠️IMPORTANT** Beginning with version 1.27.0 all ROR internal requests from kibana will not match blocks containing `filter` and/or `fields` rules.
 
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
 
@@ -2047,4 +2051,3 @@ Of course, if you do not use ssl, disable it.
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
       indices: ["metricbeat-*", "log_metricbeat*"]
 ```
-
