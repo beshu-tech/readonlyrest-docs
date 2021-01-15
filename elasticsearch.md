@@ -213,12 +213,6 @@ service start elasticsearch
 
 Depending on your environment.
 
-Now you should be able to see the logs and ReadonlyREST related lines like the one below:
-
-```text
-[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
-```
-
 ### Deploying ReadonlyREST in a stable production cluster
 
 Unless some advanced features are being used \(see below\),this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** \(port 9200\).
@@ -264,7 +258,7 @@ readonlyrest:
       indices: ["logstash-*"] # <-- This is a rule
 
     - name: "Block 2 - Blocking everything from a network"
-      type: forbid 
+      type: forbid
       hosts: ["10.0.0.0/24"] # <-- this is a rule
 ```
 
@@ -351,7 +345,7 @@ Optionally, it's possible to specify a list allowed SSL protocols and SSL cipher
 ```text
 readonlyrest:
     ssl:
-      # put the keystore in the same dir with elasticsearch.yml 
+      # put the keystore in the same dir with elasticsearch.yml
       keystore_file: "keystore.jks"
       keystore_pass: readonlyrest
       key_pass: readonlyrest
@@ -514,7 +508,7 @@ The rule has also an extended version:
 
 ```text
 indices:
-  patterns: ["sales", "logstash-*"]` 
+  patterns: ["sales", "logstash-*"]`
   must_involve_indices: false
 ```
 
@@ -681,30 +675,30 @@ In Elasticsearch, each request carries only one action. We extracted from Elasti
 Example actions \(see above for the full list\):
 
 ```text
- "cluster:admin/data_frame/delete" 
- "cluster:admin/data_frame/preview" 
+ "cluster:admin/data_frame/delete"
+ "cluster:admin/data_frame/preview"
  ...
- "cluster:monitor/data_frame/stats/get" 
- "cluster:monitor/health" 
- "cluster:monitor/main" 
- "cluster:monitor/nodes/hot_threads" 
- "cluster:monitor/nodes/info" 
+ "cluster:monitor/data_frame/stats/get"
+ "cluster:monitor/health"
+ "cluster:monitor/main"
+ "cluster:monitor/nodes/hot_threads"
+ "cluster:monitor/nodes/info"
 ...
- "indices:admin/aliases" 
- "indices:admin/aliases/get" 
- "indices:admin/analyze" 
+ "indices:admin/aliases"
+ "indices:admin/aliases/get"
+ "indices:admin/analyze"
 ...
- "indices:data/read/get" 
- "indices:data/read/mget" 
- "indices:data/read/msearch" 
+ "indices:data/read/get"
+ "indices:data/read/mget"
+ "indices:data/read/msearch"
  "indices:data/read/msearch/template"
  ...
- "indices:data/write/bulk" 
- "indices:data/write/bulk_shard_operations[s]" 
- "indices:data/write/delete" 
- "indices:data/write/delete/byquery" 
- "indices:data/write/index" 
- "indices:data/write/reindex" 
+ "indices:data/write/bulk"
+ "indices:data/write/bulk_shard_operations[s]"
+ "indices:data/write/delete"
+ "indices:data/write/delete/byquery"
+ "indices:data/write/index"
+ "indices:data/write/reindex"
  ...
  many more...
 ```
@@ -721,9 +715,9 @@ The idea is that with one single rule we allow the bare minimum set of index+act
 
 Possible access levels:
 
-* `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices. 
-* `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created. 
-* `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified. 
+* `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices.
+* `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created.
+* `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified.
 * `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app.
 
 **NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana_access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
@@ -883,7 +877,7 @@ The solution is to duplicate the block. The first one will intercept \(and filte
       auth_key: rw_user:pwd
       kibana_access: rw
       indices: ["r*"]  # <-- DO NOT FILTER THE .kibana INDEX!
-      filter: '{"query_string":{"query":"DestCountry:FR"}}' 
+      filter: '{"query_string":{"query":"DestCountry:FR"}}'
 
     - name: "::RW_USER (allow remaining requests)::"
       auth_key: rw_user:pwd
@@ -924,6 +918,76 @@ After adding the `filter` rule \(using the block duplication strategy\).
       kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
       kibana_index: ".kibana_@{user}"
 ```
+
+#### `response_fields`
+
+This rule allows filtering Elasticsearch responses using a list of fields. It works in very similar way to `fields` rule. In contrast to `fields` rule, which filters out document fields, this rule filters out response fields. It **doesn't make use of Field Level Security \(FLS\)** and can be applied to every response returned by Elasticsearch.
+
+It can be configured in two modes:
+  * *whitelist* allowing only the defined fields from the response object
+  * *blacklist* filtering out (removing) only the defined fields from the response object
+
+**Blacklist mode**
+
+Specifies which fields should be filtered out by adding the ~ prefix to the field name. Other fields in the response will be implicitly allowed. For example:
+
+`response_fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
+
+The above will return the usual response object, but deprived (if found) of the fields that:
+  * start with `excluded_fields_prefix_`
+  * are equal to `excluded_field`
+  * are equal to `another_excluded_field.nested_field`
+
+**Whitelist mode**
+
+In this mode rule is configured to filter out each field that isn't defined in the rule.
+
+`response_fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
+
+Return response deprived of all the fields, except the ones that:
+ * start with `allowed_fields_prefix_`
+ * start with underscore
+ * are equal to `allowed_field.nested_field.text`
+
+**NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and ROR will refuse to boot up if this condition is detected.
+
+*Example*: allow only `cluster_name` and `status` field in cluster health response:
+
+Without any filtering response from `/_cluster/health` looks more or less like:
+```
+{
+	"cluster_name": "ROR_SINGLE",
+	"status": "yellow",
+	"timed_out": false,
+	"number_of_nodes": 1,
+	"number_of_data_nodes": 1,
+	"active_primary_shards": 2,
+	"active_shards": 2,
+	"relocating_shards": 0,
+	"initializing_shards": 0,
+	"unassigned_shards": 2,
+	"delayed_unassigned_shards": 0,
+	"number_of_pending_tasks": 0,
+	"number_of_in_flight_fetch": 0,
+	"task_max_waiting_in_queue_millis": 0,
+	"active_shards_percent_as_number": 50.0
+}
+```
+but after configuring such rule:
+```
+- name: "Filter cluster health response"
+  uri_re: "^/_cluster/health"
+  response_fields: ["cluster_name", "status"]
+```
+response from above will look like:
+```
+{
+	"cluster_name": "ROR_SINGLE",
+	"status": "yellow"
+}
+```
+
+**NB:** Any response field can be filtered using this rule.
 
 ### Authentication
 
@@ -1449,7 +1513,7 @@ Anywhere in `readonlyrest.yml` you can use the espression `${MY_ENV_VAR}` to rep
 For example, here we declare an environment variable, and we write `${LDAP_PASSWORD}` in our settings:
 
 ```bash
-$ export LDAP_PASSWORD=S3cr3tP4ss 
+$ export LDAP_PASSWORD=S3cr3tP4ss
 $ cat readonlyrest.yml
 ```
 
@@ -1544,18 +1608,18 @@ Here follow some examples of how to use JWT claims as dynamic variables in Reado
 
 ```yaml
 # Using JWT claims as dynamic variables
-indices: [ ".kibana_@{jwt:department}", "otherIdx" ] 
+indices: [ ".kibana_@{jwt:department}", "otherIdx" ]
 # claims = { "user": "u1", "department": "infosec"}
 # -> indices: [".kibana_infosec", "otherIdx"]
 
 # Using nested values in JWT using JSONPATH as dynamic variables
 indices: [ ".kibana_@{jwt:jsonpath.to.department}", "otherIdx"]  
-# claims = { "jsonpath": {"to": { "department": "infosec" }}} 
+# claims = { "jsonpath": {"to": { "department": "infosec" }}}
 # -> indices: [".kibana_infosec", "otherIdx"]
 
 # Referencing array-typed values from JWT claims will expand in a list of strings
 indices: [ ".kibana_@explode{jwt:allowedIndices}", "otherIdx"]  
-# claims = {"username": "u1", "allowedIndices":  ["x", "y"] } 
+# claims = {"username": "u1", "allowedIndices":  ["x", "y"] }
 # -> indices: [".kibana_x", ".kibana_y", "otherIdx"]
 
 # Explode operator will generate an array of strings from a comma-separated string
@@ -1566,7 +1630,7 @@ indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
 
 ### LDAP connector
 
-In this example, users credentials are validate via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
+In this example, users credentials are validated via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
 
 **Simpler: authentication and authorization in one rule**
 
@@ -1596,6 +1660,7 @@ readonlyrest:
       port: 389                                                     # optional, default 389
       ssl_enabled: false                                            # optional, default true
       ssl_trust_all_certs: true                                     # optional, default false
+      ignore_ldap_connectivity_problems: true                       # optional, default false
       bind_dn: "cn=admin,dc=example,dc=com"                         # optional, skip for anonymous bind
       bind_password: "password"                                     # optional, skip for anonymous bind
       search_user_base_DN: "ou=People,dc=example,dc=com"
@@ -1617,6 +1682,12 @@ readonlyrest:
       ha: "ROUND_ROBIN"                                             # optional, default "FAILOVER"
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+
+    # Server discovery variant
+    - name: ldap3
+      server_discovery: true                                        # Using _ldaps._tcp SRV DNS record for getting LDAP addresses
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
 **Advanced: authentication and authorization in separate rules**
@@ -1628,7 +1699,7 @@ readonlyrest:
 
     access_control_rules:
 
-    - name: Accept requests to index1 from users with valid LDAP credentials, belonging to LDAP group 'team1' 
+    - name: Accept requests to index1 from users with valid LDAP credentials, belonging to LDAP group 'team1'
       ldap_authentication: "ldap1"  
       ldap_authorization:
         name: "ldap1"                                       # ldap name from 'ldaps' section
@@ -1652,6 +1723,7 @@ readonlyrest:
       port: 389                                                 # default 389
       ssl_enabled: false                                        # default true
       ssl_trust_all_certs: true                                 # default false
+      ignore_ldap_connectivity_problems: true                   # optional, default false
       bind_dn: "cn=admin,dc=example,dc=com"                     # skip for anonymous bind
       bind_password: "password"                                 # skip for anonymous bind
       search_user_base_DN: "ou=People,dc=example,dc=com"
@@ -1680,7 +1752,8 @@ readonlyrest:
 * By default, users in `search_user_base_DN` should contain a `uid` LDAP attribute referring to a unique ID for the user within the base DN. An alternative attribute name can be specified via the optional `user_id_attribute` configuration item.
 * By default, groups in `search_groups_base_DN` should contain a `uniqueMember` LDAP attribute referring to the full DNs of the users that belong to the group. \(There may be any number of occurrences of this attribute within a particular group, as any number of users may belong to the group.\) An alternative attribute name can be specified via the optional `unique_member_attribute` configuration item.
 * `group_name_attribute` is the LDAP group object attribute that contains the names of the ROR groups
-* `group_search_filter` is the LDAP search filter \(or filters\) to limit the user groups returned by LDAP. By default, this filter will be joined \(with `&`\) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: \(&YOUR\_GROUP\_SEARCH\_FILTER\(unique\_member\_attribute=user\_dn\)\). The `unique_member_attribute` can be set to use the value of `user_id_attribute` by setting `group_attribute_is_dn: false`. 
+* `group_search_filter` is the LDAP search filter \(or filters\) to limit the user groups returned by LDAP. By default, this filter will be joined \(with `&`\) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: \(&YOUR\_GROUP\_SEARCH\_FILTER\(unique\_member\_attribute=user\_dn\)\). The `unique_member_attribute` can be set to use the value of `user_id_attribute` by setting `group_attribute_is_dn: false`.
+* `ignore_ldap_connectivity_problems` set to true allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default ROR starts only after it's able to connect to each server.
 
 Examples:
 
@@ -1693,6 +1766,37 @@ group_search_filter: "(cn=*)" # basically no group filtering
 \(An example OpenLDAP configuration file can be found in our tests: /src/test/resources/test\_example.ldif\)
 
 Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Accept requests from users in group team2 on index2` rule\)
+
+#### LDAP Server discovery
+
+It is possible for the LDAP connector to get all LDAP hostnames from DNS server rather than from configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
+
+The simplest configuration example of an LDAP connector instance using server discovery is:
+```
+    - name: ldap
+      server_discovery: true                                        
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+```
+This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value wil be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
+
+The server discovery mechanism can be optionally configured further, by adding a few more configuration parameters, all of which are optional:
+* `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
+* `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default the system DNS is used.
+* `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in cache. Default is 1h.
+* `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used.
+
+Example:
+```
+    - name: ldap
+      server_discovery:
+        record_name: "_ldap._tcp.example.com"
+        dns_url: "dns://192.168.1.100"
+        ttl: "3 hours"
+        use_ssl: true                                    
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+```
 
 ### External Basic Auth
 
@@ -1821,9 +1925,9 @@ readonlyrest:
         name: "jwt_provider_1"
         roles: ["writer"]
 
-    jwt: 
+    jwt:
     - name: jwt_provider_1
-      signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC 
+      signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC
       signature_key: "your_signature_min_256_chars"
       user_claim: email
       roles_claim: resource_access.client-app.roles # JSON-path style
@@ -1901,7 +2005,7 @@ See [commercial license FAQ page](https://github.com/beshu-tech/readonlyrest-doc
 
 1. Download the binary release of the latest version of ReadonlyREST from the [download page](https://readonlyrest.com/download.html)
 2. `cd` to the Elasticsearch home
-3. Install the plugin 
+3. Install the plugin
 
 **Elasticsearch 5.x**
 
@@ -1921,7 +2025,7 @@ See [commercial license FAQ page](https://github.com/beshu-tech/readonlyrest-doc
 
 You need to have installed: git, maven, Java 8 JDK, zip. So use apt-get or brew to get them.
 
-1. Clone the repo 
+1. Clone the repo
 
 ```bash
 git clone https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
@@ -1967,7 +2071,7 @@ http.type: ssl_netty4
 * user = logstash
 * password = logstash
 
-**Step 4** Hash the credentials string `logstash:logstash` using SHA256. The simplest way is to paste the string in an [online tool](http://www.xorbin.com/tools/sha256-hash-calculator) You should have obtained "4338fa3ea95532196849ae27615e14dda95c77b1".
+**Step 4** Hash the credentials string `logstash:logstash` using SHA256. The simplest way is to paste the string in an [online tool](http://www.xorbin.com/tools/sha256-hash-calculator) You should have obtained "280ac6f756a64a80143447c980289e7e4c6918b92588c8095c7c3f049a13fbf9".
 
 **Step 5** Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` and append the following lines:
 
