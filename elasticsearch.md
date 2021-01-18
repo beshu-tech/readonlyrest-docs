@@ -779,7 +779,7 @@ In this example, we want to avoid that users belonging to group "press" can see 
 
 **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 
-**⚠️IMPORTANT** Beginning with version 1.27.0 all ROR internal requests from kibana will not match blocks containing `filter` and/or `fields` rules.
+**⚠️IMPORTANT** Beginning with version 1.27.0 all ROR internal requests from kibana will not match blocks containing `filter` and/or `fields` rules. There requests are used to perform kibana login and dynamic config reload.
 
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
 
@@ -843,13 +843,13 @@ Example: hide prices from catalogue indices
 
 **⚠️IMPORTANT** The `filter`and `fields` rules will only affect "read" requests, therefore "write" requests **will not match** because otherwise it would implicitly allow clients to "write" without the filtering restriction. For reference, this behaviour is identical to x-pack and search guard.
 
-**⚠️IMPORTANT** Beginning with version 1.27.0 all ROR internal requests from kibana will not match blocks containing `filter` and/or `fields` rules.
+**⚠️IMPORTANT** Beginning with version 1.27.0 all ROR internal requests from kibana will not match blocks containing `filter` and/or `fields` rules. There requests are used to perform kibana login and dynamic config reload.
 
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
 
 #### Configuring an ACL with filter/fields rules when using Kibana
 
-A normal Kibana session interacts with Elasticsearch using a mix of actions which we can roughly group in two macro categories of "read" and "write" actions. However the `fields` and \`filter´ rules will **only match read requests**. This means that a complete Kibana session cannot anymore be entirely matched by a single ACL block like it normally would.
+A normal Kibana session interacts with Elasticsearch using a mix of actions which we can roughly group in two macro categories of "read" and "write" actions. However the `fields` and `filter` rules will **only match read requests**. They will also block ROR internal request used to log in to kibana and reload config. This means that a complete Kibana session cannot anymore be entirely matched by a single ACL block like it normally would.
 
 For example, this ACL block would perfectly support a complete Kibana session. That is, 100% of the actions \(browser HTTP requests\) would be allowed by this ACL block.
 
@@ -865,7 +865,7 @@ However, when we introduce a filter \(or fields\) rule, this block will be able 
 ```yaml
     - name: "::RW_USER::"
       auth_key: rw_user:pwd
-      kibana_access: rw
+      kibana_access: rw  # <-- won't work because of filter present in block
       indices: ["r*", ".kibana"]
       filter: '{"query_string":{"query":"DestCountry:FR"}}'  # <-- will reject all write requests! :(
 ```
@@ -875,7 +875,6 @@ The solution is to duplicate the block. The first one will intercept \(and filte
 ```yaml
     - name: "::RW_USER (filter read requests)::"  
       auth_key: rw_user:pwd
-      kibana_access: rw
       indices: ["r*"]  # <-- DO NOT FILTER THE .kibana INDEX!
       filter: '{"query_string":{"query":"DestCountry:FR"}}'
 
@@ -893,11 +892,11 @@ Before adding the `filter` rule:
 
 ```text
   - name: "::PERSONAL_GRP::"
-      groups: ["Personal"]
-      kibana_access: rw
-      indices: ["r*", ".kibana_@{user}"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
-      kibana_index: ".kibana_@{user}"
+    groups: ["Personal"]
+    kibana_access: rw
+    indices: ["r*", ".kibana_@{user}"]
+    kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
+    kibana_index: ".kibana_@{user}"
 ```
 
 After adding the `filter` rule \(using the block duplication strategy\).
@@ -905,11 +904,8 @@ After adding the `filter` rule \(using the block duplication strategy\).
 ```yaml
     - name: "::PERSONAL_GRP (FILTERED SEARCH)::"
       groups: ["Personal"]
-      kibana_access: rw
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
       indices: [ "r*" ]
       filter: '{"query_string":{"query":"DestCountry:FR"}}'
-      kibana_index: ".kibana_@{user}"
 
     - name: "::PERSONAL_GRP::"
       groups: ["Personal"]
