@@ -192,13 +192,21 @@ Loading ReadonlyREST settings from index failed: Settings config content is malf
                     ^
 ```
 
-To recover from this state, set `force_load_from_file: true` in `readonlyrest.yml` on one node `es1`.
+To recover from this state, set `readonlyrest.force_load_from_file: true` in `elasticsearch.yaml` on one node `es1`.
 
 Example recovery settings:
 
+elasticsearch.yaml
 ```yaml
+[...]
 readonlyrest:
   force_load_from_file: true
+```
+
+readonlyrest.yaml
+```yaml
+readonlyrest:
+
   access_control_rules:
   - name: "::ADMIN recover::"
     auth_key: admin:dev
@@ -211,7 +219,7 @@ Then remove in-index settings index manually.
 curl -X DELETE "admin:dev@es1:9200/.readonlyrest?pretty"
 ```
 
-Now you can restore your settings to `readonlyrest.yml`, and restart node.
+Now you can restore your settings to `readonlyrest.yml`, remove `readonlyrest.force_load_from_file: true` `from elasticsearch.yaml` and restart node.
 
 ### Example: multiuser ELK
 
