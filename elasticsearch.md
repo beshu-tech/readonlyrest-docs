@@ -920,8 +920,9 @@ After adding the `filter` rule \(using the block duplication strategy\).
 This rule allows filtering Elasticsearch responses using a list of fields. It works in very similar way to `fields` rule. In contrast to `fields` rule, which filters out document fields, this rule filters out response fields. It **doesn't make use of Field Level Security \(FLS\)** and can be applied to every response returned by Elasticsearch.
 
 It can be configured in two modes:
-  * *whitelist* allowing only the defined fields from the response object
-  * *blacklist* filtering out (removing) only the defined fields from the response object
+
+* _whitelist_ allowing only the defined fields from the response object
+* _blacklist_ filtering out \(removing\) only the defined fields from the response object
 
 **Blacklist mode**
 
@@ -929,10 +930,11 @@ Specifies which fields should be filtered out by adding the ~ prefix to the fiel
 
 `response_fields: ["~excluded_fields_prefix_*", "~excluded_field", "~another_excluded_field.nested_field"]`
 
-The above will return the usual response object, but deprived (if found) of the fields that:
-  * start with `excluded_fields_prefix_`
-  * are equal to `excluded_field`
-  * are equal to `another_excluded_field.nested_field`
+The above will return the usual response object, but deprived \(if found\) of the fields that:
+
+* start with `excluded_fields_prefix_`
+* are equal to `excluded_field`
+* are equal to `another_excluded_field.nested_field`
 
 **Whitelist mode**
 
@@ -941,45 +943,51 @@ In this mode rule is configured to filter out each field that isn't defined in t
 `response_fields: ["allowed_fields_prefix_*", "_*", "allowed_field.nested_field.text"]`
 
 Return response deprived of all the fields, except the ones that:
- * start with `allowed_fields_prefix_`
- * start with underscore
- * are equal to `allowed_field.nested_field.text`
+
+* start with `allowed_fields_prefix_`
+* start with underscore
+* are equal to `allowed_field.nested_field.text`
 
 **NB:** You can only provide a full black list or white list. Grey lists \(i.e. `["~a", "b"]`\) are invalid settings and ROR will refuse to boot up if this condition is detected.
 
-*Example*: allow only `cluster_name` and `status` field in cluster health response:
+_Example_: allow only `cluster_name` and `status` field in cluster health response:
 
 Without any filtering response from `/_cluster/health` looks more or less like:
-```
+
+```text
 {
-	"cluster_name": "ROR_SINGLE",
-	"status": "yellow",
-	"timed_out": false,
-	"number_of_nodes": 1,
-	"number_of_data_nodes": 1,
-	"active_primary_shards": 2,
-	"active_shards": 2,
-	"relocating_shards": 0,
-	"initializing_shards": 0,
-	"unassigned_shards": 2,
-	"delayed_unassigned_shards": 0,
-	"number_of_pending_tasks": 0,
-	"number_of_in_flight_fetch": 0,
-	"task_max_waiting_in_queue_millis": 0,
-	"active_shards_percent_as_number": 50.0
+    "cluster_name": "ROR_SINGLE",
+    "status": "yellow",
+    "timed_out": false,
+    "number_of_nodes": 1,
+    "number_of_data_nodes": 1,
+    "active_primary_shards": 2,
+    "active_shards": 2,
+    "relocating_shards": 0,
+    "initializing_shards": 0,
+    "unassigned_shards": 2,
+    "delayed_unassigned_shards": 0,
+    "number_of_pending_tasks": 0,
+    "number_of_in_flight_fetch": 0,
+    "task_max_waiting_in_queue_millis": 0,
+    "active_shards_percent_as_number": 50.0
 }
 ```
+
 but after configuring such rule:
-```
+
+```text
 - name: "Filter cluster health response"
   uri_re: "^/_cluster/health"
   response_fields: ["cluster_name", "status"]
 ```
+
 response from above will look like:
-```
+
+```text
 {
-	"cluster_name": "ROR_SINGLE",
-	"status": "yellow"
+    "cluster_name": "ROR_SINGLE",
+    "status": "yellow"
 }
 ```
 
@@ -1768,22 +1776,26 @@ Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Acc
 It is possible for the LDAP connector to get all LDAP hostnames from DNS server rather than from configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
 
 The simplest configuration example of an LDAP connector instance using server discovery is:
-```
+
+```text
     - name: ldap
       server_discovery: true                                        
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
+
 This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value wil be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
 
 The server discovery mechanism can be optionally configured further, by adding a few more configuration parameters, all of which are optional:
+
 * `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
 * `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default the system DNS is used.
 * `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in cache. Default is 1h.
 * `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used.
 
 Example:
-```
+
+```text
     - name: ldap
       server_discovery:
         record_name: "_ldap._tcp.example.com"
@@ -2151,3 +2163,4 @@ Of course, if you do not use ssl, disable it.
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
       indices: ["metricbeat-*", "log_metricbeat*"]
 ```
+
