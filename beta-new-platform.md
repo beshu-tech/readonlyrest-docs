@@ -58,12 +58,11 @@ Even better, throw away the entire Kibana directory, and install from scratch. L
 There's also a pre-uninstallation step, to bring back the Kibana files to the original state.
 
 ```bash
-# Uninstall normally
-$ bin/kibana-plugin remove readonlyrest_kbn
-...
 # [NEW!] Un-patch Kibana core files 
 $ node/bin/node plugins/readonlyrest_kbn/ror-tools.js unpatch
 
+# Uninstall normally
+$ bin/kibana-plugin remove readonlyrest_kbn
 ```
 
 

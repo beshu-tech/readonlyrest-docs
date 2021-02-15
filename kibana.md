@@ -192,13 +192,23 @@ Loading ReadonlyREST settings from index failed: Settings config content is malf
                     ^
 ```
 
-To recover from this state, set `force_load_from_file: true` in `readonlyrest.yml` on one node `es1`.
+To recover from this state, set `readonlyrest.force_load_from_file: true` in `elasticsearch.yaml` on one node `es1`.
 
 Example recovery settings:
 
+elasticsearch.yaml
+
 ```yaml
+[...]
 readonlyrest:
   force_load_from_file: true
+```
+
+readonlyrest.yaml
+
+```yaml
+readonlyrest:
+
   access_control_rules:
   - name: "::ADMIN recover::"
     auth_key: admin:dev
@@ -211,7 +221,7 @@ Then remove in-index settings index manually.
 curl -X DELETE "admin:dev@es1:9200/.readonlyrest?pretty"
 ```
 
-Now you can restore your settings to `readonlyrest.yml`, and restart node.
+Now you can restore your settings to `readonlyrest.yml`, remove `readonlyrest.force_load_from_file: true` `from elasticsearch.yaml` and restart node.
 
 ### Example: multiuser ELK
 
@@ -622,6 +632,34 @@ readonlyrest:
 
 **⚠️IMPORTANT** the Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
 
+If you have configured OIDC with the `groupsParameter` \( _See below_ \), you can also restrict ACL to specific groups:
+
+```text
+readonlyrest:
+    access_control_rules:
+
+    - name: "::KIBANA-SRV::"
+      auth_key: kibana:kibana
+
+    ... all usual blocks of rules...
+
+    - name: "ReadonlyREST Enterprise instance #1 for group 1"
+      ror_kbn_auth:
+        name: "kbn1"
+        groups: ["group1"]
+
+    - name: "ReadonlyREST Enterprise instance #1 for group 2"
+      ror_kbn_auth:
+        name: "kbn1"
+        groups: ["group2"]
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
+```
+
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. \( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. \)
+
 ### Kibana side
 
 We will assume the OpenID identity provider responds to port 8080 of localhost. In our example, we used Keycloak, an open source implementation of OpenID Connect identity provide.
@@ -654,7 +692,7 @@ readonlyrest_kbn.auth:
 3. Create some users and some groups in the identity provider if not present.
 4. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs\).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
-6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
+6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. \( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.\)
 7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.) 
 
 ## Load balancers
