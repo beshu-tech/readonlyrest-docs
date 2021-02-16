@@ -681,6 +681,7 @@ readonlyrest_kbn.auth:
             scope: 'openid profile roles role_list email'
             usernameParameter: 'preferred_username'
             groupsParameter: 'groups'
+            kibanaExternalHost: 'localhost:8080'
             logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout'
 ```
 
@@ -692,6 +693,7 @@ readonlyrest_kbn.auth:
 4. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs\).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
 6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. \( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.\)
+7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.) 
 
 ## Load balancers
 
