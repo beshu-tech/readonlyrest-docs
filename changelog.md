@@ -7,7 +7,7 @@
 * **🧐Enhancement** \(KBN\) Kibana logout event generates a special audit log entry in ROR audit logs index
 * **🐞Fix** \(ES\) [blocks containing filter and/or fields won't match internal kibana requests, so kibana_* rules won't have to be placed in such blocks](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#fields)
 * **🐞Fix** \(ES\) SQL API - better handling of invalid query
-* **🐞Fix** \(ES\) wrong behaviour of `kibana_action` rule for ROR actions when ADMIN value is set
+* **🐞Fix** \(ES\) wrong behaviour of `kibana_access` rule for ROR actions when ADMIN value is set
 
 ### What's new in 1.26.1
 
