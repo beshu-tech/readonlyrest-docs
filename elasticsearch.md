@@ -1512,14 +1512,14 @@ _Example: rules are associated to groups \(instead of users\) and users-group as
 
 ### Username case sensitivity
 ReadonlyREST can cooperate with services, that operates in case-insensitive way.
-For this case ror has toggleable username case sensitivity option `username_case_sensitivity`.
+For this case ROR has toggleable username case sensitivity option `username_case_sensitivity`.
 
 ```text
 readonlyrest:
   username_case_sensitivity: case_sensitive
  ```  
 By default, usernames are case-sensitive `username_case_sensitivity: case_sensitive`.
-By setting `username_case_sensitivity: case_sensitive` every username comparison will be case-insensitive.
+By setting `username_case_sensitivity: case_sensitive` username comparison will be case-insensitive in any rule.
 
 ### Environmental variables
 
