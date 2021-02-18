@@ -5,6 +5,7 @@
 * **🚀New** \(ES\) 7.11.0, 7.10.2, 6.8.14 support
 * **🧐Enhancement** \(KBN\) X-Forwarded-For copied from incoming request (or filled with source IP) before forwarding to ES
 * **🧐Enhancement** \(KBN\) Kibana logout event generates a special audit log entry in ROR audit logs index
+* **🧐Enhancement** \(KBN\) ROR panel shows "reports" button if kibana:management app is hidden
 * **🐞Fix** \(ES\) [blocks containing filter and/or fields won't match internal kibana requests, so kibana_* rules won't have to be placed in such blocks](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#fields)
 * **🐞Fix** \(ES\) SQL API - better handling of invalid query
 * **🐞Fix** \(ES\) wrong behaviour of `kibana_access` rule for ROR actions when ADMIN value is set
