@@ -1,5 +1,11 @@
 # Changelog
 
+
+### What's new in 1.27.1
+
+* **🚨Security Fix** \(ES\) [CVE-2021-21290](https://nvd.nist.gov/vuln/detail/CVE-2021-21290)
+* **🚀New** \(ES\) 7.11.1 support 
+
 ### What's new in 1.27.0
 
 * **🚀New** \(ES\) 7.11.0, 7.10.2, 6.8.14 support
