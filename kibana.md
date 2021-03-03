@@ -256,13 +256,13 @@ readonlyrest:
       auth_key: ro:dev
       kibana_access: ro
       indices: [ ".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
 
     - name: "::RW::"
       auth_key: rw:dev
       kibana_access: rw
       indices: [".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
 
 
     - name: "::ADMIN::"
@@ -357,7 +357,7 @@ Examples of valid arguments for the `kibana_hide_apps: [...]` rule \(readonlyres
 | canvas | Canvas | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas) |
 | maps | Maps | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps) |
 | code | Code \(Beta\) | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code) |
-| readonlyrest\_kbn | ReadonlyREST | [http://kibana-url:5601/app/readonlyrest\_kbn](http://kibana-url:5601/app/readonlyrest_kbn) |
+| ~~readonlyrest\_kbn~~ \(obsolete\) | ~~ReadonlyREST~~ | ~~~~[~~http://kibana-url:5601/app/readonlyrest\_kbn~~](http://kibana-url:5601/app/readonlyrest_kbn)~~~~ |
 | ml | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml) |
 | infra:home | Infrastructure | [http://kibana-url:5601/app/infra\#/infrastructure/inventory?\_g=\(](http://kibana-url:5601/app/infra#/infrastructure/inventory?_g=%28)\) |
 | infra:logs | Logs | [http://kibana-url:5601/app/infra\#/logs?\_g=\(](http://kibana-url:5601/app/infra#/logs?_g=%28)\) |
@@ -367,7 +367,7 @@ Examples of valid arguments for the `kibana_hide_apps: [...]` rule \(readonlyres
 | graph | Graph | [http://kibana-url:5601/app/graph](http://kibana-url:5601/app/graph) |
 | kibana:dev\_tools | Dev Tools | [http://kibana-url:5601/app/kibana\#/dev\_tools](http://kibana-url:5601/app/kibana#/dev_tools) |
 | monitoring | Stack Monitoring | [http://kibana-url:5601/app/monitoring](http://kibana-url:5601/app/monitoring) |
-| kibana:management | Management | [http://kibana-url:5601/app/kibana\#/management](http://kibana-url:5601/app/kibana#/management) |
+| kibana:stack\_management | Stack Management | [http://kibana-url:5601/app/kibana\#/management](http://kibana-url:5601/app/kibana#/management) |
 
 ### Kibana configuration
 
@@ -496,7 +496,7 @@ In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automa
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29.png)
+![loading visualization](.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%283%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 
@@ -693,7 +693,7 @@ readonlyrest_kbn.auth:
 4. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs\).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
 6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. \( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.\)
-7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.) 
+7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. \( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.\) 
 
 ## Load balancers
 
