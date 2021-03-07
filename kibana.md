@@ -229,12 +229,11 @@ Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` \(on the El
 
 ```yaml
 # For X-Pack users: you may only leave monitoring on. 
-# Don't add this if X-Pack is not installed at all
-xpack.graph.enabled: false
-xpack.ml.enabled: false
+# Don't add this if X-Pack is not installed at all, or Kibana won't start.
 xpack.monitoring.enabled: true
 xpack.security.enabled: false
 xpack.watcher.enabled: false
+xpack.telemetry.enabled: false
 ```
 
 This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` \(the settings file of the Elasticsearch plugin\), to support ReadonlyREST PRO.
