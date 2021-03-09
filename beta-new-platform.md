@@ -19,6 +19,31 @@ Kibana is a fast changing piece of software. In the past, it was very frequent t
 
 Today, the new ReadonlyREST Enterprise has been completely re-enginered to be more robust to changes, modular and testable.
 
+### New internal plugin name
+
+The internal plugin name had to change from **"readonlyrest\_kbn" to "readonlyrestkbn"**, to comply with new rules in the plugin API. Fortunately, we managed to keep the zip file names and kibana.yml configuration parameters unchanged \(i.e. things like `readonlyrest_kbn.cookiePass: xxx` are still valid\).
+
+### New way to hide apps
+
+Previously we needed to keep track and document all Kibana apps IDs, and you had to look them up all the time. Now we made it simpler.
+
+![](.gitbook/assets/image%20%281%29.png)
+
+Imagine you want to hide "Machine Learning" app from "Kibana" sub menu. You type:
+
+```bash
+kibana_hide_apps: [ "Kibana|Machine Learning" ]
+```
+
+That is `<submenu-title|app-title>` . Other examples:
+
+* Enterprise Search\|Workplace Search
+* Management\|Stack Management
+* Security\|Detections
+* Kibana\|Maps
+
+You get the gist.
+
 ### Will users notice different UX?
 
 Only subtle differences, and many of these are just total improvements.
@@ -42,7 +67,7 @@ With the new plugin, you need a post-installation step. This will slightly modif
 $ bin/kibana-plugin install file:///tmp/readonlyrest_kbn_v1.27.0_es7.10.1.zip
 ...
 # [NEW!] Patch Kibana core files 
-$ node/bin/node plugins/readonlyrest_kbn/ror-tools.js patch
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js patch
 
 ```
 
@@ -59,10 +84,10 @@ There's also a pre-uninstallation step, to bring back the Kibana files to the or
 
 ```bash
 # [NEW!] Un-patch Kibana core files 
-$ node/bin/node plugins/readonlyrest_kbn/ror-tools.js unpatch
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
 
 # Uninstall normally
-$ bin/kibana-plugin remove readonlyrest_kbn
+$ bin/kibana-plugin remove readonlyrestkbn
 ```
 
 
