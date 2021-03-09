@@ -6,5 +6,5 @@ description: External connectors integration
 
 With ReadonlyREST Enterprise, you can integrate with SAML 2.0 Single Sign-on identity providers for both authentication and authorization.
 
-Follow the guides to know more. 
+Follow the guides to know more.
 
