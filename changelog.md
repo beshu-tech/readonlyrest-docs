@@ -2,14 +2,14 @@
 
 ### What's new in 1.25.0
 
-* **🚨Security Fix** (ES) [Common Vulnerabilities and Exposures (CVE)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/1728)
-* **🚀New** (ES) [auth_key_pbkdf2 rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#auth_key_pbkdf2)
-* **🚀New (ES)** [Introduced configuration property defining FLS engine used by fields rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields)
-* **🧐Enhancement** (ES) Fields rule performance improvement
-* **🧐Enhancement** (ES) Resolved index API support
-* **🐞Fix** (ES) ["username" in audit entry when user is authenticated via proxy_auth](https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id)
-* **🐞Fix (ES)** index resolve action should be treated as readonly action
-* **🐞Fix (ES)** /_snapshot and /_snapshot/_all should behave the same
+* **🚨Security Fix** \(ES\) [Common Vulnerabilities and Exposures \(CVE\)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/1728)
+* **🚀New** \(ES\) [auth\_key\_pbkdf2 rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#auth_key_pbkdf2)
+* **🚀New \(ES\)** [Introduced configuration property defining FLS engine used by fields rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields)
+* **🧐Enhancement** \(ES\) Fields rule performance improvement
+* **🧐Enhancement** \(ES\) Resolved index API support
+* **🐞Fix** \(ES\) ["username" in audit entry when user is authenticated via proxy\_auth](https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id)
+* **🐞Fix \(ES\)** index resolve action should be treated as readonly action
+* **🐞Fix \(ES\)** /\_snapshot and /\_snapshot/\_all should behave the same
 
 ### What's new in 1.24.0
 
