@@ -6,7 +6,7 @@ description: User manual for ReadonlyREST Enterprise/PRO/Free
 
 🧙 **Are you using Kibana version 7.8.x or older? Go to the** [**old platform manual page**](kibana-7.8.x-and-older.md)**.**
 
-## Kibana Plugin overview
+### Kibana Plugin overview
 
 ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html), and [ReadonlyREST Free](https://readonlyrest.com/free) packages. See product descriptions and a comparison chart in the official [ReadonlyREST website](https://readonlyrest.com)
 
@@ -53,9 +53,15 @@ If the update contains a security fix, it is very important that you take action
 
 ## Installation
 
-You can install this as a normal Kibana plugin using the `bin/kibana-plugin` utility.
+You can install this as a normal Kibana plugin using the `bin/kibana-plugin` utility. Let's see a two ways to use this utility with ReadonlyREST.
 
-### Install via URL
+{% hint style="warning" %}
+**Don't forget**
+
+After Kibana 7.9.x, it's necessary to [patch](./#patching-kibana) Kibana after you install, otherwise ReadonlyREST will NOT work.
+{% endhint %}
+
+### Installing via URL
 
 This installation method is more practical if your Kibana server is connected to the internet.
 
@@ -87,7 +93,7 @@ $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_p
 $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&esVersion=7.6.1&email=<your_email_address>"
 ```
 
-If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter pluginVersion along with esVersion.
+If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter `pluginVersion` along with `esVersion`.
 
 ```bash
 # ReadonlyREST Free edition - version 1.22.0 for Elasticsearch 7.6.1
@@ -116,7 +122,9 @@ $ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_e
 
 You can obtain official links with personal secret tokens using our self service [download form](https://readonlyrest.com/download/), once your email address has been recognized as active subscriber.
 
-### Install from zip file
+Now you are ready to [patch Kibana](./#patching-kibana).
+
+### Installing from zip file
 
 ```bash
 $ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
@@ -124,34 +132,59 @@ $ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_e
 
 Notice how we need to type in the format `file://` + absolute path \(yes, with three slashes\).
 
-### Uninstall
+### Patching Kibana
+
+If you are using Kibana 7.9.x or newer, you need **an extra post-installation step**. This will slightly modify some core Kibana files.
+
+```bash
+# Patch Kibana core files 
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js patch
+```
+
+### Unpatching Kibana
+
+If you are using Kibana 7.9.x or newer, you need **an extra pre-uninstallation step**. This will restore the core Kibana files to the original state.
+
+```bash
+# Unpatch Kibana core files 
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+```
+
+### Uninstalling
+
+{% hint style="info" %}
+To uninstall, you should unpatch Kibana first, then uninstall ReadonlyREST plugin. However **the Kibana plugin system uninstallation process is highly unreliable**.
+
+So we highly recomend to throw away the entire Kibana directory, and start from scratch. Ideally, use ephemeral docker containers. 
+
+Need inspiration? Try [ROR Docker demo](https://github.com/sscarduzio/ror-docker-demo)!
+{% endhint %}
+
+To bring Kibana to its pre-patching original state, it's possible to unpatch.
+
+```bash
+# Un-patch Kibana core files 
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+
+# Uninstall normally
+$ bin/kibana-plugin remove readonlyrestkbn
+```
+
+And the classic uninstall command...
 
 ```bash
 $ bin/kibana-plugin remove readonlyrest_kbn
 ```
 
-### Upgrade
+### Upgrading
 
-Just uninstall the old version and install the new version.
+To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 
-```bash
-$ bin/kibana-plugin remove readonlyrest_kbn
-```
-
-Install the new version of ReadonlyREST into Kibana.
-
-```bash
-$ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-*.zip
-
-# Only for older versions (until Kibana early 6.x)
-$ touch optimize/bundles/readonlyrest_kbn.style.css
-```
-
-Restart Kibana.
-
-### Using RoR with a reverse proxy
-
-RoR - just like Kibana itself - is meant to be used either with a proxy or without one, but not both simultaneously. If you decide to set the `server.basePath` property in `kibana.yml` be sure to access RoR via a proxy, as it will not work properly when accessed directly.
+* [Unpatch Kibana](./#unpatching-kibana)
+* [Uninstall](kibana-7.8.x-and-older.md#uninstall) the old plugin
+* [Install](./#installation) the new one
+* [Patch Kibana](./#patching-kibana)
+* Restart Kibana.
 
 ## Configuration
 
@@ -161,7 +194,9 @@ ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch c
 
 In general, by design, we tend to concentrate all configuration within the main plugin \(the Elasticsearch one\) as much as possible.
 
-### Clusterwide Settings vs readonlyrest.yml
+### Clusterwide Settings VS readonlyrest.yml
+
+This feature is available in Free and PRO editions
 
 Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
 
@@ -229,6 +264,8 @@ Now you can restore your settings to `readonlyrest.yml`, remove `readonlyrest.fo
 
 ### Example: multiuser ELK
 
+This configuration will work in PRO and Enterprise editions
+
 Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` \(on the Elasticsearch side\) and `kibana.yml` \(on the Kibana side\): This is how you disable X-pack modules:
 
 ```yaml
@@ -280,12 +317,7 @@ readonlyrest:
 
 ### Very important
 
-Whatever your configuration ends up being, remember:
-
-* The admin user has `kibana_access: admin` 
-* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it \(makes for a better UX\).
-
-#### Rules ordering matters
+#### ACL blocks ordering matters
 
 > Blocks related to the authentication of the users should be at the top of the ACL
 
@@ -347,30 +379,30 @@ readonlyrest_kbn.clearSessionOnEvents: ["never"]
 
 Possible values: `"login", "tenancyHop", "never"`.
 
-#### Kibana App strings
+### Hiding Kibana Apps
 
-Examples of valid arguments for the `kibana_hide_apps: [...]` rule \(readonlyrest.yml\)
+This feature will work in ReadonlyREST PRO and Enteprise.
 
-| hide-app key | App name | App url |
-| :--- | :--- | :--- |
-| kibana:discover | Discover | [http://kibana-url:5601/app/kibana\#/discover](http://kibana-url:5601/app/kibana#/discover) |
-| kibana:visualize | Visualize | [http://kibana-url:5601/app/kibana\#/visualize](http://kibana-url:5601/app/kibana#/visualize) |
-| kibana:dashboard | Dashboard | [http://kibana-url:5601/app/kibana\#/dashboards](http://kibana-url:5601/app/kibana#/dashboards) |
-| timelion | Timelion | [http://kibana-url:5601/app/timelion](http://kibana-url:5601/app/timelion) |
-| canvas | Canvas | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas) |
-| maps | Maps | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps) |
-| code | Code \(Beta\) | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code) |
-| ~~readonlyrest\_kbn~~ \(obsolete\) | ~~ReadonlyREST~~ | ~~~~[~~http://kibana-url:5601/app/readonlyrest\_kbn~~](http://kibana-url:5601/app/readonlyrest_kbn)~~~~ |
-| ml | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml) |
-| infra:home | Infrastructure | [http://kibana-url:5601/app/infra\#/infrastructure/inventory?\_g=\(](http://kibana-url:5601/app/infra#/infrastructure/inventory?_g=%28)\) |
-| infra:logs | Logs | [http://kibana-url:5601/app/infra\#/logs?\_g=\(](http://kibana-url:5601/app/infra#/logs?_g=%28)\) |
-| apm | APM | [http://kibana-url:5601/app/apm](http://kibana-url:5601/app/apm) |
-| uptime | Uptime | [http://kibana-url:5601/app/uptime\#/](http://kibana-url:5601/app/uptime#/) |
-| siem | SIEM | [http://kibana-url:5601/app/siem](http://kibana-url:5601/app/siem) |
-| graph | Graph | [http://kibana-url:5601/app/graph](http://kibana-url:5601/app/graph) |
-| kibana:dev\_tools | Dev Tools | [http://kibana-url:5601/app/kibana\#/dev\_tools](http://kibana-url:5601/app/kibana#/dev_tools) |
-| monitoring | Stack Monitoring | [http://kibana-url:5601/app/monitoring](http://kibana-url:5601/app/monitoring) |
-| kibana:stack\_management | Stack Management | [http://kibana-url:5601/app/kibana\#/management](http://kibana-url:5601/app/kibana#/management) |
+Previously we needed to keep track and document all Kibana apps IDs, and you had to look them up all the time. Now we made it simpler.
+
+![](../.gitbook/assets/image%20%281%29.png)
+
+From the Kibana sidebar above, if we want to hide "Machine Learning" app from "Kibana" sub menu. We type:
+
+```bash
+kibana_hide_apps: [ "Kibana|Machine Learning" ]
+```
+
+That is `<submenu-title|app-title>`. Any app can be hidden. For example:
+
+* Enterprise Search\|Workplace Search
+* Management\|Stack Management
+* Security\|Detections
+* Kibana\|Maps
+
+```bash
+kibana_hide_apps: [ "Kibana|Machine Learning", "Kibana|Maps", "Enterprise Search|Workplace Search", "Management|Stack Management", "Security|Detection" ]
+```
 
 ### Kibana configuration
 
@@ -395,6 +427,8 @@ And of course also make sure `elasticsearch.url` points to the designated Elasti
 
 ### Proxy Auth
 
+This feature will work in all ReadonlyREST editions. 
+
 ROR for Elasticsearch can delegate authentication to a reverse proxy which will enforce some kind of authentication, and pass the successfully authenticated user's name inside a `X-Forwarded-User` header.
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.
@@ -405,6 +439,8 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
 
 #### Custom Logout link
+
+This feature will work in all ReadonlyREST editions. 
 
 Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrypted cookie that represents the users identity and the login form is shown.
 
@@ -418,6 +454,8 @@ For this, ROR for Kibana offers a way to customize the logout button's URL:
 Now users that gained a session through delegated auth, can also click on the logout button in ROR for kibana and actually exit their session.
 
 #### Custom Login link
+
+This feature will work in all ReadonlyREST editions. 
 
 When you delegate authentication to an external service, you can tell ReadonlyREST to skip the classic login form entirely and redirect users to your proxy or identity provider's login screen.
 
@@ -433,6 +471,8 @@ The advantage of this approach is a streamlined user experience for users that l
 Enabling proxy auth passthrough will relax the requirement to provide a password. Therefore, don't enable this option if you don't make sure Kibana can **only be accessed through the reverse proxy\***.
 
 ### JWT Token Forwarding as URL Query Parameter
+
+This feature will work in all ReadonlyREST editions. 
 
 Alternatively to typing in credentials in the standard login form, it is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.
 
@@ -489,6 +529,8 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 ## Audit log
 
+This feature will work in all ReadonlyREST editions. 
+
 The audit log feature is widely described in [📖docs for Elasticsearch plugin](../elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
 
 ### Loading visualization
@@ -512,6 +554,8 @@ In detail, this feature creates three Kibana "saved objects":
 The audit log dashboard, by default, has only a few basic visualizations. They cover security, access logs, and performance metrics.
 
 ## SAML
+
+This feature will work in ReadonlyREST Enterprise. 
 
 ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO \(single sign on\) and SLO \(single log out\). Here is how to configure it.
 
@@ -601,7 +645,9 @@ Example response:
 
 ## OpenID Connect \(OIDC\)
 
-ReadonlyREST Enterprise support OpenID Connect for authentication and authorization.
+This feature will work in ReadonlyREST Enterprise. 
+
+ReadonlyREST Enterprise support OpenID Connect for both authentication and authorization.
 
 > soon we will create a specific guide only for OpenID, like the ones we have for SAML
 
@@ -700,6 +746,8 @@ readonlyrest_kbn.auth:
 
 ## Load balancers
 
+These features will work with all ReadonlyREST Editions
+
 ### Enable health check endpoint
 
 Normally a load balancer needs a health check URL to see if the instance is still running, you can whitelist this Kibana path so the load balancer avoids a redirection to `/login`.
@@ -725,6 +773,8 @@ Each Kibana node stores user sessions in-memory. This will cause problems when u
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them.
 
 ## Login screen tweaking
+
+These features will work with ReadonlyREST PRO and Enterprise.
 
 It is possible to customize the look of the login screen.
 
@@ -763,7 +813,9 @@ readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
 
 ## Kibana UI tweaking
 
-With ReadonlyREST Enterprise, it's possible to inject custom CSS and Javascript to achieve a customised user experience for your users/tenants.
+This feature will work with Readonlyrest Enterprise
+
+It's possible to inject custom CSS and Javascript to achieve a customised user experience for your users/tenants.
 
 ### Inject custom CSS in Kibana
 
@@ -796,6 +848,8 @@ readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 **⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group name will be used as fallback. Also, if the mapping function is not specified, the original group name value will be used.
 
 ## Tenancy index templating
+
+This feature will work only with ReadonlyREST Enterprise
 
 When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana\_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.
 
