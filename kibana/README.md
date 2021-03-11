@@ -1,6 +1,10 @@
-# Kibana plugins
+---
+description: User manual for ReadonlyREST Enterprise/PRO/Free
+---
 
-🚀**NEW**: check out [our guide](examples/saml-sso/keycloak_saml.md) on how to level up on **identity management** with ReadonlyREST Enterprise and [KeyCloak](https://www.keycloak.org/)
+# For Kibana
+
+🧙 **Are you using Kibana version 7.8.x or older? Go to the** [**old platform manual page**](kibana-7.8.x-and-older.md)**.**
 
 ## Kibana Plugin overview
 
@@ -179,7 +183,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](.gitbook/assets/ror_config_loading_diagram.png)
+![config loading diagram](../.gitbook/assets/ror_config_loading_diagram.png)
 
 #### Malformed in-index settings
 
@@ -436,7 +440,7 @@ Alternatively to typing in credentials in the standard login form, it is possibl
 
 To enable this feature in ReadonlyREST, you need to:
 
-* Have JWT authentication configured in ReadonlyREST \(modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin\). [See how](elasticsearch.md#json-web-token-jwt-auth).
+* Have JWT authentication configured in ReadonlyREST \(modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin\). [See how](../elasticsearch.md#json-web-token-jwt-auth).
 * Specify the query parameter name in `kibana.yml` by adding the line `readonlyrest_kbn.jwt_query_param: "jwt"` as a string, in our case "jwt".
 
 #### In Action
@@ -485,17 +489,17 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 ## Audit log
 
-The audit log feature is widely described in [📖docs for Elasticsearch plugin](elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
+The audit log feature is widely described in [📖docs for Elasticsearch plugin](../elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
 
 ### Loading visualization
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](.gitbook/assets/audit_tab.png)
+![audit log tab](../.gitbook/assets/audit_tab.png)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%283%29.png)
+![loading visualization](../.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%283%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 
@@ -657,7 +661,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. \( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. \)
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](../elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. \( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. \)
 
 ### Kibana side
 
