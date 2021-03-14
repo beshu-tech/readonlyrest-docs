@@ -139,7 +139,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Create a new app called "Readonlyrest Enterprise".
 
-![Azure App Name](../../.gitbook/assets/azure_app_name%20%283%29.png)
+![Azure App Name](../../.gitbook/assets/azure_app_name%20%283%29%20%283%29.png)
 
 1. Click "Single Sign On" to configure the app for SAML.
 
