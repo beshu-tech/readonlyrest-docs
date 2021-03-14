@@ -1,6 +1,8 @@
-# Kibana plugins
+---
+description: User manual for ReadonlyREST Enterprise/PRO/Free plugins
+---
 
-🚀**NEW**: check out [our guide](examples/saml-sso/keycloak_saml.md) on how to level up on **identity management** with ReadonlyREST Enterprise and [KeyCloak](https://www.keycloak.org/)
+# Kibana 7.8.x and older
 
 ## Kibana Plugin overview
 
@@ -179,7 +181,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](.gitbook/assets/ror_config_loading_diagram.png)
+![config loading diagram](../.gitbook/assets/ror_config_loading_diagram.png)
 
 #### Malformed in-index settings
 
@@ -229,12 +231,11 @@ Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` \(on the El
 
 ```yaml
 # For X-Pack users: you may only leave monitoring on. 
-# Don't add this if X-Pack is not installed at all
-xpack.graph.enabled: false
-xpack.ml.enabled: false
+# Don't add this if X-Pack is not installed at all, or Kibana won't start.
 xpack.monitoring.enabled: true
 xpack.security.enabled: false
 xpack.watcher.enabled: false
+xpack.telemetry.enabled: false
 ```
 
 This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` \(the settings file of the Elasticsearch plugin\), to support ReadonlyREST PRO.
@@ -256,13 +257,13 @@ readonlyrest:
       auth_key: ro:dev
       kibana_access: ro
       indices: [ ".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
 
     - name: "::RW::"
       auth_key: rw:dev
       kibana_access: rw
       indices: [".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
 
 
     - name: "::ADMIN::"
@@ -357,7 +358,7 @@ Examples of valid arguments for the `kibana_hide_apps: [...]` rule \(readonlyres
 | canvas | Canvas | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas) |
 | maps | Maps | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps) |
 | code | Code \(Beta\) | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code) |
-| readonlyrest\_kbn | ReadonlyREST | [http://kibana-url:5601/app/readonlyrest\_kbn](http://kibana-url:5601/app/readonlyrest_kbn) |
+| ~~readonlyrest\_kbn~~ \(obsolete\) | ~~ReadonlyREST~~ | ~~~~[~~http://kibana-url:5601/app/readonlyrest\_kbn~~](http://kibana-url:5601/app/readonlyrest_kbn)~~~~ |
 | ml | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml) |
 | infra:home | Infrastructure | [http://kibana-url:5601/app/infra\#/infrastructure/inventory?\_g=\(](http://kibana-url:5601/app/infra#/infrastructure/inventory?_g=%28)\) |
 | infra:logs | Logs | [http://kibana-url:5601/app/infra\#/logs?\_g=\(](http://kibana-url:5601/app/infra#/logs?_g=%28)\) |
@@ -367,7 +368,7 @@ Examples of valid arguments for the `kibana_hide_apps: [...]` rule \(readonlyres
 | graph | Graph | [http://kibana-url:5601/app/graph](http://kibana-url:5601/app/graph) |
 | kibana:dev\_tools | Dev Tools | [http://kibana-url:5601/app/kibana\#/dev\_tools](http://kibana-url:5601/app/kibana#/dev_tools) |
 | monitoring | Stack Monitoring | [http://kibana-url:5601/app/monitoring](http://kibana-url:5601/app/monitoring) |
-| kibana:management | Management | [http://kibana-url:5601/app/kibana\#/management](http://kibana-url:5601/app/kibana#/management) |
+| kibana:stack\_management | Stack Management | [http://kibana-url:5601/app/kibana\#/management](http://kibana-url:5601/app/kibana#/management) |
 
 ### Kibana configuration
 
@@ -437,7 +438,7 @@ Alternatively to typing in credentials in the standard login form, it is possibl
 
 To enable this feature in ReadonlyREST, you need to:
 
-* Have JWT authentication configured in ReadonlyREST \(modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin\). [See how](elasticsearch.md#json-web-token-jwt-auth).
+* Have JWT authentication configured in ReadonlyREST \(modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin\). [See how](../elasticsearch.md#json-web-token-jwt-auth).
 * Specify the query parameter name in `kibana.yml` by adding the line `readonlyrest_kbn.jwt_query_param: "jwt"` as a string, in our case "jwt".
 
 #### In Action
@@ -486,13 +487,13 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 ## Audit log
 
-The audit log feature is widely described in [📖docs for Elasticsearch plugin](elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
+The audit log feature is widely described in [📖docs for Elasticsearch plugin](../elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
 
 ### Loading visualization
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](.gitbook/assets/audit_tab.png)
+![audit log tab](../.gitbook/assets/audit_tab.png)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
@@ -658,7 +659,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. \( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. \)
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](../elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. \( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. \)
 
 ### Kibana side
 

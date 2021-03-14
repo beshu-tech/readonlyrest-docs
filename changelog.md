@@ -1,5 +1,16 @@
 # Changelog
 
+### What's new in 1.28.0
+
+* **🚀New** \(ES\) 7.11.2 support 
+* **🚀New** \(ES\) full [Index and Component Templates API](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html) support 
+* **🧐Enhancement** \(ES\) [Username case sensitivity settings](https://forum.readonlyrest.com/t/ldap-based-user-authentication/1667)
+* **🐞Fix** \(ES\) [Kibana logout event storing fix](https://forum.readonlyrest.com/t/kibana-plugin-software-licensing-and-expiration/1808/5)
+* **🐞Fix** \(ES\) [Fixed remote reindex operation with "type" parameter](https://forum.readonlyrest.com/t/reindex-index-not-found-exception/1708/20)
+* **🐞Fix** \(KBN\) Prevent cookie expiration deadlock in browsers when using SAML/OIDC
+* **🐞Fix** \(KBN\) When credentials change in the ACL, make it possible to login again
+* **🐞Fix** \(KBN\) Kibana management app ID changed from "kibana:management" to "kibana:stack_management"
+  
 ### What's new in 1.27.1
 
 * **🚨Security Fix** \(ES\) [CVE-2021-21290](https://nvd.nist.gov/vuln/detail/CVE-2021-21290)

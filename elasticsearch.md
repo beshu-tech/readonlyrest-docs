@@ -1,4 +1,4 @@
-# Elasticsearch plugin
+# For Elasticsearch
 
 ## Overview: The ReadonlyREST Suite
 
@@ -8,7 +8,7 @@ The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv
 
 Unlike the Elasticsearch plugin, the Kibana plugins are commercial only. But rely on the Elasticsearch plugin in order to work.
 
-For a description of the Kibana plugins, skip to the [dedicated documentation page](kibana.md) instead.
+For a description of the Kibana plugins, skip to the [dedicated documentation page](kibana/) instead.
 
 ### ReadonlyREST Free plugin for Elasticsearch
 
@@ -266,7 +266,7 @@ _An Example of Access Control List \(ACL\) made of 2 blocks._
 
 The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. Create this file **on the same path where `elasticsearch.yml` is found**.
 
-**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana.md).
+**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana/).
 
 ### Encryption
 
@@ -1182,7 +1182,7 @@ readonlyrest:
 
 This authentication and authorization connector represents the secure channel \(based on JWT tokens\) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
 
-Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
+Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana/#saml)
 
 ### Ancillary rules
 
