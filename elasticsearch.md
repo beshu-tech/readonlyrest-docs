@@ -1510,6 +1510,17 @@ The `groups` rule accepts a list of group names. This rule will match if the res
 
 _Example: rules are associated to groups \(instead of users\) and users-group association is declared separately later under `users:`_
 
+### Username case sensitivity
+
+ReadonlyREST can cooperate with services, that operates in case-insensitive way. For this case ROR has toggleable username case sensitivity option `username_case_sensitivity`.
+
+```text
+readonlyrest:
+  username_case_sensitivity: case_sensitive
+```
+
+By default, usernames are case-sensitive `username_case_sensitivity: case_sensitive`. By setting `username_case_sensitivity: case_sensitive` username comparison will be case-insensitive in any rule.
+
 ### Environmental variables
 
 Anywhere in `readonlyrest.yml` you can use the espression `${MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.

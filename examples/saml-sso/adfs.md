@@ -90,7 +90,7 @@ If DNS has not been installed already, the role installation screen may pop up i
 1. Click on **Promote this server to a domain controller,** which will allow you to see the **Deployment Configuration** screen.
 2. ![](../../.gitbook/assets/18.png)
 3. Name the domain. In this case, use ad.lc-test.local.
-4. This name was arbitrarily chosen. Using a subdomain such as “ad” instead of your actual domain \(i.e., \[lc-test.local\]\([http://lc-test.local\](http://lc-test.local\)\) by itself\) is recommended.
+4. This name was arbitrarily chosen. Using a subdomain such as “ad” instead of your actual domain \(i.e., \[lc-test.local\]\([http://lc-test.local\](http://lc-test.local%29%29%20by%20itself\) is recommended.
 5. ![](../../.gitbook/assets/19.png)
 6. Select **Windows Server 2016** as the **functional level**. For the **domain controller capabilities**, choose **Domain Name System \(DNS\) server**. Set a Directory Services Restore Mode \(DSRM\) **password.**
 7. ![](../../.gitbook/assets/20.png)
@@ -477,7 +477,7 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 5. ![](../../.gitbook/assets/112.png)
 6. Open an administrative command prompt, and navigate to the **Kibana** directory to run the kibana.bat batch file and start **Kibana.**
 7. ![](../../.gitbook/assets/113.png)
-8. Once Kibana has started, navigate to \[[http://localhost:5601\]\(http://localhost:5601\](http://localhost:5601]%28http://localhost:5601\)\) to verify that Kibana is functional.
+8. Once Kibana has started, navigate to \[[http://localhost:5601\]\(http://localhost:5601\](http://localhost:5601]%28http://localhost:5601%29\) to verify that Kibana is functional.
 9. ![](../../.gitbook/assets/114.png)
 
 ### Creating a Self-Signed Certificate for Kibana
@@ -522,7 +522,7 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
    * elasticsearch.password—This field matches the second part \(post-colon\) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
    * elasticsearch.ssl.verificationMode—Set the value to “true” to ignore SSL errors. This is useful when working in a test environment.
    * xpack.security.enabled—This must be disabled for ReadonlyREST to work.
-   * \[server.host\]\([http://server.host—By](http://server.host—By) default, this will be \[localhost\]\([http://localhost\](http://localhost\)\); but, we need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.
+   * \[server.host\]\([http://server.host—By](http://server.host—By) default, this will be \[localhost\]\([http://localhost\](http://localhost%29\); but, we need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.
    * server.ssl.enabled—This is used to turn on SSL and respond to https.
    * server.ssl.certificate—This is the location of the public key certificate.
    * server.ssl.key—This is the location of the private key for the certificate.
@@ -541,7 +541,7 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
 
 ### Opening the Firewall Port
 
-To allow the AD FS server to talk to Kibana, we need to open the 5601 port on the Kibana server since \[localhost\]\([http://localhost\](http://localhost\)\) is not routable.
+To allow the AD FS server to talk to Kibana, we need to open the 5601 port on the Kibana server since \[localhost\]\([http://localhost\](http://localhost%29\) is not routable.
 
 1. Open the **Windows Firewall with Advanced Security** screen, and add a new rule under **Inbound Rules.** Choose **Port.**
 2. Add the specific local port of **5601,** and click **Next.**
@@ -551,7 +551,7 @@ To allow the AD FS server to talk to Kibana, we need to open the 5601 port on th
 
 ## Demonstration
 
-1. Navigate to your Kibana URL \([https://10.0.0.6:5601\](https://10.0.0.6:5601\)\) using Chrome or Firefox. Do not use IE or the SSO button may not show up.
+1. Navigate to your Kibana URL \([https://10.0.0.6:5601\](https://10.0.0.6:5601%29\) using Chrome or Firefox. Do not use IE or the SSO button may not show up.
 2. ![](../../.gitbook/assets/128.png)
 3. Click on ADFS, the button configured in the kibana.yml file, and log in with one of the created AD users. Use the defined mail attribute on the AD account \(an email address\).
 4. ![](../../.gitbook/assets/129.png)
