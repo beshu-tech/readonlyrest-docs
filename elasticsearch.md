@@ -537,7 +537,7 @@ If a **write request** wants to write to indices they don't have permission for,
 **Requests related to templates**
 
 Templates are also connected with indices, but rather indirectly. 
-Index template has index patterns and could also have aliases. 
+An index template has index patterns and could also have aliases. 
 During an index template creation or modification, ROR checks if index patterns and aliases, defined in a request body, are allowed. When a user tries to remove or get template by name, ROR checks
 if the template can be considered as allowed for the user, and 
 based on that information, it allows/forbids to remove or see it. 
