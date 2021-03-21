@@ -321,11 +321,8 @@ considered to be visible for a user, when the user has access to
 AT LEAST ONE index pattern of the template's index pattern list. 
 ROR is going to show the template but to hide the information about not allowed index patterns and not allowed aliases.
 
-
 <details>
   <summary>Example (click to expand)</summary>
-
-</details>
 
 In previous sections we proved that ROR gets along with index templates adding, modifying and removing pretty well. Now, we'd like check what index templates are supposed to be visible for users. Let's assume we have 4 index templates:
 
@@ -458,6 +455,8 @@ The next is `t4`. When `admin` had listed index templates, we saw that template 
 
 And the last one to explain - `t1`. The index pattern of the template is `i*`. Obviously user `dev1` has no access to it, because his allowed indices are `idev1, idev1_*`. But if we imagine all possible values generated from pattern `i*` and all possible values generated from `idev1, idev1_*`, we can notice that the latter will be a subset of the first. It means that this template can be interesting for the user `dev1`, because it will ba applied to indices created by him. That's why ROR decides to show it. 
 
+</details>
+
 ---
 ## Component templates
 
@@ -470,6 +469,75 @@ The request will be allowed when all of following conditions are met:
 * a template with requested name does not exist (if it does, it's rather a template modification, than a creation),
 * all aliases of the new, requested template are allowed.
 
+<details>
+  <summary>Example (click to expand)</summary>
+
+Unlike index templates, component templates don't have index patterns. But they still have aliases. So, their behaviour according to an aliases usage is quite similar, but there are several differences which are worth mentioning. 
+
+Let's check if `dev1` user can create a component template:
+
+```text
+$ curl -vk -u dev1:test "http://localhost:9200/_component_template/ctemp1?pretty" -XPUT -H "Content-Type: application/json" -d \
+  '{
+     "template": {
+   	   "settings": {
+   	     "index.number_of_replicas": 0
+   	   },
+   	   "aliases": { 
+   	     "idev1": {},
+   	     "idev2": {}
+   	   }
+     }
+  }'
+  
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    "error" : {
+      "root_cause" : [
+        {
+          "reason" : "forbidden",
+          "due_to" : ["OPERATION_NOT_ALLOWED"]
+        }
+      ],
+      "reason" : "forbidden",
+      "due_to" : ["OPERATION_NOT_ALLOWED"],
+      "status" : 403
+    }
+  }
+```
+
+Oh, user `dev1` is not allowed to create this template. But wait! It looks like we have the same problem as had while creating index template. Alias `idev2` is not allowed. Let's try to do the same without this alias:
+
+```text
+$ curl -vk -u dev1:test "http://localhost:9200/_component_template/ctemp1?pretty" -XPUT -H "Content-Type: application/json" -d \
+  '{
+     "template": {
+   	   "settings": {
+   	     "index.number_of_replicas": 0
+   	   },
+   	   "aliases": { 
+   	     "idev1": {}
+   	   }
+     }
+  }'
+  
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    "acknowledged" : true
+  }
+```
+
+Ha! As expected. A user has to have access to all aliases during adding a component template which has aliases defined.
+
+*Note*
+If a component template doesn't involve aliases, there is no restriction from ROR side to add one. It can be changed in future, when we add sth like `templates` rule.
+
+</details>
+
 ---
 ### Modify a component template
 
@@ -478,13 +546,83 @@ The request will be allowed when all of following conditions are met:
 * all aliases of the existing template are allowed,
 * all aliases of the requested template are allowed.
   
+<details>
+  <summary>Example (click to expand)</summary>
+
+In the previous example, user `dev1` created the component template `ctemp1` with one alias `idev1`. Let's check if user `dev2` will be able to modify it:
+
+```text
+$ curl -vk -u dev2:test "http://localhost:9200/_component_template/ctemp1?pretty" -XPUT -H "Content-Type: application/json" -d \
+  '{
+     "template": {
+   	   "settings": {
+   	     "index.number_of_replicas": 0
+   	   },
+   	   "aliases": { 
+   	     "idev2": {}
+   	   }
+     }
+  }'
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    "error" : {
+      "root_cause" : [
+        {
+          "reason" : "forbidden",
+          "due_to" : ["OPERATION_NOT_ALLOWED"]
+        }
+      ],
+      "reason" : "forbidden",
+      "due_to" : ["OPERATION_NOT_ALLOWED"],
+      "status" : 403
+    }
+  }
+```
+
+No. And this is good behaviour, because `dev2` doesn't have an access to the alias `idev1` which the `ctemp1` has. ROR assumes, that he isn't an owner of the component template (please notice, that the same request will be allowed when a different, nonexistent component template name is used). I can assure you that `dev1` is able to modify the template (you can check if you want).
+
+</details>
+
 ---
 ### Delete a component template
 
 The request will be allowed when template does not exist OR all of the following conditions are met:
 * a template with requested name does exist,
 * all aliases of the existing template are allowed.
-  
+
+<details>
+  <summary>Example (click to expand)</summary>
+
+If you read the previous example, here you won't find anything interested. A component template can be removed only by an owner of the template. If ROR considers that a user is an owner of a requested component template, it allows to remove it. See that `dev2` is not able to remove `ctemp1`:
+
+```text
+$ curl -vk -u dev2:test -XDELETE "http://localhost:9200/_component_template/ctemp1?pretty"
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    "error" : {
+      "root_cause" : [
+        {
+          "reason" : "forbidden",
+          "due_to" : ["OPERATION_NOT_ALLOWED"]
+        }
+      ],
+      "reason" : "forbidden",
+      "due_to" : ["OPERATION_NOT_ALLOWED"],
+      "status" : 403
+    }
+  }
+```
+
+I told you. But please remember that only aliases are checked by ROR when it's trying to figure out ownership of a component template. If a component template doesn't have any aliases, it can be modified or deleted by any user.
+
+</details>
+
 ---
 ### Get component templates
 
@@ -492,6 +630,99 @@ At the moment there is no way to restrict which component templates can be visib
 future - see a corresponding index template section). But ROR is 
 going to hide the information about not allowed aliases of returned
 component templates.
+
+<details>
+  <summary>Example (click to expand)</summary>
+
+A careful reader can guess that ROR won't forbid showing component templates. But similar to indices templates, ROR will filter out aliases list depending on an aliases accessability of current user. Let's see an example:
+
+```text
+$ curl -vk -u admin:admin "http://localhost:9200/_component_template?pretty"
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    "component_templates" : [
+      {
+        "name" : "ctemp2",
+        "component_template" : {
+          "template" : {
+            "settings" : {
+              "index" : {
+                "number_of_replicas" : "0"
+              }
+            },
+            "aliases" : {
+              "idev2" : { }
+            }
+          }
+        }
+      },
+      {
+        "name" : "ctemp1",
+        "component_template" : {
+          "template" : {
+            "settings" : {
+              "index" : {
+                "number_of_replicas" : "0"
+              }
+            },
+            "aliases" : {
+              "idev1" : { }
+            }
+          }
+        }
+      }
+    ]
+  }
+```
+
+We can see that we have two component templates. `ctemp1` has alias `idev1` and `ctemp2` alias `idev2`. Let check what templates `dev1` user will be able to see:
+
+```text
+$ curl -vk -u dev1:test "http://localhost:9200/_component_template?pretty"
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    "component_templates" : [
+      {
+        "name" : "ctemp2",
+        "component_template" : {
+          "template" : {
+            "settings" : {
+              "index" : {
+                "number_of_replicas" : "0"
+              }
+            },
+            "aliases" : { }
+          }
+        }
+      },
+      {
+        "name" : "ctemp1",
+        "component_template" : {
+          "template" : {
+            "settings" : {
+              "index" : {
+                "number_of_replicas" : "0"
+              }
+            },
+            "aliases" : {
+              "idev1" : { }
+            }
+          }
+        }
+      }
+    ]
+  }
+```
+
+We can see that he is able to see all component templates, but `ctemp2` doesn't have `idev2` alias. User `dev1` has no access to the alias, so response returned by ROR doesn't contain the alias. Similar behaviour we will observe when `dev2` user will try to get all templates.
+
+</details>
 
 ---
 ## Troubleshooting 
