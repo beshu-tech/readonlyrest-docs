@@ -1,4 +1,4 @@
-## FLS engine
+# FLS engine
 
 Applicable in context of `fields` [rule](elasticsearch.md#fields) 
  
@@ -8,7 +8,7 @@ Now `fields` rule is more flexible and part of FLS responsibilities is handled s
 Unfortunately, a few FLS functionalities still have to be handled at Lucene level, and cannot benefit of the new ES level implementation (see supported at ES level [requests](#ES-limitations) )
 Lucene is still used by `fields` rule when ES is not able to handle request properly (as kind of a fallback).
 
-### Configuration 
+## Configuration 
 
 FLS engine can be configured with global, optional property `fls_engine` set under `readonlyrest:` section. 
 
@@ -28,7 +28,7 @@ In `es` engine FLS is not available for some type of requests (requirements list
 
 If lack of full FLS support is unacceptable and all type of requests needs to be handled properly (rule matching, no rejection) it's advised to use more reliable `es_with_lucene` engine.
 
-### ES limitations
+## ES limitations
 Supported by `es` fls engine requests are: 
 
 * all Get/MGet API requests
