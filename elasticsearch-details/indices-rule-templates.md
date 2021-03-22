@@ -252,7 +252,7 @@ $ curl -vk -u dev2:test -XPUT "http://127.0.0.1:9200/_index_template/test?pretty
   }
 ```
 
-Yes! This is something what we wanted like to see. Even if the request was correct and the user `dev2` has an access to the requested index pattern and aliases, the request was forbidden. Obviously, there is already existed template `temp` which has the index pattern and aliases, which are not allowed for `dev2`. ROR deduces that `dev2` cannot be considered as an owner of the template, so it forbade to modify/overwrite it. 
+Yes! This is something what we wanted like to see. Even if the request was correct and the user `dev2` has an access to the requested index pattern and aliases, the request was forbidden. Obviously, there is already existed template `temp` which has the index pattern and aliases, which are not allowed for `dev2`. ROR deduces that `dev2` cannot be considered as someone how can modify/overwrite it. 
 
 Pretty awesome. Won't `dev2` also be able to remove it? We'll see in next section ...
 
@@ -269,7 +269,7 @@ The request will be allowed when template does not exist OR all of the following
 <details>
   <summary>Example (click to expand)</summary>
 
-In the last section we wondered, if ROR will be able to block removing the template `temp` by the user `dev2`. Let's recall, that we proved that the user is not able to modify this template, because ROR considers that he isn't an owner of the template. 
+In the last section we wondered, if ROR will be able to block removing the template `temp` by the user `dev2`. Let's recall, that we proved that the user is not able to modify this template, because ROR considers that he doesn't have permissions to change/remove it. 
 
 ```text
 $ curl -vk -u dev2:test -XDELETE "http://127.0.0.1:9200/_index_template/test?pretty"
@@ -451,7 +451,7 @@ Hmm, we can see many weird things here. Let's start with the simplest case: inde
 
 What about the index template `t3`? `dev1` is not allowed to see it because the index pattern `idev2_*` is not allowed for him. It was also pretty much obvious!
 
-The next is `t4`. When `admin` had listed index templates, we saw that template `t4` has 2 index patterns. But `dev1` can see only one. This is great, because he has an access to a part of that template, so he definitely should be able to see it. ROR behaviour here is pretty neat - it allows the user to see a template with filtered, not allowed parts of it, but at the same time, the user is not treated by ROR as an owner of the template - he won't be able to eg. remove it (Don't believe me? Go ahead and check!)   
+The next is `t4`. When `admin` had listed index templates, we saw that template `t4` has 2 index patterns. But `dev1` can see only one. This is great, because he has an access to a part of that template, so he definitely should be able to see it. ROR behaviour here is pretty neat - it allows the user to see a template with filtered, not allowed parts of it, but at the same time, the user doesn't have permissions to modify/remove the template (Don't believe me? Go ahead and check!)   
 
 And the last one to explain - `t1`. The index pattern of the template is `i*`. Obviously user `dev1` has no access to it, because his allowed indices are `idev1, idev1_*`. But if we imagine all possible values generated from pattern `i*` and all possible values generated from `idev1, idev1_*`, we can notice that the latter will be a subset of the first. It means that this template can be interesting for the user `dev1`, because it will ba applied to indices created by him. That's why ROR decides to show it. 
 
@@ -582,7 +582,7 @@ $ curl -vk -u dev2:test "http://localhost:9200/_component_template/ctemp1?pretty
   }
 ```
 
-No. And this is good behaviour, because `dev2` doesn't have an access to the alias `idev1` which the `ctemp1` has. ROR assumes, that he isn't an owner of the component template (please notice, that the same request will be allowed when a different, nonexistent component template name is used). I can assure you that `dev1` is able to modify the template (you can check if you want).
+No. And this is a good behaviour, because `dev2` doesn't have an access to the alias `idev1` which the `ctemp1` has. ROR assumes, that he cannot modify the component template (please notice, that the same request will be allowed when a different, nonexistent component template name is used). I can assure you that `dev1` is able to modify the template (you can check if you want).
 
 </details>
 
@@ -596,7 +596,7 @@ The request will be allowed when template does not exist OR all of the following
 <details>
   <summary>Example (click to expand)</summary>
 
-If you read the previous example, here you won't find anything interested. A component template can be removed only by an owner of the template. If ROR considers that a user is an owner of a requested component template, it allows to remove it. See that `dev2` is not able to remove `ctemp1`:
+If you read the previous example, you won't find anything interesting here. A component template can be removed only by someone whom ROR considers to have modification rights of the template. See that `dev2` is not able to remove `ctemp1`:
 
 ```text
 $ curl -vk -u dev2:test -XDELETE "http://localhost:9200/_component_template/ctemp1?pretty"
@@ -619,7 +619,7 @@ $ curl -vk -u dev2:test -XDELETE "http://localhost:9200/_component_template/ctem
   }
 ```
 
-I told you. But please remember that only aliases are checked by ROR when it's trying to figure out ownership of a component template. If a component template doesn't have any aliases, it can be modified or deleted by any user.
+I told you. But please remember that only aliases are checked by ROR when it's trying to figure out modification rights of a component template. If a component template doesn't have any aliases, it can be modified or deleted by any user.
 
 </details>
 
