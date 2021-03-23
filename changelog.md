@@ -2,7 +2,7 @@
 
 ### What's new in 1.28.0
 
-* **🚀New** \(ES\) 7.11.2 support 
+* **🚀New** \(ES\) 7.12.0, 7.11.2 support 
 * **🚀New** \(ES\) full [Index and Component Templates API](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html) support 
 * **🧐Enhancement** \(ES\) [Username case sensitivity settings](https://forum.readonlyrest.com/t/ldap-based-user-authentication/1667)
 * **🐞Fix** \(ES\) [Kibana logout event storing fix](https://forum.readonlyrest.com/t/kibana-plugin-software-licensing-and-expiration/1808/5)
