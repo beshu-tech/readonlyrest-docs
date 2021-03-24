@@ -1,5 +1,9 @@
 # Changelog
 
+### What's new in 1.28.1
+* **🐞Fix** \(ES\) Getting index templates issue when no `indices` rule was used in matched block
+* **🐞Fix** \(ES\) [NPE on getting template aliases](https://forum.readonlyrest.com/t/cannot-put-index-template-template-1/1681/25)
+
 ### What's new in 1.28.0
 
 * **🚀New** \(ES\) 7.12.0, 7.11.2 support 
