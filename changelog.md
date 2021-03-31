@@ -1,5 +1,10 @@
 # Changelog
 
+### What's new in 1.28.2
+
+* **🚨Security Fix** \(ES\) [CVE-2021-21295](https://nvd.nist.gov/vuln/detail/CVE-2021-21295)
+* **🐞Fix** \(KBN\) prevent SAML/OIDC initiated Kibana sessions from expiring after `session_timeout_minutes` despite continued interaction
+
 ### What's new in 1.28.1
 * **🐞Fix** \(ES\) Getting index templates issue when no `indices` rule was used in matched block
 * **🐞Fix** \(ES\) [NPE on getting template aliases](https://forum.readonlyrest.com/t/cannot-put-index-template-template-1/1681/25)
