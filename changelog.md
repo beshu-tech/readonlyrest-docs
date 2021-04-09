@@ -9,8 +9,8 @@
 * **🐞Fix** \(ES\) [Fixed remote reindex operation with "type" parameter](https://forum.readonlyrest.com/t/reindex-index-not-found-exception/1708/20)
 * **🐞Fix** \(KBN\) Prevent cookie expiration deadlock in browsers when using SAML/OIDC
 * **🐞Fix** \(KBN\) When credentials change in the ACL, make it possible to login again
-* **🐞Fix** \(KBN\) Kibana management app ID changed from "kibana:management" to "kibana:stack_management"
-  
+* **🐞Fix** \(KBN\) Kibana management app ID changed from "kibana:management" to "kibana:stack\_management"
+
 ### What's new in 1.27.1
 
 * **🚨Security Fix** \(ES\) [CVE-2021-21290](https://nvd.nist.gov/vuln/detail/CVE-2021-21290)
