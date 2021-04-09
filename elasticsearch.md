@@ -528,7 +528,7 @@ When the subset of indices is empty, it means that user are not allowed to acces
 * requested indices don't exist
 * requested indices exist but logged user is not authorized to access them  
 
-For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled \(for nonexistent index\). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. See [detailed example](./elasticsearch-details/index-not-found-examples.md).
+For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled \(for nonexistent index\). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. See [detailed example](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/index-not-found-examples.md).
 
 It's also worth mentioning, that when `prompt_for_basic_auth` is set to `true` \(that is, the default value\), ROR is going to return 401 instead of 404 HTTP status code. It is relevant for users who don't use ROR Kibana's plugin and who would like to take advantage of default Kibana's behaviour which shows the native browser basic auth dialog, when it receives HTTP 401 response.
 
@@ -536,12 +536,7 @@ If a **write request** wants to write to indices they don't have permission for,
 
 **Requests related to templates**
 
-Templates are also connected with indices, but rather indirectly. 
-An index template has index patterns and could also have aliases. 
-During an index template creation or modification, ROR checks if index patterns and aliases, defined in a request body, are allowed. When a user tries to remove or get template by name, ROR checks
-if the template can be considered as allowed for the user, and 
-based on that information, it allows/forbids to remove or see it. 
-See [details](./elasticsearch-details/indices-rule-templates.md).
+Templates are also connected with indices, but rather indirectly. An index template has index patterns and could also have aliases. During an index template creation or modification, ROR checks if index patterns and aliases, defined in a request body, are allowed. When a user tries to remove or get template by name, ROR checks if the template can be considered as allowed for the user, and based on that information, it allows/forbids to remove or see it. See [details](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/indices-rule-templates.md).
 
 #### `actions`
 
@@ -676,9 +671,9 @@ In other words: FLS protects from usage some not allowed fields for a certain us
 Field rule definition consists of two parts:
 
 * A non empty list of fields \(blacklisted or whitelisted\) names. Supports wildcards and user runtime variables.
-* The FLS engine definition \(global setting, optional\). See: [engine details](./elasticsearch-details/fls-engine.md).
+* The FLS engine definition \(global setting, optional\). See: [engine details](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/fls-engine.md).
 
-**⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](./elasticsearch-details/fls-engine.md).
+**⚠️IMPORTANT** With default FLS engine it's required to install ReadonlyREST plugin in all the data nodes. Different configurations allowing to avoid such requirement are described in [engine details](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/fls-engine.md).
 
 **Field names**
 

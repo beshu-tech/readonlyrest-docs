@@ -131,7 +131,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Login in your Microsoft Azure dashboard, and head to Enterprise Applications.
 
-![Azure Dashboard](../../.gitbook/assets/azure_dashboard%20%281%29%20%281%29%20%281%29.png)
+![Azure Dashboard](../../.gitbook/assets/azure_dashboard%20%281%29%20%281%29%20%281%29%20%283%29%20%283%29.png)
 
 1. Click on "Non-gallery application".
 
@@ -163,7 +163,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
    You should now see a new blue button that says "Azure AD SAML SSO".
 
-![ROR login](../../.gitbook/assets/ror_ent_login%20%281%29%20%281%29%20%281%29%20%283%29%20%284%29.png)
+![ROR login](../../.gitbook/assets/ror_ent_login%20%281%29%20%281%29%20%281%29%20%283%29%20%285%29%20%286%29.png)
 
 1. Press it, and you should see the Azure AD login page. Place your credentials here, or pick an already authenticated identity to enter Kibana.
 
