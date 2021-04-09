@@ -33,7 +33,7 @@ This will create a generic SAML provider. Set these fields:
 * EntityID: Set an existing entity name or use the same as Service Provider Name
 * Assertion Consumer Service: The SAML Url assertion found in metadata.xml, the url format is `<kibanaExternalHost>/ror_kbn_sso/assert`. 
 
-![SP](../../.gitbook/assets/duo-saml-sp%20%281%29%20%283%29%20%283%29.png)
+![SP](../../.gitbook/assets/duo-saml-sp%20%281%29%20%283%29%20%283%29%20%283%29.png)
 
 In SAML Response, set NameID to be the same variable name as configured previously in the authentication source. Leave the default values for the remaining settings. Click `Save Application` and scroll up and download the configuration file.
 
