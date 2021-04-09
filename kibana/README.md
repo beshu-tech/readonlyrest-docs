@@ -155,7 +155,7 @@ $ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
 {% hint style="info" %}
 To uninstall, you should unpatch Kibana first, then uninstall ReadonlyREST plugin. However **the Kibana plugin system uninstallation process is highly unreliable**.
 
-So we highly recomend to throw away the entire Kibana directory, and start from scratch. Ideally, use ephemeral docker containers. 
+So we highly recomend to throw away the entire Kibana directory, and start from scratch. Ideally, use ephemeral docker containers.
 
 Need inspiration? Try [ROR Docker demo](https://github.com/sscarduzio/ror-docker-demo)!
 {% endhint %}
@@ -427,7 +427,7 @@ And of course also make sure `elasticsearch.url` points to the designated Elasti
 
 ### Proxy Auth
 
-This feature will work in all ReadonlyREST editions. 
+This feature will work in all ReadonlyREST editions.
 
 ROR for Elasticsearch can delegate authentication to a reverse proxy which will enforce some kind of authentication, and pass the successfully authenticated user's name inside a `X-Forwarded-User` header.
 
@@ -440,7 +440,7 @@ Now ROR for Kibana will **skip the login form entirely**, and will only require 
 
 #### Custom Logout link
 
-This feature will work in all ReadonlyREST editions. 
+This feature will work in all ReadonlyREST editions.
 
 Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrypted cookie that represents the users identity and the login form is shown.
 
@@ -455,7 +455,7 @@ Now users that gained a session through delegated auth, can also click on the lo
 
 #### Custom Login link
 
-This feature will work in all ReadonlyREST editions. 
+This feature will work in all ReadonlyREST editions.
 
 When you delegate authentication to an external service, you can tell ReadonlyREST to skip the classic login form entirely and redirect users to your proxy or identity provider's login screen.
 
@@ -472,7 +472,7 @@ Enabling proxy auth passthrough will relax the requirement to provide a password
 
 ### JWT Token Forwarding as URL Query Parameter
 
-This feature will work in all ReadonlyREST editions. 
+This feature will work in all ReadonlyREST editions.
 
 Alternatively to typing in credentials in the standard login form, it is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.
 
@@ -529,7 +529,7 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 ## Audit log
 
-This feature will work in all ReadonlyREST editions. 
+This feature will work in all ReadonlyREST editions.
 
 The audit log feature is widely described in [📖docs for Elasticsearch plugin](../elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
 
@@ -541,7 +541,7 @@ In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automa
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](../.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%283%29.png)
+![loading visualization](../.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29%20%283%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 
@@ -555,7 +555,7 @@ The audit log dashboard, by default, has only a few basic visualizations. They c
 
 ## SAML
 
-This feature will work in ReadonlyREST Enterprise. 
+This feature will work in ReadonlyREST Enterprise.
 
 ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO \(single sign on\) and SLO \(single log out\). Here is how to configure it.
 
@@ -645,7 +645,7 @@ Example response:
 
 ## OpenID Connect \(OIDC\)
 
-This feature will work in ReadonlyREST Enterprise. 
+This feature will work in ReadonlyREST Enterprise.
 
 ReadonlyREST Enterprise support OpenID Connect for both authentication and authorization.
 

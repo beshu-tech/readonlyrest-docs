@@ -358,7 +358,7 @@ Examples of valid arguments for the `kibana_hide_apps: [...]` rule \(readonlyres
 | canvas | Canvas | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas) |
 | maps | Maps | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps) |
 | code | Code \(Beta\) | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code) |
-| ~~readonlyrest\_kbn~~ \(obsolete\) | ~~ReadonlyREST~~ | ~~~~[~~http://kibana-url:5601/app/readonlyrest\_kbn~~](http://kibana-url:5601/app/readonlyrest_kbn)~~~~ |
+| ~~readonlyrest\_kbn~~ \(obsolete\) | ~~ReadonlyREST~~ | ~~~~\[~~[http://kibana-url:5601/app/readonlyrest\_kbn~~\]\(http://kibana-url:5601/app/readonlyrest\_kbn\)~~~~](http://kibana-url:5601/app/readonlyrest_kbn~~]%28http://kibana-url:5601/app/readonlyrest_kbn%29~~~~) |
 | ml | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml) |
 | infra:home | Infrastructure | [http://kibana-url:5601/app/infra\#/infrastructure/inventory?\_g=\(](http://kibana-url:5601/app/infra#/infrastructure/inventory?_g=%28)\) |
 | infra:logs | Logs | [http://kibana-url:5601/app/infra\#/logs?\_g=\(](http://kibana-url:5601/app/infra#/logs?_g=%28)\) |
@@ -497,7 +497,7 @@ In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automa
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29.png)
+![loading visualization](https://github.com/beshu-tech/readonlyrest-docs/tree/ebc7ffc071a51c1c58885ecbdf54ed45792ba26d/kibana/.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 
