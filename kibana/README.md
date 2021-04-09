@@ -383,25 +383,27 @@ Possible values: `"login", "tenancyHop", "never"`.
 
 This feature will work in ReadonlyREST PRO and Enteprise.
 
-Previously we needed to keep track and document all Kibana apps IDs, and you had to look them up all the time. Now we made it simpler.
+Previously we needed to keep track and document all Kibana apps IDs, and you had to look them up all the time. Now we made it simpler by letting you type the apps and submenu titles exactly as you see them in the UI.
 
-![](../.gitbook/assets/image%20%281%29.png)
+For example, this is how you hide the whole Enterprise Search submenu.
 
-From the Kibana sidebar above, if we want to hide "Machine Learning" app from "Kibana" sub menu. We type:
+![kibana\_hide\_apps:&#xA0;\[&quot;Enterprise Search&quot;\]](../.gitbook/assets/image%20%282%29.png)
+
+And this is how you hide only one app from the Enterprise Search menu:
+
+![kibana\_hide\_apps: \[&quot;Enterprise Search\|Workplace Search&quot;\]](../.gitbook/assets/image%20%283%29.png)
+
+More generally, either of these two ways will work:
 
 ```bash
-kibana_hide_apps: [ "Kibana|Machine Learning" ]
+kibana_hide_apps: [ "<submenu-title>" ]
+kibana_hide_apps: [ "<submenu-title|app-title>" ]
 ```
 
-That is `<submenu-title|app-title>`. Any app can be hidden. For example:
-
-* Enterprise Search\|Workplace Search
-* Management\|Stack Management
-* Security\|Detections
-* Kibana\|Maps
+For example the following is a valid rule:
 
 ```bash
-kibana_hide_apps: [ "Kibana|Machine Learning", "Kibana|Maps", "Enterprise Search|Workplace Search", "Management|Stack Management", "Security|Detection" ]
+kibana_hide_apps: [ "Security", "Management|Stack Management", "Enterprise Search" ]
 ```
 
 ### Kibana configuration
@@ -541,7 +543,7 @@ In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automa
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](../.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29%20%283%29.png)
+![loading visualization](../.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29%20%285%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 

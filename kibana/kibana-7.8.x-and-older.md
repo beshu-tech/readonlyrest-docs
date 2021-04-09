@@ -497,7 +497,7 @@ In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automa
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](https://github.com/beshu-tech/readonlyrest-docs/tree/ebc7ffc071a51c1c58885ecbdf54ed45792ba26d/kibana/.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29.png)
+![loading visualization](https://github.com/beshu-tech/readonlyrest-docs/tree/64130b8d9cafefb344b40743cf6df4dc99d60169/kibana/.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 

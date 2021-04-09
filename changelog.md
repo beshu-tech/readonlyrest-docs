@@ -1,8 +1,24 @@
 # Changelog
 
+### What's new in 1.29.0
+
+* **🚀New** \(KBN\) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 ([with ROR new platform](https://beta.readonlyrest.com/)) 
+* **🧐Enhancement** \(KBN\) logout if the credentials/metadata of the current user change in the ACL
+* **🚨Security Fix** \(ES\) Security Fix (ES) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409)
+  
+### What's new in 1.28.2
+
+* **🚨Security Fix** \(ES\) [CVE-2021-21295](https://nvd.nist.gov/vuln/detail/CVE-2021-21295)
+* **🐞Fix** \(KBN\) prevent SAML/OIDC initiated Kibana sessions from expiring after `session_timeout_minutes` despite continued interaction
+
+### What's new in 1.28.1
+
+* **🐞Fix** \(ES\) Getting index templates issue when no `indices` rule was used in matched block
+* **🐞Fix** \(ES\) [NPE on getting template aliases](https://forum.readonlyrest.com/t/cannot-put-index-template-template-1/1681/25)
+
 ### What's new in 1.28.0
 
-* **🚀New** \(ES\) 7.11.2 support 
+* **🚀New** \(ES\) 7.12.0, 7.11.2 support 
 * **🚀New** \(ES\) full [Index and Component Templates API](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html) support 
 * **🧐Enhancement** \(ES\) [Username case sensitivity settings](https://forum.readonlyrest.com/t/ldap-based-user-authentication/1667)
 * **🐞Fix** \(ES\) [Kibana logout event storing fix](https://forum.readonlyrest.com/t/kibana-plugin-software-licensing-and-expiration/1808/5)
