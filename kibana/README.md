@@ -296,13 +296,13 @@ readonlyrest:
       auth_key: ro:dev
       kibana_access: ro
       indices: [ ".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
+      kibana_hide_apps: [ "Security", "Enterprise Search"]
 
     - name: "::RW::"
       auth_key: rw:dev
       kibana_access: rw
       indices: [".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
+      kibana_hide_apps: [ "Security", "Enterprise Search"]
 
 
     - name: "::ADMIN::"
@@ -543,7 +543,7 @@ In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automa
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](../.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29%20%285%29.png)
+![loading visualization](../.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29%20%286%29%20%286%29.png)
 
 In detail, this feature creates three Kibana "saved objects":
 
@@ -721,19 +721,19 @@ Edit `kibana.yml` and append:
 readonlyrest_kbn.auth:
   signature_key: "my_shared_secret_kibana1(min 256 chars)"
   oidc_kc: 
-            buttonName: "KeyCloak OpenID"
-            type: "oidc"
-            issuer: 'http://localhost:8080/auth/realms/ror'
-            authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth'
-            tokenURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/token'
-            userInfoURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/userinfo'
-            clientID: 'ror_oidc'
-            clientSecret: '9f1d39c8-a211-460a-84b6-0a4a1499c455'
-            scope: 'openid profile roles role_list email'
-            usernameParameter: 'preferred_username'
-            groupsParameter: 'groups'
-            kibanaExternalHost: 'localhost:8080'
-            logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout'
+    buttonName: "KeyCloak OpenID"
+    type: "oidc"
+    issuer: 'http://localhost:8080/auth/realms/ror'
+    authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth'
+    tokenURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/token'
+    userInfoURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/userinfo'
+    clientID: 'ror_oidc'
+    clientSecret: '9f1d39c8-a211-460a-84b6-0a4a1499c455'
+    scope: 'openid profile roles role_list email'
+    usernameParameter: 'preferred_username'
+    groupsParameter: 'groups'
+    kibanaExternalHost: 'localhost:5601'
+    logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout'
 ```
 
 ### Identity provider side
