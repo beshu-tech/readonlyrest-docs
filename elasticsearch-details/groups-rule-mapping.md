@@ -1,7 +1,15 @@
 # External to local groups mapping 
 
-`Groups` rule matches request which user is assigned to at least one of its groups. Groups are being assigned to a username (or username pattern) in `users` section of ROR's configuration. Each element of the section requires also an authentication method (like eg. `auth_key` or `ldap_authentication`). But we can also use an authorization rule in this section beside the mentioned authentication rule (or one rule which provides both - the authentication and authorization altogether). Thanks to this, we gain a possibility to map external groups to local ones. Let's see it on an example.
+The `groups` accepts a list of group names. This rule will match requests in which the resolved username belongs at least to one of the listed groups. The association between usernames and groups is explicitly declared in the users section of the ACL. This is a list of usernames (full wildcard patterns are supported).
 
+Each entry in the association rule requires:
+* an authentication rule: (I.e. auth_key_* for local credentials, or ldap_authentication, external_authentication, etc)
+* a list of groups within the ones precendently inserted in the groups rules of the ACL blocks
+* optional: a remote authorization rule (ldap_authorization, groups_provider_authorization, etc.)
+  
+When the groups rule and the authorization rule are used together, we obtain "group mapping". That is: we are effectively mapping remote groups to local groups.
+
+*Note:* the rule ldap_auth is the composition of ldap_authentication and ldap_authorization. So it can be used as a shortcut for both.
 ## Example
 
 ```yaml
@@ -19,10 +27,13 @@ readonlyrest:
   [...]
 
   users:
+  # Local user "joe" is associated to local group "editors"
   - username: "joe"
     groups: ["editors"]
     auth_key: joe:password
 
+  # Externally authenticated user + authorization via group mapping
+  # Users belonging to "external_group1" OR "external_group2" are authorized as "viewers" and "editors" in the ACL.
   - username: "*"
     groups: ["viewers", "editors"]
     external_authentication: "ext1"
@@ -30,6 +41,8 @@ readonlyrest:
       user_groups_provider: "ext2"
       groups: ["external_group1", "external_group2"]
 
+  # LDAP Authentication (any LDAP user is valid)
+  # LDAP group mapping: users belonging to ANY of these LDAP groups, are mapped to "devops" local group
   - username: "*"
     groups: ["devops"]
     ldap_auth:
@@ -62,7 +75,7 @@ And sometimes we'd like to set up a requirement like this:
 
 You can think about it as a mapping external groups to local ones. 
 
-Let's back to our example. In the second element of `users` array, it states that:
+Let's go back to our example. In the second element of `users` array, it states that:
 
 * any user can be taken into consideration by this user definition
 * a user should be authenticated by an `external_authentication` rule which uses the `ext1` service

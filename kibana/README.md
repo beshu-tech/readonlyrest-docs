@@ -640,10 +640,11 @@ Example response:
 </EntityDescriptor>
 ```
 
-1. Create some users and some groups in the identity provider app
-2. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set kibana in debug mode so ReadonlyREST will print the user profile\).
-3. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
-4. If you want to use SAML for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
+1. Create some users and some groups
+2.  in the identity provider app
+3. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set kibana in debug mode so ReadonlyREST will print the user profile\).
+4. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
+5. If you want to use SAML for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
 
 ## OpenID Connect \(OIDC\)
 

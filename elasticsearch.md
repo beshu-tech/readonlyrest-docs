@@ -1409,7 +1409,7 @@ The `groups` rule accepts a list of group names. This rule will match if the res
 
 _Example: rules are associated to groups \(instead of users\) and users-group association is declared separately later under `users:`_
 
-### External groups
+### Group mapping
 
 Sometimes we'd like to take advantage of roles existing in external systems (like LDAP). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](./elasticsearch-details/groups-rule-mapping.md).
 
