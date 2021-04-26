@@ -16,7 +16,7 @@ In this document we are going to describe how to operate the Elasticsearch plugi
 
 * **Encryption**: transform the Elasticsearch API from HTTP to HTTPS
 * **Authentication**: require credentials
-* **Authorization**: declar groups of users, permissions and partial access to indices.
+* **Authorization**: declare groups of users, permissions and partial access to indices.
 * **Access control**: complex logic can be modeled using an ACL \(access control list\) written in YAML.
 * **Audit logs**: a trace of the access requests can be logged to file or index \(or both\).
 
@@ -1005,7 +1005,32 @@ readonlyrest:
 
 `groups: ["group1", "group2"]`
 
-Limit access to members of specific user groups. See [User management](elasticsearch.md#user-management-with-groups).
+Limit access to members of specific user groups. The members and groups are defined in `users` section. 
+
+The single entry inside the `users` section tells us that:
+* a given member with a username matching one of patterns in the `username` array ...
+* belongs to groups listed in the `groups` array ...
+* when he can be authenticated or/and authorized by auth rule(s)
+
+In general it looks like this:
+
+```yaml
+  users:
+  - username: ["pattern1", "pattern2", ...]
+    groups: ["group1", "group2", ...]
+    authentication_rule: ...
+
+  - username: ["pattern1", "pattern2", ...]
+    groups: ["group1", "group2", ...]
+    authentication_rule: ...
+    authorization_rule: ...
+
+  - username: ["pattern1", "pattern2", ...]
+    groups: ["group1", "group2", ...]
+    authentication_with_authorization_rule: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
+```
+
+For details see [User management](elasticsearch.md#users-and-groups) .
 
 #### `session_max_idle`
 
@@ -1369,20 +1394,24 @@ The `groups` rule accepts a list of group names. This rule will match if the res
 
     users:
 
-    - username: alice
-      auth_key: alice:p455phrase
+    - username: "alice"
       groups: ["team1"]
+      auth_key: alice:p455phrase
 
-    - username: bob
-      auth_key: bob:s3cr37
+    - username: "bob"
       groups: ["team2", "team4"]
+      auth_key: bob:s3cr37
 
-    - username: claire
-      auth_key_sha256: e0bba5fda92dbb0570fd2e729a3c8ed6b1d52b380581f32427a38e396ba28ec6 #claire:p455key
+    - username: "claire"
       groups: ["team1", "team5"]
+      auth_key_sha256: e0bba5fda92dbb0570fd2e729a3c8ed6b1d52b380581f32427a38e396ba28ec6 #claire:p455key
 ```
 
 _Example: rules are associated to groups \(instead of users\) and users-group association is declared separately later under `users:`_
+
+### Group mapping
+
+Sometimes we'd like to take advantage of roles existing in external systems (like LDAP). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](./elasticsearch-details/groups-rule-mapping.md).
 
 ### Username case sensitivity
 
