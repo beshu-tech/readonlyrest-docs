@@ -3,6 +3,7 @@
 ### What's new in 1.29.0
 
 * **🚀New** \(KBN\) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 \([with ROR new platform](https://beta.readonlyrest.com/)\) 
+* **🚀New** \(ES\) 7.12.1 support 
 * **🧐Enhancement** \(KBN\) logout if the credentials/metadata of the current user change in the ACL
 * **🚨Security Fix** \(ES\) Security Fix \(ES\) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409)
 
