@@ -1591,6 +1591,9 @@ readonlyrest:
       cache_ttl_in_sec: 60                                          # optional, default 0 - cache disabled
       group_search_filter: "(objectClass=group)(cn=application*)"   # optional, default (cn=*)
       group_name_attribute: "cn"                                    # optional, default "cn"
+      circuit_breaker:                                              # optional section, default configuration used when not declared
+        max_retries: 2                                              # required, default 10 when circuit_breaker is not declared
+        reset_duration: 5s                                          # required, default 10s when circuit_breaker is not declared
 
     # High availability LDAP settings (using "hosts", rather than "host")
     - name: ldap2
@@ -1684,6 +1687,14 @@ group_search_filter: "(cn=*)" # basically no group filtering
 \(An example OpenLDAP configuration file can be found in our tests: /src/test/resources/test\_example.ldif\)
 
 Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Accept requests from users in group team2 on index2` rule\)
+
+#### Circuit Breaker
+
+The LDAP connector is equipped by default with the circuit breaker functionality. The circuit breaker disables sending new requests to the server when it doesn't respond properly. After receiving configured number of failed responses in a row, circuit breaker blocks sending new requests by terminating them immediately with exception. After configured time, circuit breaker allows one request to pass. If it succeeds, CB goes back to normal operation. If not test request is sent again after configured time. 
+
+Circuit breaker could be adapted to specific needs using these configuration parameters:
+* `max_retries` is number of failed responses in a row which will trigger circuit breaker.
+* `reset_duration` defines how long circuit breaker will block requests until sending one test request. 
 
 #### LDAP Server discovery
 
@@ -2077,4 +2088,3 @@ Of course, if you do not use ssl, disable it.
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
       indices: ["metricbeat-*", "log_metricbeat*"]
 ```
-
