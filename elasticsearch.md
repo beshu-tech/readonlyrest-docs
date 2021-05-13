@@ -1690,11 +1690,11 @@ Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Acc
 
 #### Circuit Breaker
 
-The LDAP connector is equipped by default with the circuit breaker functionality. The circuit breaker disables sending new requests to the server when it doesn't respond properly. After receiving configured number of failed responses in a row, circuit breaker blocks sending new requests by terminating them immediately with exception. After configured time, circuit breaker allows one request to pass. If it succeeds, CB goes back to normal operation. If not test request is sent again after configured time. 
+The LDAP connector is equipped by default with the circuit breaker functionality. The circuit breaker is able to disable connector from sending new requests to the server when it doesn't respond properly. After receiving a configured number of failed responses in a row, the circuit breaker feature disables sending new requests by terminating them immediately with exception. After a configurable amount of time, the circuit breaker feature allows one request to pass. If it succeeds, CB goes back to normal operation. If not, a test request is sent again after a configurable amount of time. General description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found on [library doc](https://monix.io/docs/current/catnap/circuit-breaker.html).
 
-Circuit breaker could be adapted to specific needs using these configuration parameters:
-* `max_retries` is number of failed responses in a row which will trigger circuit breaker.
-* `reset_duration` defines how long circuit breaker will block requests until sending one test request. 
+The circuit breaker feature can be customised to adapt to specific needs using the following configuration parameters:
+* `max_retries` is the number of failed responses in a row which will trigger circuit breaker.
+* `reset_duration` defines how long the circuit breaker feature will block the incoming requests before starting to send one test request. to the LDAP server.
 
 #### LDAP Server discovery
 
@@ -1709,7 +1709,7 @@ The simplest configuration example of an LDAP connector instance using server di
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
-This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value wil be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
+This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value will be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
 
 The server discovery mechanism can be optionally configured further, by adding a few more configuration parameters, all of which are optional:
 
