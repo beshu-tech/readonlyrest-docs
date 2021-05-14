@@ -1591,6 +1591,9 @@ readonlyrest:
       cache_ttl_in_sec: 60                                          # optional, default 0 - cache disabled
       group_search_filter: "(objectClass=group)(cn=application*)"   # optional, default (cn=*)
       group_name_attribute: "cn"                                    # optional, default "cn"
+      circuit_breaker:                                              # optional section, default configuration used when not declared
+        max_retries: 2                                              # required, default 10 when circuit_breaker is not declared
+        reset_duration: 5s                                          # required, default 10s when circuit_breaker is not declared
 
     # High availability LDAP settings (using "hosts", rather than "host")
     - name: ldap2
@@ -1685,6 +1688,14 @@ group_search_filter: "(cn=*)" # basically no group filtering
 
 Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Accept requests from users in group team2 on index2` rule\)
 
+#### Circuit Breaker
+
+The LDAP connector is equipped by default with the circuit breaker functionality. The circuit breaker is able to disable connector from sending new requests to the server when it doesn't respond properly. After receiving a configured number of failed responses in a row, the circuit breaker feature disables sending new requests by terminating them immediately with exception. After a configurable amount of time, the circuit breaker feature allows one request to pass. If it succeeds, CB goes back to normal operation. If not, a test request is sent again after a configurable amount of time. General description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
+
+The circuit breaker feature can be customised to adapt to specific needs using the following configuration parameters:
+* `max_retries` is the number of failed responses in a row which will trigger circuit breaker.
+* `reset_duration` defines how long the circuit breaker feature will block the incoming requests before starting to send one test request. to the LDAP server.
+
 #### LDAP Server discovery
 
 It is possible for the LDAP connector to get all LDAP hostnames from DNS server rather than from configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
@@ -1698,7 +1709,7 @@ The simplest configuration example of an LDAP connector instance using server di
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
-This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value wil be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
+This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value will be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
 
 The server discovery mechanism can be optionally configured further, by adding a few more configuration parameters, all of which are optional:
 
@@ -2077,4 +2088,3 @@ Of course, if you do not use ssl, disable it.
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
       indices: ["metricbeat-*", "log_metricbeat*"]
 ```
-
