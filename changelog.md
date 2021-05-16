@@ -1,5 +1,14 @@
 # Changelog
 
+### What's new in 1.30.0
+* **🚀New** \(KBN\) 7.12.x compatibility
+* **🚀New** \(ES\) [LDAP connector circuit breaker](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#circuit-breaker)
+* **🧐Enhancement** \(ES\) [Username with wildcard support in users section](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#groups) and [groups mapping](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#group-mapping)
+* **🧐Enhancement** \(KBN < 7.9.x\) OIDC errors visibility
+* **🧐Enhancement** \(KBN < 7.9.x\) Smarter session probe algorithm
+* **🐞Fix** \(KBN >= 7.9.x\) [Load CertificateAuthorities as an array if not specified as an array](https://forum.readonlyrest.com/t/kibana-crash-at-startup-with-the-new-7-10-2-version/1840)
+* **🐞Fix** \(KBN < 7.9.x\) Don't hide visualizations list search box in RO mode
+
 ### What's new in 1.29.0
 
 * **🚀New** \(KBN\) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 \([with ROR new platform](https://beta.readonlyrest.com/)\) 
