@@ -1,5 +1,10 @@
 # Changelog
 
+### What's new in 1.30.1
+* **🚨Security Fix** \(ES\) [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
+* **🐞Fix** \(ES\) Regression in multi-tenancy handling
+* **🐞Fix** \(ES\) Proper handling of _snapshot/_status endpoint
+
 ### What's new in 1.30.0
 * **🚀New** \(KBN\) 7.12.x compatibility
 * **🚀New** \(ES\) [LDAP connector circuit breaker](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#circuit-breaker)
@@ -11,10 +16,10 @@
 
 ### What's new in 1.29.0
 
+* **🚨Security Fix** \(ES\) Security Fix \(ES\) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409)
 * **🚀New** \(KBN\) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 \([with ROR new platform](https://beta.readonlyrest.com/)\) 
 * **🚀New** \(ES\) 7.12.1 support 
 * **🧐Enhancement** \(KBN\) logout if the credentials/metadata of the current user change in the ACL
-* **🚨Security Fix** \(ES\) Security Fix \(ES\) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409)
 
 ### What's new in 1.28.2
 
