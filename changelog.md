@@ -2,7 +2,7 @@
 
 ### What's new in 1.30.1
 * **🚨Security Fix** \(ES\) [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
-* **🚀New** \(ES\) 7.13.0 support
+* **🚀New** \(ES\) 7.13.0, 7.13.1 support
 * **🐞Fix** \(ES\) Regression in multi-tenancy handling
 * **🐞Fix** \(ES\) Proper handling of _snapshot/_status endpoint
 
