@@ -1,3 +1,7 @@
+---
+description: "⚠ Nothing to see here, this code is now generally available for Kibana >= 7.9.0 \U0001F389"
+---
+
 # \[Beta\] Enterprise New Platform
 
 ## How can I get a build?

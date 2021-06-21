@@ -1,19 +1,21 @@
 # Changelog
 
 ### What's new in 1.30.1
+
 * **🚨Security Fix** \(ES\) [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
 * **🚀New** \(ES\) 7.13.0, 7.13.1 support
 * **🐞Fix** \(ES\) Regression in multi-tenancy handling
-* **🐞Fix** \(ES\) Proper handling of _snapshot/_status endpoint
+* **🐞Fix** \(ES\) Proper handling of \_snapshot/\_status endpoint
 
 ### What's new in 1.30.0
+
 * **🚀New** \(KBN\) 7.12.x compatibility
 * **🚀New** \(ES\) [LDAP connector circuit breaker](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#circuit-breaker)
 * **🧐Enhancement** \(ES\) [Username with wildcard support in users section](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#groups) and [groups mapping](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#group-mapping)
-* **🧐Enhancement** \(KBN < 7.9.x\) OIDC errors visibility
-* **🧐Enhancement** \(KBN < 7.9.x\) Smarter session probe algorithm
-* **🐞Fix** \(KBN >= 7.9.x\) [Load CertificateAuthorities as an array if not specified as an array](https://forum.readonlyrest.com/t/kibana-crash-at-startup-with-the-new-7-10-2-version/1840)
-* **🐞Fix** \(KBN < 7.9.x\) Don't hide visualizations list search box in RO mode
+* **🧐Enhancement** \(KBN &lt; 7.9.x\) OIDC errors visibility
+* **🧐Enhancement** \(KBN &lt; 7.9.x\) Smarter session probe algorithm
+* **🐞Fix** \(KBN &gt;= 7.9.x\) [Load CertificateAuthorities as an array if not specified as an array](https://forum.readonlyrest.com/t/kibana-crash-at-startup-with-the-new-7-10-2-version/1840)
+* **🐞Fix** \(KBN &lt; 7.9.x\) Don't hide visualizations list search box in RO mode
 
 ### What's new in 1.29.0
 

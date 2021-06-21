@@ -1005,12 +1005,13 @@ readonlyrest:
 
 `groups: ["group1", "group2"]`
 
-Limit access to members of specific user groups. The members and groups are defined in `users` section. 
+Limit access to members of specific user groups. The members and groups are defined in `users` section.
 
 The single entry inside the `users` section tells us that:
+
 * a given member with a username matching one of patterns in the `username` array ...
 * belongs to groups listed in the `groups` array ...
-* when he can be authenticated or/and authorized by auth rule(s)
+* when he can be authenticated or/and authorized by auth rule\(s\)
 
 In general it looks like this:
 
@@ -1411,7 +1412,7 @@ _Example: rules are associated to groups \(instead of users\) and users-group as
 
 ### Group mapping
 
-Sometimes we'd like to take advantage of roles existing in external systems (like LDAP). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](./elasticsearch-details/groups-rule-mapping.md).
+Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](https://github.com/beshu-tech/readonlyrest-docs/tree/cd4594859f29f4e3a1504d8630f8afae22176532/elasticsearch-details/groups-rule-mapping.md).
 
 ### Username case sensitivity
 
@@ -1693,6 +1694,7 @@ Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Acc
 The LDAP connector is equipped by default with the circuit breaker functionality. The circuit breaker is able to disable connector from sending new requests to the server when it doesn't respond properly. After receiving a configured number of failed responses in a row, the circuit breaker feature disables sending new requests by terminating them immediately with exception. After a configurable amount of time, the circuit breaker feature allows one request to pass. If it succeeds, CB goes back to normal operation. If not, a test request is sent again after a configurable amount of time. General description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
 
 The circuit breaker feature can be customised to adapt to specific needs using the following configuration parameters:
+
 * `max_retries` is the number of failed responses in a row which will trigger circuit breaker.
 * `reset_duration` defines how long the circuit breaker feature will block the incoming requests before starting to send one test request. to the LDAP server.
 
@@ -2088,3 +2090,4 @@ Of course, if you do not use ssl, disable it.
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
       indices: ["metricbeat-*", "log_metricbeat*"]
 ```
+
