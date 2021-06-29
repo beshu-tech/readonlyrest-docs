@@ -1,5 +1,21 @@
 # Changelog
 
+### What's new in 1.31.0
+
+* **🚨Security Fix** (KBN) prevent direct navigation to hidden apps
+* **🚀New** (KBN) new minimal Kibana Management menu when "Management" app is hidden
+* **🧐Enhancement** (KBN) logout active Kibana session if key metadata/permissions change in ACL
+* **🧐Enhancement** (KBN) better port number validation
+* **🧐Enhancement** (ES) improved cluster indices handling
+* **🐞Fix** (ES) [Kibana access rule regression fix](https://forum.readonlyrest.com/t/es7-11-2-1-30-0-enterprise-two-contexts-rw-ro-issue/1855)
+* **🐞Fix** (ES) search template API handling with `filter` and `fields` rule
+* **🐞Fix** (ES) multi-tenancy issue when groups_provider_authorization is used
+* **🐞Fix** (ES) `x_forwarded_for` rule: wrong handling of / request
+* **🐞Fix** (ES) Issue with handling ResizeRequest which made it unable to upgrade Kibana to version 7.12.0+
+* **🐞Fix** (KBN) some Kibana requests arrive to ES without credentials
+* **🐞Fix** (KBN) inconsistent read after write in session storage lead to issues with round robin load balancing
+* **🐞Fix** (KBN) bad multipart POST handling leads to saved object import errors
+
 ### What's new in 1.30.1
 
 * **🚨Security Fix** \(ES\) [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
