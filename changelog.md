@@ -3,7 +3,7 @@
 ### What's new in 1.31.0
 
 * **🚨Security Fix** (KBN) prevent direct navigation to hidden apps
-* **🚀New** (ES) 7.13.2, 7.13.3, 6.8.17 support
+* **🚀New** (ES) 7.13.4, 7.13.3, 7.13.2, 6.8.17 support
 * **🚀New** (KBN) new minimal Kibana Management menu when "Management" app is hidden
 * **🧐Enhancement** (KBN) logout active Kibana session if key metadata/permissions change in ACL
 * **🧐Enhancement** (KBN) better port number validation
