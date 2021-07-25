@@ -6,16 +6,16 @@
 * **🚨Security Fix** (KBN) upgraded dependencies due to security fixes
 * **🚨Security Fix** (KBN) disable x-powered-by to avoid fingerprinting
 * **🚀New** (KBN) Support for Kibana 7.13.x series
-* **🐞Fix** (ES) [incomplete response for request GET */_alias](https://forum.readonlyrest.com/t/ror-return-incomplete-response-for-request-get-alias/1872)
-* **🐞Fix** (ES) not allowed aliases should not present in a response for a Get Index API request
-* **🐞Fix** (KBN) fix dev-tools and import saved object not working
-* **🐞Fix** (KBN) honor `requestHeadersWhitelist` in user metadata request (login)
-* **🐞Fix** \(KBN &lt; 7.9.x\) do not crash on invalid metadata
 * **🧐Enhancement** (KBN) honor configurations coming from ENV and CLI options
 * **🧐Enhancement** (KBN) when metadata has no username, login must be denied
 * **🧐Enhancement** (KBN) audit tab ported to new platform
 * **🧐Enhancement** (ES) improved ES resources cleaning when ROR returns FORBIDDEN response
 * **🧐Enhancement** \(KBN &lt; 7.9.x\) auto clean-up dangling SAML/OIDC cookies
+* **🐞Fix** (ES) [incomplete response for request GET */_alias](https://forum.readonlyrest.com/t/ror-return-incomplete-response-for-request-get-alias/1872)
+* **🐞Fix** (ES) not allowed aliases should not present in a response for a Get Index API request
+* **🐞Fix** (KBN) fix dev-tools and import saved object not working
+* **🐞Fix** (KBN) honor `requestHeadersWhitelist` in user metadata request (login)
+* **🐞Fix** \(KBN &lt; 7.9.x\) do not crash on invalid metadata
  
 ### What's new in 1.31.0
 
