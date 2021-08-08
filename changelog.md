@@ -5,6 +5,7 @@
 * **🚨Security Fix** (ES) [Apache Commons Codec vulnerability](https://forum.readonlyrest.com/t/security-vulnerability-for-common-codec-1-10/1906)
 * **🚨Security Fix** (KBN) upgraded dependencies due to security fixes
 * **🚨Security Fix** (KBN) disable x-powered-by to avoid fingerprinting
+* **🚀New** (ES) Support for ES 7.14.0 & 6.8.18
 * **🚀New** (KBN) Support for Kibana 7.13.x series
 * **🧐Enhancement** (KBN) honor configurations coming from ENV and CLI options
 * **🧐Enhancement** (KBN) when metadata has no username, login must be denied
