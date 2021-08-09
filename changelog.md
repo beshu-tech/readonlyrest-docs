@@ -1,5 +1,14 @@
 # Changelog
 
+### What's new in 1.33.0
+
+* **🚨Security Fix** (KBN) xml-crypto dependency update
+* **🚀New** (KBN) New Support for 7.14.0, 6.8.18
+* **🧐Enhancement** (KBN) Parse credentials in /api/* requests, no need for valid cookie. Supersedes whitelistedPaths
+* **🐞Fix** (KBN)Caching issues switching tenancies with dark/light theme
+* **🐞Fix** (KBN) Newly created Space shows in all tenancies when using default kibana index
+* **🐞Fix** \(KBN &lt; 7.9.x\) nextUrl works again with SAML and OIDC
+
 ### What's new in 1.32.0
 
 * **🚨Security Fix** (ES) [Apache Commons Codec vulnerability](https://forum.readonlyrest.com/t/security-vulnerability-for-common-codec-1-10/1906)
