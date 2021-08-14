@@ -1,5 +1,11 @@
 # Changelog
 
+### What's new in 1.33.1
+
+* **🐞Fix** (KBN) Error in patching for 7.14.0
+* **🐞Fix** (KBN) clearSessionOnEvents now works as expected
+* **🐞Fix** (KBN) login form font loads correctly
+
 ### What's new in 1.33.0
 
 * **🚨Security Fix** (KBN) xml-crypto dependency update
