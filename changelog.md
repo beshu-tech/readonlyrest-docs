@@ -2,6 +2,7 @@
 
 ### What's new in 1.33.1
 
+* **🚀New** (ES) New Support for 7.14.1
 * **🐞Fix** (KBN) Error in patching for 7.14.0
 * **🐞Fix** (KBN) clearSessionOnEvents now works as expected
 * **🐞Fix** (KBN) login form font loads correctly
