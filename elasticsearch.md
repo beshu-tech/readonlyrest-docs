@@ -1548,136 +1548,32 @@ indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
 ```
 
 ### LDAP connector
+#### Configuration notes
 
-In this example, users credentials are validated via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
+##### Business configuration
+Usually we would like to configure three main things for LDAP connector:
+1. a way to **authenticate client** (LDAP binding):
+    * `bind_dn` (string, optional, default: [not present]) - [TODO]
+    * `bind_password` (string, optional, default: [not present]) - [TODO]
+2. a way to **search users**. In ROR it can be done using following YAML keys:
+   * `search_user_base_DN` (string, required) - should refer to the base Distinguished Name of the users to be authenticated
+   * `user_id_attribute` (string, optional, default: `uid`) - should refer to a unique ID for the user within the base DN
 
-**Simpler: authentication and authorization in one rule**
+3. a way to **search user groups**. In ROR, depending on LDAP schema, a relation between users and groups can be defined in:
+   1. Group entry - it has an attribute which refers to User entries:
+      * `search_groups_base_DN` (required) - should refer to the base Distinguished Name of the groups to which these users may belong
+      * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
+      * `unique_member_attribute` (string, optional, default: `uniqueMember`) - is the LDAP group object attribute that contains the names of the ROR groups
+      * `group_search_filter` (string, optional, default: `(cn=*)`) - is the LDAP search filter (or filters) to limit the user groups returned by LDAP. By default, this filter will be joined (with `&`) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute=user_dn))`.
+      * `group_attribute_is_dn` (boolean, optional, default: `true`) -
+        * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))` 
+        * then `false` the search filer will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_ID_ATTRIBUTE_VALUE}))`
+   2. User entry - it has an attribute which refers to Group entries:
+      * `search_groups_base_DN` (string, required) - should refer to the base Distinguished Name of the groups to which these users may belong
+      * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
+      * `groups_from_user_attribute` (string, optional, default: `memberOf`) -  is the LDAP user object attribute that contains the names of the ROR groups
 
-```text
-readonlyrest:
-
-    access_control_rules:
-
-    - name: Accept requests from users in group team1 on index1
-      type: allow                                           # Optional, defaults to "allow", will omit from now on.
-      ldap_auth:
-        name: "ldap1"                                       # ldap name from below 'ldaps' section
-        groups: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
-      indices: ["index1"]
-
-    - name: Accept requests from users in group team2 on index2
-      ldap_auth:
-        name: "ldap2"
-        groups: ["g3"]
-        cache_ttl_in_sec: 60
-      indices: ["index2"]
-
-    ldaps:
-
-    - name: ldap1
-      host: "ldap1.example.com"
-      port: 389                                                     # optional, default 389
-      ssl_enabled: false                                            # optional, default true
-      ssl_trust_all_certs: true                                     # optional, default false
-      ignore_ldap_connectivity_problems: true                       # optional, default false
-      bind_dn: "cn=admin,dc=example,dc=com"                         # optional, skip for anonymous bind
-      bind_password: "password"                                     # optional, skip for anonymous bind
-      search_user_base_DN: "ou=People,dc=example,dc=com"
-      user_id_attribute: "uid"                                      # optional, default "uid"
-      search_groups_base_DN: "ou=Groups,dc=example,dc=com"
-      unique_member_attribute: "uniqueMember"                       # optional, default "uniqueMember"
-      connection_pool_size: 10                                      # optional, default 30
-      connection_timeout_in_sec: 10                                 # optional, default 1
-      request_timeout_in_sec: 10                                    # optional, default 1
-      cache_ttl_in_sec: 60                                          # optional, default 0 - cache disabled
-      group_search_filter: "(objectClass=group)(cn=application*)"   # optional, default (cn=*)
-      group_name_attribute: "cn"                                    # optional, default "cn"
-      circuit_breaker:                                              # optional section, default configuration used when not declared
-        max_retries: 2                                              # required, default 10 when circuit_breaker is not declared
-        reset_duration: 5s                                          # required, default 10s when circuit_breaker is not declared
-
-    # High availability LDAP settings (using "hosts", rather than "host")
-    - name: ldap2
-      hosts:                                                        # HA style, alternative to "host"
-      - "ldaps://ssl-ldap2.foo.com:636"                             # can use ldap:// or ldaps:// (for ssl)
-      - "ldaps://ssl-ldap3.foo.com:636"                             # the port is declared in line
-      ha: "ROUND_ROBIN"                                             # optional, default "FAILOVER"
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
-
-    # Server discovery variant
-    - name: ldap3
-      server_discovery: true                                        # Using _ldaps._tcp SRV DNS record for getting LDAP addresses
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
-```
-
-**Advanced: authentication and authorization in separate rules**
-
-```text
-readonlyrest:
-    enable: true
-    response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
-
-    access_control_rules:
-
-    - name: Accept requests to index1 from users with valid LDAP credentials, belonging to LDAP group 'team1'
-      ldap_authentication: "ldap1"  
-      ldap_authorization:
-        name: "ldap1"                                       # ldap name from 'ldaps' section
-        groups: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
-      indices: ["index1"]
-
-    - name: Accept requests to index2 from users with valid LDAP credentials, belonging to LDAP group 'team2'
-      ldap_authentication:
-        name: "ldap2"  
-        cache_ttl_in_sec: 60
-      ldap_authorization:
-        name: "ldap2"
-        groups: ["g3"]
-        cache_ttl_in_sec: 60
-      indices: ["index2"]
-
-    ldaps:
-
-    - name: ldap1
-      host: "ldap1.example.com"
-      port: 389                                                 # default 389
-      ssl_enabled: false                                        # default true
-      ssl_trust_all_certs: true                                 # default false
-      ignore_ldap_connectivity_problems: true                   # optional, default false
-      bind_dn: "cn=admin,dc=example,dc=com"                     # skip for anonymous bind
-      bind_password: "password"                                 # skip for anonymous bind
-      search_user_base_DN: "ou=People,dc=example,dc=com"
-      user_id_attribute: "uid"                                  # default "uid"
-      search_groups_base_DN: "ou=Groups,dc=example,dc=com"
-      unique_member_attribute: "uniqueMember"                   # default "uniqueMember"
-      connection_pool_size: 10                                  # default 30
-      connection_timeout_in_sec: 10                             # default 1
-      request_timeout_in_sec: 10                                # default 1
-      cache_ttl_in_sec: 60                                      # default 0 - cache disabled
-
-    # High availability LDAP settings (using "hosts", rather than "host")
-    - name: ldap2
-      hosts:                                                        # HA style, alternative to "host"
-      - "ldaps://ssl-ldap2.foo.com:636"                             # can use ldap:// or ldaps:// (for ssl)
-      - "ldaps://ssl-ldap3.foo.com:636"                             # the port is declared in line
-      ha: "ROUND_ROBIN"                                             # optional, default "FAILOVER"
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
-```
-
-#### LDAP configuration notes
-
-* `search_user_base_DN` should refer to the base Distinguished Name of the users to be authenticated.
-* `search_groups_base_DN` should refer to the base Distinguished Name of the groups to which these users may belong.
-* By default, users in `search_user_base_DN` should contain a `uid` LDAP attribute referring to a unique ID for the user within the base DN. An alternative attribute name can be specified via the optional `user_id_attribute` configuration item.
-* By default, groups in `search_groups_base_DN` should contain a `uniqueMember` LDAP attribute referring to the full DNs of the users that belong to the group. \(There may be any number of occurrences of this attribute within a particular group, as any number of users may belong to the group.\) An alternative attribute name can be specified via the optional `unique_member_attribute` configuration item.
-* `group_name_attribute` is the LDAP group object attribute that contains the names of the ROR groups
-* `group_search_filter` is the LDAP search filter \(or filters\) to limit the user groups returned by LDAP. By default, this filter will be joined \(with `&`\) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: \(&YOUR\_GROUP\_SEARCH\_FILTER\(unique\_member\_attribute=user\_dn\)\). The `unique_member_attribute` can be set to use the value of `user_id_attribute` by setting `group_attribute_is_dn: false`.
-* `ignore_ldap_connectivity_problems` set to true allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default ROR starts only after it's able to connect to each server.
-
-Examples:
+Examples: 
 
 ```text
 group_search_filter: "(objectClass=group)"
@@ -1685,9 +1581,32 @@ group_search_filter: "(objectClass=group)(cn=application*)"
 group_search_filter: "(cn=*)" # basically no group filtering
 ```
 
-\(An example OpenLDAP configuration file can be found in our tests: /src/test/resources/test\_example.ldif\)
+(An example OpenLDAP schema file can be found in [our tests](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/test/resources/test_example.ldif))
 
-Caching can be configured per LDAP client \(see `ldap1`\) or per rule \(see `Accept requests from users in group team2 on index2` rule\)
+##### Technical configuration
+
+There are also pleanty of technical settings which can be useful:
+* an LDAP server address:
+    * single host:
+      * `host` (String, required) - LDAP server address
+      * `port` (Integer, optional, default: `389`) - LDAP server port
+      * `ssl_enabled` (Boolean, optional, default: `true`) - enables or disables SSL for LDAP connection 
+    * several hosts:
+      * `hosts` (List, required) - list of LDAP server addresses. The address should look like this `ldap://[HOST]:[PORT]` or/and `ldaps://[HOST]:[PORT]`
+      * `ha` (enum: [`FAILOVER`, `ROUND_ROBIN`], optional, default: `FAILOVER`) - provides high availability strategy for LDAP
+    * auto discovery:
+      * `server_discovery` (Boolean|YAML object, optional, default: `false`) - for details see [LDAP server discovery section](#ldap-server-discovery)
+* `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server 
+* `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server 
+* `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving whole response from LDAP server
+* `ssl_trust_all_certs` (Boolean, optional, default: `false`) - if it is set to `true`, untrusted certificates will be accepted
+* `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default ROR starts only after it's able to connect to each server
+* `cache_ttl` (Duration, optional, default: `0 sec`) - tells how long LDAP connector should cache queries results (for default see [caching section](#caching))
+* `circuit_breaker` (YAML object, optional, default: `max_retries: 10`, `reset_duration: 10 sec`) - for details see [circuit breaker section](#circuit-breaker)
+
+#### Caching
+[TBD]
+Caching can be configured per LDAP client (see `ldap1`) or per rule (see `Accept requests from users in group team2 on index2` rule)
 
 #### Circuit Breaker
 
@@ -1733,6 +1652,124 @@ Example:
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
+#### ROR with LDAP - examples 
+In this example, users credentials are validated via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
+
+**Simpler: authentication and authorization in one rule**
+
+```text
+readonlyrest:
+
+    access_control_rules:
+
+    - name: Accept requests from users in group team1 on index1
+      type: allow                                           # Optional, defaults to "allow", will omit from now on.
+      ldap_auth:
+        name: "ldap1"                                       # ldap name from below 'ldaps' section
+        groups: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
+      indices: ["index1"]
+
+    - name: Accept requests from users in group team2 on index2
+      ldap_auth:
+        name: "ldap2"
+        groups: ["g3"]
+        cache_ttl_in_sec: 60
+      indices: ["index2"]
+
+    ldaps:
+
+    - name: ldap1
+      host: "ldap1.example.com"
+      port: 389                                                  
+      ssl_enabled: false                                         
+      ssl_trust_all_certs: true                                  
+      ignore_ldap_connectivity_problems: true                   
+      bind_dn: "cn=admin,dc=example,dc=com"                     
+      bind_password: "password"                                 
+      search_user_base_DN: "ou=People,dc=example,dc=com"
+      user_id_attribute: "uid"                                  
+      search_groups_base_DN: "ou=Groups,dc=example,dc=com"
+      unique_member_attribute: "uniqueMember"                   
+      connection_pool_size: 10                                  
+      connection_timeout: 10s                                   
+      request_timeout: 10s                                      
+      cache_ttl: 60s                                            
+      group_search_filter: "(objectClass=group)(cn=application*)"
+      group_name_attribute: "cn"                                 
+      circuit_breaker:                                           
+        max_retries: 2                                           
+        reset_duration: 5s                                       
+
+    # High availability LDAP settings (using "hosts", rather than "host")
+    - name: ldap2
+      hosts:                                           
+      - "ldaps://ssl-ldap2.foo.com:636"                
+      - "ldaps://ssl-ldap3.foo.com:636"                
+      ha: "ROUND_ROBIN"                                
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+
+    # Server discovery variant
+    - name: ldap3
+      server_discovery: true               
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+```
+
+**Advanced: authentication and authorization in separate rules**
+
+```text
+readonlyrest:
+    enable: true
+    response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
+
+    access_control_rules:
+
+    - name: Accept requests to index1 from users with valid LDAP credentials, belonging to LDAP group 'team1'
+      ldap_authentication: "ldap1"  
+      ldap_authorization:
+        name: "ldap1"                                       # ldap name from 'ldaps' section
+        groups: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
+      indices: ["index1"]
+
+    - name: Accept requests to index2 from users with valid LDAP credentials, belonging to LDAP group 'team2'
+      ldap_authentication:
+        name: "ldap2"  
+        cache_ttl_in_sec: 60
+      ldap_authorization:
+        name: "ldap2"
+        groups: ["g3"]
+        cache_ttl_in_sec: 60
+      indices: ["index2"]
+
+    ldaps:
+
+    - name: ldap1
+      host: "ldap1.example.com"
+      port: 389                          
+      ssl_enabled: false                 
+      ssl_trust_all_certs: true          
+      ignore_ldap_connectivity_problems: true                   
+      bind_dn: "cn=admin,dc=example,dc=com"                     
+      bind_password: "password"                                 
+      search_user_base_DN: "ou=People,dc=example,dc=com"
+      user_id_attribute: "uid"                                  
+      search_groups_base_DN: "ou=Groups,dc=example,dc=com"
+      unique_member_attribute: "uniqueMember"                   
+      connection_pool_size: 10                                  
+      connection_timeout: 10s                                   
+      request_timeout: 10s                                      
+      cache_ttl: 60s                                            
+
+    # High availability LDAP settings (using "hosts", rather than "host")
+    - name: ldap2
+      hosts:                                                    
+      - "ldaps://ssl-ldap2.foo.com:636"                         
+      - "ldaps://ssl-ldap3.foo.com:636"                         
+      ha: "ROUND_ROBIN"                                         
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+```
 ### External Basic Auth
 
 ReadonlyREST will forward the received `Authorization` header to a website of choice and evaluate the returned HTTP status code to verify the provided credentials. This is useful if you already have a web server with all the credentials configured and the credentials are passed over the `Authorization` header.
