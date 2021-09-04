@@ -1,5 +1,14 @@
 # Changelog
 
+### What's new in 1.34.0
+
+* **🧐Enhancement** (KBN) VS Code style YAML editor
+* **🧐Enhancement** (KBN) Skip rendering hidden apps entirely
+* **🧐Enhancement** (KBN) Redesigned ROR Menu
+* **🧐Enhancement** (KBN) Dark theme aware ROR UI
+* **🐞Fix** (KBN) Broken Kibana Spaces
+* **🐞Fix** (KBN) cookiePass config parsing broke load balancing
+
 ### What's new in 1.33.1
 
 * **🚀New** (ES) New Support for 7.14.1
