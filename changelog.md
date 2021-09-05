@@ -1,5 +1,15 @@
 # Changelog
 
+### What's new in 1.34.0
+
+* **🚀New** (KBN) VS Code style YAML editor
+* **🚀New** (KBN) Skip rendering hidden app groups entirely
+* **🚀New** (KBN) Redesigned ROR Menu
+* **🚀New** (KBN) Dark theme awareness
+* **🐞Fix** (KBN) Broken Kibana Spaces
+* **🐞Fix** (KBN) Support Kibana's undocumented "server.ssl.*" settings
+* **🐞Fix** (KBN) cookiePass config parsing broke load balancing
+
 ### What's new in 1.33.1
 
 * **🚀New** (ES) New Support for 7.14.1
