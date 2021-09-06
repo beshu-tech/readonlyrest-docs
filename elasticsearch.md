@@ -1039,7 +1039,49 @@ For details see [User management](elasticsearch.md#users-and-groups) .
 
 **⚠️DEPRECATED** Browser session timeout \(via cookie\). Example values 1w \(one week\), 10s \(10 seconds\), 7d \(7 days\), etc. NB: not available for Elasticsearch 2.x.
 
+#### `ldap_authentication`
+
+simple version: 
+`ldap_authentication: ldap1`
+
+extended version:
+```yaml
+ldap_authentication:
+  name: ldap1
+  cache_ttl: 10 sec
+```
+
+It handles LDAP authentication only using configured LDAP connector (here `ldap1`). Check [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+
+#### `ldap_authorization`
+
+```yaml
+ldap_authorization:
+  name: "ldap1"
+  groups: ["group3"]
+  cache_ttl: 10 sec
+```
+
+It handles LDAP authorization only using configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured groups. Check [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+
 #### `ldap_auth`
+
+```yaml
+ldap_auth:
+  name: "ldap1"
+  groups: ["group3"]
+```
+
+It handles both, authentication and authorization using configured LDAP connector (here `ldap1`). The same functionality can be achieved using two rules described above:
+
+```yaml
+ldap_authentication: ldap1
+ldap_authorization:
+  name: "ldap1"
+  groups: ["group3"]
+```
+
+Check [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
 See below, the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
@@ -1424,7 +1466,6 @@ readonlyrest:
 ```
 
 By default, usernames are case-sensitive `username_case_sensitivity: case_sensitive`. By setting `username_case_sensitivity: case_sensitive` username comparison will be case-insensitive in any rule.
-
 ### Environmental variables
 
 Anywhere in `readonlyrest.yml` you can use the espression `${MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
@@ -1510,7 +1551,7 @@ readonlyrest:
 
 #### Dynamic variables from JWT claims
 
-The JWT token is an authentication string passed generally as a header or a query parameter to the web browser. If you squint, you can see it's a concatenation of three base64 encoded strings. If you base64 decode the middle string, you can see the "claims object". That is, the object containing the current user's metadata.
+The JWT token is an authentication string passed generally as a header or a query parameter to the web browser. If you squint, you can see it's a concatenation of three base64 encoded strings. If you base64 decode the middle string, you can see the "claims object". That is the object containing the current user's metadata.
 
 Here is an example of JWT claims object.
 
@@ -1551,16 +1592,16 @@ indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
 #### Configuration notes
 
 ##### Business configuration
-Usually we would like to configure three main things for LDAP connector:
-1. a way to **authenticate client** (LDAP binding):
-    * `bind_dn` (string, optional, default: [not present]) - [TODO]
-    * `bind_password` (string, optional, default: [not present]) - [TODO]
-2. a way to **search users**. In ROR it can be done using following YAML keys:
+Usually, we would like to configure three main things for LDAP connector:
+1. a way to **authenticate client** (LDAP binding; used by all LDAP rules):
+    * `bind_dn` (string, optional, default: [not present]) - a username used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
+    * `bind_password` (string, optional, default: [not present]) - a password used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
+2. a way to **search users**. In ROR it can be done using the following YAML keys (used by all LDAP rules):
    * `search_user_base_DN` (string, required) - should refer to the base Distinguished Name of the users to be authenticated
    * `user_id_attribute` (string, optional, default: `uid`) - should refer to a unique ID for the user within the base DN
 
-3. a way to **search user groups**. In ROR, depending on LDAP schema, a relation between users and groups can be defined in:
-   1. Group entry - it has an attribute which refers to User entries:
+3. a way to **search user groups** (NOT used by [`ldap_authentication`](#ldap_authentication) rule). In ROR, depending on LDAP schema, a relation between users and groups can be defined in:
+   1. Group entry - it has an attribute that refers to User entries:
       * `search_groups_base_DN` (required) - should refer to the base Distinguished Name of the groups to which these users may belong
       * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
       * `unique_member_attribute` (string, optional, default: `uniqueMember`) - is the LDAP group object attribute that contains the names of the ROR groups
@@ -1568,7 +1609,7 @@ Usually we would like to configure three main things for LDAP connector:
       * `group_attribute_is_dn` (boolean, optional, default: `true`) -
         * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))` 
         * then `false` the search filer will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_ID_ATTRIBUTE_VALUE}))`
-   2. User entry - it has an attribute which refers to Group entries:
+   2. User entry - it has an attribute that refers to Group entries:
       * `search_groups_base_DN` (string, required) - should refer to the base Distinguished Name of the groups to which these users may belong
       * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
       * `groups_from_user_attribute` (string, optional, default: `memberOf`) -  is the LDAP user object attribute that contains the names of the ROR groups
@@ -1585,7 +1626,7 @@ group_search_filter: "(cn=*)" # basically no group filtering
 
 ##### Technical configuration
 
-There are also pleanty of technical settings which can be useful:
+There are also plenty of technical settings which can be useful:
 * an LDAP server address:
     * single host:
       * `host` (String, required) - LDAP server address
@@ -1594,32 +1635,31 @@ There are also pleanty of technical settings which can be useful:
     * several hosts:
       * `hosts` (List, required) - list of LDAP server addresses. The address should look like this `ldap://[HOST]:[PORT]` or/and `ldaps://[HOST]:[PORT]`
       * `ha` (enum: [`FAILOVER`, `ROUND_ROBIN`], optional, default: `FAILOVER`) - provides high availability strategy for LDAP
-    * auto discovery:
+    * auto-discovery:
       * `server_discovery` (Boolean|YAML object, optional, default: `false`) - for details see [LDAP server discovery section](#ldap-server-discovery)
 * `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server 
 * `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server 
-* `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving whole response from LDAP server
+* `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving a whole response from LDAP server
 * `ssl_trust_all_certs` (Boolean, optional, default: `false`) - if it is set to `true`, untrusted certificates will be accepted
-* `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default ROR starts only after it's able to connect to each server
+* `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default, ROR starts only after it's able to connect to each server
 * `cache_ttl` (Duration, optional, default: `0 sec`) - tells how long LDAP connector should cache queries results (for default see [caching section](#caching))
 * `circuit_breaker` (YAML object, optional, default: `max_retries: 10`, `reset_duration: 10 sec`) - for details see [circuit breaker section](#circuit-breaker)
 
 #### Caching
-[TBD]
-Caching can be configured per LDAP client (see `ldap1`) or per rule (see `Accept requests from users in group team2 on index2` rule)
+Too many calls made by ROR to our LDAP service can sometimes be problematic (eg. when one LDAP connector is used in many rules). The problem can be simply solved by using caching functionality. Caching can be configured per LDAP connector or per LDAP rule (see [`ldap_auth`](#ldap_auth), [`ldap_authentication`](#ldap_authentication), [`ldap_authorization`](#ldap_authorization) rules). By default cache is diabled. We can enabled it by set `cache_ttl` > `0 sec`. In the cache will be stored only results of successful requests - info about authentication result and/or returned LDAP groups for the given credentials. When LDAP connector level cache is used any rule that use the connector can take advantage of cached results. When we configure `cache_ttl` at LDAP rule level, the results of LDAP calls made by the rule will be stored in cache. Other LDAP rules won't have access to this cache. 
 
 #### Circuit Breaker
 
-The LDAP connector is equipped by default with the circuit breaker functionality. The circuit breaker is able to disable connector from sending new requests to the server when it doesn't respond properly. After receiving a configured number of failed responses in a row, the circuit breaker feature disables sending new requests by terminating them immediately with exception. After a configurable amount of time, the circuit breaker feature allows one request to pass. If it succeeds, CB goes back to normal operation. If not, a test request is sent again after a configurable amount of time. General description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
+The LDAP connector is equipped by default with circuit breaker functionality. The circuit breaker can disable the connector from sending new requests to the server when it doesn't respond properly. After receiving a configured number of failed responses in a row, the circuit breaker feature disables sending new requests by terminating them immediately with an exception. After a configurable amount of time, the circuit breaker feature allows one request to pass. If it succeeds, CB goes back to normal operation. If not, a test request is sent again after a configurable amount of time. A general description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
 
-The circuit breaker feature can be customised to adapt to specific needs using the following configuration parameters:
+The circuit breaker feature can be customized to adapt to specific needs using the following configuration parameters:
 
-* `max_retries` is the number of failed responses in a row which will trigger circuit breaker.
+* `max_retries` is the number of failed responses in a row that will trigger the circuit breaker.
 * `reset_duration` defines how long the circuit breaker feature will block the incoming requests before starting to send one test request. to the LDAP server.
 
 #### LDAP Server discovery
 
-It is possible for the LDAP connector to get all LDAP hostnames from DNS server rather than from configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
+The LDAP connector can get all LDAP hostnames from DNS server rather than from the configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
 
 The simplest configuration example of an LDAP connector instance using server discovery is:
 
@@ -1635,8 +1675,8 @@ This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV rec
 The server discovery mechanism can be optionally configured further, by adding a few more configuration parameters, all of which are optional:
 
 * `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
-* `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default the system DNS is used.
-* `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in cache. Default is 1h.
+* `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default, the system DNS is used.
+* `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in the cache. Default is 1h.
 * `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used.
 
 Example:
@@ -1653,7 +1693,7 @@ Example:
 ```
 
 #### ROR with LDAP - examples 
-In this example, users credentials are validated via LDAP. The groups associated to each validated users are resolved using the same LDAP server.
+In this example, users' credentials are validated via LDAP. The groups associated with each validated user, are resolved using the same LDAP server.
 
 **Simpler: authentication and authorization in one rule**
 
@@ -1735,11 +1775,11 @@ readonlyrest:
     - name: Accept requests to index2 from users with valid LDAP credentials, belonging to LDAP group 'team2'
       ldap_authentication:
         name: "ldap2"  
-        cache_ttl_in_sec: 60
+        cache_ttl: 60s
       ldap_authorization:
         name: "ldap2"
         groups: ["g3"]
-        cache_ttl_in_sec: 60
+        cache_ttl: 60s
       indices: ["index2"]
 
     ldaps:
