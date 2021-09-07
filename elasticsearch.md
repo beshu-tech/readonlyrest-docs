@@ -1616,9 +1616,11 @@ There are also plenty of technical settings which can be useful:
 
 ##### Query configuration
 Usually, we would like to configure three main things for defining the way LDAP users and groups are queried:
+
 1. a way to **authenticate client** (LDAP binding; used by all LDAP rules):
     * `bind_dn` (string, optional, default: [not present]) - a username used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
     * `bind_password` (string, optional, default: [not present]) - a password used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
+    
 2. a way to **search users**. In ROR it can be done using the following YAML keys (used by all LDAP rules):
    * `search_user_base_DN` (string, required) - should refer to the base Distinguished Name of the users to be authenticated
    * `user_id_attribute` (string, optional, default: `uid`) - should refer to a unique ID for the user within the base DN
