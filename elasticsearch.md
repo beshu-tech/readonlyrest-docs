@@ -1051,7 +1051,7 @@ ldap_authentication:
   cache_ttl: 10 sec
 ```
 
-It handles LDAP authentication only using configured LDAP connector (here `ldap1`). Check [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+It handles LDAP authentication only using the configured LDAP connector (here `ldap1`). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
 #### `ldap_authorization`
 
@@ -1062,7 +1062,7 @@ ldap_authorization:
   cache_ttl: 10 sec
 ```
 
-It handles LDAP authorization only using configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured groups. Check [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured groups. Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
 #### `ldap_auth`
 
@@ -1072,7 +1072,7 @@ ldap_auth:
   groups: ["group3"]
 ```
 
-It handles both, authentication and authorization using configured LDAP connector (here `ldap1`). The same functionality can be achieved using two rules described above:
+It handles both authentication and authorization using the configured LDAP connector (here `ldap1`). The same functionality can be achieved using the two rules described below:
 
 ```yaml
 ldap_authentication: ldap1
@@ -1081,9 +1081,7 @@ ldap_authorization:
   groups: ["group3"]
 ```
 
-Check [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
-
-See below, the dedicated [LDAP section](elasticsearch.md#ldap-connector)
+See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
 #### `jwt_auth`
 
@@ -1589,10 +1587,35 @@ indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
 ```
 
 ### LDAP connector
-#### Configuration notes
+The auhentication and authorization rules for LDAP (`ldap_auth`, `ldap_authentication`, `ldap_authorization`) defined  in the rules section, always need to contain a reference by name to one LDAP connector. One or more LDAP connectors need to be defined in the section "ldaps" of the ACL.
 
-##### Business configuration
-Usually, we would like to configure three main things for LDAP connector:
+#### Configuration notes
+If you would like to experiment with LDAP and need a development server, you can stand up an OpenLDAP server configuring it using our schema file, which can be found in [our tests](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/test/resources/test_example.ldif)).
+
+##### Technical configuration
+
+There are also plenty of technical settings which can be useful:
+* an LDAP server address:
+    * single host:
+      * `host` (String, required) - LDAP server address
+      * `port` (Integer, optional, default: `389`) - LDAP server port
+      * `ssl_enabled` (Boolean, optional, default: `true`) - enables or disables SSL for LDAP connection 
+    * several hosts:
+      * `hosts` (List, required) - list of LDAP server addresses. The address should look like this `ldap://[HOST]:[PORT]` or/and `ldaps://[HOST]:[PORT]`
+      * `ha` (enum: [`FAILOVER`, `ROUND_ROBIN`], optional, default: `FAILOVER`) - provides high availability strategy for LDAP
+    * auto-discovery:
+      * `server_discovery` (Boolean|YAML object, optional, default: `false`) - for details see [LDAP server discovery section](#ldap-server-discovery)
+* `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server 
+* `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server 
+* `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving a whole response from LDAP server
+* `ssl_trust_all_certs` (Boolean, optional, default: `false`) - if it is set to `true`, untrusted certificates will be accepted
+* `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default, ROR starts only after it's able to connect to each server
+* `cache_ttl` (Duration, optional, default: `0 sec`) - tells how long LDAP connector should cache queries results (for default see [caching section](#caching))
+* `circuit_breaker` (YAML object, optional, default: `max_retries: 10`, `reset_duration: 10 sec`) - for details see [circuit breaker section](#circuit-breaker)
+
+
+##### Query configuration
+Usually, we would like to configure three main things for defining the way LDAP users and groups are queried:
 1. a way to **authenticate client** (LDAP binding; used by all LDAP rules):
     * `bind_dn` (string, optional, default: [not present]) - a username used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
     * `bind_password` (string, optional, default: [not present]) - a password used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
@@ -1622,35 +1645,11 @@ group_search_filter: "(objectClass=group)(cn=application*)"
 group_search_filter: "(cn=*)" # basically no group filtering
 ```
 
-(An example OpenLDAP schema file can be found in [our tests](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/test/resources/test_example.ldif))
-
-##### Technical configuration
-
-There are also plenty of technical settings which can be useful:
-* an LDAP server address:
-    * single host:
-      * `host` (String, required) - LDAP server address
-      * `port` (Integer, optional, default: `389`) - LDAP server port
-      * `ssl_enabled` (Boolean, optional, default: `true`) - enables or disables SSL for LDAP connection 
-    * several hosts:
-      * `hosts` (List, required) - list of LDAP server addresses. The address should look like this `ldap://[HOST]:[PORT]` or/and `ldaps://[HOST]:[PORT]`
-      * `ha` (enum: [`FAILOVER`, `ROUND_ROBIN`], optional, default: `FAILOVER`) - provides high availability strategy for LDAP
-    * auto-discovery:
-      * `server_discovery` (Boolean|YAML object, optional, default: `false`) - for details see [LDAP server discovery section](#ldap-server-discovery)
-* `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server 
-* `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server 
-* `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving a whole response from LDAP server
-* `ssl_trust_all_certs` (Boolean, optional, default: `false`) - if it is set to `true`, untrusted certificates will be accepted
-* `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default, ROR starts only after it's able to connect to each server
-* `cache_ttl` (Duration, optional, default: `0 sec`) - tells how long LDAP connector should cache queries results (for default see [caching section](#caching))
-* `circuit_breaker` (YAML object, optional, default: `max_retries: 10`, `reset_duration: 10 sec`) - for details see [circuit breaker section](#circuit-breaker)
-
 #### Caching
 Too many calls made by ROR to our LDAP service can sometimes be problematic (eg. when one LDAP connector is used in many rules). The problem can be simply solved by using caching functionality. Caching can be configured per LDAP connector or per LDAP rule (see [`ldap_auth`](#ldap_auth), [`ldap_authentication`](#ldap_authentication), [`ldap_authorization`](#ldap_authorization) rules). By default cache is diabled. We can enabled it by set `cache_ttl` > `0 sec`. In the cache will be stored only results of successful requests - info about authentication result and/or returned LDAP groups for the given credentials. When LDAP connector level cache is used any rule that use the connector can take advantage of cached results. When we configure `cache_ttl` at LDAP rule level, the results of LDAP calls made by the rule will be stored in cache. Other LDAP rules won't have access to this cache. 
 
 #### Circuit Breaker
-
-The LDAP connector is equipped by default with circuit breaker functionality. The circuit breaker can disable the connector from sending new requests to the server when it doesn't respond properly. After receiving a configured number of failed responses in a row, the circuit breaker feature disables sending new requests by terminating them immediately with an exception. After a configurable amount of time, the circuit breaker feature allows one request to pass. If it succeeds, CB goes back to normal operation. If not, a test request is sent again after a configurable amount of time. A general description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
+The LDAP connector is equipped by default with a circuit breaker functionality. The circuit breaker can disable the connector from sending new requests to the server when it doesn't respond properly. After receiving a configurable number of failed responses in a row, the circuit breaker feature disables sending any new requests by terminating them immediately with an exception. After a configurable amount of time, the circuit breaker feature allows one request to pass again. If it succeeds, the connector goes back to normal operation. If not, a test request is sent again after a configurable amount of time. A general description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
 
 The circuit breaker feature can be customized to adapt to specific needs using the following configuration parameters:
 
