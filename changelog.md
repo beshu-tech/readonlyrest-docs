@@ -2,6 +2,7 @@
 
 ### What's new in 1.34.0
 
+* **🚀New** (ES) New Support for 7.15.0
 * **🚀New** (KBN) VS Code style YAML editor
 * **🚀New** (KBN) Skip rendering hidden app groups entirely
 * **🚀New** (KBN) Redesigned ROR Menu
