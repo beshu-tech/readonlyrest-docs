@@ -1010,7 +1010,7 @@ Limit access to members of specific user groups. The members and groups are defi
 The single entry inside the `users` section tells us that:
 
 * a given member with a username matching one of patterns in the `username` array ...
-* belongs to groups listed in the `groups` array ...
+* belongs to local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of detailed mapping between local group name and external groups (example 3 below)
 * when he can be authenticated or/and authorized by auth rule\(s\)
 
 In general it looks like this:
@@ -1018,16 +1018,18 @@ In general it looks like this:
 ```yaml
   users:
   - username: ["pattern1", "pattern2", ...]
-    groups: ["group1", "group2", ...]
+    groups: ["local_group1", "local_group2", ...]
     authentication_rule: ...
 
   - username: ["pattern1", "pattern2", ...]
-    groups: ["group1", "group2", ...]
+    groups: ["local_group1", "local_group2", ...]
     authentication_rule: ...
     authorization_rule: ...
 
   - username: ["pattern1", "pattern2", ...]
-    groups: ["group1", "group2", ...]
+    groups: 
+      - local_group1: ["external_group1", "external_group2"]
+      - local_group2: ["external_group2"] 
     authentication_with_authorization_rule: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
 ```
 
