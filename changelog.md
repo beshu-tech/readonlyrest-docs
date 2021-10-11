@@ -1,5 +1,23 @@
 # Changelog
 
+### What's new in 1.35.0
+
+* **🚀New** (KBN) Support Kibana 7.14.2, 7.15.0
+* **🧐Enhancement** (ES) [local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch-details/groups-rule-mapping.md)
+* **🧐Enhancement** (ES) when ROR is starting any request is going to end up with HTTP 403 response, instead of HTTP 503
+* **🧐Enhancement** (KBN) "server.basePath" kibana option implementation
+* **🧐Enhancement** (KBN) Support full regex in kibana_hidden_apps rule
+* **🧐Enhancement** Crash if Kibana is not patched
+* **🧐Enhancement** (KBN) Honour kibana setting "logging.dest"
+* **🧐Enhancement** (KBN) Confirm before overwriting audit log dashboard
+* **🐞Fix** (ES) verbosity: error fix in case of ROR KBN login request
+* **🐞Fix** (KBN) Make alerting work on primary tenancy
+* **🐞Fix** (KBN) OIDC fix sameSite / secure cookie options
+* **🐞Fix** (KBN) Login form is stretched when long error
+* **🐞Fix** (KBN) Login form is stretched when long error
+* **🐞Fix** (KBN-PRO) [Don't send x-ror-currentgroup in PRO](https://forum.readonlyrest.com/t/upgrading-6-7-w-1-18-to-7-14-w-1-33-ldap-from-ms-active-directory-no-longer-understands-multiple-ad-group-memberships/1973/6)
+* **🐞Fix** (KBN) Resolve browser console errors on a popover close
+
 ### What's new in 1.34.0
 
 * **🚀New** (ES) New Support for 7.15.0, 7.14.2
