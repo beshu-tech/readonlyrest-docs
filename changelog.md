@@ -1,6 +1,6 @@
 # Changelog
 
-### What's new in 1.35.0
+### (2021-10-12) What's new in **ROR 1.35.0**
 
 * **🚀New** (KBN) Support Kibana 7.14.2, 7.15.0
 * **🧐Enhancement** (ES) [local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch-details/groups-rule-mapping.md)
@@ -18,7 +18,7 @@
 * **🐞Fix** (KBN-PRO) [Don't send x-ror-currentgroup in PRO](https://forum.readonlyrest.com/t/upgrading-6-7-w-1-18-to-7-14-w-1-33-ldap-from-ms-active-directory-no-longer-understands-multiple-ad-group-memberships/1973/6)
 * **🐞Fix** (KBN) Resolve browser console errors on a popover close
 
-### What's new in 1.34.0
+### (2021-09-24) What's new in **ROR 1.34.0**
 
 * **🚀New** (ES) New Support for 7.15.0, 7.14.2
 * **🚀New** (KBN) VS Code style YAML editor
@@ -29,14 +29,14 @@
 * **🐞Fix** (KBN) Support Kibana's undocumented "server.ssl.*" settings
 * **🐞Fix** (KBN) cookiePass config parsing broke load balancing
 
-### What's new in 1.33.1
+### (2021-08-14) What's new in **ROR 1.33.1**
 
 * **🚀New** (ES) New Support for 7.14.1
 * **🐞Fix** (KBN) Error in patching for 7.14.0
 * **🐞Fix** (KBN) clearSessionOnEvents now works as expected
 * **🐞Fix** (KBN) login form font loads correctly
 
-### What's new in 1.33.0
+### (2021-08-09) What's new in **ROR 1.33.0**
 
 * **🚨Security Fix** (KBN) xml-crypto dependency update
 * **🚀New** (KBN) New Support for 7.14.0, 6.8.18
@@ -45,7 +45,7 @@
 * **🐞Fix** (KBN) Newly created Space shows in all tenancies when using default kibana index
 * **🐞Fix** \(KBN &lt; 7.9.x\) nextUrl works again with SAML and OIDC
 
-### What's new in 1.32.0
+### (2021-07-25) What's new in **ROR 1.32.0**
 
 * **🚨Security Fix** (ES) [Apache Commons Codec vulnerability](https://forum.readonlyrest.com/t/security-vulnerability-for-common-codec-1-10/1906)
 * **🚨Security Fix** (KBN) upgraded dependencies due to security fixes
@@ -63,7 +63,7 @@
 * **🐞Fix** (KBN) honor `requestHeadersWhitelist` in user metadata request (login)
 * **🐞Fix** \(KBN &lt; 7.9.x\) do not crash on invalid metadata
  
-### What's new in 1.31.0
+### (2021-06-29) What's new in **ROR 1.31.0**
 
 * **🚨Security Fix** (KBN) prevent direct navigation to hidden apps
 * **🚀New** (ES) 7.13.4, 7.13.3, 7.13.2, 6.8.17 support
@@ -80,14 +80,14 @@
 * **🐞Fix** (KBN) inconsistent read after write in session storage lead to issues with round robin load balancing
 * **🐞Fix** (KBN) bad multipart POST handling leads to saved object import errors
 
-### What's new in 1.30.1
+### (2021-05-26) What's new in **ROR 1.30.1**
 
 * **🚨Security Fix** \(ES\) [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
 * **🚀New** \(ES\) 7.13.0, 7.13.1 support
 * **🐞Fix** \(ES\) Regression in multi-tenancy handling
 * **🐞Fix** \(ES\) Proper handling of \_snapshot/\_status endpoint
 
-### What's new in 1.30.0
+### (2021-05-16) What's new in **ROR 1.30.0**
 
 * **🚀New** \(KBN\) 7.12.x compatibility
 * **🚀New** \(ES\) [LDAP connector circuit breaker](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#circuit-breaker)
@@ -97,24 +97,24 @@
 * **🐞Fix** \(KBN &gt;= 7.9.x\) [Load CertificateAuthorities as an array if not specified as an array](https://forum.readonlyrest.com/t/kibana-crash-at-startup-with-the-new-7-10-2-version/1840)
 * **🐞Fix** \(KBN &lt; 7.9.x\) Don't hide visualizations list search box in RO mode
 
-### What's new in 1.29.0
+### (2021-04-09) What's new in **ROR 1.29.0**
 
 * **🚨Security Fix** \(ES\) Security Fix \(ES\) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409)
 * **🚀New** \(KBN\) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 \([with ROR new platform](https://beta.readonlyrest.com/)\) 
 * **🚀New** \(ES\) 7.12.1 support 
 * **🧐Enhancement** \(KBN\) logout if the credentials/metadata of the current user change in the ACL
 
-### What's new in 1.28.2
+### (2021-04-01) What's new in **ROR 1.28.2**
 
 * **🚨Security Fix** \(ES\) [CVE-2021-21295](https://nvd.nist.gov/vuln/detail/CVE-2021-21295)
 * **🐞Fix** \(KBN\) prevent SAML/OIDC initiated Kibana sessions from expiring after `session_timeout_minutes` despite continued interaction
 
-### What's new in 1.28.1
+### (2021-03-24) What's new in **ROR 1.28.1**
 
 * **🐞Fix** \(ES\) Getting index templates issue when no `indices` rule was used in matched block
 * **🐞Fix** \(ES\) [NPE on getting template aliases](https://forum.readonlyrest.com/t/cannot-put-index-template-template-1/1681/25)
 
-### What's new in 1.28.0
+### (2021-03-14) What's new in **ROR 1.28.0**
 
 * **🚀New** \(ES\) 7.12.0, 7.11.2 support 
 * **🚀New** \(ES\) full [Index and Component Templates API](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html) support 
@@ -125,12 +125,12 @@
 * **🐞Fix** \(KBN\) When credentials change in the ACL, make it possible to login again
 * **🐞Fix** \(KBN\) Kibana management app ID changed from "kibana:management" to "kibana:stack\_management"
 
-### What's new in 1.27.1
+### (2021-02-27) What's new in **ROR 1.27.1**
 
 * **🚨Security Fix** \(ES\) [CVE-2021-21290](https://nvd.nist.gov/vuln/detail/CVE-2021-21290)
 * **🚀New** \(ES\) 7.11.1 support 
 
-### What's new in 1.27.0
+### (2021-02-16) What's new in **ROR 1.27.0**
 
 * **🚀New** \(ES\) 7.11.0, 7.10.2, 6.8.14 support
 * **🧐Enhancement** \(KBN\) X-Forwarded-For copied from incoming request \(or filled with source IP\) before forwarding to ES
@@ -139,11 +139,11 @@
 * **🐞Fix** \(ES\) [blocks containing filter and/or fields won't match internal kibana requests, so kibana\_\* rules won't have to be placed in such blocks](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#fields)
 * **🐞Fix** \(ES\) SQL API - better handling of invalid query
 
-### What's new in 1.26.1
+### (2021-01-11) What's new in **ROR 1.26.1**
 
 * **🐞Fix** \(ES\) wrong behaviour of `kibana_access` rule for ROR actions when ADMIN value is set
 
-### What's new in 1.26.0
+### (2021-01-02) What's new in **ROR 1.26.0**
 
 * **🚨Security Fix** \(ES\) [CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35490) & [CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35491) \(removed Jackson dependency from ROR core\)
 * **🚀New** \(ES\) [New response\_fields rule](https://forum.readonlyrest.com/t/ror-1-18-9-enterprise-es-7-2-0-enable-cluster-health-without-authentication/1567)
@@ -169,7 +169,7 @@
 
 ### What's new in 1.25.0
 
-* **🚨Security Fix** \(ES\) [Common Vulnerabilities and Exposures \(CVE\)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/1728)
+* **🚨Security Fix** \(ES\) [Common Vulnerabilities and Exposures \(CVE\)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/176)
 * **🚀New** \(ES\) 7.10.0 support
 * **🚀New** \(ES\) [auth\_key\_pbkdf2 rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#auth_key_pbkdf2)
 * **🚀New** \(ES\) [Introduced configuration property defining FLS engine used by fields rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields)
