@@ -1,5 +1,8 @@
 # Changelog
 
+### (2021-10-17) What's new in **ROR 1.35.1**
+* **🚨Security Fix** (ES) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409) & [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
+
 ### (2021-10-12) What's new in **ROR 1.35.0**
 
 * **🚀New** (KBN) Support Kibana 7.15.0, 7.14.2
