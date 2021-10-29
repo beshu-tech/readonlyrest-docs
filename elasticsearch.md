@@ -315,6 +315,24 @@ readonlyrest:
 
 Similar to `ssl` for HTTP, the keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`. This config must be added to all nodes taking part in encrypted communication within cluster.
 
+##### Internode communication with XPack nodes
+
+It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.3. 
+
+To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates. 
+
+Generated `elastic-certificates.p12` could be then used in ROR node with such configuration 
+```text
+readonlyrest:
+  ssl_internode:
+    enable: true
+    keystore_file: "elastic-certificates.p12"
+    keystore_pass: [ password for generated certificate ]
+    key_pass: [ password for generated certificate ]
+    truststore_file: "elastic-certificates.p12"
+    truststore_pass: [ password for generated certificate ]
+```
+
 #### Certificate verification
 
 By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.  
@@ -2170,4 +2188,3 @@ Of course, if you do not use ssl, disable it.
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
       indices: ["metricbeat-*", "log_metricbeat*"]
 ```
-
