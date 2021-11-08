@@ -1,8 +1,18 @@
 # Changelog
 
+### (2021-10-17) What's new in **ROR 1.35.1**
+* **🚨Security Fix** (ES) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409) & [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
+* **🚀New** (KBN) Support Kibana 7.15.1
+* **🧐Enhancement** (KBN) Support "server.ssl.supportedProtocols" settings
+* **🧐Enhancement** (KBN) Support "server.ssl.cipherSuites"
+* **🧐Enhancement** (KBN) Always honor SSL cipher order
+* **🐞Fix** (KBN) Don'thide "Add/Remove field as column" in Discover app for RO users
+* **🐞Fix** (KBN) More alerting fixes (only for main tenancy)
+
 ### (2021-10-12) What's new in **ROR 1.35.0**
 
-* **🚀New** (KBN) Support Kibana 7.14.2, 7.15.0
+* **🚀New** (KBN) Support Kibana 7.15.0, 7.14.2
+* **🚀New** (ES) New Support for 7.15.1, 6.8.19, 6.8.20
 * **🧐Enhancement** (ES) [local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch-details/groups-rule-mapping.md)
 * **🧐Enhancement** (ES) when ROR is starting any request is going to end up with HTTP 403 response, instead of HTTP 503
 * **🧐Enhancement** (KBN) "server.basePath" kibana option implementation
