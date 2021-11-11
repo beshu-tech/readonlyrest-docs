@@ -3,6 +3,7 @@
 ### (2021-10-17) What's new in **ROR 1.35.1**
 * **🚨Security Fix** (ES) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409) & [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
 * **🚀New** (KBN) Support Kibana 7.15.1
+* **🚀New** (ES) New Support for 7.15.2
 * **🧐Enhancement** (KBN) Support "server.ssl.supportedProtocols" settings
 * **🧐Enhancement** (KBN) Support "server.ssl.cipherSuites"
 * **🧐Enhancement** (KBN) Always honor SSL cipher order
