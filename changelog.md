@@ -1,8 +1,24 @@
 # Changelog
 
+### (2021-11-21) What's new in **ROR 1.36.0**
+* **🚀New** (ES) [Added support for setting up cluster containing ES with ROR (with disabled XPack security) and ES with XPack security enabled](https://forum.readonlyrest.com/t/ssl-internode-with-elk-cluster/1916)
+* **🧐Enhancement** (KBN) kibana_hide_apps: [ror|kibana] to remove kibana mgmt button
+* **🐞Fix** (ES) [/_snapshot/_status should return only running snapshots](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/756)
+* **🐞Fix** (ES) [Adding policy to index template bug](https://forum.readonlyrest.com/t/forbidden-by-readonlyrest-es-plugin-with-add-policy-to-index-template-action-in-kibana/1969)
+* **🐞Fix** (KBN) Index management tabs result in "forbidden" error
+* **🐞Fix** (KBN) [corrupted patch file for Kibana 7.9.x](https://forum.readonlyrest.com/t/ror-1-35-1-kibana-7-9-3-unable-to-patch/2018)
+* **🐞Fix** (KBN) [YAML editor not working in air-gapped environments](https://forum.readonlyrest.com/t/readonlyrest-security-settings-editor-loading/2014/5)
+* **🐞Fix** (KBN) [Devtools not working](https://forum.readonlyrest.com/t/kibana-devtools-error-does-not-support-having-a-body/2027)
+* **🐞Fix** (KBN) [Monitoring not working in multi-tenancy](https://forum.readonlyrest.com/t/kibana-alerting-not-working-with-readonlyrest/1986)
+* **🐞Fix** (KBN) Regression in Kibana < 6.8.x front end crash
+* **🐞Fix** (KBN) Kibana < 7.8.x prevent navigation to hidden apps from home links
+* **🐞Fix** (KBN) Kibana < 7.8.x implicitly hide kibana:dashboard when kibana:dashboards is hidden (and viceversa)
+* **🐞Fix** (KBN) Kibana < 7.8.x broken `clearSessionOnEvents: [tenancyHop]`
+
 ### (2021-10-17) What's new in **ROR 1.35.1**
 * **🚨Security Fix** (ES) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409) & [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
 * **🚀New** (KBN) Support Kibana 7.15.1
+* **🚀New** (ES) New Support for 7.15.2
 * **🧐Enhancement** (KBN) Support "server.ssl.supportedProtocols" settings
 * **🧐Enhancement** (KBN) Support "server.ssl.cipherSuites"
 * **🧐Enhancement** (KBN) Always honor SSL cipher order
