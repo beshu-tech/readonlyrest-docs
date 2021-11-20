@@ -315,6 +315,24 @@ readonlyrest:
 
 Similar to `ssl` for HTTP, the keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`. This config must be added to all nodes taking part in encrypted communication within cluster.
 
+##### Internode communication with XPack nodes
+
+It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.3. 
+
+To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates. 
+
+Generated `elastic-certificates.p12` could be then used in ROR node with such configuration 
+```text
+readonlyrest:
+  ssl_internode:
+    enable: true
+    keystore_file: "elastic-certificates.p12"
+    keystore_pass: [ password for generated certificate ]
+    key_pass: [ password for generated certificate ]
+    truststore_file: "elastic-certificates.p12"
+    truststore_pass: [ password for generated certificate ]
+```
+
 #### Certificate verification
 
 By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.  
@@ -879,6 +897,8 @@ Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authenticat
 
 **⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
 
+[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
+
 #### `auth_key_sha512`
 
 `auth_key_sha512: 280ac6f...94bf9`
@@ -892,6 +912,8 @@ The rules support also alternative syntax, where only password is hashed, eg:
 `auth_key_sha512: "admin:280ac6f...94bf9"`
 
 In the example below `admin` is the username and `280ac6f...94bf9` is the hashed secret.
+
+[Impersonation](elasticsearch-details/impersonation.md) is supported by these rules by default.
 
 #### `auth_key_pbkdf2`
 
@@ -910,6 +932,7 @@ Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authenticat
 
 The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
 
+[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
 #### `auth_key_unix`
 
 `auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 # Hashed for "test:test"`
@@ -970,6 +993,8 @@ if __name__ == '__main__':
 
 For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
 
+[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
+
 #### `proxy_auth: "*"`
 
 `proxy_auth: "*"`
@@ -981,6 +1006,8 @@ If you are using this technique for authentication using our **Kibana** plugins,
 `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 So that Kibana will forward the necessary headers to Elasticsearch.
+
+[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
 
 #### `users`
 
@@ -1033,7 +1060,10 @@ In general it looks like this:
     authentication_with_authorization_rule: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
 ```
 
-For details see [User management](elasticsearch.md#users-and-groups) .
+For details see [User management](elasticsearch.md#users-and-groups).
+
+[Impersonation](elasticsearch-details/impersonation.md) supports depends on 
+authentication and authorization rules used in `users` section.
 
 #### `session_max_idle`
 
@@ -1085,17 +1115,26 @@ ldap_authorization:
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
+[Impersonation](elasticsearch-details/impersonation.md) is not supported by default 
+by LDAP rules.
+
 #### `jwt_auth`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth)
+
+[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
 
 #### `external-basic-auth`
 
 Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
 
+[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
+
 #### `groups_provider_authorization`
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#groups_provider_authorization)
+
+[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
 
 #### `ror_kbn_auth`
 
@@ -1125,6 +1164,8 @@ readonlyrest:
 This authentication and authorization connector represents the secure channel \(based on JWT tokens\) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
 
 Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana/#saml)
+
+[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
 
 ### Ancillary rules
 
@@ -2170,4 +2211,3 @@ Of course, if you do not use ssl, disable it.
       actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
       indices: ["metricbeat-*", "log_metricbeat*"]
 ```
-
