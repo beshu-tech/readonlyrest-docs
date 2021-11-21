@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2021-11-21) What's new in **ROR 1.36.0**
+* **🚀New** (KBN) Support Kibana 7.15.2
 * **🚀New** (ES) [Added support for setting up cluster containing ES with ROR (with disabled XPack security) and ES with XPack security enabled](https://forum.readonlyrest.com/t/ssl-internode-with-elk-cluster/1916)
 * **🧐Enhancement** (KBN) kibana_hide_apps: [ror|kibana] to remove kibana mgmt button
 * **🐞Fix** (ES) [/_snapshot/_status should return only running snapshots](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/756)
