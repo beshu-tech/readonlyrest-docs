@@ -270,7 +270,7 @@ The YAML snippet above, like all of this plugin's settings should be saved insid
 
 ### Encryption
 
-An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. [Letsencrypt](https://letsencrypt.org/) certificates work just fine, once they are inside a [JKS keystore](https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm). ReadonlyREST can be configured to encrypt network traffic on two independent levels:
+An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine. Both files, certificate and private key, have to be placed inside PKCS#12 or JKS keystore. [Here's](https://maximilian-boehm.com/en-gb/blog/create-a-java-keystore-jks-from-lets-encrypt-certificates-4142510/) the tutorial on how to put Let's encrypt certificate first into PKCS#12 keystore and then converting it to JKS keystore. It can also be an example on how to use certificates from other providers. ReadonlyREST can be configured to encrypt network traffic on two independent levels:
 
 #### External REST API
 
