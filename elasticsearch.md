@@ -286,7 +286,7 @@ Now in `readonlyrest.yml` add the following settings:
 ```text
 readonlyrest:
     ssl:
-      keystore_file: "keystore.jks"
+      keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 ```
@@ -308,7 +308,7 @@ In `readonlyrest.yml` following settings must be added \(it's just example confi
 ```text
 readonlyrest:
     ssl_internode:
-      keystore_file: "keystore.jks"
+      keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 ```
