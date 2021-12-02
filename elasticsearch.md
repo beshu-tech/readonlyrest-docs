@@ -270,7 +270,14 @@ The YAML snippet above, like all of this plugin's settings should be saved insid
 
 ### Encryption
 
-An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine. Both files, certificate and private key, have to be placed inside PKCS#12 or JKS keystore. [Here's](https://maximilian-boehm.com/en-gb/blog/create-a-java-keystore-jks-from-lets-encrypt-certificates-4142510/) the tutorial on how to put Let's encrypt certificate first into PKCS#12 keystore and then converting it to JKS keystore. It can also be an example on how to use certificates from other providers. ReadonlyREST can be configured to encrypt network traffic on two independent levels:
+An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Both files, certificate and private key, have to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section.
+
+ReadonlyREST can be configured to encrypt network traffic on two independent levels:
+1. HTTP (port 9200)
+2. Internode communication - transport module (port 9300)
+
+> An Elasticsearch node with ReadonlyREST can join an existing cluster based on native SSL from `xpack.security` module. This configuration is useful to deploy ReadonlyREST Enterprise for Kibana to an existing large production cluster without disrupting any configuration. More on this in the dedicated paragraph of this section.
+
 
 #### External REST API
 
@@ -391,6 +398,35 @@ truststore_pass: truststorepass
 ```
 
 under `ssl` or `ssl_internode` section. This option is applicable for both ssl modes - external ssl and internode ssl. The truststore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml` \(like keystore\). When not specifed, ReadonlyREST uses default truststore.
+
+
+#### Using Let's encrypt
+We are  going to show how to first add all the certificates and private key into PKCS#12 keystore, and then (optionally) converting it to JKS keystore. ReadonlyREST supports both formats.
+
+This tutorial can be a useful example on how to use certificates from other providers. 
+
+##### 1. Create keys
+```
+./letsencrypt-auto certonly --standalone -d DOMAIN.TLD -d DOMAIN_2.TLD --email EMAIL@EMAIL.TLD
+```
+Now change to the directory (probably /etc/letsencrypt/live/DOMAIN.tld) where the certificates were created.
+
+##### 2. Create a PKCS12 file with the full chain and private key
+```
+openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out pkcs.p12 -name NAME
+```
+
+##### 3. Convert PKCS12 to JKS Keystore (Optional)
+The STORE_PASS is the password which was entered in step 2) as a password for the pkcs12 file.
+
+```
+keytool -importkeystore -deststorepass PASSWORD_STORE -destkeypass PASSWORD_KEYPASS -destkeystore keystore.jks -srckeystore pkcs.p12 -srcstoretype PKCS12 -srcstorepass STORE_PASS -alias NAME
+```
+
+If you happen to get a `java.io.IOException: failed to decrypt safe contents entry: javax.crypto.BadPaddingException: Given final block not properly padded`, you have probably forgotten to enter the correct password from step 2.
+
+(Credits for the original JKS tutorial to [Maximilian Boehm](https://maximilian-boehm.com))
+
 
 ### Blocks of rules
 
