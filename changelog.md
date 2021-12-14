@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2021-12-14) What's new in **ROR 1.37.0**
+* **🚨Security Fix** (ES) [CVE-2021-43797](https://nvd.nist.gov/vuln/detail/CVE-2021-43797)
 * **🚀New** (KBN) Support Kibana 7.16.0, 7.16.1, 6.8.21
 * **🧐Enhancement** (ES) fields rule handling in the context of x-Pack SQL requests
 * **🐞Fix** filter rule handling in the context of x-Pack SQL requests
