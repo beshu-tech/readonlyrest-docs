@@ -1,5 +1,12 @@
 # Changelog
 
+### (2021-12-14) What's new in **ROR 1.37.0**
+* **🚀New** (KBN) Support Kibana 7.16.0, 7.16.1, 6.8.21
+* **🧐Enhancement** (ES) fields rule handling in the context of x-Pack SQL requests
+* **🐞Fix** filter rule handling in the context of x-Pack SQL requests
+* **🐞Fix** (KBN) POST / bulk cause an 400 error in devtools console
+* **🐞Fix** (KBN) More robust Kibana patcher + better logs messages
+
 ### (2021-11-21) What's new in **ROR 1.36.0**
 * **🚀New** (ES) New Support for 7.16.1, 7.16.0, 6.8.21
 * **🚀New** (KBN) Support Kibana 7.15.2
