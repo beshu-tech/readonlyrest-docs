@@ -1,15 +1,15 @@
 # External to local groups mapping 
 
-The `groups` accepts a list of group names. This rule will match requests in which the resolved username belongs at least to one of the listed groups. The association between usernames and groups is explicitly declared in the users section of the ACL. This is a list of usernames (full wildcard patterns are supported).
+The `groups` rule accepts a list of group names. This rule will match on a requests in which the resolved username belongs at least to one of the listed groups. The association between usernames and groups is explicitly declared in the users section of the ACL. This is a list of usernames, and today, full wildcard patterns are supported.
 
-Each entry in the association rule requires:
-* an authentication rule: (I.e. auth_key_* for local credentials, or ldap_authentication, external_authentication, etc)
+Each entry in the `groups` rule (in the users section) requires:
+* an authentication rule: (I.e. one of the `auth_key_*` rules for local credentials, or `ldap_authentication`, `external_authentication`, etc)
 * a list of groups within the ones precendently inserted in the groups rules of the ACL blocks
-* optional: a remote authorization rule (ldap_authorization, groups_provider_authorization, etc.)
+* optional: a remote authorization rule (`ldap_authorization`, `groups_provider_authorization`, etc.)
   
-When the `groups` rule and the authorization rule are used together, we obtain "group mapping". That is: we are effectively mapping remote groups to local groups. There are two types of mapping available: common and detailed mapping.
+When the users section's `groups` rule and the authorization rule are used together, we obtain "group mapping". That is: we are effectively mapping remote groups to local groups. There are two types of mapping available: **common** and **detailed** group mappings.
 
-*Note:* the rule ldap_auth is the composition of ldap_authentication and ldap_authorization. So it can be used as a shortcut for both.
+*Note:* the rule `ldap_auth` is the composition of `ldap_authentication` and `ldap_authorization`. So it can be used as a shortcut for both.
 ## Example
 
 ```yaml
