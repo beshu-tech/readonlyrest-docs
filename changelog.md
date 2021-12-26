@@ -1,6 +1,16 @@
 # Changelog
 
+### (2021-12-14) What's new in **ROR 1.37.0**
+* **🚨Security Fix** (ES) [CVE-2021-43797](https://nvd.nist.gov/vuln/detail/CVE-2021-43797)
+* **🚀New** (ES) New Support for 7.16.2, 6.8.22
+* **🚀New** (KBN) New Support for 7.16.2, 7.16.1, 7.16.10, 6.8.22, 6.8.21
+* **🧐Enhancement** (ES) fields rule handling in the context of x-Pack SQL requests
+* **🐞Fix** (ES) filter rule handling in the context of x-Pack SQL requests
+* **🐞Fix** (KBN) POST / bulk cause an 400 error in devtools console
+* **🐞Fix** (KBN) More robust Kibana patcher + better logs messages
+
 ### (2021-11-21) What's new in **ROR 1.36.0**
+* **🚀New** (ES) New Support for 7.16.1, 7.16.0, 6.8.21
 * **🚀New** (KBN) Support Kibana 7.15.2
 * **🚀New** (ES) [Added support for setting up cluster containing ES with ROR (with disabled XPack security) and ES with XPack security enabled](https://forum.readonlyrest.com/t/ssl-internode-with-elk-cluster/1916)
 * **🧐Enhancement** (KBN) kibana_hide_apps: [ror|kibana] to remove kibana mgmt button
