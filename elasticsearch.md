@@ -1477,13 +1477,13 @@ logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
 
 ### Custom audit cluster
 
-It's possible to set a custom audit cluster responsible for audit logs storage. When custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
+It's possible to set a custom audit cluster responsible for audit logs storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
 ```text
 readonlyrest:
   audit:
     collector: true
-    cluster: ["https://auditNode1:9200", "https://auditNode2:9200"]
+    cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
   ...
 ```
 
