@@ -1308,12 +1308,15 @@ ReadonlyREST can write events very similarly to Logstash into to a series of ind
   }
 ```
 
-Here is a configuration example, you can see the `audit_collector: true` setting, which nomally defaults to false. Note how the successful requests matched by the first rule \(Kibana\) will not be written to the audit log, because the verbosity is set to error. Audit log in facts, obey the verbosity setting the same way regular text logs do.
+Here is a configuration example, you can see the `audit.collector: true` setting, which normally defaults to false. Note how the successful requests matched by the first rule \(Kibana\) will not be written to the audit log, because the verbosity is set to error. Audit log in facts, obey the verbosity setting the same way regular text logs do.
+
+**NB** Following audit configurations are presented with the separate `audit` section, although it can be omitted as settings defined using previous approach (defined directly under `readonlyrest` section and starting with `audit_`)` are still supported (but not recommended) preserving backward compatibility.
 
 ```text
 readonlyrest:
 
-    audit_collector: true
+    audit:
+      collector: true
 
     access_control_rules:
 
@@ -1333,21 +1336,23 @@ If you want to log the request content then an additional serializer is provided
 
 ```text
 readonlyrest:
-  audit_collector: true
-  audit_serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
+  audit:
+    collector: true
+    serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
   ...
 ```
 
 ### Custom audit indices name and time granularity
 
-It is possible to change the name of the produced audit log indices by specifying a template value as `audit_index_template`.
+It is possible to change the name of the produced audit log indices by specifying a template value as `audit.index_template`.
 
 Example: tell ROR to write on monthly index.
 
 ```text
 readonlyrest:
-  audit_collector: true
-  audit_index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
+  audit:
+    collector: true
+    index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
   ...
 ```
 
@@ -1410,8 +1415,9 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
 
    ```text
     readonlyrest:
-        audit_collector: true
-        audit_serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
+        audit:
+          collector: true
+          serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
    ```
 
 3. Start elasticsearch \(with ROR installed\) and grep for:
@@ -1468,6 +1474,20 @@ logger.access_log_rolling.filter.regex.regex = .*USR:(kibana|beat|logstash),.*
 logger.access_log_rolling.filter.regex.onMatch = DENY
 logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
 ```
+
+### Custom audit cluster
+
+It's possible to set a custom audit cluster responsible for audit logs storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
+
+```text
+readonlyrest:
+  audit:
+    collector: true
+    cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
+  ...
+```
+
+Setting `audit.cluster` is optional, it accepts non empty list of audit cluster nodes URIs.
 
 ## Users and Groups
 

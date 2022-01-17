@@ -1,15 +1,15 @@
 # External to local groups mapping 
 
-The `groups` accepts a list of group names. This rule will match requests in which the resolved username belongs at least to one of the listed groups. The association between usernames and groups is explicitly declared in the users section of the ACL. This is a list of usernames (full wildcard patterns are supported).
+The `groups` ACL rule accepts a list of group names. This rule will match on a requests in which the resolved username belongs at least to one of the listed groups. The association between usernames and groups is explicitly declared in the users section of the ACL. This is a list of usernames, and today, full wildcard patterns are also supported.
 
-Each entry in the association rule requires:
-* an authentication rule: (I.e. auth_key_* for local credentials, or ldap_authentication, external_authentication, etc)
+In the `users` section, each entry requires:
+* an authentication rule: (I.e. one of the `auth_key_*` rules for local credentials, or `ldap_authentication`, `external_authentication`, etc)
 * a list of groups within the ones precendently inserted in the groups rules of the ACL blocks
-* optional: a remote authorization rule (ldap_authorization, groups_provider_authorization, etc.)
+* optionally, an authorization rule (`ldap_authorization`, `groups_provider_authorization`, etc.)
   
-When the `groups` rule and the authorization rule are used together, we obtain "group mapping". That is: we are effectively mapping remote groups to local groups. There are two types of mapping available: common and detailed mapping.
+When the users section's `groups` rule and the authorization rule are used together, we obtain "group mapping". That is: we are effectively mapping remote groups to local groups. There are two types of mapping available: **common** and **detailed** group mappings.
 
-*Note:* the rule ldap_auth is the composition of ldap_authentication and ldap_authorization. So it can be used as a shortcut for both.
+*Note:* the rule `ldap_auth` is the composition of `ldap_authentication` and `ldap_authorization`. So it can be used as a shortcut for both.
 ## Example
 
 ```yaml
@@ -27,11 +27,13 @@ readonlyrest:
   [...]
 
   users:
+  # PLAIN LOCAL GROUPS EXAMPLE
   # Local user "joe" is associated to local group "editors"
   - username: "joe"
     groups: ["editors"]
     auth_key: joe:password
-
+    
+  # COMMON GROUP MAPPING EXAMPLE
   # Externally authenticated user + authorization via external groups provider + groups common mapping
   # Users belonging to "external_group1" OR "external_group2" are authorized as "viewers" AND "editors" in the ACL.
   - username: "*"
@@ -40,7 +42,8 @@ readonlyrest:
     groups_provider_authorization:
       user_groups_provider: "ext2"
       groups: ["external_group1", "external_group2"]
-
+  
+  # DETAILED GROUP MAPPING EXAMPLE
   # LDAP authenticated user + authorization via LDAP + groups detailed mapping (any LDAP user is valid; groups from `ldap1` are mapped to local groups) 
   # Users belonging to LDAP `ldap_role_devops` OR `ldap_role_ops` are mapped to "devops" local group 
   # AND 
@@ -71,25 +74,45 @@ As we can see, there are two blocks in our ACL:
 1. `Viewer block` allows all users, which belong to `viewers` group, to access indices matching pattern `logstash-viewers*`
 1. `DevOps block` allows all users, which belong to `devops` group, to access indices matching pattern `logstash-devops*`
 
-`viewers`, `devops` and (unused in the ACL example) `editors` & `developers` are local groups. They may exist only at ROR's configuration level. But ROR can also integrate with external systems like an LDAP or some REST service, where we can find a similar concept to ROR groups (eg. users in LDAP can have roles assigned).
+### Common mapping example
+```yml
+  - username: "*"
+    groups: ["viewers", "editors"]
+    external_authentication: "ext1"
+    groups_provider_authorization:
+      user_groups_provider: "ext2"
+      groups: ["external_group1", "external_group2"]
+```
 
-And sometimes we'd like to set up a requirement like this:
+`viewers`, `devops`, (unused in the ACL example), `editors` and `developers` are local groups. That is, they exist only at ROR's configuration level. But ROR can also integrate with external authorization systems like an LDAP or some REST service, where we can find similar concepts to ROR groups (eg. users in LDAP can have roles assigned).
 
-> Users defined by a given pattern, which can be authorized in external system using given roles, in ROR, should have given groups assigned.
+And sometimes we'd like to fulfil a requirement such as:
+
+> Users having usernames defined by a given pattern, and having a given set of roles, should have certain given ROR internal groups assigned.
 
 You can think about it as a mapping external groups to local ones. 
 
-Let's go back to our example. In the second element of `users` array, it states that:
+Let's go back to our example. In the second element of the `users` array, we declare that:
 
 * any user can be taken into consideration by this user definition
 * a user should be authenticated by an `external_authentication` rule which uses the `ext1` service
-* a user should be authorized by a `groups_provider_authorization` rule which uses the `ext2` service and matches only if the service returns at least one of `external_group1`, `external_group2` groups
-* if all of the requirements defined above are fulfilled, we can assign `viewers`, `editors` groups to the user 
+* a user should be authorized by a `groups_provider_authorization` rule which uses the `ext2` service and such user belongs to at least one of `external_group1`, `external_group2` external groups.
+* if all the above conditions are true, we can assign `viewers`, `editors` groups to the user
 
-It means that we mapped external `external_group1`, `external_group2` returned by service `ext2` to local ROR group `viewers`, `editors`. 
+We have just "mapped" the external groups `external_group1`, `external_group2` returned by service `ext2` to the local ROR groups `viewers`, `editors`.
 
+### Detailed mapping example
+```yml
+  - username: "*"
+    groups: 
+      - devops: ["ldap_role_devops", "ldap_role_ops"]
+      - developers: ["ldap_role_dev"]
+    ldap_auth:
+      name: "ldap1"
+      groups: ["ldap_role_devops", "ldap_role_ops", "ldap_role_dev"]
+```
 The third element of `users` array (in the example above) is similar, but we use one rule which is authentication and authorization rule at the same time (it can authenticate a user and then authorize him). And that's how we defined the following mappings: 
 * LDAP roles `ldap_role_devops`, `ldap_role_ops` are mapped to `devops` ROR's local group
 * LDAP role `ldap_role_dev` is mapped to `developers` ROR's local group
 
-The feature described above can be useful, because in `users` section we can define all external to local groups mappings and after that, in our ACL, we can use only local groups. This makes our ACL much more concise, readable and easier to maintain. 
+The "detailed" mapping offers a bit more structured approach to group mapping, and although less intuitive at first sight, it's more powerful and concise.
