@@ -1,7 +1,7 @@
 # Changelog
 
 ### (2021-01-17) What's new in **ROR 1.38.0**
-* **🚀New** (ES) Configuration for custom audit cluster
+* **🚀New** (ES) [Configuration for custom audit cluster](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.38.x/elasticsearch.md#custom-audit-cluster)
 * **🧐Enhancement** (ES) Separate "audit" section for all audit settings
 * **🐞Fix** (KBN) Editor rendering issue with kibana basePath enabled
 
