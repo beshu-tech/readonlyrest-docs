@@ -4,18 +4,18 @@ description: SAML SSO Integration with Keycloak as an identity provider.
 
 # Keycloak
 
-This document will guide you through the task of setting up an excellent, open source identity provider \([KeyCloak](https://www.keycloak.org)\) to work as an external authenticator and authorizer system for your ELK stack. The scenario is the usual:
+This document will guide you through the task of setting up an excellent, open source identity provider ([KeyCloak](https://www.keycloak.org)) to work as an external authenticator and authorizer system for your ELK stack. The scenario is the usual:
 
 * A centralised, large Elasticsearch cluster
 * A Kibana installation
-* We want one, centralised multi tenant Elasticsearch + Kibana 
+* We want one, centralised multi tenant Elasticsearch + Kibana&#x20;
 
 But with some more enterprisy requirements:
 
 * Users need to be able to change their passwords independently
 * Users need to verify their emails
-* Group managers need to be able to add, remove, block \(only\) their users.
-* [Multi factor authentication \(MFA\)](https://www.keycloak.org/docs/3.2/server_admin/topics/authentication/otp-policies.html) is a requirement.
+* Group managers need to be able to add, remove, block (only) their users.
+* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/3.2/server\_admin/topics/authentication/otp-policies.html) is a requirement.
 
 ## What is Keycloak
 
@@ -29,27 +29,27 @@ This tutorial was created using KeyCloak 8.0.1.
 2. Run Keycloak: run `bin/standalone.sh` or equivalent for your platform.
 3. Navigate to [http://localhost:8080](http://localhost:8080) and configure the admin user's credentials **don't forget to fill the email address!**
 4. Login as admin
-5. Follow the explanation below, or \(if your KC version is the same or close enough to this\) use the import function to load this [configuration file](https://github.com/beshu-tech/readonlyrest-docs/tree/d77c4981b29a843fc82f89c4272fdddaab390d89/keycloak_601_ror_SAML.json)
+5. Follow the explanation below, or (if your KC version is the same or close enough to this) use the import function to load this [configuration file](https://github.com/beshu-tech/readonlyrest-docs/tree/d77c4981b29a843fc82f89c4272fdddaab390d89/keycloak\_601\_ror\_SAML.json)
 
-If you imported the JSON file, you should have a "ror" realm, and a SAML client called "ror" \(keep this ID or change the "issuer" setting in kibana.yml\) in the "master" realm. Please now select "ror" realm, navigate to "clients", click "ror" client and double check everything matches with your use case, as this guide assumes both Kibana, Elasticsearch and Keycloak are running on "localhost".
+If you imported the JSON file, you should have a "ror" realm, and a SAML client called "ror" (keep this ID or change the "issuer" setting in kibana.yml) in the "master" realm. Please now select "ror" realm, navigate to "clients", click "ror" client and double check everything matches with your use case, as this guide assumes both Kibana, Elasticsearch and Keycloak are running on "localhost".
 
 ### Configure Keycloak to work with ROR
 
 First we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
-![keycloak\_screenshot](../../.gitbook/assets/kc_saml_conf_realm%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29%20%281%29.png)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2).png>)
 
 Then, let's create a SAML client for this realm:
 
-![keycloak\_screenshot](../../.gitbook/assets/kc_saml_create_saml_client.png)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_create\_saml\_client (1).png>)
 
 Then, configure the SAML client according to your Kibana URL, in this example, Kibana responds to "[https://localhost:5601/k](https://localhost:5601/k)"
 
-![keycloak\_screenshot](../../.gitbook/assets/kc_saml_configure_saml_client.png)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_configure\_saml\_client (1).png>)
 
 Now that the client is saved, let's observe the "configure" tab, here we will extract the two logout and login endpoints that we will use for configuring our SAML connector in "kibana.yml".
 
-![keycloak\_screenshot](../../.gitbook/assets/kc_saml_extract_config_from_client.png)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_extract\_config\_from\_client (1).png>)
 
 ### Install ReadonlyREST Enterprise for Kibana
 
@@ -61,7 +61,7 @@ Provided that you have ReadonlyREST Enterprise installed configured, you can add
 
 **kibana.yml**
 
-```text
+```
 # More on how to enable SSL on the official documentation of Kibana
 server.ssl.enabled: true
 server.ssl.key: /home/xx/selfsigned_ssl_localhost/localhost.key
@@ -95,22 +95,22 @@ readonlyrest_kbn:
       logoutUrl: "http://localhost:8080/auth/realms/ror/protocol/saml" # <-- from KC configuration tab!
 ```
 
-Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` \(on the elasticsearch side\). Security settings can also be changed via the ReadonlyREST Kibana app.
+Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` (on the elasticsearch side). Security settings can also be changed via the ReadonlyREST Kibana app.
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our Elasticsearch needs to be available on https \(more detailed info in our [documentation](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#encryption)\), so we modify the elasticsearch.yml
+Our Elasticsearch needs to be available on https (more detailed info in our [documentation](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#encryption)), so we modify the elasticsearch.yml
 
 **append to elasticsearch.yml**
 
-```text
+```
 xpack.security.enabled: false
 http.type: ssl_netty4 # <-- needed for ROR SSL
 ```
 
 Write in **readonlyrest.yml**
 
-```text
+```
 readonlyrest:
 
     ssl:
@@ -137,4 +137,3 @@ readonlyrest:
     - name: kbn1
       signature_key: "9yzBfnLaTYLfGPzyKW9es76RKYhUVgmuv6ZtehaScj5msGpBpa5FWpwk295uJYaaffTFnQC5tsknh2AguVDaTrqCLfM5zCTqdE4UGNL73h28Bg4dPrvTAFQyygQqv4xfgnevBED6VZYdfjXAQLc8J8ywaHQQSmprZqYCWGE6sM3vzNUEWWB3kmGrEKa4sGbXhmXZCvL6NDnEJhXPDJAzu9BMQxn8CzVLqrx6BxDgPYF8gZCxtyxMckXwCaYXrxAGbjkYH69F4wYhuAdHSWgRAQCuWwYmWCA6g39j4VPge5pv962XYvxwJpvn23Y5KvNZ5S5c6crdG4f4gTCXnU36x92fKMQzsQV9K4phcuNvMWkpqVB6xMA5aPzUeHcGytD93dG8D52P5BxsgaJJE6QqDrk3Y2vyLw9ZEbJhPRJxbuBKVCBtVx26Ldd46dq5eyyzmNEyQGLrjQ4qd978VtG8TNT5rkn4ETJQEju5HfCBbjm3urGLFVqxhGVawecT4YM9Rry4EqXWkRJGTFQWQRnweUFbKNbVTC9NxcXEp6K5rSPEy9trb5UYLYhhMJ9fWSBMuenGRjNSJxeurMRCaxPpNppBLFnp8qW5ezfHgCBpEjkSNNzP4uXMZFAXmdUfJ8XQdPTWuYfdHYc5TZWnzrdq9wcfFQRDpDB2zX5Myu96krDt9vA7wNKfYwkSczA6qUQV66jA8nV4Cs38cDAKVBXnxz22ddAVrPv8ajpu7hgBtULMURjvLt94Nc5FDKw79CTTQxffWEj9BJCDCpQnTufmT8xenywwVJvtj49yv2MP2mGECrVDRmcGUAYBKR8G6ZnFAYDVC9UhY46FGWDcyVX3HKwgtHeb45Ww7dsW8JdMnZYctaEU585GZmqTJp2LcAWRcQPH25JewnPX8pjzVpJNcy7avfA2bcU86bfASvQBDUCrhjgRmK2ECR6vzPwTsYKRgFrDqb62FeMdrKgJ9vKs435T5ACN7MNtdRXHQ4fj5pNpUMDW26Wd7tt9bkBTqEGf"
 ```
-

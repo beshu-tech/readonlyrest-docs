@@ -8,7 +8,7 @@ description: User manual for ReadonlyREST Enterprise/PRO/Free plugins
 
 ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html), and [ReadonlyREST Free](https://readonlyrest.com/free) packages. See product descriptions and a comparison chart in the official [ReadonlyREST website](https://readonlyrest.com)
 
-ReadonlyREST plugins for Kibana **always require** ReadonlyREST Free to be installed in the Elasticsearch nodes your Kibana instance\(s\) will connect to.
+ReadonlyREST plugins for Kibana **always require** ReadonlyREST Free to be installed in the Elasticsearch nodes your Kibana instance(s) will connect to.
 
 It's not mandatory to install ReadonlyREST Free in all Elasticsearch nodes, but only in the ones in where you need the HTTP interface to be secured.
 
@@ -120,7 +120,7 @@ You can obtain official links with personal secret tokens using our self service
 $ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
 ```
 
-Notice how we need to type in the format `file://` + absolute path \(yes, with three slashes\).
+Notice how we need to type in the format `file://` + absolute path (yes, with three slashes).
 
 ### Uninstall
 
@@ -155,21 +155,21 @@ RoR - just like Kibana itself - is meant to be used either with a proxy or witho
 
 ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
 
-> In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring to the configuration files **in the Elasticsearch plugin** \(our Kibana plugins do not need a "readonlyrest.yml"\).
+> In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring to the configuration files **in the Elasticsearch plugin** (our Kibana plugins do not need a "readonlyrest.yml").
 
-In general, by design, we tend to concentrate all configuration within the main plugin \(the Elasticsearch one\) as much as possible.
+In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.
 
 ### Clusterwide Settings vs readonlyrest.yml
 
 Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
 
-When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. You can customize a name of the index by setting `readonlyrest.settings_index: .my_custom_readonlyrest` in `elasticsearch.yml` file \(remember to set the same value for all your ES nodes\).
+When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. You can customize a name of the index by setting `readonlyrest.settings_index: .my_custom_readonlyrest` in `elasticsearch.yml` file (remember to set the same value for all your ES nodes).
 
 When an Elasticsearch node restarts, the order of settings evaluation is the following: 1. Attempt to find valid settings in readonlyrest.yml 2. If none is found, look inside elasticsearch.yml 3. Once successfully bootstrapped using file-based settings, attempt to read ".readonlyrest" index 4. If the index exists and contains valid settings, override file based settings with the ones from the index. 5. Pressing "save" in the cluster wide settings app, will **not overwrite the readonlyrest.yml** file.
 
 Best practices:
 
-* Build and update your production security settings from the Kibana app \(will be saved in index\)
+* Build and update your production security settings from the Kibana app (will be saved in index)
 * Protect the ".readonlyrest" Kibana index with an ACL rule
 
 #### Loading settings: order of precedence
@@ -177,17 +177,17 @@ Best practices:
 As you read, there are two possible places where the settings can be read from:
 
 * `readonlyrest.yml` a file the user needs to create in the same directory where `elasticsearch.yml` is found.
-* `.readonlyrest` index. Our Kibana plugins' GUI \(PRO/Enterprise\) is programmed to write this index.
+* `.readonlyrest` index. Our Kibana plugins' GUI (PRO/Enterprise) is programmed to write this index.
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](../.gitbook/assets/ror_config_loading_diagram.png)
+![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1).png>)
 
 #### Malformed in-index settings
 
 If for some reason the in-index settings get corrupted and ROR can't parse them, then neither settings from file or in-index settings can be loaded, so ES can't start. In this case ES would print message like:
 
-```text
+```
 Loading ReadonlyREST settings from index failed: Settings config content is malformed. Details: while scanning a quoted scalar
  in 'reader', line 9, column 17:
           auth_key: "admin:container
@@ -227,7 +227,7 @@ Now you can restore your settings to `readonlyrest.yml`, remove `readonlyrest.fo
 
 ### Example: multiuser ELK
 
-Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` \(on the Elasticsearch side\) and `kibana.yml` \(on the Kibana side\): This is how you disable X-pack modules:
+Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` (on the Elasticsearch side) and `kibana.yml` (on the Kibana side): This is how you disable X-pack modules:
 
 ```yaml
 # For X-Pack users: you may only leave monitoring on. 
@@ -238,7 +238,7 @@ xpack.watcher.enabled: false
 xpack.telemetry.enabled: false
 ```
 
-This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` \(the settings file of the Elasticsearch plugin\), to support ReadonlyREST PRO.
+This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
 
 ```yaml
 readonlyrest:
@@ -280,8 +280,8 @@ readonlyrest:
 
 Whatever your configuration ends up being, remember:
 
-* The admin user has `kibana_access: admin` 
-* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it \(makes for a better UX\).
+* The admin user has `kibana_access: admin`&#x20;
+* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
 
 #### Rules ordering matters
 
@@ -293,7 +293,7 @@ So, some request with credentials can be let through from one of the first block
 
 Take this example of troublesome ACL:
 
-```text
+```
     # PROBLEMATIC SETTINGS (EXAMPLE) ⚠️
 
     access_control_rules:
@@ -307,13 +307,13 @@ Take this example of troublesome ACL:
       kibana_access: admin
 ```
 
-The user will be able to login because the login request will be allowed by the first ACL block. But the ACL will not have resolved any metadata about the user identity \(credentials checking was ignored\)!
+The user will be able to login because the login request will be allowed by the first ACL block. But the ACL will not have resolved any metadata about the user identity (credentials checking was ignored)!
 
-This means the response to the Kibana login request will contain no user identity metadata \(username, hidden apps, etc\) and ReadonlyREST for Kibana won't be able to function correctly.
+This means the response to the Kibana login request will contain no user identity metadata (username, hidden apps, etc) and ReadonlyREST for Kibana won't be able to function correctly.
 
 The solution to this is to reorder the ACL blocks, so the ones that authenticate Kibana users are on the top.
 
-```text
+```
     # SOLUTION: KIBANA USER AUTH RELATED BLOCKS GO FIRST! ✅👍
 
     access_control_rules:
@@ -331,7 +331,7 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
 
 When a user logs in, ReadonlyREST will write an encrypted cookie in the browser. This cookie has an time to live that can be tweaked with the following configuration key in `kibana.yml`.
 
-```text
+```
 readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
 ```
 
@@ -339,7 +339,7 @@ readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
 
 By default, all the session data like search history, dev tool commands history, etc, will be wiped out from the browser whenever a new user is logged in, or a user changes tenancy. To override this behaviour, use this setting:
 
-```text
+```
 readonlyrest_kbn.clearSessionOnEvents: ["never"]
 ```
 
@@ -347,32 +347,32 @@ Possible values: `"login", "tenancyHop", "never"`.
 
 #### Kibana App strings
 
-Examples of valid arguments for the `kibana_hide_apps: [...]` rule \(readonlyrest.yml\)
+Examples of valid arguments for the `kibana_hide_apps: [...]` rule (readonlyrest.yml)
 
-| hide-app key | App name | App url |
-| :--- | :--- | :--- |
-| kibana:discover | Discover | [http://kibana-url:5601/app/kibana\#/discover](http://kibana-url:5601/app/kibana#/discover) |
-| kibana:visualize | Visualize | [http://kibana-url:5601/app/kibana\#/visualize](http://kibana-url:5601/app/kibana#/visualize) |
-| kibana:dashboard | Dashboard | [http://kibana-url:5601/app/kibana\#/dashboards](http://kibana-url:5601/app/kibana#/dashboards) |
-| timelion | Timelion | [http://kibana-url:5601/app/timelion](http://kibana-url:5601/app/timelion) |
-| canvas | Canvas | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas) |
-| maps | Maps | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps) |
-| code | Code \(Beta\) | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code) |
-| ~~readonlyrest\_kbn~~ \(obsolete\) | ~~ReadonlyREST~~ | ~~~~\[~~[http://kibana-url:5601/app/readonlyrest\_kbn~~\]\(http://kibana-url:5601/app/readonlyrest\_kbn\)~~~~](http://kibana-url:5601/app/readonlyrest_kbn~~]%28http://kibana-url:5601/app/readonlyrest_kbn%29~~~~) |
-| ml | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml) |
-| infra:home | Infrastructure | [http://kibana-url:5601/app/infra\#/infrastructure/inventory?\_g=\(](http://kibana-url:5601/app/infra#/infrastructure/inventory?_g=%28)\) |
-| infra:logs | Logs | [http://kibana-url:5601/app/infra\#/logs?\_g=\(](http://kibana-url:5601/app/infra#/logs?_g=%28)\) |
-| apm | APM | [http://kibana-url:5601/app/apm](http://kibana-url:5601/app/apm) |
-| uptime | Uptime | [http://kibana-url:5601/app/uptime\#/](http://kibana-url:5601/app/uptime#/) |
-| siem | SIEM | [http://kibana-url:5601/app/siem](http://kibana-url:5601/app/siem) |
-| graph | Graph | [http://kibana-url:5601/app/graph](http://kibana-url:5601/app/graph) |
-| kibana:dev\_tools | Dev Tools | [http://kibana-url:5601/app/kibana\#/dev\_tools](http://kibana-url:5601/app/kibana#/dev_tools) |
-| monitoring | Stack Monitoring | [http://kibana-url:5601/app/monitoring](http://kibana-url:5601/app/monitoring) |
-| kibana:stack\_management | Stack Management | [http://kibana-url:5601/app/kibana\#/management](http://kibana-url:5601/app/kibana#/management) |
+| hide-app key                     | App name         | App url                                                                                                                                                                                                                     |
+| -------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| kibana:discover                  | Discover         | [http://kibana-url:5601/app/kibana#/discover](http://kibana-url:5601/app/kibana#/discover)                                                                                                                                  |
+| kibana:visualize                 | Visualize        | [http://kibana-url:5601/app/kibana#/visualize](http://kibana-url:5601/app/kibana#/visualize)                                                                                                                                |
+| kibana:dashboard                 | Dashboard        | [http://kibana-url:5601/app/kibana#/dashboards](http://kibana-url:5601/app/kibana#/dashboards)                                                                                                                              |
+| timelion                         | Timelion         | [http://kibana-url:5601/app/timelion](http://kibana-url:5601/app/timelion)                                                                                                                                                  |
+| canvas                           | Canvas           | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas)                                                                                                                                                      |
+| maps                             | Maps             | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps)                                                                                                                                                          |
+| code                             | Code (Beta)      | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code)                                                                                                                                                          |
+| ~~readonlyrest\_kbn~~ (obsolete) | ~~ReadonlyREST~~ | ~~\~\~\[~~[http://kibana-url:5601/app/readonlyrest\_kbn~~\](http://kibana-url:5601/app/readonlyrest\_kbn)~~\~\~](http://kibana-url:5601/app/readonlyrest\_kbn\~\~]\(http://kibana-url:5601/app/readonlyrest\_kbn\)\~\~\~\~) |
+| ml                               | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml)                                                                                                                                                              |
+| infra:home                       | Infrastructure   | [http://kibana-url:5601/app/infra#/infrastructure/inventory?\_g=(](http://kibana-url:5601/app/infra#/infrastructure/inventory?\_g=%28))                                                                                     |
+| infra:logs                       | Logs             | [http://kibana-url:5601/app/infra#/logs?\_g=(](http://kibana-url:5601/app/infra#/logs?\_g=%28))                                                                                                                             |
+| apm                              | APM              | [http://kibana-url:5601/app/apm](http://kibana-url:5601/app/apm)                                                                                                                                                            |
+| uptime                           | Uptime           | [http://kibana-url:5601/app/uptime#/](http://kibana-url:5601/app/uptime#/)                                                                                                                                                  |
+| siem                             | SIEM             | [http://kibana-url:5601/app/siem](http://kibana-url:5601/app/siem)                                                                                                                                                          |
+| graph                            | Graph            | [http://kibana-url:5601/app/graph](http://kibana-url:5601/app/graph)                                                                                                                                                        |
+| kibana:dev\_tools                | Dev Tools        | [http://kibana-url:5601/app/kibana#/dev\_tools](http://kibana-url:5601/app/kibana#/dev\_tools)                                                                                                                              |
+| monitoring                       | Stack Monitoring | [http://kibana-url:5601/app/monitoring](http://kibana-url:5601/app/monitoring)                                                                                                                                              |
+| kibana:stack\_management         | Stack Management | [http://kibana-url:5601/app/kibana#/management](http://kibana-url:5601/app/kibana#/management)                                                                                                                              |
 
 ### Kibana configuration
 
-Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using a pair of credentials we just defined in `readonlyrest.yml` \(see above, the ::KIBANA-SRV:: block\).
+Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using a pair of credentials we just defined in `readonlyrest.yml` (see above, the ::KIBANA-SRV:: block).
 
 Open up `conf/kibana.yml` and add the following:
 
@@ -389,7 +389,7 @@ elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
 ```
 
-And of course also make sure `elasticsearch.url` points to the designated Elasticsearch instance \(check also the http or https\)
+And of course also make sure `elasticsearch.url` points to the designated Elasticsearch instance (check also the http or https)
 
 ### Proxy Auth
 
@@ -397,7 +397,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.
 
-1. Configure ROR for ES to expect delegated authentication \(see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#proxy_auth-)\) in ROR for ES documentation.
+1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
@@ -438,14 +438,14 @@ Alternatively to typing in credentials in the standard login form, it is possibl
 
 To enable this feature in ReadonlyREST, you need to:
 
-* Have JWT authentication configured in ReadonlyREST \(modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin\). [See how](../elasticsearch.md#json-web-token-jwt-auth).
+* Have JWT authentication configured in ReadonlyREST (modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin). [See how](../elasticsearch.md#json-web-token-jwt-auth).
 * Specify the query parameter name in `kibana.yml` by adding the line `readonlyrest_kbn.jwt_query_param: "jwt"` as a string, in our case "jwt".
 
 #### In Action
 
 Once Kibana is restarted, you will be able to navigate to a link like this:
 
-```text
+```
 http://kibana:5601/login?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
 
@@ -462,7 +462,7 @@ Because the identity is embedded in the link, and ReadonlyREST is able to authen
 
 **Anatomy of a JWT deep link**
 
-```text
+```
 http://kibana:5601/login?jwt=<the-token>&nextUrl=urlEncode(<kibana-path>)
 ```
 
@@ -481,7 +481,7 @@ console.log("Final JWT deep link: " + url)
 
 The result may look something like this:
 
-```text
+```
 http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
 
@@ -493,11 +493,11 @@ The audit log feature is widely described in [📖docs for Elasticsearch plugin]
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](../.gitbook/assets/audit_tab.png)
+![audit log tab](<../.gitbook/assets/audit\_tab (1).png>)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](https://github.com/beshu-tech/readonlyrest-docs/tree/64130b8d9cafefb344b40743cf6df4dc99d60169/kibana/.gitbook/assets/load_audit_dashboard%20%281%29%20%281%29%20%281%29%20%281%29%20%284%29.png)
+![loading visualization](https://github.com/beshu-tech/readonlyrest-docs/tree/64130b8d9cafefb344b40743cf6df4dc99d60169/kibana/.gitbook/assets/load\_audit\_dashboard%20\(1\)%20\(1\)%20\(1\)%20\(1\)%20\(4\).png)
 
 In detail, this feature creates three Kibana "saved objects":
 
@@ -511,7 +511,7 @@ The audit log dashboard, by default, has only a few basic visualizations. They c
 
 ## SAML
 
-ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO \(single sign on\) and SLO \(single log out\). Here is how to configure it.
+ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO (single sign on) and SLO (single log out). Here is how to configure it.
 
 ### Configure `ror_kbn_auth` bridge
 
@@ -521,7 +521,7 @@ In order for the user identity information to flow securely from Kibana to Elast
 
 Edit `readonlyrest.yml`
 
-```text
+```
 readonlyrest:
     access_control_rules:
 
@@ -568,9 +568,9 @@ readonlyrest_kbn.auth:
 ```
 
 * `issuer`: issuer string to supply to identity provider during sign on request. Defaults to 'ror'
-* `disableRequestedAuthnContext`: if truthy, do not request a specific authentication context. This is known to help when authenticating against Active Directory \(AD FS\) servers.
+* `disableRequestedAuthnContext`: if truthy, do not request a specific authentication context. This is known to help when authenticating against Active Directory (AD FS) servers.
 * `decryptionPvk`: Service Provider Private Key. Private key that will be used to attempt to decrypt any encrypted assertions that are received.
-* cert: The downloadable certificate in IDP Metadata \(file, absolute path\)
+* cert: The downloadable certificate in IDP Metadata (file, absolute path)
 
 For advanced SAML options, see [passport-saml documentation](https://github.com/bergie/passport-saml).
 
@@ -593,11 +593,11 @@ Example response:
 ```
 
 1. Create some users and some groups in the identity provider app
-2. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set kibana in debug mode so ReadonlyREST will print the user profile\).
-3. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
+2. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set kibana in debug mode so ReadonlyREST will print the user profile).
+3. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
 4. If you want to use SAML for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
 
-## OpenID Connect \(OIDC\)
+## OpenID Connect (OIDC)
 
 ReadonlyREST Enterprise support OpenID Connect for authentication and authorization.
 
@@ -613,7 +613,7 @@ This part is identical as seen in SAML connectors. In order for the user identit
 
 Edit `readonlyrest.yml`
 
-```text
+```
 readonlyrest:
     access_control_rules:
 
@@ -633,9 +633,9 @@ readonlyrest:
 
 **⚠️IMPORTANT** the Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
 
-If you have configured OIDC with the `groupsParameter` \( _See below_ \), you can also restrict ACL to specific groups:
+If you have configured OIDC with the `groupsParameter` ( _See below_ ), you can also restrict ACL to specific groups:
 
-```text
+```
 readonlyrest:
     access_control_rules:
 
@@ -659,7 +659,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](../elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. \( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. \)
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](../elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
@@ -691,10 +691,10 @@ readonlyrest_kbn.auth:
 1. Enter the settings interface of your identity provider, and create a new OpenID app .
 2. The redirect URL should be configured as `http://localhost:5601/*`  assuming kibana is listening on localhost and on the default port.
 3. Create some users and some groups in the identity provider if not present.
-4. Check the user profile parameter names that the identity provider uses during the assertion callback \( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs\).
-5. Match the name of the parameter used by the identity provider to carry the unique user ID \(in the assertion message\) to the `usernameParameter` kibana YAML setting.
-6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. \( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.\)
-7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. \( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.\) 
+4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).
+5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
+6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.)
+7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)&#x20;
 
 ## Load balancers
 
@@ -704,22 +704,22 @@ Normally a load balancer needs a health check URL to see if the instance is stil
 
 Edit `kibana.yml`
 
-```text
+```
 readonlyrest_kbn.whitelistedPaths: [".*/api/status$"]
 ```
 
 ### Session management with multiple Kibana instances
 
-Each Kibana node stores user sessions in-memory. This will cause problems when using multiple Kibana instances behind a load balancer \(especially without sticky sessions\), as there would be no synchronization between nodes' sessions cache. To avoid this, session synchronization via an Elasticsearch index should be enabled. Follow these steps:
+Each Kibana node stores user sessions in-memory. This will cause problems when using multiple Kibana instances behind a load balancer (especially without sticky sessions), as there would be no synchronization between nodes' sessions cache. To avoid this, session synchronization via an Elasticsearch index should be enabled. Follow these steps:
 
 1. Come up with a string of at least 32 characters length or more to be used as the shared cookie encryption key, called `cookiePass`.
 2. Open up `conf/kibana.yml` and add:
-   * `readonlyrest_kbn.cookiePass: "generatedStringIn1step"` \(example: "12345678901234567890123456789012"\)
-   * `readonlyrest_kbn.cookieName` \(custom cookie name - this property is optional, if not specified default cookie name would be `rorCookie`\)
-   * `readonlyrest_kbn.store_sessions_in_index: true` \(enable session storage in index\)
-   * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` \(index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`\)
-   * `readonlyrest_kbn.sessions_refresh_after: 1000` \(time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds\)
-   * `readonlyrest_kbn.sessions_probe_interval_seconds: 15` \(default 10s\) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks \(i.e. VPN\), or have very slow loading dashboards.
+   * `readonlyrest_kbn.cookiePass: "generatedStringIn1step"` (example: "12345678901234567890123456789012")
+   * `readonlyrest_kbn.cookieName` (custom cookie name - this property is optional, if not specified default cookie name would be `rorCookie`)
+   * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
+   * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
+   * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
+   * `readonlyrest_kbn.sessions_probe_interval_seconds: 15` (default 10s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them.
 
 ## Login screen tweaking
@@ -732,7 +732,7 @@ By default,the login form appears in a single column view. ![one column](blob:ht
 
 But once title and subtitle are configured, it will switch to two columns for making room to the new text.
 
-```text
+```
 readonlyrest_kbn.login_title: "Some Title"
 readonlyrest_kbn.login_subtitle: "Longer text <b>any HTML is supported<b/> including ifrmaes"
 ```
@@ -745,17 +745,17 @@ It's recommended to use a transparent PNG, negative logo. Ideally a white foregr
 
 Open `config/kibana.yml` and append the following:
 
-```text
+```
 readonlyrest_kbn.login_custom_logo: 'https://.../logo.png'
 ```
 
 ### Add custom CSS/JS
 
-You have the opportunity to inject HTML code right before the closing head tag \(`</head>`\).
+You have the opportunity to inject HTML code right before the closing head tag (`</head>`).
 
 Open `config/kibana.yml` and append the following:
 
-```text
+```
 readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
 ```
 
@@ -767,19 +767,19 @@ With ReadonlyREST Enterprise, it's possible to inject custom CSS and Javascript 
 
 Open `config/kibana.yml` and append the following:
 
-```text
+```
 readonlyrest_kbn.kibana_custom_css_inject: '.global-nav, kbnGlobalNav { background-color: green }'
 ```
 
 Alternatively, it's possible to load the CSS from a file in the filesystem:
 
-```text
+```
 readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 ```
 
 ### Inject custom JS in Kibana
 
-```text
+```
 readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
 
@@ -787,7 +787,7 @@ readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert(
 
 You can provide a function, mapping group names to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
 
-```text
+```
 readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 ```
 
@@ -797,19 +797,19 @@ readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 
 When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana\_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.
 
-The issue is that "user1"'s user experience will be really raw as they will see a completely blank Kibana tenancy. Not even a default index pattern will be present. And this is particularly challenging if the tenant is supposed to be read-only \(i.e. kibana\_access: "ro"\) because they won't even have privileges to create their own index-pattern, let alone any dashboards.
+The issue is that "user1"'s user experience will be really raw as they will see a completely blank Kibana tenancy. Not even a default index pattern will be present. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana\_access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
 
 To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy.
 
 ### How to use tenancy templating
 
-An administrator will need to create the template tenancy, populate it with the default Kibana objects \(index-patterns, dashboards\) and configure ReadonlyREST Enterprise to take the index template it in use. Let's see this step by step:
+An administrator will need to create the template tenancy, populate it with the default Kibana objects (index-patterns, dashboards) and configure ReadonlyREST Enterprise to take the index template it in use. Let's see this step by step:
 
 #### Create the template tenancy
 
-Let's start to add to our access control list \(found in $ES\_PATH\_CONF/config/readonlyrest.yml, or ReadonlyREST App in Kibana\) a local user "administrator" that will belong to two tenancies: the default one \(stored in .kibana index\), and the template one \(stored in .kibana\_template index\).
+Let's start to add to our access control list (found in $ES\_PATH\_CONF/config/readonlyrest.yml, or ReadonlyREST App in Kibana) a local user "administrator" that will belong to two tenancies: the default one (stored in .kibana index), and the template one (stored in .kibana\_template index).
 
-```text
+```
 readonlyrest:
   audit_collector: true
 
@@ -847,7 +847,7 @@ Now login as administrator in Kibana, hop into the "Template" tenancy, and start
 
 Open kibana.yml and add the following line:
 
-```text
+```
 readonlyrest_kbn.kibanaIndexTemplate: ".kibana_template"
 ```
 
@@ -857,7 +857,7 @@ Now, ReadonlyREST Enterprise will look for the ".kibana\_template" index, and tr
 
 Restart Kibana with the new setting. Add a new tenancy to the ACL:
 
-```text
+```
 readonlyrest:
   audit_collector: true
 
@@ -893,4 +893,3 @@ readonlyrest:
 ```
 
 Now try to login as user1, and ReadonlyREST Enterprise should initialise the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.
-

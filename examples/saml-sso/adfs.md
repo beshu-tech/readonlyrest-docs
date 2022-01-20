@@ -8,27 +8,27 @@ description: >-
 
 How to Connect ROR Enterprise with SAML and ADFS
 
-ReadonlyREST \(ROR\) Enterprise allows for complex authentication and authorization configurations with Kibana and Elasticsearch. When Elasticsearch is combined with Kibana, a data visualization dashboard, the combination provides a powerful way to ingest logs and analyze data.
+ReadonlyREST (ROR) Enterprise allows for complex authentication and authorization configurations with Kibana and Elasticsearch. When Elasticsearch is combined with Kibana, a data visualization dashboard, the combination provides a powerful way to ingest logs and analyze data.
 
-To access that data, many enterprises manage users in a central directory. This directory could be an Active Directory \(AD\) instance, in the case of a Windows-centric environment, or a cloud directory provider, such as Google Cloud Identity, in a cloud-based environment. Instead of integrating these services directly into a product, an abstraction layer such as SAML can provide authentication and authorization and tie into different back ends as necessary.
+To access that data, many enterprises manage users in a central directory. This directory could be an Active Directory (AD) instance, in the case of a Windows-centric environment, or a cloud directory provider, such as Google Cloud Identity, in a cloud-based environment. Instead of integrating these services directly into a product, an abstraction layer such as SAML can provide authentication and authorization and tie into different back ends as necessary.
 
 ReadonlyREST provides a free Elasticsearch plugin that provides advanced authentication options. When it is combined with the ReadonlyREST Enterprise plugin for Kibana, integrating SAML authentication into the authentication process becomes easy.
 
-This article will walk through the process of setting up an entire environment in order to demonstrate how the ReadonlyREST free and Enterprise plugins integrate with Active Directory Federation Services \(AD FS\) to provide SAML authentication.
+This article will walk through the process of setting up an entire environment in order to demonstrate how the ReadonlyREST free and Enterprise plugins integrate with Active Directory Federation Services (AD FS) to provide SAML authentication.
 
 In this tutorial, you will learn how to:
 
 * Provision Azure Virtual Machines to host Active Directory, Elasticsearch, and Kibana
-* Install and configure Active Directory \(AD\) Services
+* Install and configure Active Directory (AD) Services
 * Provision sample AD users
-* Install and configure Active Directory Certificate Services \(AD CS\)
-* Install and configure Active Directory Federation Services \(AD FS\)
+* Install and configure Active Directory Certificate Services (AD CS)
+* Install and configure Active Directory Federation Services (AD FS)
 * Install and configure ElasticSearch and the ReadonlyREST Free Plugin
 * Install and configure Kibana and the ReadonlyREST Enterprise Plugin
 
 ## Provisioning Azure Virtual Machines to Host Active Directory, Elasticsearch, and Kibana
 
-Any Windows Server 2016 Virtual Machines \(VM\) can be used for this process; however, in this demonstration, the Microsoft Azure environment will be used to provision and host the VMs.
+Any Windows Server 2016 Virtual Machines (VM) can be used for this process; however, in this demonstration, the Microsoft Azure environment will be used to provision and host the VMs.
 
 You can name your VMs whatever you would like. This article will refer to the names listed below for consistency.
 
@@ -63,7 +63,7 @@ _Please note that Azure Spot Instances cannot be resized after creation._
 
 After this VM has been created, create one more to host the Active Directory and related services. In the end, you should have two VMs as outlined above.
 
-## Installing and Configuring Active Directory \(AD\) Services
+## Installing and Configuring Active Directory (AD) Services
 
 After the two VMs have been provisioned, the next step is to set up directory services on the first VM, lc-win2019-02.
 
@@ -90,13 +90,13 @@ If DNS has not been installed already, the role installation screen may pop up i
 1. Click on **Promote this server to a domain controller,** which will allow you to see the **Deployment Configuration** screen.
 2. ![](../../.gitbook/assets/18.png)
 3. Name the domain. In this case, use ad.lc-test.local.
-4. This name was arbitrarily chosen. Using a subdomain such as “ad” instead of your actual domain \(i.e., \[lc-test.local\]\([http://lc-test.local\](http://lc-test.local%29%29%20by%20itself\) is recommended.
+4. This name was arbitrarily chosen. Using a subdomain such as “ad” instead of your actual domain (i.e., \[lc-test.local]\([http://lc-test.local\\](http://lc-test.local/\)\)%20by%20itself/) is recommended.
 5. ![](../../.gitbook/assets/19.png)
-6. Select **Windows Server 2016** as the **functional level**. For the **domain controller capabilities**, choose **Domain Name System \(DNS\) server**. Set a Directory Services Restore Mode \(DSRM\) **password.**
+6. Select **Windows Server 2016** as the **functional level**. For the **domain controller capabilities**, choose **Domain Name System (DNS) server**. Set a Directory Services Restore Mode (DSRM) **password.**
 7. ![](../../.gitbook/assets/20.png)
 8. The following **DNS Options** warning message can be disregarded:
 9. ![](../../.gitbook/assets/21.png)
-10. Set the **NetBIOS domain name**, which is usually the short name prior to the host name \(e.g., AD\), and click **Next.**
+10. Set the **NetBIOS domain name**, which is usually the short name prior to the host name (e.g., AD), and click **Next.**
 11. ![](../../.gitbook/assets/22.png)
 12. Use the default paths, and click on **Next.**
 13. ![](../../.gitbook/assets/23.png)
@@ -110,10 +110,10 @@ If DNS has not been installed already, the role installation screen may pop up i
 21. Click **Close** on the restart prompt.
 22. ![](../../.gitbook/assets/27.png)
 
-### Configuring the Domain Name Services \(DNS\) Role
+### Configuring the Domain Name Services (DNS) Role
 
 1. Click on the **DNS Services** role, add the additional features as requested, and click **Next.**
-2. If you are using DHCP for the server \(this is not recommended for a production service\), then you will see the validation warning shown below. It can be disregarded. Click on **Continue** and **Install.**
+2. If you are using DHCP for the server (this is not recommended for a production service), then you will see the validation warning shown below. It can be disregarded. Click on **Continue** and **Install.**
 3. ![](../../.gitbook/assets/30.png)
 4. Click **Next** on the **Features** screen, since no additional features are necessary.
 5. ![](../../.gitbook/assets/31.png)
@@ -140,7 +140,7 @@ Next we need to join the second server—the one hosting Elasticsearch and Kiban
 8. ![](../../.gitbook/assets/39.png)
 9. Click on **Change** to add this server to the domain.
 10. ![](../../.gitbook/assets/40.png)
-11. Enter the domain \(e.g., ad.lc-test.local\).
+11. Enter the domain (e.g., ad.lc-test.local).
 12. ![](../../.gitbook/assets/41.png)
 13. Click on **OK,** and enter the credentials of the account that has privileges enabling it to add the domain.
 14. ![](../../.gitbook/assets/42.png)
@@ -152,36 +152,36 @@ For testing purposes, it can be useful to provision additional users within the 
 
 Import-Module -Name 'ActiveDirectory'
 
-$Domain = 'ad.lc-test.local'  
+$Domain = 'ad.lc-test.local'\
 $OU = 'CN=Users,DC=ad,DC=lc-test,DC=local'
 
-$Users = @{  
-"TestUser1" = "testPass1"  
-"TestUser2" = "testPass2"  
-"TestUser3" = "testPass3"  
-"TestUser4" = "testPass4"  
-"TestUser5" = "testPass5"  
+$Users = @{\
+"TestUser1" = "testPass1"\
+"TestUser2" = "testPass2"\
+"TestUser3" = "testPass3"\
+"TestUser4" = "testPass4"\
+"TestUser5" = "testPass5"\
 }
 
-$Users.GetEnumerator\(\) \| ForEach-Object {  
-$Name = $\_.Key  
+$Users.GetEnumerator() | ForEach-Object {\
+$Name = $\_.Key\
 $Password = $\_.Value
 
-$Params = @{  
-"Name" = $Name  
-"Path" = $OU  
-"AccountPassword" = \(ConvertTo-SecureString -AsPlainText $Password -Force\)  
-"Enabled" = $True  
-"DisplayName" = $Name  
-"PasswordNeverExpires" = $True  
-"CannotChangePassword" = $True  
-"EmailAddres" = "$Name@$Domain"  
+$Params = @{\
+"Name" = $Name\
+"Path" = $OU\
+"AccountPassword" = (ConvertTo-SecureString -AsPlainText $Password -Force)\
+"Enabled" = $True\
+"DisplayName" = $Name\
+"PasswordNeverExpires" = $True\
+"CannotChangePassword" = $True\
+"EmailAddres" = "$Name@$Domain"\
 }
 
-New-ADUser @Params  
+New-ADUser @Params\
 }
 
-## Installing Active Directory Certificate Services \(AD CS\)
+## Installing Active Directory Certificate Services (AD CS)
 
 1. Click on **Active Directory Certificate Services,** and add the additional features as prompted.
 2. Since no additional features are necessary, allow defaults, and click on **Next.**
@@ -209,7 +209,7 @@ New-ADUser @Params
 10. ![](../../.gitbook/assets/54.png)
 11. Click on **Create a new private key,** and then click on **Next.**
 12. ![](../../.gitbook/assets/55.png)
-13. Select **RSA\#Microsoft Software Key Storage Provider**, a default key length of **2048**, and a hash algorithm of **SHA256.** Click **Next.**
+13. Select **RSA#Microsoft Software Key Storage Provider**, a default key length of **2048**, and a hash algorithm of **SHA256.** Click **Next.**
 14. ![](../../.gitbook/assets/56.png)
 15. Use the defaults given for the CA Name, and click on **Next.**
 16. ![](../../.gitbook/assets/57.png)
@@ -220,7 +220,7 @@ New-ADUser @Params
 21. Click on **Configure** and **Close** when the configuration process has been completed.
 22. ![](../../.gitbook/assets/60.png)
 
-## Installing and Configuring Active Directory Federation Services \(AD FS\)
+## Installing and Configuring Active Directory Federation Services (AD FS)
 
 Previously, it was recommended that AD FS should not be installed on the same server as the DC because IIS was installed as part of that process. As of 2012, this recommendation has changed, since AD FS does not use IIS anymore. Now, mounting AD FS and DC on the same server is advised for domains under 1000 users.
 
@@ -271,13 +271,13 @@ Previously, it was recommended that AD FS should not be installed on the same se
 
 ### Creating a Group Managed Service Account and Adding a KDS Key
 
-It is best to use a **gMSA** \(group Managed Service Account\) instead of a traditional **sMSA** \(standalone Managed Service Account\). The primary difference between the two is that, in a gMSA, the Windows operating system manages the password for the account instead of relying on the administrator to do it.
+It is best to use a **gMSA** (group Managed Service Account) instead of a traditional **sMSA** (standalone Managed Service Account). The primary difference between the two is that, in a gMSA, the Windows operating system manages the password for the account instead of relying on the administrator to do it.
 
 Before we can select the gMSA, however, we need to add a **KDS Root Key**. To avoid non-blocking warnings later in the process, this key should be added with an effective date of 10 hours prior to the current date and time.
 
 Open a **PowerShell** session as an Administrator, and run the following command to add the KDS root key:
 
-Add-KdsRootKey -EffectiveTime \(\(Get-Date\).AddHours\(-10\)\)
+Add-KdsRootKey -EffectiveTime ((Get-Date).AddHours(-10))
 
 If you do not take this step, you will see the following error when attempting to add the gMSA account:
 
@@ -287,11 +287,11 @@ To create a gMSA account to use with the AD FS service, use the PowerShell scrip
 
 $Name = 'sa\_adfs'
 
-$Params = @{  
-"Name" = $Name  
-"DNSHostName" = 'lc-win2019-02.ad.lc-test.local'  
-"PrincipalsAllowedToRetrieveManagedPassword" = 'lc-win2019-02$'  
-"ServicePrincipalNames" = 'http/lc-win2019-02.ad.lc-test.local'  
+$Params = @{\
+"Name" = $Name\
+"DNSHostName" = 'lc-win2019-02.ad.lc-test.local'\
+"PrincipalsAllowedToRetrieveManagedPassword" = 'lc-win2019-02$'\
+"ServicePrincipalNames" = 'http/lc-win2019-02.ad.lc-test.local'\
 }
 
 $ServiceAccount = New-ADServiceAccount @Params
@@ -324,7 +324,7 @@ Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceA
 20. Once the server has restarted, open an Administrative PowerShell session, and run the following command to enable the **IdP Signon Page:**
 21. Set-ADFSProperties -EnableIdPInitiatedSignonPage $True
 22. Verify that AD FS metadata is being returned by navigating to the following URL:
-23. [https://{FQDN](https://{FQDN) of AD FS Server}/adfs/fs/federationserverservice.asmx
+23. [https://{FQDN](https://{fqdn) of AD FS Server}/adfs/fs/federationserverservice.asmx
 24. ![](../../.gitbook/assets/88.png)
 
 ### Setting Up ReadonlyREST Relying Trust
@@ -333,10 +333,10 @@ Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceA
 2. ![](../../.gitbook/assets/89.png)
 3. Select **Claims aware,** and click **Start.**
 4. Choose **Enter data about the relying party manually,** and click **Next.**
-5. Enter a **Display Name** \(in this case, “ror”\), and click **Next.**
+5. Enter a **Display Name** (in this case, “ror”), and click **Next.**
 6. It’s not necessary to specify a token encryption certificate, so click **Next** to continue.
 7. Select the option **Enable support for the SAML 2.0 SSL service URL,** and enter:
-8. [https://{IP Address of Kibana Server}:5601/ror\_kbn\_sso\_saml\_adfs/assert](https://10.0.0.6:5601/ror_kbn_sso_saml_adfs/assert)
+8. [https://{IP Address of Kibana Server}:5601/ror\_kbn\_sso\_saml\_adfs/assert](https://10.0.0.6:5601/ror\_kbn\_sso\_saml\_adfs/assert)
 9. The saml\_adfs will change depending on the name chosen in the configuration of the kibana.yml file.
 10. Enter the **Relying party trust identifiers**, in this case, “ror.” This will match the **Issuer** in the Kibana configuration. Click **Next** when you are done with this step.
 11. On the **Access Control Policy** screen, select **Permit everyone,** and click **Next.**
@@ -351,9 +351,9 @@ Though we have not yet configured claims for Kibana, the metadata for the SAML c
 
 The important section to note concerns the claims issuance policy. We need to return a **NameID** format in the form of an **emailAddress** by entering the following code**:**
 
-&lt;NameIDFormat&gt;  
-urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress  
-&lt;/NameIDFormat&gt;
+\<NameIDFormat>\
+urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress\
+\</NameIDFormat>
 
 Therefore, we need two rules: one to pull back the LDAP attribute from the Active Directory, and another to transform that data into the correct format.
 
@@ -405,7 +405,7 @@ Therefore, we need two rules: one to pull back the LDAP attribute from the Activ
 1. On the **Endpoints** screen, click on **Add SAML,** and enter the **SAML Logout** details as follows:
    * **Endpoint Type**: SAML Logout
    * **Binding**: POST
-   * **Trusted URL**: [https://{IP](https://{IP) Address of Kibana Server}:5601/ror\_kbn\_sso\_saml\_adfs/notifylogout
+   * **Trusted URL**: [https://{IP](https://{ip) Address of Kibana Server}:5601/ror\_kbn\_sso\_saml\_adfs/notifylogout
 
 ![](../../.gitbook/assets/100.png)
 
@@ -437,10 +437,9 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 1. Navigate to the [ReadonlyREST Plugin download page](https://readonlyrest.com/download/) to enter your details. You will receive the download link in your email. Make sure to choose the **Free Elasticsearch Plugin** that matches your Elasticstack version.
 2. ![](../../.gitbook/assets/108.png)
 3. Download the plugin, open an Administrative command prompt, and navigate to the Elasticsearch program directory. Run the plugin installation by entering the following:
-4. cd "C:\Program Files\Elastic\ElasticSearch\7.6.2\bin"
+4.  cd "C:\Program Files\Elastic\ElasticSearch\7.6.2\bin"
 
-   elasticsearch-plugin.bat install file:///C:/Users/lc-admin.AD/Downloads/readonlyrest-1.19.4\_es7.6.2.zip
-
+    elasticsearch-plugin.bat install file:///C:/Users/lc-admin.AD/Downloads/readonlyrest-1.19.4\_es7.6.2.zip
 5. ![](../../.gitbook/assets/109.png)
 6. Navigate to the C:\ProgramData\Elastic\ElasticSearch\config directory, and create the file readonlyrest.yml.
 7. ![](../../.gitbook/assets/110.png)
@@ -448,7 +447,7 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 9. Create a random 256-character signature\_key. This key will be shared between Kibana and Elasticsearch.
 10. Please note that the kbn1 identifier must match in the ror\_kbn\_auth and ror\_kbn sections; however, any names can be used for them.
 
-    ```text
+    ```
     readonlyrest:  
      access_control_rules:
 
@@ -463,21 +462,20 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
      - name: kbn1  
        signature_key: "VEGj@YLLhsAigspnNi2Xsopsqja_nrKUqU__eQW9VQ2!9p!RoeHwc-G.y-MVJtYYcDFCH.e3W2BKcZsoynJaHyjjXyh7kDHjsYKPkczvai-xCzP@Ez3QW23ZBFuReA7kPAqnc6pQ3VeNeFf3sWNoKeJAt_d9J7aFwEvCP2Gb-kQcA8YR*wNWHQuo-jwmmo2Qqpu_Fq3aKFCbNFWUbK@BVwmmKezxn3h687mAkuyhV4.hnfrjVjF-Rphjqmy4.tB8"
     ```
-
 11. Restart **Elasticsearch** **Windows Service**. This can be done in the **Services** MMC snapin.
 
 ## Installing and Configuring Kibana and the ReadonlyREST Enterprise Plugin
 
 ### Installing Kibana
 
-1. Locate a recent download of [Kibana](https://artifacts.elastic.co/downloads/kibana/kibana-7.6.2-windows-x86_64.zip), and download the zip package. At the time this article was written, the most recent version was 7.6.2. You may want to check for more updated links as they become available.
+1. Locate a recent download of [Kibana](https://artifacts.elastic.co/downloads/kibana/kibana-7.6.2-windows-x86\_64.zip), and download the zip package. At the time this article was written, the most recent version was 7.6.2. You may want to check for more updated links as they become available.
 2. Extract the Kibana installation. Note that this is a rather large file. If you have trouble with the default Windows zip extractor, you may want to try a tool such as 7-Zip.
 3. ![](../../.gitbook/assets/111.png)
 4. Move the extracted folder to C:\kibana. This may require you to rename the folder.
 5. ![](../../.gitbook/assets/112.png)
 6. Open an administrative command prompt, and navigate to the **Kibana** directory to run the kibana.bat batch file and start **Kibana.**
 7. ![](../../.gitbook/assets/113.png)
-8. Once Kibana has started, navigate to \[[http://localhost:5601\]\(http://localhost:5601\](http://localhost:5601]%28http://localhost:5601%29\) to verify that Kibana is functional.
+8. Once Kibana has started, navigate to \[[http://localhost:5601\](http://localhost:5601\\](http://localhost/:5601]\(http://localhost:5601\)/) to verify that Kibana is functional.
 9. ![](../../.gitbook/assets/114.png)
 
 ### Creating a Self-Signed Certificate for Kibana
@@ -486,7 +484,7 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
 
 1. The easiest way to generate a self-signed certificate using the required format is to use **OpenSSL**. A Windows version of this tool available for download is located [here](https://slproweb.com/products/Win32OpenSSL.html).
 2. ![](../../.gitbook/assets/115.png)
-3. If **Microsoft Visual C++ 2017 Redistributables \(64-bit\)** is not already installed, click **Yes** to download the installation and run the installer first.
+3. If **Microsoft Visual C++ 2017 Redistributables (64-bit)** is not already installed, click **Yes** to download the installation and run the installer first.
 4. Accept the license agreement, and click on **Install.**
 5. Back on the OpenSSL installation, click on **I accept the agreement**, then click on **Next.**
 6. ![](../../.gitbook/assets/120.png)
@@ -504,7 +502,6 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
 18. "C:\Program Files\OpenSSL-Win64\bin\openssl.exe"
 
     req -x509 -sha256 -nodes -days 730 -newkey rsa:2048 -keyout localhost-key.pem -out localhost.pem -subj "/C=US/ST=IL/L=Bloomington/O=lc-test/CN=10.0.0.6"
-
 19. Change the subj to one that is more indicative of your installation. Make sure the CN={IP Address} matches the accessible IP of your Elasticsearch/Kibana server.
 20. ![](../../.gitbook/assets/126.png)
 21. Locate the newly created pem certificates and copy them to C:\kibana\ssl\_cert.
@@ -518,11 +515,11 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
 2. The email that you receive will contain installation instructions. The link will be time-limited, as shown below.
 3. Navigate to C:\kibana\config, and locate the kibana.yml configuration file.
 4. Open the kibana.yml file in Notepad and update it with the following details:
-   * elasticsearch.username—This field matches the first part \(pre-colon\) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
-   * elasticsearch.password—This field matches the second part \(post-colon\) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
+   * elasticsearch.username—This field matches the first part (pre-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
+   * elasticsearch.password—This field matches the second part (post-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
    * elasticsearch.ssl.verificationMode—Set the value to “true” to ignore SSL errors. This is useful when working in a test environment.
    * xpack.security.enabled—This must be disabled for ReadonlyREST to work.
-   * \[server.host\]\([http://server.host—By](http://server.host—By) default, this will be \[localhost\]\([http://localhost\](http://localhost%29\); but, we need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.
+   * \[server.host]\([http://server.host—By](http://server.xn--hostby-6g0c) default, this will be \[localhost]\([http://localhost\\](http://localhost\)); but, we need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.
    * server.ssl.enabled—This is used to turn on SSL and respond to https.
    * server.ssl.certificate—This is the location of the public key certificate.
    * server.ssl.key—This is the location of the private key for the certificate.
@@ -534,26 +531,26 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
    * readonlyrest\_kbn.auth.saml\_adfs.type—For AD FS, this must be “saml.”
    * readonlyrest\_kbn.auth.saml\_adfs.issue —This is the unique identifier that was defined in the AD FS Relying Party Trust configuration, in this case, “ror.”
    * readonlyrest\_kbn.auth.saml\_adfs.protocol—AD FS requires https.
-   * readonlyrest\_kbn.auth.saml\_adfs.entryPoint—This is the entry point for AD FS—[https://{AD](https://{AD) FS Server}/adfs/ls.
-   * readonlyrest\_kbn.auth.saml\_adfs.logoutUrl—This is the logout call to AD FS— [https://{AD](https://{AD) FS Server}/adfs/ls?wa=wsignout1.0.
-   * readonlyrest\_kbn.auth.saml\_adfs.kibanaExternalHost—This is the address and port without the protocol preceding \(i.e., https\).
+   * readonlyrest\_kbn.auth.saml\_adfs.entryPoint—This is the entry point for AD FS—[https://{AD](https://{ad) FS Server}/adfs/ls.
+   * readonlyrest\_kbn.auth.saml\_adfs.logoutUrl—This is the logout call to AD FS— [https://{AD](https://{ad) FS Server}/adfs/ls?wa=wsignout1.0.
+   * readonlyrest\_kbn.auth.saml\_adfs.kibanaExternalHost—This is the address and port without the protocol preceding (i.e., https).
    * readonlyrest\_kbn.auth.saml\_adfs.usernameParameter—This configuration is only doing authentication, and it must match the nameID parameter.
 
 ### Opening the Firewall Port
 
-To allow the AD FS server to talk to Kibana, we need to open the 5601 port on the Kibana server since \[localhost\]\([http://localhost\](http://localhost%29\) is not routable.
+To allow the AD FS server to talk to Kibana, we need to open the 5601 port on the Kibana server since \[localhost]\([http://localhost\\](http://localhost\)) is not routable.
 
 1. Open the **Windows Firewall with Advanced Security** screen, and add a new rule under **Inbound Rules.** Choose **Port.**
 2. Add the specific local port of **5601,** and click **Next.**
 3. Select **Allow the connection,** and click **Next.**
-4. Choose all profiles \(the default\), and click **Next.**
+4. Choose all profiles (the default), and click **Next.**
 5. Name the rule “Kibana,” and click **Finish.**
 
 ## Demonstration
 
-1. Navigate to your Kibana URL \([https://10.0.0.6:5601\](https://10.0.0.6:5601%29\) using Chrome or Firefox. Do not use IE or the SSO button may not show up.
+1. Navigate to your Kibana URL ([https://10.0.0.6:5601\\](https://10.0.0.6/:5601\)/) using Chrome or Firefox. Do not use IE or the SSO button may not show up.
 2. ![](../../.gitbook/assets/128.png)
-3. Click on ADFS, the button configured in the kibana.yml file, and log in with one of the created AD users. Use the defined mail attribute on the AD account \(an email address\).
+3. Click on ADFS, the button configured in the kibana.yml file, and log in with one of the created AD users. Use the defined mail attribute on the AD account (an email address).
 4. ![](../../.gitbook/assets/129.png)
 5. With a successful login, the Kibana screen will appear, and you will see your SAML authenticated user in the lower right corner.
 6. ![](../../.gitbook/assets/130.png)
@@ -561,4 +558,3 @@ To allow the AD FS server to talk to Kibana, we need to open the 5601 port on th
 ## Conclusion
 
 ReadonlyREST combined with Elasticsearch and Kibana opens a world of advanced authentication and authorization options to you. Though only a basic configuration was outlined here, many more useful configuration options are available. You can find out more information about these advanced configurations in the ReadonlyREST documentation and in the ROR forums.
-
