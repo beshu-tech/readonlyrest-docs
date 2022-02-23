@@ -407,6 +407,24 @@ For example the following is a valid rule:
 kibana_hide_apps: [ "Security", "Management|Stack Management", "Enterprise Search" ]
 ```
 
+### Hiding ReadonlyREST menu elements
+This feature will work in ReadonlyREST PRO and Enteprise.
+
+To hide the `Manage kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana_hide_apps`
+
+```bash
+kibana_hide_apps: [ "ROR Manage Kibana" ]
+```
+
+To hide the `Edit security settings` button for the specific user you need to provide `ROR Security Settings` or `readonlyrest_kbn` value into a `kibana_hide_apps`
+
+```bash
+kibana_hide_apps: [ "ROR Security Settings" ]
+```
+
+![Hiding ReadonlyREST menu elements](../.gitbook/assets/hiding_readonlyrest_menu_elements.png)
+
+
 ### Kibana configuration
 
 Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using a pair of credentials we just defined in `readonlyrest.yml` (see above, the ::KIBANA-SRV:: block).
