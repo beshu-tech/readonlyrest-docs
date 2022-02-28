@@ -10,12 +10,12 @@ This document will guide you through the task of setting up an excellent, open s
 * A Kibana installation
 * We want one, centralised multi tenant Elasticsearch + Kibana&#x20;
 
-But with some more enterprisy requirements:
+But with some more enterprise requirements:
 
 * Users need to be able to change their passwords independently
 * Users need to verify their emails
 * Group managers need to be able to add, remove, block (only) their users.
-* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/3.2/server\_admin/topics/authentication/otp-policies.html) is a requirement.
+* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/latest/server_admin/#one-time-password-otp-policies) is a requirement.
 
 ## What is Keycloak
 
@@ -93,7 +93,13 @@ readonlyrest_kbn:
       usernameParameter: "nameID"
       groupsParameter: "Role"
       logoutUrl: "http://localhost:8080/auth/realms/ror/protocol/saml" # <-- from KC configuration tab!
+      cert: /etc/ror/integration/certs/dag.crt # from KC realm keys tab <-- It can be also provided a string value 
 ```
+
+You can find a public PEM-encoded X.509 signing certificate as a string value by selecting the "keys" tab in your newly created realm.
+After clicking on a cert  button, you can copy the value into `kibana.yml` saml config `cert` parameter.
+
+![keycloak\_screenshot](<../../.gitbook/assets/kc_saml_keys_tab.png>)
 
 Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` (on the elasticsearch side). Security settings can also be changed via the ReadonlyREST Kibana app.
 
@@ -135,5 +141,6 @@ readonlyrest:
 
     ror_kbn:
     - name: kbn1
+      # It has to be the same string as we declared in kibana.yml.
       signature_key: "9yzBfnLaTYLfGPzyKW9es76RKYhUVgmuv6ZtehaScj5msGpBpa5FWpwk295uJYaaffTFnQC5tsknh2AguVDaTrqCLfM5zCTqdE4UGNL73h28Bg4dPrvTAFQyygQqv4xfgnevBED6VZYdfjXAQLc8J8ywaHQQSmprZqYCWGE6sM3vzNUEWWB3kmGrEKa4sGbXhmXZCvL6NDnEJhXPDJAzu9BMQxn8CzVLqrx6BxDgPYF8gZCxtyxMckXwCaYXrxAGbjkYH69F4wYhuAdHSWgRAQCuWwYmWCA6g39j4VPge5pv962XYvxwJpvn23Y5KvNZ5S5c6crdG4f4gTCXnU36x92fKMQzsQV9K4phcuNvMWkpqVB6xMA5aPzUeHcGytD93dG8D52P5BxsgaJJE6QqDrk3Y2vyLw9ZEbJhPRJxbuBKVCBtVx26Ldd46dq5eyyzmNEyQGLrjQ4qd978VtG8TNT5rkn4ETJQEju5HfCBbjm3urGLFVqxhGVawecT4YM9Rry4EqXWkRJGTFQWQRnweUFbKNbVTC9NxcXEp6K5rSPEy9trb5UYLYhhMJ9fWSBMuenGRjNSJxeurMRCaxPpNppBLFnp8qW5ezfHgCBpEjkSNNzP4uXMZFAXmdUfJ8XQdPTWuYfdHYc5TZWnzrdq9wcfFQRDpDB2zX5Myu96krDt9vA7wNKfYwkSczA6qUQV66jA8nV4Cs38cDAKVBXnxz22ddAVrPv8ajpu7hgBtULMURjvLt94Nc5FDKw79CTTQxffWEj9BJCDCpQnTufmT8xenywwVJvtj49yv2MP2mGECrVDRmcGUAYBKR8G6ZnFAYDVC9UhY46FGWDcyVX3HKwgtHeb45Ww7dsW8JdMnZYctaEU585GZmqTJp2LcAWRcQPH25JewnPX8pjzVpJNcy7avfA2bcU86bfASvQBDUCrhjgRmK2ECR6vzPwTsYKRgFrDqb62FeMdrKgJ9vKs435T5ACN7MNtdRXHQ4fj5pNpUMDW26Wd7tt9bkBTqEGf"
 ```

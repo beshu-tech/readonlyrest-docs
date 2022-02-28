@@ -653,10 +653,10 @@ readonlyrest_kbn.auth:
     usernameParameter: 'nameID'
     groupsParameter: 'memberOf'
     logoutUrl: 'https://my-saml-idp/saml2/http-post/slo'
-
+    cert: /etc/ror/integration/certs/dag.crt # <-- It can be also provided a string value 
+    
     # OPTIONAL, advanced parameters
     # decryptionCert: /etc/ror/integration/certs/pub.crt
-    # cert: /etc/ror/integration/certs/dag.crt
     # decryptionPvk: /etc/ror/integration/certs/decrypt_pvk.crt
     # issuer: saml_sso_idp
 ```
@@ -664,7 +664,7 @@ readonlyrest_kbn.auth:
 * `issuer`: issuer string to supply to identity provider during sign on request. Defaults to 'ror'
 * `disableRequestedAuthnContext`: if truthy, do not request a specific authentication context. This is known to help when authenticating against Active Directory (AD FS) servers.
 * `decryptionPvk`: Service Provider Private Key. Private key that will be used to attempt to decrypt any encrypted assertions that are received.
-* cert: The downloadable certificate in IDP Metadata (file, absolute path)
+* `cert`: The downloadable certificate in IDP Metadata (file, absolute path) or single line string value
 
 For advanced SAML options, see [passport-saml documentation](https://github.com/bergie/passport-saml).
 
@@ -696,8 +696,6 @@ Example response:
 This feature will work in ReadonlyREST Enterprise.
 
 ReadonlyREST Enterprise support OpenID Connect for both authentication and authorization.
-
-> soon we will create a specific guide only for OpenID, like the ones we have for SAML
 
 Here is how to configure it.
 
@@ -780,6 +778,7 @@ readonlyrest_kbn.auth:
     groupsParameter: 'groups'
     kibanaExternalHost: 'localhost:5601'
     logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout'
+    jwksURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/certs'
 ```
 
 ### Identity provider side
