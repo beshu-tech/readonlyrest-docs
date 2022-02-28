@@ -12,6 +12,8 @@
     * [Microsoft Azure AD](examples/saml-sso/azure_ad.md)
     * [Microsoft ADFS](examples/saml-sso/adfs.md)
     * [Duo Security MFA](examples/saml-sso/multifactor_authentication_with_duo_via_saml.md)
+  * [OpenID Connect (OIDC)](examples/oidc-sso/README.md)
+    * [Keycloak](examples/oidc-sso/keycloak_oidc.md)
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
 * [Changelog](changelog.md)

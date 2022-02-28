@@ -10,12 +10,12 @@ This document will guide you through the task of setting up an excellent, open s
 * A Kibana installation
 * We want one, centralised multi tenant Elasticsearch + Kibana&#x20;
 
-But with some more enterprisy requirements:
+But with some more enterprise requirements:
 
 * Users need to be able to change their passwords independently
 * Users need to verify their emails
 * Group managers need to be able to add, remove, block (only) their users.
-* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/3.2/server\_admin/topics/authentication/otp-policies.html) is a requirement.
+* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/latest/server_admin/#one-time-password-otp-policies) is a requirement.
 
 ## What is Keycloak
 
@@ -93,7 +93,13 @@ readonlyrest_kbn:
       usernameParameter: "nameID"
       groupsParameter: "Role"
       logoutUrl: "http://localhost:8080/auth/realms/ror/protocol/saml" # <-- from KC configuration tab!
+      cert: /etc/ror/integration/certs/dag.crt # from KC realm keys tab <-- It can be also provided a string value 
 ```
+
+You can find a public PEM-encoded X.509 signing certificate as a string value by selecting the "keys" tab in your newly created realm.
+After clicking on a cert  button, you can copy the value into `kibana.yml` saml config `cert` parameter.
+
+![keycloak\_screenshot](<../../.gitbook/assets/kc_saml_keys_tab.png>)
 
 Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` (on the elasticsearch side). Security settings can also be changed via the ReadonlyREST Kibana app.
 
