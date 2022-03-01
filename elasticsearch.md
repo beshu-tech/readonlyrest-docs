@@ -1073,7 +1073,7 @@ The ACL block will match when the user belongs to any of the specified groups. T
 In the `users` section, each entry tells us that:
 
 * A given user with a username matching one of patterns in the `username` array ...
-* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](groups-rule-mapping.md) between local group name and external groups (example 3 below).
+* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](elasticsearch-details/groups-rule-mapping.md) between local group name and external groups (example 3 below).
 * when they can be authenticated and (if authorization rule is present) authorized by the present rule(s).
 
 In general it looks like this:
@@ -1568,7 +1568,7 @@ _Example: rules are associated to groups \(instead of users\) and users-group as
 
 ### Group mapping
 
-Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](https://github.com/beshu-tech/readonlyrest-docs/tree/cd4594859f29f4e3a1504d8630f8afae22176532/elasticsearch-details/groups-rule-mapping.md).
+Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](elasticsearch-details/groups-rule-mapping.md).
 
 ### Username case sensitivity
 
