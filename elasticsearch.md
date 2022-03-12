@@ -1068,38 +1068,51 @@ readonlyrest:
 
 `groups: ["group1", "group2"]`
 
-Limit access to members of specific user groups. The members and groups are defined in `users` section.
+The ACL block will match when the user belongs to any of the specified groups. The information about what users belong to what groups is defined in the `users` section, typically situated after the ACL, further down in the YAML.
 
-The single entry inside the `users` section tells us that:
+In the `users` section, each entry tells us that:
 
-* a given member with a username matching one of patterns in the `username` array ...
-* belongs to local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of detailed mapping between local group name and external groups (example 3 below)
-* when he can be authenticated or/and authorized by auth rule\(s\)
+* A given user with a username matching one of patterns in the `username` array ...
+* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](elasticsearch-details/groups-rule-mapping.md) between local group name and external groups (example 3 below).
+* when they can be authenticated and (if authorization rule is present) authorized by the present rule(s).
 
 In general it looks like this:
 
 ```yaml
+  ...
+  - name: "ACL block with groups rule"
+    indices: [x, y]
+    groups: ["local_group1"] # this group name is defined in the "users" section
+    
   users:
   - username: ["pattern1", "pattern2", ...]
     groups: ["local_group1", "local_group2", ...]
-    authentication_rule: ...
+    <any_authentication_rule>: ...
 
   - username: ["pattern1", "pattern2", ...]
     groups: ["local_group1", "local_group2", ...]
-    authentication_rule: ...
-    authorization_rule: ...
+    <any_authentication_rule>: ...
+    <optionally_any_authorization_rule>: ...
 
   - username: ["pattern1", "pattern2", ...]
     groups: 
       - local_group1: ["external_group1", "external_group2"]
       - local_group2: ["external_group2"] 
-    authentication_with_authorization_rule: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
+    <authentication_with_authorization_rule>: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
 ```
+
 
 For details see [User management](elasticsearch.md#users-and-groups).
 
 [Impersonation](elasticsearch-details/impersonation.md) supports depends on 
 authentication and authorization rules used in `users` section.
+
+#### `groups_and`
+
+`groups_and: ["group1", "group2"]`
+
+This rule is identical to the above defined `groups` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `groups` rule.
+
 
 #### `session_max_idle`
 
@@ -1528,10 +1541,14 @@ The `groups` rule accepts a list of group names. This rule will match if the res
       groups: ["team2"]
       indices: ["index2"]
 
-    - name: Accept requests from users in groups team1 or team2 on index3
+    - name: Accept requests from users in groups team1 OR team2 on index3
       groups: ["team1", "team2"]
       indices: ["index3"]
 
+    - name: Accept requests from users in groups team1 AND team2 on index3
+      groups_and: ["team1", "team2"]
+      indices: ["index3"]
+      
     users:
 
     - username: "alice"
@@ -1551,7 +1568,7 @@ _Example: rules are associated to groups \(instead of users\) and users-group as
 
 ### Group mapping
 
-Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](https://github.com/beshu-tech/readonlyrest-docs/tree/cd4594859f29f4e3a1504d8630f8afae22176532/elasticsearch-details/groups-rule-mapping.md).
+Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](elasticsearch-details/groups-rule-mapping.md).
 
 ### Username case sensitivity
 
