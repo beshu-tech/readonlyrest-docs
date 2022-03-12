@@ -64,7 +64,22 @@ Notice how we need to type in the format `file://` + absolute path \(yes, with t
 
 When prompted about additional permissions, answer **y**.
 
-#### 3.Create settings file
+#### 3. Patch ES
+
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will add some X-Pack jars to ROR's installation directory.
+
+```bash
+# Patch ES 
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+```
+
+**NB:** In case of any problems with the `ror-tools`, please call:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+```
+
+#### 4.Create settings file
 
 Create and edit the `readonlyrest.yml` settings file in the **same directory where `elasticsearch.yml` is found**:
 
@@ -83,7 +98,7 @@ readonlyrest:
       auth_key: user:password
 ```
 
-#### 4. Disable X-Pack security module
+#### 5. Disable X-Pack security module
 
 **\(applies to ES 6.4.0 or greater\)**
 
@@ -95,7 +110,7 @@ Edit `elasticsearch.yml` and append `xpack.security.enabled: false`.
  vim $ES_PATH_CONF/conf/elasticsearch.yml
 ```
 
-#### 5. Start Elasticsearch
+#### 6. Start Elasticsearch
 
 ```text
 bin/elasticsearch
@@ -115,7 +130,7 @@ Now you should be able to see the logs and ReadonlyREST related lines like the o
 [2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
 ```
 
-#### 6. Test everything is working
+#### 7. Test everything is working
 
 The following command should succeed, and the response should show a status code 200.
 
@@ -143,13 +158,28 @@ service stop elasticsearch
 
 depending on your environment.
 
-#### 2. Uninstall ReadonlyREST
+#### 2. Unpatch ES
+
+If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all additional files from ROR's installation directory.
+
+```bash
+# Unpatch ES
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
+```
+
+**NB:** In case of any problems with the `ror-tools`, please call:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+```
+
+#### 3. Uninstall ReadonlyREST
 
 ```text
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
-#### 3. Install the new version of ReadonlyREST into Elasticsearch.
+#### 4. Install the new version of ReadonlyREST into Elasticsearch.
 
 ```text
 bin/elasticsearch-plugin install file://<download_dir>/readonlyrest-<ROR_VERSION>_es<ES_VERSION>.zip
@@ -161,14 +191,27 @@ e.g.
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 ```
 
-#### 4. Restart Elasticsearch.
+#### 5. Patch ES
+
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will add some X-Pack jars to ROR's installation directory.
+
+```bash
+# Patch ES 
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+```
+
+**NB:** In case of any problems with the `ror-tools`, please call:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+```
+
+#### 6. Restart Elasticsearch.
 
 ```text
 bin/elasticsearch
 ```
-
 or:
-
 ```text
 service start elasticsearch
 ```
@@ -193,13 +236,28 @@ service stop elasticsearch
 
 depending on your environment.
 
-#### 2. Uninstall ReadonlyREST from Elasticsearch:
+#### 2. Unpatch ES
+
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will add some X-Pack jars to ROR's installation directory.
+
+```bash
+# Patch ES 
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+```
+
+**NB:** In case of any problems with the `ror-tools`, please call:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+```
+
+#### 3. Uninstall ReadonlyREST from Elasticsearch:
 
 ```text
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
-#### 3. Start Elasticsearch.
+#### 4. Start Elasticsearch.
 
 ```text
 bin/elasticsearch
