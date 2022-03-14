@@ -66,7 +66,7 @@ When prompted about additional permissions, answer **y**.
 
 #### 3. Patch ES
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will add some X-Pack jars to ROR's installation directory.
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will copy some X-Pack jars to ROR's installation directory.
 
 ```bash
 # Patch ES 
@@ -160,7 +160,7 @@ depending on your environment.
 
 #### 2. Unpatch ES
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all additional files from ROR's installation directory.
+If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 # Unpatch ES
@@ -193,7 +193,7 @@ bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 
 #### 5. Patch ES
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will add some X-Pack jars to ROR's installation directory.
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will copy some X-Pack jars to ROR's installation directory.
 
 ```bash
 # Patch ES 
@@ -238,11 +238,11 @@ depending on your environment.
 
 #### 2. Unpatch ES
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will add some X-Pack jars to ROR's installation directory.
+If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
-# Patch ES 
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+# Unpatch ES
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
