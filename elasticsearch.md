@@ -66,7 +66,7 @@ When prompted about additional permissions, answer **y**.
 
 #### 3. Patch ES
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will copy some X-Pack jars to ROR's installation directory.
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools/src/main/scala/tech/beshu/ror/tools/patches/Es8xxPatch.scala), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 # Patch ES 
@@ -193,7 +193,7 @@ bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 
 #### 5. Patch ES
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. This will copy some X-Pack jars to ROR's installation directory.
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools/src/main/scala/tech/beshu/ror/tools/patches/Es8xxPatch.scala), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 # Patch ES 
