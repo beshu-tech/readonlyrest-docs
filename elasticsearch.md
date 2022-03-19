@@ -396,6 +396,7 @@ readonlyrest:
     key_pass: [ password for generated certificate ]
     truststore_file: "elastic-certificates.p12"
     truststore_pass: [ password for generated certificate ]
+    certificate_verification: true # certificate verification is enabled by default on XPack nodes
 ```
 
 #### Certificate verification
