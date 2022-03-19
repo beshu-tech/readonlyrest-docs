@@ -17,7 +17,7 @@
 * **🧐Enhancement** (KBN) Bump axios from 0.21.1 to 0.21.2 in /web-app 
 * **🧐Enhancement** (KBN) Bump ansi-regex from 5.0.0 to 5.0.1 in /automatic-tests
 * **🐞Fix** (KBN) Mandatory elasticsearch credentials in kibana.yml 
-* **🐞Fix** (KBN) Reporting page redirect on refresh when kibana_hide_apps: ["Stack Management"]
+* **🐞Fix** (KBN) [Reporting page redirect on refresh when kibana_hide_apps: ["Stack Management"]](https://forum.readonlyrest.com/t/when-hiding-stack-management-a-redirect-appears-with-report/2088)
 * **🐞Fix** (KBN) whitelistedPaths: log errors when 404 occurs
 * **🐞Fix** (KBN) [Issue uploading large payload](https://forum.readonlyrest.com/t/issue-uploading-large-payload/2091)
 * **🐞Fix** (KBN) `elasticsearch.requestHeadersWhitelist` should be case insensitive
