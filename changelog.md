@@ -1,5 +1,30 @@
 # Changelog
 
+### (2021-03-19) What's new in **ROR 1.39.0**
+* **🚨Security Fix** (KBN) XSS sanitize path requested
+* **🚨Security Fix** (ES) [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) & [CVE-2022-21653](https://nvd.nist.gov/vuln/detail/CVE-2022-21653)
+* **🚀New** (ES) New Support for 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#3-patch-es))
+* **🚀New** (ES) [New `groups_and` ACL rule](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#groups_and)
+* **🧐Enhancement** (KBN) Stop inlining whitelisted headers into Authorization header
+* **🧐Enhancement** (KBN) log additional errors and info related to HA
+* **🧐Enhancement** (KBN) Bump url-parse from 1.5.7 to 1.5.10 in /web-app
+* **🧐Enhancement** (KBN) Bump passport-saml from 1.3.5 to 3.1.0 + OIDC library change
+* **🧐Enhancement** (KBN) Bump url-parse from 1.4.7 to 1.5.7 in /web-app
+* **🧐Enhancement** (KBN) Bump follow-redirects from 1.14.7 to 1.14.8 in /web-app 
+* **🧐Enhancement** (KBN) Bump follow-redirects from 1.13.0 to 1.14.7 in /web-app
+* **🧐Enhancement** (KBN) Bump tmpl from 1.0.4 to 1.0.5 in /web-app 
+* **🧐Enhancement** (KBN) Bump ws from 5.2.2 to 5.2.3 in /web-app 
+* **🧐Enhancement** (KBN) Bump axios from 0.21.1 to 0.21.2 in /web-app 
+* **🧐Enhancement** (KBN) Bump ansi-regex from 5.0.0 to 5.0.1 in /automatic-tests
+* **🐞Fix** (KBN) Mandatory elasticsearch credentials in kibana.yml 
+* **🐞Fix** (KBN) Reporting page redirect on refresh when kibana_hide_apps: ["Stack Management"]
+* **🐞Fix** (KBN) whitelistedPaths: log errors when 404 occurs
+* **🐞Fix** (KBN) [Issue uploading large payload](https://forum.readonlyrest.com/t/issue-uploading-large-payload/2091)
+* **🐞Fix** (KBN) `elasticsearch.requestHeadersWhitelist` should be case insensitive
+* **🐞Fix** (ES) [Issue with handling data streams by `indices` rule](https://forum.readonlyrest.com/t/ror-1-37-0-indices-rule-and-alias-within-kibana/2078)
+* **🐞Fix** (ES) X-Pack SSL nodes cooperation with ROR SSL nodes
+* **🐞Fix** (ES) _msearch issue when filter rules was used in matched block
+
 ### (2021-01-17) What's new in **ROR 1.38.0**
 * **🚀New** (ES) New Support for 7.17.0, 7.17.1
 * **🚀New** (KBN) New Support for 7.17.0
