@@ -6,16 +6,8 @@
 * **🚀New** (ES) New Support for 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#3-patch-es))
 * **🚀New** (ES) [New `groups_and` ACL rule](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#groups_and)
 * **🧐Enhancement** (KBN) Stop inlining whitelisted headers into Authorization header
-* **🧐Enhancement** (KBN) log additional errors and info related to HA
-* **🧐Enhancement** (KBN) Bump url-parse from 1.5.7 to 1.5.10 in /web-app
-* **🧐Enhancement** (KBN) Bump passport-saml from 1.3.5 to 3.1.0 + OIDC library change
-* **🧐Enhancement** (KBN) Bump url-parse from 1.4.7 to 1.5.7 in /web-app
-* **🧐Enhancement** (KBN) Bump follow-redirects from 1.14.7 to 1.14.8 in /web-app 
-* **🧐Enhancement** (KBN) Bump follow-redirects from 1.13.0 to 1.14.7 in /web-app
-* **🧐Enhancement** (KBN) Bump tmpl from 1.0.4 to 1.0.5 in /web-app 
-* **🧐Enhancement** (KBN) Bump ws from 5.2.2 to 5.2.3 in /web-app 
-* **🧐Enhancement** (KBN) Bump axios from 0.21.1 to 0.21.2 in /web-app 
-* **🧐Enhancement** (KBN) Bump ansi-regex from 5.0.0 to 5.0.1 in /automatic-tests
+* **🧐Enhancement** (KBN) Log additional errors and info related to HA
+* **🧐Enhancement** (KBN) Misc internal dependencies upgrades 
 * **🐞Fix** (KBN) Mandatory elasticsearch credentials in kibana.yml 
 * **🐞Fix** (KBN) [Reporting page redirect on refresh when kibana_hide_apps: ["Stack Management"]](https://forum.readonlyrest.com/t/when-hiding-stack-management-a-redirect-appears-with-report/2088)
 * **🐞Fix** (KBN) whitelistedPaths: log errors when 404 occurs
