@@ -3,7 +3,7 @@
 ### (2021-03-19) What's new in **ROR 1.39.0**
 * **🚨Security Fix** (KBN) XSS sanitize path requested
 * **🚨Security Fix** (ES) [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) & [CVE-2022-21653](https://nvd.nist.gov/vuln/detail/CVE-2022-21653)
-* **🚀New** (ES) New Support for 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#3-patch-es))
+* **🚀New** (ES) New Support for 8.1.1, 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#3-patch-es))
 * **🚀New** (ES) [New `groups_and` ACL rule](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#groups_and)
 * **🧐Enhancement** (KBN) Stop inlining whitelisted headers into Authorization header
 * **🧐Enhancement** (KBN) Log additional errors and info related to HA
