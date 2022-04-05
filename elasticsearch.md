@@ -1202,24 +1202,43 @@ ldap_authorization:
   cache_ttl: 10 sec
 ```
 
-It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured groups. Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` can be used to require users belong to all the listed groups (AND logic). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
 #### `ldap_auth`
+
+Shorthand rule that combines `ldap_authentication` and `ldap_authorization` rules together. It handles both authentication and authorization using the configured LDAP connector (here `ldap1`).
 
 ```yaml
 ldap_auth:
   name: "ldap1"
-  groups: ["group3"]
+  groups: ["group1", "group2"] 
 ```
 
-It handles both authentication and authorization using the configured LDAP connector (here `ldap1`). The same functionality can be achieved using the two rules described below:
+The same functionality can be achieved using the two rules described below:
 
 ```yaml
 ldap_authentication: ldap1
 ldap_authorization:
   name: "ldap1"
-  groups: ["group3"]
+  groups: ["group1", "group2"] # match when user belongs to at least one group
 ```
+
+In both `ldap_auth`and `ldap_authorization`, the `groups` clause can be replaced by `group_and` to require the valid LDAP user must belong to all the listed groups:
+
+```yaml
+ldap_auth:
+  name: "ldap1"
+  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+```
+
+Or equivalently:
+
+```yaml
+ldap_authentication: ldap1
+ldap_authorization:
+  name: "ldap1"
+  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+``
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
