@@ -187,6 +187,12 @@ To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 * [Patch Kibana](./#patching-kibana)
 * Restart Kibana.
 
+### Using RoR with a reverse proxy
+
+RoR - just like Kibana itself - is meant to be used either with a proxy or without one.
+- If you decide to set the `server.basePath` property in `kibana.yml`  and set `server.rewriteBasePath` into a `true`, RoR will be accessed directly and via a reverse proxy,
+- If you decided to rewrite the base path manually by your reverse proxy and set the` server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access RoR via a proxy, as it will not work properly when accessed directly.
+
 ## Configuration
 
 ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
