@@ -39,7 +39,7 @@ readonlyrest:
     truststore_file: "truststore.bcfks"
     truststore_pass: readonlyrest
 ```
-3. In case you are using ES >= 7.10 you need to modify $JAVA_HOME/conf/security/java.policy file and add this section at the end of it. It is required because ES restricted permissions that could be used by plugins.
+3. In case you are using ES >= 7.10 you need to modify `$JAVA_HOME/conf/security/java.policy` file and add this section at the end of it. It is required because ES restricted permissions that could be used by plugins.
 ```
 grant {
   permission org.bouncycastle.crypto.CryptoServicesPermission "exportSecretKey";
