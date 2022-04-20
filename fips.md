@@ -19,7 +19,7 @@ Unfortunately not yet. Currently only SSL transport part uses FIPS compliant alg
 1. Prepare keystore and truststore in BCFKS format which is FIPS compliant. It is described [in this section](#how-to-generate-bcfks-keystore-and-truststore-files). 
 > :warning: BCFKS format is supported only when FIPS mode is enabled. It won't be recognised otherwise.
 
-1. Configure readonlyrest.yml to use new keystore and truststore. You will also need to add new configuration parameter `fips_mode`. Here's an example:
+2. Configure readonlyrest.yml to use new keystore and truststore. You will also need to add new configuration parameter `fips_mode`. Here's an example:
 ``` 
 readonlyrest:
   fips_mode: SSL_ONLY
@@ -39,7 +39,7 @@ readonlyrest:
     truststore_file: "truststore.bcfks"
     truststore_pass: readonlyrest
 ```
-1. In case you are using ES >= 7.10 you need to modify $JAVA_HOME/conf/security/java.policy file and add this section at the end of it:
+3. In case you are using ES >= 7.10 you need to modify $JAVA_HOME/conf/security/java.policy file and add this section at the end of it. It is required because ES restricted permissions that could be used by plugins.
 ```
 grant {
   permission org.bouncycastle.crypto.CryptoServicesPermission "exportSecretKey";
