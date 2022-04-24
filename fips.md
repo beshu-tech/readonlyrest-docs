@@ -16,8 +16,10 @@ Unfortunately not yet. Currently only SSL transport part uses FIPS compliant alg
 
 ## How to enable SSL FIPS compliance
 
-1. Prepare keystore and truststore in BCFKS format which is FIPS compliant. Your existing JKS or PKCS12 keystore could be easily converted to BCFKS. Process is described [in this section](#how-to-convert-jks/pkcs12-keystore-files-into-bcfks). 
+1. Prepare keystore and truststore in BCFKS format which is FIPS compliant. Your existing JKS or PKCS12 keystore could be easily converted to BCFKS. Process is described [in this section](#how-to-convert-jkspkcs12-keystore-files-into-bcfks). 
 > :warning: BCFKS format is supported only when FIPS mode is enabled. It won't be recognised otherwise.
+
+> :warning: When using FIPS mode using different password for specific keystore elements is not supported and `key_pass` configuration field is ignored.
 
 2. Configure readonlyrest.yml to use new keystore and truststore. You will also need to add new configuration parameter `fips_mode`. Here's an example:
 ``` 
@@ -29,7 +31,6 @@ readonlyrest:
     keystore_pass: readonlyrest
     truststore_file: "truststore.bcfks"
     truststore_pass: readonlyrest
-    key_pass: readonlyrest
 
   ssl_internode:
     enable: true
