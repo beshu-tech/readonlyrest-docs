@@ -16,7 +16,7 @@ Unfortunately not yet. Currently only SSL transport part uses FIPS compliant alg
 
 ## How to enable SSL FIPS compliance
 
-1. Prepare keystore and truststore in BCFKS format which is FIPS compliant. It is described [in this section](#how-to-generate-bcfks-keystore-and-truststore-files). 
+1. Prepare keystore and truststore in BCFKS format which is FIPS compliant. Your existing JKS or PKCS12 keystore could be easily converted to BCFKS. Process is described [in this section](#how-to-convert-jks/pkcs12-keystore-files-into-bcfks). 
 > :warning: BCFKS format is supported only when FIPS mode is enabled. It won't be recognised otherwise.
 
 2. Configure readonlyrest.yml to use new keystore and truststore. You will also need to add new configuration parameter `fips_mode`. Here's an example:
@@ -57,4 +57,23 @@ grant {
 ```
 
 
-## How to generate BCFKS keystore and truststore files
+## How to convert JKS/PKCS12 keystore files into BCFKS
+
+1. Download [jar with bc-fips](https://repo1.maven.org/maven2/org/bouncycastle/bc-fips/1.0.2.3/bc-fips-1.0.2.3.jar) library and place it preferably in the same directory where are keystore files that you want to convert. 
+
+2. Open terminal and go to directory with keystore to convert
+
+3. Use keytool with following parameters to perform the conversion:
+```
+keytool \
+-importkeystore \
+-srckeystore < filename of keystore that you want to convert >  \
+-destkeystore < name of output keystore, typically should end with .bcfks > \
+-srcstoretype < type of input keystore, should be JKS or PKCS12 > \
+-deststoretype BCFKS \
+-deststorepass < password for input keystore > \
+-srcstorepass < password for output keystore > \
+-providerpath ./bc-fips-1.0.2.1.jar \
+-provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
+```
+If you placed dowloaded jar with bc-fips then you have to use appropriate path instead of `./bc-fips-1.0.2.1.jar`
