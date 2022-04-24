@@ -60,7 +60,7 @@ grant {
 
 ## How to convert JKS/PKCS12 keystore files into BCFKS
 
-1. Download [jar with bc-fips](https://repo1.maven.org/maven2/org/bouncycastle/bc-fips/1.0.2.3/bc-fips-1.0.2.3.jar) library and place it preferably in the same directory where are keystore files that you want to convert. 
+1. Download [jar with bc-fips](https://repo1.maven.org/maven2/org/bouncycastle/bc-fips/1.0.2.3/bc-fips-1.0.2.3.jar) library and place it preferably in the same directory where you store keystore files to convert. 
 
 2. Open terminal and go to directory with keystore to convert
 
