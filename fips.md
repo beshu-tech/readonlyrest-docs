@@ -64,16 +64,16 @@ grant {
 2. Open terminal and go to directory with keystore to convert
 
 3. Use keytool with following parameters to perform the conversion:
-```
-keytool \
--importkeystore \
--srckeystore < filename of keystore that you want to convert >  \
--destkeystore < name of output keystore, typically should end with .bcfks > \
--srcstoretype < type of input keystore, should be JKS or PKCS12 > \
--deststoretype BCFKS \
--deststorepass < password for input keystore > \
--srcstorepass < password for output keystore > \
--providerpath ./bc-fips-1.0.2.1.jar \
--provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
-```
-If you placed dowloaded jar with bc-fips then you have to use appropriate path instead of `./bc-fips-1.0.2.1.jar`
+  ```
+  keytool \
+  -importkeystore \
+  -srckeystore < filename of keystore that you want to convert >  \
+  -destkeystore < name of output keystore, typically should end with .bcfks > \
+  -srcstoretype < type of input keystore, should be JKS or PKCS12 > \
+  -deststoretype BCFKS \
+  -deststorepass < password for input keystore > \
+  -srcstorepass < password for output keystore > \
+  -providerpath ./bc-fips-1.0.2.1.jar \
+  -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
+  ```
+  If you placed dowloaded jar with bc-fips then you have to use appropriate path instead of `./bc-fips-1.0.2.1.jar` 
