@@ -12,7 +12,7 @@ ReadonlyREST uses OpenSource [BouncyCastle](https://www.bouncycastle.org) librar
 
 ## Does ReadonlyREST is fully FIPS compliant?
 
-Unfortunately not yet. Currently only SSL transport part uses FIPS compliant algorithms.
+Unfortunately not yet. Currently only internode SSL and HTTP SSL transports use FIPS compliant algorithms.
 
 ## How to enable SSL FIPS compliance
 
@@ -36,7 +36,6 @@ readonlyrest:
     enable: true
     keystore_file: "keystore.bcfks"
     keystore_pass: readonlyrest
-    key_pass: readonlyrest
     truststore_file: "truststore.bcfks"
     truststore_pass: readonlyrest
 ```
@@ -68,13 +67,20 @@ grant {
   ```
   keytool \
   -importkeystore \
-  -srckeystore < filename of keystore that you want to convert >  \
-  -destkeystore < name of output keystore, typically should end with .bcfks > \
-  -srcstoretype < type of input keystore, should be JKS or PKCS12 > \
-  -deststoretype BCFKS \
-  -deststorepass < password for input keystore > \
-  -srcstorepass < password for output keystore > \
+  -srckeystore SOURCE_KEYSTORE_FILENAME  \
+  -destkeystore DEST_KEYSTORE_FILENAME \
+  -srcstoretype SOURCE_KEYSTORE_TYPE \
+  -deststoretype DEST_KEYSTORE_TYPE \
+  -srcstorepass SOURCE_KEYSTORE_PASSWORD \
+  -deststorepass DEST_KEYSTORE_PASSWORD \
   -providerpath ./bc-fips-1.0.2.1.jar \
   -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
   ```
-  If you placed dowloaded jar with bc-fips then you have to use appropriate path instead of `./bc-fips-1.0.2.1.jar` 
+  where:
+  * SOURCE_KEYSTORE_FILENAME - filename of the keystore(or truststore) that you want to convert.
+  * DEST_KEYSTORE_FILENAME - name of the output file.
+  * SOURCE_KEYSTORE_TYPE - type of keystore to convert. Must be JKS or PKCS12.
+  * DEST_KEYSTORE_TYPE - type of output keystore. Must be BCFKS.
+  * SOURCE_KEYSTORE_PASSWORD - password protecting keystore to convert.
+  * DEST_KEYSTORE_PASSWORD - password protecting output file.
+  If you placed dowloaded jar with bc-fips somewhere else then you have to use appropriate path instead of `./bc-fips-1.0.2.1.jar` 
