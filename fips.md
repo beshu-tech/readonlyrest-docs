@@ -10,9 +10,11 @@ In short it is a thoroughly tested and verified set of standards which could be 
 
 ReadonlyREST uses OpenSource [BouncyCastle](https://www.bouncycastle.org) library to provide FIPS 140-2 compliant algorithms.
 
-## Does ReadonlyREST is fully FIPS compliant?
+## Is ReadonlyREST fully compliant to FIPS 140-2?
 
-Unfortunately not yet. Currently only internode SSL and HTTP SSL transports use FIPS compliant algorithms.
+At the moment, ReadonlyREST can be configured as FIPS compliant only from the "data in transit" standpoint. That is, the SSL encryption of the HTTP and transport interfaces. Other aspects remain to be covered:
+* Making all cryptographic algorithms FIPS compliant.
+* Enforcing more strict security policies across whole ROR plugin in FIPS mode.
 
 ## How to enable SSL FIPS compliance
 
@@ -39,7 +41,7 @@ readonlyrest:
     truststore_file: "truststore.bcfks"
     truststore_pass: readonlyrest
 ```
-3. In case you are using ES >= 7.10 you need to modify `$JAVA_HOME/conf/security/java.policy` file and add this section at the end of it. It is required because ES restricted permissions that could be used by plugins.
+3. In case you are using ES >= 7.10 you need to modify `$JAVA_HOME/conf/security/java.policy` file and add this section at the end of it. This is required because otherwise Elasticsearch will not be able grant to our plugin all these permissions at the JVM level.
 ```
 grant {
   permission org.bouncycastle.crypto.CryptoServicesPermission "exportSecretKey";
@@ -59,9 +61,9 @@ grant {
 
 ## How to convert JKS/PKCS12 keystore files into BCFKS
 
-1. Download [jar with bc-fips](https://repo1.maven.org/maven2/org/bouncycastle/bc-fips/1.0.2.3/bc-fips-1.0.2.3.jar) library and place it preferably in the same directory where you store keystore files to convert. 
+1. Download the [jar with bc-fips](https://repo1.maven.org/maven2/org/bouncycastle/bc-fips/1.0.2.3/bc-fips-1.0.2.3.jar) library and place it preferably in the same directory where you store keystore files to convert. 
 
-2. Open terminal and go to directory with keystore to convert
+2. Open your terminal and go to directory with the keystore to convert
 
 3. Use keytool with following parameters to perform the conversion:
   ```
@@ -83,4 +85,4 @@ grant {
   * DEST_KEYSTORE_TYPE - type of output keystore. Must be BCFKS.
   * SOURCE_KEYSTORE_PASSWORD - password protecting keystore to convert.
   * DEST_KEYSTORE_PASSWORD - password protecting output file.
-  If you placed dowloaded jar with bc-fips somewhere else then you have to use appropriate path instead of `./bc-fips-1.0.2.1.jar` 
+If you saved the bc-fips jar in a different path, remember to run it using the appropriate path instead of  `./bc-fips-1.0.2.1.jar` 
