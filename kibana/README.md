@@ -190,8 +190,9 @@ To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 ### Using RoR with a reverse proxy
 
 RoR - just like Kibana itself - is meant to be used either with a proxy or without one.
-- If you decide to set the `server.basePath` property in `kibana.yml`  and set `server.rewriteBasePath` into a `true`, RoR will be accessed directly and via a reverse proxy,
-- If you decided to rewrite the base path manually by your reverse proxy and set the` server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access RoR via a proxy, as it will not work properly when accessed directly.
+
+* If you decide to set the `server.basePath` property in `kibana.yml` and set `server.rewriteBasePath` into a `true`, RoR will be accessed directly and via a reverse proxy,
+* If you decided to rewrite the base path manually by your reverse proxy and set the `server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access RoR via a proxy, as it will not work properly when accessed directly.
 
 ## Configuration
 
@@ -414,6 +415,7 @@ kibana_hide_apps: [ "Security", "Management|Stack Management", "Enterprise Searc
 ```
 
 ### Hiding ReadonlyREST menu elements
+
 This feature will work in ReadonlyREST PRO and Enteprise.
 
 To hide the `Manage kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana_hide_apps`
@@ -428,8 +430,7 @@ To hide the `Edit security settings` button for the specific user you need to pr
 kibana_hide_apps: [ "ROR Security Settings" ]
 ```
 
-![Hiding ReadonlyREST menu elements](../.gitbook/assets/hiding_readonlyrest_menu_elements.png)
-
+![Hiding ReadonlyREST menu elements](../.gitbook/assets/hiding\_readonlyrest\_menu\_elements.png)
 
 ### Kibana configuration
 
@@ -556,7 +557,7 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 ## SSL/TLS server
 
-You can configure Kibana with ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example,  in `kibana.yml`:
+You can configure Kibana with ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example, in `kibana.yml`:
 
 ```
 server.ssl.enabled: true
@@ -567,19 +568,17 @@ server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
 
 ### Secure cookies
 
-ReadonlyREST will set the "secure" flag to its Kibana session cookie ("ror-cookie") automatically when SSL is enabled in Kibana. \
+ReadonlyREST will set the "secure" flag to its Kibana session cookie ("ror-cookie") automatically when SSL is enabled in Kibana.\
 \
 This is because modern browsers like Chrome won't accept "secure"-flagged cookies if the website is not HTTPS).
 
-However, a common situation is when SSL is configured in a reverse proxy (SSL termination): so the browser will interact with Kibana using HTTPS. But because ROR doesn't know it, it will still serve session cookies without the "secure" flag. \
+However, a common situation is when SSL is configured in a reverse proxy (SSL termination): so the browser will interact with Kibana using HTTPS. But because ROR doesn't know it, it will still serve session cookies without the "secure" flag.\
 \
-In this case, you can force ReadonlyREST to create "secure"-flagged cookies by adding this line in `kibana.yml`:&#x20;
+In this case, you can force ReadonlyREST to create "secure"-flagged cookies by adding this line in `kibana.yml`:
 
 ```
 xpack.security.secureCookies: true 
 ```
-
-
 
 ## Audit log
 
@@ -759,7 +758,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](../elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](<../elasticsearch.md#Dynamic variables from JWT claims>)for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
@@ -790,12 +789,12 @@ readonlyrest_kbn.auth:
 ### Identity provider side
 
 1. Enter the settings interface of your identity provider, and create a new OpenID app .
-2. The redirect URL should be configured as `http://localhost:5601/*`  assuming kibana is listening on localhost and on the default port.
+2. The redirect URL should be configured as `http://localhost:5601/*` assuming kibana is listening on localhost and on the default port.
 3. Create some users and some groups in the identity provider if not present.
 4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
-6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.)
-7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)&#x20;
+6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter` must be present in the `userinfo` token of your OIDC provider.)
+7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)
 
 ## Load balancers
 
@@ -821,8 +820,8 @@ Each Kibana node stores user sessions in-memory. This will cause problems when u
    * `readonlyrest_kbn.cookieName` (custom cookie name - this property is optional, if not specified default cookie name would be `rorCookie`)
    * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
    * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
-   * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
-   * `readonlyrest_kbn.sessions_probe_interval_seconds: 15` (default 10s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
+   * `readonlyrest_kbn.sessions_refresh_after: 5000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
+   * `readonlyrest_kbn.sessions_probe_interval_seconds: 120` (default 60s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them.
 
 ## Login screen tweaking
