@@ -996,3 +996,57 @@ readonlyrest:
 ```
 
 Now try to login as user1, and ReadonlyREST Enterprise should initialise the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.
+
+## Impersonation
+
+User with specific roles (`admin` or `unrestricted`) and permissions (`impersonation` section in the `readonlyrest.yml` file)
+can impersonate (imitate behaviors or actions of the user) another user.
+
+### Test settings
+
+During user impersonation, the `reasonlyrest.yml` settings are replaced by test settings and used during a whole impersonation process
+You need to configure test settings to be able to impersonate the user
+
+
+#### Setting test settings
+
+To set test settings:
+
+1. Open the RoR menu
+2. Click the Edit security settings button
+
+![Test settings ror menu](<../.gitbook/assets/test_settings_ror_menu.png>)
+
+3. Go into the Test settings tab
+4. You can set the TTL value. After the TTL value is reached, your test settings will be deactivated automatically
+5. You can load current settings as test settings
+6. You can deactivate settings manually
+7. You can save test settings as settings
+
+![test settings tab](<../.gitbook/assets/test_settings_tab.png>)
+
+### Impersonate
+It contains a list of external services and local users. You can add and edit the list of users in external services and impersonate a specific user.
+
+#### Local and auth mock services users configuration
+
+1. Open the RoR menu
+2. Click the Edit security settings button
+
+![Impersonate ror menu](<../.gitbook/assets/test_settings_ror_menu.png>)
+
+3. Go into the Impersonate tab
+4. You can free type impersonate. This button is available only in the situation when in some cases, the system is not able to receive all usernames. In this case, to impersonate, you need to type impersonating username manually.
+5. You can add/edit user in a specific external auth mock service
+6. You can impersonate a user and imitate his behavior and actions
+
+![Impersonate tab](<../.gitbook/assets/impersonate_tab.png>)
+
+#### Impersonate a user
+
+1. After successfully impersonating, you should see impersonating username
+2. Click the Finish impersonation button to stop impersonation and go back into Impersonate tab
+
+All logs of impersonated user will have this format `[<log level>][plugins][ReadonlyREST][<filename>][impersonating <impersonated user username>]`
+
+![Impersonate user](<../.gitbook/assets/impersonate_impersonated_menu.png>)
