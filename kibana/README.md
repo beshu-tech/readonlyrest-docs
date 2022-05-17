@@ -1012,7 +1012,7 @@ You need to configure test settings to be able to impersonate the user
 
 To set test settings:
 
-1. Open the RoR menu
+1. Open the ROR menu
 2. Click the Edit security settings button
 
 ![Test settings ror menu](<../.gitbook/assets/test_settings_ror_menu.png>)
@@ -1030,7 +1030,7 @@ It contains a list of external services and local users. You can add and edit th
 
 #### Local and auth mock services users configuration
 
-1. Open the RoR menu
+1. Open the ROR menu
 2. Click the Edit security settings button
 
 ![Impersonate ror menu](<../.gitbook/assets/test_settings_ror_menu.png>)
@@ -1051,7 +1051,7 @@ After clicking add/edit user buttons(5), you will see a dialog with an option to
 
 #### Impersonate a user
 
-1. After successfully impersonating, you should see impersonating username
+1. When an impersonation session is started correctly, the "impersonating" will be visible in the ROR menu a shown in the picture.
 2. Click the Finish impersonation button to stop impersonation and go back into Impersonate tab
 
 All logs of impersonated user will have this format `[<log level>][plugins][ReadonlyREST][<filename>][impersonating <impersonated user username>]`
