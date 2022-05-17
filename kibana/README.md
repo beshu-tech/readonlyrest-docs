@@ -1042,6 +1042,13 @@ It contains a list of external services and local users. You can add and edit th
 
 ![Impersonate tab](<../.gitbook/assets/impersonate_tab.png>)
 
+#### Add/edit auth mock user
+
+After clicking add/edit user buttons(5), you will see a dialog with an option to add(6) or remove(7) user from external auth mock
+
+![Add/edit auth mock service](<../.gitbook/assets/add_edit_auth_mock_service.png>)
+
+
 #### Impersonate a user
 
 1. After successfully impersonating, you should see impersonating username
