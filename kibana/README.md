@@ -671,7 +671,7 @@ For advanced SAML options, see [passport-saml documentation](https://github.com/
 ### Identity provider side
 
 1. Enter the settings of your identity provider, create a new app.
-2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_sso_saml_serv1/metadata.xml`
+2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_saml_serv1/metadata.xml`
 
 Example response:
 
@@ -679,9 +679,9 @@ Example response:
 <?xml version="1.0"?>
 <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="onelogin_saml" ID="onelogin_saml">
   <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/notifylogout"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn/notifylogout"/>
     <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</NameIDFormat>
-    <AssertionConsumerService index="1" isDefault="true" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/assert"/>
+    <AssertionConsumerService index="1" isDefault="true" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn/assert"/>
   </SPSSODescriptor>
 </EntityDescriptor>
 ```
