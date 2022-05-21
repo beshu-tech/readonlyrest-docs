@@ -8,14 +8,14 @@ This document will guide you through the task of setting up an excellent, open s
 
 * A centralised, large Elasticsearch cluster
 * A Kibana installation
-* We want one, centralised multi tenant Elasticsearch + Kibana&#x20;
+* We want one, centralised multi tenant Elasticsearch + Kibana
 
 But with some more enterprise requirements:
 
 * Users need to be able to change their passwords independently
 * Users need to verify their emails
 * Group managers need to be able to add, remove, block (only) their users.
-* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/latest/server_admin/#one-time-password-otp-policies) is a requirement.
+* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/latest/server\_admin/#one-time-password-otp-policies) is a requirement.
 
 ## What is Keycloak
 
@@ -37,23 +37,23 @@ If you imported the JSON file, you should have a "ror" realm, and a SAML client 
 
 First we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2) (5).png>)
 
 Then, let's create a SAML client for this realm:
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_create\_saml\_client (1).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_create\_saml\_client (1) (1).png>)
 
 Then, configure the SAML client according to your Kibana URL, in this example, Kibana responds to "[https://localhost:5601/k](https://localhost:5601/k)"
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_configure\_saml\_client (1).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_configure\_saml\_client (1) (1).png>)
 
 Now that the client is saved, let's observe the "configure" tab, here we will extract the two logout and login endpoints that we will use for configuring our SAML connector in "kibana.yml".
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_extract\_config\_from\_client (1).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_extract\_config\_from\_client (1) (1).png>)
 
 ### Install ReadonlyREST Enterprise for Kibana
 
-Please refer to our [documentation](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md) on how to obtain and install ReadonlyREST Enterprise for Kibana. Also remember that it relies on the Elasticsearch plugin to be configured as well.
+Please refer to our [documentation](../../kibana.md) on how to obtain and install ReadonlyREST Enterprise for Kibana. Also remember that it relies on the Elasticsearch plugin to be configured as well.
 
 ### Setup the SAML connector
 
@@ -96,16 +96,15 @@ readonlyrest_kbn:
       cert: /etc/ror/integration/certs/dag.crt # from KC realm keys tab <-- It can be also provided a string value 
 ```
 
-You can find a public PEM-encoded X.509 signing certificate as a string value by selecting the "keys" tab in your newly created realm.
-After clicking on a cert  button, you can copy the value into `kibana.yml` saml config `cert` parameter.
+You can find a public PEM-encoded X.509 signing certificate as a string value by selecting the "keys" tab in your newly created realm. After clicking on a cert button, you can copy the value into `kibana.yml` saml config `cert` parameter.
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc_saml_keys_tab.png>)
+![keycloak\_screenshot](../../.gitbook/assets/kc\_saml\_keys\_tab.png)
 
 Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` (on the elasticsearch side). Security settings can also be changed via the ReadonlyREST Kibana app.
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our Elasticsearch needs to be available on https (more detailed info in our [documentation](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#encryption)), so we modify the elasticsearch.yml
+Our Elasticsearch needs to be available on https (more detailed info in our [documentation](../../elasticsearch.md#encryption)), so we modify the elasticsearch.yml
 
 **append to elasticsearch.yml**
 

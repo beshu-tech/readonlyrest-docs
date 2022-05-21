@@ -219,7 +219,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1).png>)
+![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1) (1).png>)
 
 #### Malformed in-index settings
 
@@ -408,6 +408,7 @@ kibana_hide_apps: [ "Security", "Management|Stack Management", "Enterprise Searc
 ```
 
 ### Hiding ReadonlyREST menu elements
+
 This feature will work in ReadonlyREST PRO and Enteprise.
 
 To hide the `Manage kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana_hide_apps`
@@ -422,8 +423,7 @@ To hide the `Edit security settings` button for the specific user you need to pr
 kibana_hide_apps: [ "ROR Security Settings" ]
 ```
 
-![Hiding ReadonlyREST menu elements](../.gitbook/assets/hiding_readonlyrest_menu_elements.png)
-
+![Hiding ReadonlyREST menu elements](../.gitbook/assets/hiding\_readonlyrest\_menu\_elements.png)
 
 ### Kibana configuration
 
@@ -454,7 +454,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.
 
-1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
+1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](../elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
@@ -550,7 +550,7 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 ## SSL/TLS server
 
-You can configure Kibana with ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example,  in `kibana.yml`:
+You can configure Kibana with ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example, in `kibana.yml`:
 
 ```
 server.ssl.enabled: true
@@ -561,19 +561,17 @@ server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
 
 ### Secure cookies
 
-ReadonlyREST will set the "secure" flag to its Kibana session cookie ("ror-cookie") automatically when SSL is enabled in Kibana. \
+ReadonlyREST will set the "secure" flag to its Kibana session cookie ("ror-cookie") automatically when SSL is enabled in Kibana.\
 \
 This is because modern browsers like Chrome won't accept "secure"-flagged cookies if the website is not HTTPS).
 
-However, a common situation is when SSL is configured in a reverse proxy (SSL termination): so the browser will interact with Kibana using HTTPS. But because ROR doesn't know it, it will still serve session cookies without the "secure" flag. \
+However, a common situation is when SSL is configured in a reverse proxy (SSL termination): so the browser will interact with Kibana using HTTPS. But because ROR doesn't know it, it will still serve session cookies without the "secure" flag.\
 \
-In this case, you can force ReadonlyREST to create "secure"-flagged cookies by adding this line in `kibana.yml`:&#x20;
+In this case, you can force ReadonlyREST to create "secure"-flagged cookies by adding this line in `kibana.yml`:
 
 ```
 xpack.security.secureCookies: true 
 ```
-
-
 
 ## Audit log
 
@@ -585,11 +583,11 @@ The audit log feature is widely described in [📖docs for Elasticsearch plugin]
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](<../.gitbook/assets/audit\_tab (1).png>)
+![audit log tab](<../.gitbook/assets/audit\_tab (1) (1).png>)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](<../.gitbook/assets/load\_audit\_dashboard (1) (1) (1) (1) (4) (6) (7) (9) (11).png>)
+![loading visualization](<../.gitbook/assets/load\_audit\_dashboard (1) (1) (1) (1) (4) (6) (7) (10) (15).png>)
 
 In detail, this feature creates three Kibana "saved objects":
 
@@ -671,7 +669,7 @@ For advanced SAML options, see [passport-saml documentation](https://github.com/
 ### Identity provider side
 
 1. Enter the settings of your identity provider, create a new app.
-2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_saml_serv1/metadata.xml`
+2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_sso_saml_serv1/metadata.xml`
 
 Example response:
 
@@ -679,9 +677,9 @@ Example response:
 <?xml version="1.0"?>
 <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="onelogin_saml" ID="onelogin_saml">
   <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn/notifylogout"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/notifylogout"/>
     <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</NameIDFormat>
-    <AssertionConsumerService index="1" isDefault="true" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn/assert"/>
+    <AssertionConsumerService index="1" isDefault="true" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/assert"/>
   </SPSSODescriptor>
 </EntityDescriptor>
 ```
@@ -753,7 +751,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](../elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](<../elasticsearch.md#Dynamic variables from JWT claims>)for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
@@ -784,12 +782,12 @@ readonlyrest_kbn.auth:
 ### Identity provider side
 
 1. Enter the settings interface of your identity provider, and create a new OpenID app .
-2. The redirect URL should be configured as `http://localhost:5601/*`  assuming kibana is listening on localhost and on the default port.
+2. The redirect URL should be configured as `http://localhost:5601/*` assuming kibana is listening on localhost and on the default port.
 3. Create some users and some groups in the identity provider if not present.
 4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
-6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.)
-7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)&#x20;
+6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter` must be present in the `userinfo` token of your OIDC provider.)
+7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)
 
 ## Load balancers
 
