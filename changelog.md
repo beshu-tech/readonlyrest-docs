@@ -1,5 +1,21 @@
 # Changelog
 
+### (2021-05-24) What's new in **ROR 1.40.0**
+* **🚨Security Fix** (ES) [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)
+* **🚨Security Fix** (KBN) “Security” app not entirely hidden in 8.2.x
+* **🚀New** (ES) New Support for 8.2.1, 7.17.4
+* **🚀New** (ES & KBN) The Impersonation feature
+* **🚀New** (ES) [FIPS compliant SSL mode](/elasticsearch-details/fips.md)
+* **🧐Enhancement** (KBN) SAML cert is now required
+* **🧐Enhancement** (KBN) moved OIDC to better library
+* **🐞Fix** (ES) `indices: ["1"]` interpreted as integer and fails to parse
+* **🐞Fix** (KBN) /login?jwt=xxx authorization now works again
+* **🐞Fix** (KBN) OIDC/SAML assertion claims were not forwarded to ES
+* **🐞Fix** (KBN) include whitelisted headers while logging
+* **🐞Fix** (KBN) basepath handling fixes (too many redirects)
+* **🐞Fix** (KBN) Make ROR default space the actual default one
+* **🐞Fix** (KBN) RORDEV-641 Fix oidc connection error
+
 ### (2021-03-19) What's new in **ROR 1.39.0**
 * **🚨Security Fix** (KBN) XSS sanitize path requested
 * **🚨Security Fix** (ES) [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) & [CVE-2022-21653](https://nvd.nist.gov/vuln/detail/CVE-2022-21653)
