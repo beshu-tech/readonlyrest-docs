@@ -21,7 +21,7 @@ Follow the instructions for Duo Gateway ([https://duo.com/docs/dag-linux](https:
 
 Once the Duo Gateway is installed, open a browser and point to its web interface to configure it. When you configure the authentication sources, be sure to set the correct username attribute. Keep in mind this value because it will be mapped directly to whatever has been configured in the actual Duo.com dashboard, under `Gateway > Applications` (which we are just about to configure).
 
-![Source](<../../.gitbook/assets/duo-dag-config (1) (1).png>)
+![Source](<../../.gitbook/assets/duo-dag-config (1) (1) (1).png>)
 
 ### Configure Application in Duo Admin Dashboard
 
@@ -29,11 +29,11 @@ In the Duo Administration dashboard, go to Applications. Click `Protect an Appli
 
 This will create a generic SAML provider. Set these fields:
 
-* Service provider name: A name that refers to your ReadonlyREST Enterprise  installation
+* Service provider name: A name that refers to your ReadonlyREST Enterprise installation
 * EntityID: Set an existing entity name or use the same as Service Provider Name
-* Assertion Consumer Service: The SAML Url assertion found in metadata.xml, the url format is `<kibanaExternalHost>/ror_kbn_sso/assert`.&#x20;
+* Assertion Consumer Service: The SAML Url assertion found in metadata.xml, the url format is `<kibanaExternalHost>/ror_kbn_sso/assert`.
 
-![SP](<../../.gitbook/assets/duo-saml-sp (1) (3) (3) (3) (3) (2).png>)
+![SP](<../../.gitbook/assets/duo-saml-sp (1) (3) (3) (3) (3) (2) (4).png>)
 
 In SAML Response, set NameID to be the same variable name as configured previously in the authentication source. Leave the default values for the remaining settings. Click `Save Application` and scroll up and download the configuration file.
 

@@ -9,8 +9,7 @@ The documentation of an open source product should also be open source! Found a 
 
 ## Getting started
 
-* [🚀 Kibana Multi-User with ROR PRO](examples/multiuser_guide.md)
-* [🚀 Kibana Multi-Tenancy with ROR Enterprise](examples/multitenancy_guide.md)
+* [🚀 Kibana Multi-User with ROR PRO](examples/multiuser\_guide.md)
+* [🚀 Kibana Multi-Tenancy with ROR Enterprise](examples/multitenancy\_guide.md)
 
-[⬅️ Elasticsearch Project](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin) \(Github\)
-
+[⬅️ Elasticsearch plugin project](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin) (Github)

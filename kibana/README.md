@@ -226,7 +226,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1).png>)
+![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1) (1).png>)
 
 #### Malformed in-index settings
 
@@ -461,7 +461,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.
 
-1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
+1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](../elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
@@ -590,11 +590,11 @@ The audit log feature is widely described in [📖docs for Elasticsearch plugin]
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](<../.gitbook/assets/audit\_tab (1).png>)
+![audit log tab](<../.gitbook/assets/audit\_tab (1) (1).png>)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](<../.gitbook/assets/load\_audit\_dashboard (1) (1) (1) (1) (4) (6) (7) (9) (11).png>)
+![loading visualization](<../.gitbook/assets/load\_audit\_dashboard (1) (1) (1) (1) (4) (6) (7) (10) (15).png>)
 
 In detail, this feature creates three Kibana "saved objects":
 

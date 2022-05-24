@@ -181,7 +181,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1).png>)
+![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1) (1).png>)
 
 #### Malformed in-index settings
 
@@ -280,7 +280,7 @@ readonlyrest:
 
 Whatever your configuration ends up being, remember:
 
-* The admin user has `kibana_access: admin`&#x20;
+* The admin user has `kibana_access: admin`
 * Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
 
 #### Rules ordering matters
@@ -349,26 +349,26 @@ Possible values: `"login", "tenancyHop", "never"`.
 
 Examples of valid arguments for the `kibana_hide_apps: [...]` rule (readonlyrest.yml)
 
-| hide-app key                     | App name         | App url                                                                                                                                                                                                                     |
-| -------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| kibana:discover                  | Discover         | [http://kibana-url:5601/app/kibana#/discover](http://kibana-url:5601/app/kibana#/discover)                                                                                                                                  |
-| kibana:visualize                 | Visualize        | [http://kibana-url:5601/app/kibana#/visualize](http://kibana-url:5601/app/kibana#/visualize)                                                                                                                                |
-| kibana:dashboard                 | Dashboard        | [http://kibana-url:5601/app/kibana#/dashboards](http://kibana-url:5601/app/kibana#/dashboards)                                                                                                                              |
-| timelion                         | Timelion         | [http://kibana-url:5601/app/timelion](http://kibana-url:5601/app/timelion)                                                                                                                                                  |
-| canvas                           | Canvas           | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas)                                                                                                                                                      |
-| maps                             | Maps             | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps)                                                                                                                                                          |
-| code                             | Code (Beta)      | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code)                                                                                                                                                          |
-| ~~readonlyrest\_kbn~~ (obsolete) | ~~ReadonlyREST~~ | ~~\~\~\[~~[http://kibana-url:5601/app/readonlyrest\_kbn~~\](http://kibana-url:5601/app/readonlyrest\_kbn)~~\~\~](http://kibana-url:5601/app/readonlyrest\_kbn\~\~]\(http://kibana-url:5601/app/readonlyrest\_kbn\)\~\~\~\~) |
-| ml                               | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml)                                                                                                                                                              |
-| infra:home                       | Infrastructure   | [http://kibana-url:5601/app/infra#/infrastructure/inventory?\_g=(](http://kibana-url:5601/app/infra#/infrastructure/inventory?\_g=%28))                                                                                     |
-| infra:logs                       | Logs             | [http://kibana-url:5601/app/infra#/logs?\_g=(](http://kibana-url:5601/app/infra#/logs?\_g=%28))                                                                                                                             |
-| apm                              | APM              | [http://kibana-url:5601/app/apm](http://kibana-url:5601/app/apm)                                                                                                                                                            |
-| uptime                           | Uptime           | [http://kibana-url:5601/app/uptime#/](http://kibana-url:5601/app/uptime#/)                                                                                                                                                  |
-| siem                             | SIEM             | [http://kibana-url:5601/app/siem](http://kibana-url:5601/app/siem)                                                                                                                                                          |
-| graph                            | Graph            | [http://kibana-url:5601/app/graph](http://kibana-url:5601/app/graph)                                                                                                                                                        |
-| kibana:dev\_tools                | Dev Tools        | [http://kibana-url:5601/app/kibana#/dev\_tools](http://kibana-url:5601/app/kibana#/dev\_tools)                                                                                                                              |
-| monitoring                       | Stack Monitoring | [http://kibana-url:5601/app/monitoring](http://kibana-url:5601/app/monitoring)                                                                                                                                              |
-| kibana:stack\_management         | Stack Management | [http://kibana-url:5601/app/kibana#/management](http://kibana-url:5601/app/kibana#/management)                                                                                                                              |
+| hide-app key                     | App name         | App url                                                                                                                                                                                                                         |
+| -------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| kibana:discover                  | Discover         | [http://kibana-url:5601/app/kibana#/discover](http://kibana-url:5601/app/kibana#/discover)                                                                                                                                      |
+| kibana:visualize                 | Visualize        | [http://kibana-url:5601/app/kibana#/visualize](http://kibana-url:5601/app/kibana#/visualize)                                                                                                                                    |
+| kibana:dashboard                 | Dashboard        | [http://kibana-url:5601/app/kibana#/dashboards](http://kibana-url:5601/app/kibana#/dashboards)                                                                                                                                  |
+| timelion                         | Timelion         | [http://kibana-url:5601/app/timelion](http://kibana-url:5601/app/timelion)                                                                                                                                                      |
+| canvas                           | Canvas           | [http://kibana-url:5601/app/canvas](http://kibana-url:5601/app/canvas)                                                                                                                                                          |
+| maps                             | Maps             | [http://kibana-url:5601/app/maps](http://kibana-url:5601/app/maps)                                                                                                                                                              |
+| code                             | Code (Beta)      | [http://kibana-url:5601/app/code](http://kibana-url:5601/app/code)                                                                                                                                                              |
+| ~~readonlyrest\_kbn~~ (obsolete) | ~~ReadonlyREST~~ | ~~\~\~\[~~[http://kibana-url:5601/app/readonlyrest\_kbn\~\~\](http://kibana-url:5601/app/readonlyrest\_kbn)\~\~\~\~](http://kibana-url:5601/app/readonlyrest\_kbn\~\~]\(http://kibana-url:5601/app/readonlyrest\_kbn\)\~\~\~\~) |
+| ml                               | Machine Learning | [http://kibana-url:5601/app/ml](http://kibana-url:5601/app/ml)                                                                                                                                                                  |
+| infra:home                       | Infrastructure   | [http://kibana-url:5601/app/infra#/infrastructure/inventory?\_g=(](http://kibana-url:5601/app/infra#/infrastructure/inventory?\_g=%28))                                                                                         |
+| infra:logs                       | Logs             | [http://kibana-url:5601/app/infra#/logs?\_g=(](http://kibana-url:5601/app/infra#/logs?\_g=%28))                                                                                                                                 |
+| apm                              | APM              | [http://kibana-url:5601/app/apm](http://kibana-url:5601/app/apm)                                                                                                                                                                |
+| uptime                           | Uptime           | [http://kibana-url:5601/app/uptime#/](http://kibana-url:5601/app/uptime#/)                                                                                                                                                      |
+| siem                             | SIEM             | [http://kibana-url:5601/app/siem](http://kibana-url:5601/app/siem)                                                                                                                                                              |
+| graph                            | Graph            | [http://kibana-url:5601/app/graph](http://kibana-url:5601/app/graph)                                                                                                                                                            |
+| kibana:dev\_tools                | Dev Tools        | [http://kibana-url:5601/app/kibana#/dev\_tools](http://kibana-url:5601/app/kibana#/dev\_tools)                                                                                                                                  |
+| monitoring                       | Stack Monitoring | [http://kibana-url:5601/app/monitoring](http://kibana-url:5601/app/monitoring)                                                                                                                                                  |
+| kibana:stack\_management         | Stack Management | [http://kibana-url:5601/app/kibana#/management](http://kibana-url:5601/app/kibana#/management)                                                                                                                                  |
 
 ### Kibana configuration
 
@@ -397,7 +397,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.
 
-1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
+1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](../elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
@@ -493,7 +493,7 @@ The audit log feature is widely described in [📖docs for Elasticsearch plugin]
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](<../.gitbook/assets/audit\_tab (1).png>)
+![audit log tab](<../.gitbook/assets/audit\_tab (1) (1).png>)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
@@ -659,7 +659,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](../elasticsearch.md#Dynamic%20variables%20from%20JWT%20claims) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](<../elasticsearch.md#Dynamic variables from JWT claims>)for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
@@ -689,12 +689,12 @@ readonlyrest_kbn.auth:
 ### Identity provider side
 
 1. Enter the settings interface of your identity provider, and create a new OpenID app .
-2. The redirect URL should be configured as `http://localhost:5601/*`  assuming kibana is listening on localhost and on the default port.
+2. The redirect URL should be configured as `http://localhost:5601/*` assuming kibana is listening on localhost and on the default port.
 3. Create some users and some groups in the identity provider if not present.
 4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
-6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter`  must be present in the `userinfo` token of your OIDC provider.)
-7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)&#x20;
+6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter` must be present in the `userinfo` token of your OIDC provider.)
+7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)
 
 ## Load balancers
 
