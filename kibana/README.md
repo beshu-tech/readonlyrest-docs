@@ -187,6 +187,13 @@ To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 * [Patch Kibana](./#patching-kibana)
 * Restart Kibana.
 
+### Using RoR with a reverse proxy
+
+RoR - just like Kibana itself - is meant to be used either with a proxy or without one.
+
+* If you decide to set the `server.basePath` property in `kibana.yml` and set `server.rewriteBasePath` into a `true`, RoR will be accessed directly and via a reverse proxy,
+* If you decided to rewrite the base path manually by your reverse proxy and set the `server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access RoR via a proxy, as it will not work properly when accessed directly.
+
 ## Configuration
 
 ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
@@ -669,7 +676,7 @@ For advanced SAML options, see [passport-saml documentation](https://github.com/
 ### Identity provider side
 
 1. Enter the settings of your identity provider, create a new app.
-2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_sso_saml_serv1/metadata.xml`
+2. Configure it using the information found by connecting to `http://my.public.hostname.com/ror_kbn_saml_serv1/metadata.xml`
 
 Example response:
 
@@ -677,9 +684,9 @@ Example response:
 <?xml version="1.0"?>
 <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="onelogin_saml" ID="onelogin_saml">
   <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/notifylogout"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn/notifylogout"/>
     <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</NameIDFormat>
-    <AssertionConsumerService index="1" isDefault="true" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn_sso/assert"/>
+    <AssertionConsumerService index="1" isDefault="true" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://my.public.hostname.com/ror_kbn/assert"/>
   </SPSSODescriptor>
 </EntityDescriptor>
 ```
@@ -813,8 +820,8 @@ Each Kibana node stores user sessions in-memory. This will cause problems when u
    * `readonlyrest_kbn.cookieName` (custom cookie name - this property is optional, if not specified default cookie name would be `rorCookie`)
    * `readonlyrest_kbn.store_sessions_in_index: true` (enable session storage in index)
    * `readonlyrest_kbn.sessions_index_name: "someCustomIndexName"` (index name - this property is optional, if not specified default index would be `.readonlyrest_kbn_sessions`)
-   * `readonlyrest_kbn.sessions_refresh_after: 1000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
-   * `readonlyrest_kbn.sessions_probe_interval_seconds: 15` (default 10s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
+   * `readonlyrest_kbn.sessions_refresh_after: 5000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
+   * `readonlyrest_kbn.sessions_probe_interval_seconds: 120` (default 60s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them.
 
 ## Login screen tweaking
