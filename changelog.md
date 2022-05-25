@@ -4,6 +4,7 @@
 * **🚨Security Fix** (ES) [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)
 * **🚨Security Fix** (KBN) “Security” app not entirely hidden in 8.2.x
 * **🚀New** (ES) New Support for 8.2.1, 7.17.4
+* **🚀New** (KBN) New Support for 8.2.1, 7.17.4
 * **🚀New** (ES & KBN) The Impersonation feature
 * **🚀New** (ES) [FIPS compliant SSL mode](/elasticsearch-details/fips.md)
 * **🧐Enhancement** (KBN) SAML cert is now required
