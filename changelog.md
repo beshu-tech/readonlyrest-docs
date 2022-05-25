@@ -8,6 +8,7 @@
 * **🚀New** (ES) [FIPS compliant SSL mode](/elasticsearch-details/fips.md)
 * **🧐Enhancement** (KBN) SAML cert is now required
 * **🧐Enhancement** (KBN) moved OIDC to better library
+* **🧐Enhancement** (KBN) OIDC jwksURL is now required
 * **🐞Fix** (ES) `indices: ["1"]` interpreted as integer and fails to parse
 * **🐞Fix** (KBN) /login?jwt=xxx authorization now works again
 * **🐞Fix** (KBN) OIDC/SAML assertion claims were not forwarded to ES
