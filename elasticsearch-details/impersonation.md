@@ -50,14 +50,14 @@ curl -vk -u user1:user_secret "https://localhost:9200/twitter/_search?pretty"
 Now, how the same request would look like if our `admin1` wants to impersonate `user1` and search `twitter` on their behalf?
 
 ```bash
-curl -vk -u admin1:pass -H "impersonate_as: user1" "https://localhost:9200/twitter/_search?pretty"
+curl -vk -u admin1:pass -H "x-ror-impersonating: user1" "https://localhost:9200/twitter/_search?pretty"
 ```
 
-As we can see the request looks pretty much the same. The main difference is the `impersonate_as` header that contains `user1`, and authorization header value has the admin's credentials now. 
+As we can see the request looks pretty much the same. The main difference is the `x-ror-impersonating` header that contains `user1`, and authorization header value has the admin's credentials now. 
 
 Responses of both requests should be the same.
 
-Should the admin pass wrong credentials, or should they not be alowed to impersonate the user provided in the `impersonate_as` header, 
+Should the admin pass wrong credentials, or should they not be alowed to impersonate the user provided in the `x-ror-impersonating` header, 
 ROR is going to return a response like the following:
 
 > ```text
@@ -138,6 +138,9 @@ For impersonation to work, some valid test settings should be created and saved.
 ![Impersonate tab](<../.gitbook/assets/impersonate_tab.png>)
 
 ## Add/edit auth mock user
+External services mock is used to simulate the response of existing authentication or authorization service like LDAP.
+You don't need to create a user account for configuration testing.
+You will only need to define users (and the groups which belong) returned by external services, listed in test settings.
 
 After clicking add/edit user buttons(5), you will see a dialog with an option to add(6) or remove(7) user from external auth mock
 
@@ -152,3 +155,17 @@ After clicking add/edit user buttons(5), you will see a dialog with an option to
 All logs of impersonated user will have this format `[<log level>][plugins][ReadonlyREST][<filename>][impersonating <impersonated user username>]`
 
 ![Impersonate user](<../.gitbook/assets/impersonate_impersonated_menu.png>)
+
+## Impersonation limitations
+
+Impersonation mode has some limitations. Please check if they have an impact on your use cases:
+
+* Not all features available in the ROR configuration are testable with impersonation mode.
+Some rules used in ROR ACL do not support impersonation. For example, auth rule with hashed credentials(e.g. `auth_key_sha512`) can be used in impersonation mode only when credentials follow the format `USER_NAME: HASH(PASSWORD)`; A fully hashed username and password don't allow fetching a username. The auth rule in such a format won't match during impersonation.
+A list of the rules with info about impersonation support can be found [here](../elasticsearch.md#rules).
+
+* Test settings are stored in the memory of the node that handled the POST tests settings request.
+Impersonation support will be limited to this node.
+
+* Sometimes is impossible to fetch usernames defined in the test settings.
+If a `users` rule contains a username pattern with a wildcard, to impersonate a user matching a given pattern, you need to enter the username manually.
