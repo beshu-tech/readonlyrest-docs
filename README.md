@@ -3,7 +3,7 @@
 ## Documentation for ReadonlyREST plugins
 
 * [📖 Docs for Elasticsearch plugin](elasticsearch.md)
-* [📖 Docs for Kibana plugin](kibana/)
+* [📖 Docs for Kibana plugin](kibana.md)
 
 The documentation of an open source product should also be open source! Found a problem? Edit the file directly from GitHub!
 
