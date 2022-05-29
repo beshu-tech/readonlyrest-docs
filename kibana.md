@@ -1014,8 +1014,15 @@ of another user. Why would we want it? Let's suppose the first user is
 an admin, who has just configured access for a new user. They would like 
 to know if the rule(s) are configured correctly. And here it comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. 
 
+You can check more detailed information about impersonation feature [here](./kibana-details/impersonation.md)
+
+
+
+
+
+
 User with specific roles (`admin` or `unrestricted`) and permissions (`impersonation` section in the `readonlyrest.yml` file)
-can impersonate (imitate behaviors or actions of the user) another user. You can check more detailed information about impersonation feature [here](../elasticsearch-details/impersonation.md)
+can impersonate (imitate behaviors or actions of the user) another user. 
 
 ### Test settings
 

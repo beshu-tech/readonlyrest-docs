@@ -1,17 +1,31 @@
 # Impersonation 
 
-According to [Wikipedia](https://en.wikipedia.org/wiki/Impersonator):
+After describing what [the impersonation is](../kibana.md), it's high time to see how does ROR support it and who and when could be interested in using this feature. Let's start with the latter one.
 
-> An impersonator is someone who imitates or copies the behavior or actions of another.
+## Use cases
 
-So, an impersonation can be understood as imitating behaviors or actions.
-In the context of ReadonlyREST: one user could imitate an action 
-of another user. Why would we want it? Let's suppose the first user is 
-an admin, who has just configured access for a new user. They would like 
-to know if the rule(s) are configured correctly. And here it comes the impersonation feature. The admin can send an ES request on behalf of the 
-tested user and authenticate using their credentials. 
+The impersonation feature is prepared for a ROR admin. It's not rather useful for users (at least not directly). We can point out two the most obvious use cases when an admin could take advantage of the feature:
 
-## Impersonators configuration
+#### Debugging users' problems:
+
+Let's imagine that some user problem with its ROR configuration (eg. the user doesn't has an access to some feature that was blocked at ROR's level by you, the admin). They are not able to clearly describe what the issue is. For the admin, it'd be better if they can see what the user sees. Thanks to impersonation feature, an admin is allowed to impersonate the user and feel and see the same the user sees. 
+
+#### Configuring a new user:
+
+When an admin configures a new user in ROR settings, they face two problems:
+
+1. `Won't the updated configuration break the production cluster?`
+1. `How do I know that the new user is correctly configured? Do they have correct permissions?`
+
+Both of the problems can be solved using the ROR's impersonation. Thanks to the fact that the impersonation operates on different than production (main) settings, the admin can alter it without worries that their actions will break something and users won't be able to do their job. 
+
+Admin can add the new user configuration without worries and then test it by impersonate the user. They can check if user can log in without problems and if the user has access only to the Kibana's features the admin wanted to grant. When the admin is sure that everything is configured correctly, they can promote the settings (test) to production. 
+
+## Impersonation configuration
+
+### In ROR ES Settings
+
+### In Kibana UI
 
 Not every user can be the impersonator. The list of allowed impersonators and their permissions are defined in the `impersonation` section:
 
