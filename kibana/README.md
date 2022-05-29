@@ -999,6 +999,16 @@ Now try to login as user1, and ReadonlyREST Enterprise should initialise the ind
 
 ## Impersonation
 
+According to [Wikipedia](https://en.wikipedia.org/wiki/Impersonator):
+
+> An impersonator is someone who imitates or copies the behavior or actions of another.
+
+So, an impersonation can be understood as imitating behaviors or actions.
+In the context of ReadonlyREST: one user could imitate an action 
+of another user. Why would we want it? Let's suppose the first user is 
+an admin, who has just configured access for a new user. They would like 
+to know if the rule(s) are configured correctly. And here it comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. 
+
 User with specific roles (`admin` or `unrestricted`) and permissions (`impersonation` section in the `readonlyrest.yml` file)
 can impersonate (imitate behaviors or actions of the user) another user. You can check more detailed information about impersonation feature [here](../elasticsearch-details/impersonation.md)
 
