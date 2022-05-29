@@ -57,7 +57,7 @@ As we can see the request looks pretty much the same. The main difference is the
 
 Responses of both requests should be the same.
 
-Should the admin pass wrong credentials, or should they not be alowed to impersonate the user provided in the `x-ror-impersonating` header, 
+Should the admin pass wrong credentials, or should they not be allowed to impersonate the user provided in the `x-ror-impersonating` header, 
 ROR is going to return a response like the following:
 
 > ```text
@@ -140,7 +140,7 @@ For impersonation to work, some valid test settings should be created and saved.
 ## Add/edit auth mock user
 External services mock is used to simulate the response of existing authentication or authorization service like LDAP.
 You don't need to create a user account for configuration testing.
-You will only need to define users (and the groups which belong) returned by external services, listed in test settings.
+You will only need to define users (and their associated groups) that would normally be returned by the external services, listed in test settings.
 
 After clicking add/edit user buttons(5), you will see a dialog with an option to add(6) or remove(7) user from external auth mock
 
@@ -169,3 +169,25 @@ Impersonation support will be limited to this node.
 
 * Sometimes is impossible to fetch usernames defined in the test settings.
 If a `users` rule contains a username pattern with a wildcard, to impersonate a user matching a given pattern, you need to enter the username manually.
+```yaml
+readonlyrest:
+  access_control_rules:
+   - name: "LDAP group g1"
+     type: allow
+     groups: ["g1"]
+     
+  users:
+  - username: "admin*"  // To impersonate a user with a username matching 'admin*' you need to enter the username manually, like 'admin123'
+    groups:
+      - g1: group1
+    ldap_auth:
+      name: "ldap1"
+      groups: ["group1"]
+      
+  ldaps:
+    - name: ldap1
+      [..]
+      
+  impersonation:
+    [...]
+```
