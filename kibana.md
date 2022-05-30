@@ -1015,20 +1015,3 @@ an admin, who has just configured access for a new user. They would like
 to know if the rule(s) are configured correctly. And here it comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. 
 
 You can check more detailed information about impersonation feature [here](./kibana-details/impersonation.md)
-
-
-
-
-
-
-User with specific roles (`admin` or `unrestricted`) and permissions (`impersonation` section in the `readonlyrest.yml` file)
-can impersonate (imitate behaviors or actions of the user) another user. 
-
-### Test settings
-
-During user impersonation, the ROR settings are replaced by [test settings](../elasticsearch-details/impersonation.md#writing-test-settings) and used during a whole impersonation process
-You need to configure test settings to be able to impersonate the user
-
-### Impersonate
-It contains a [list of external services and local users](../elasticsearch-details/impersonation.md#local-and-auth-mock-services-users-configuration). You can [add and edit](../elasticsearch-details/impersonation.md#add/edit-auth-mock-user) the list of users in external services and  [impersonate](../elasticsearch-details/impersonation.md#impersonate-a-user) a specific user.
-

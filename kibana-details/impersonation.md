@@ -1,14 +1,14 @@
 # Impersonation 
 
-After describing what [the impersonation is](../kibana.md), it's high time to see how does ROR support it and who and when could be interested in using this feature. Let's start with the latter one.
+After describing what [the impersonation is](../kibana.md#impersonate), it's high time to see how does ROR support it and who and when could be interested in using this feature. Let's start with the latter one.
 
 ## Use cases
 
-The impersonation feature is prepared for a ROR admin. It's not rather useful for users (at least not directly). We can point out two the most obvious use cases when an admin could take advantage of the feature:
+The impersonation feature is prepared for a ROR admin. It's not rather useful for users (at least not directly). We can point out two the most obvious use cases when the admin could take advantage of the feature:
 
 #### Debugging users' problems:
 
-Let's imagine that some user problem with its ROR configuration (eg. the user doesn't has an access to some feature that was blocked at ROR's level by you, the admin). They are not able to clearly describe what the issue is. For the admin, it'd be better if they can see what the user sees. Thanks to impersonation feature, an admin is allowed to impersonate the user and feel and see the same the user sees. 
+Let's imagine that some user has a problem with its ROR configuration (eg. the user doesn't has an access to some feature that was blocked at ROR's level by you, the admin). They are not able to clearly describe what the issue is (sounds familiar?). For the admin, it'd be better if they can see what the user sees. Thanks to impersonation feature, an admin is allowed to impersonate the user and feel and see the same the user sees. 
 
 #### Configuring a new user:
 
@@ -19,15 +19,23 @@ When an admin configures a new user in ROR settings, they face two problems:
 
 Both of the problems can be solved using the ROR's impersonation. Thanks to the fact that the impersonation operates on different than production (main) settings, the admin can alter it without worries that their actions will break something and users won't be able to do their job. 
 
-Admin can add the new user configuration without worries and then test it by impersonate the user. They can check if user can log in without problems and if the user has access only to the Kibana's features the admin wanted to grant. When the admin is sure that everything is configured correctly, they can promote the settings (test) to production. 
+Admin can add the new user configuration without worries and then test it by impersonate the user. They can check if the user can log in without problems and if the user has access only to the Kibana's features the admin wanted to grant. When the admin is sure that everything is configured correctly, they can promote the settings (test) to production. 
 
 ## Impersonation configuration
 
-### In ROR ES Settings
+Before an admin will be able to impersonate the user, they have to configure ROR properly. The configuration consists of several parts:
 
-### In Kibana UI
+1. creating ROR's Test Settings,
+2. defining mocks of the external services,
+3. impersonating a chosen user.
 
-Not every user can be the impersonator. The list of allowed impersonators and their permissions are defined in the `impersonation` section:
+#### Creating ROR's Test Settings
+
+When you call Elasticsearch directly or through ROR Kibana, ROR ACL is defined by Settings (we can assume they are main settings). The Test Settings define another ACL, that is taken into consideration by ROR ES only then a proper impersonation header is passed. The Test Settings are active only for a strictly defined amount of time. After the time is expired, they are automatically invalidated (for a security reasons). 
+
+Detailed instruction how to define Test Settings can be find [here](../examples/impersonation/test-settings-ui.md).
+
+Copying Main Settings as Test Settings is not enough. We have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate any other user). The list of allowed impersonators and their permissions are defined in the `impersonation` section in ROR Settings:
 
 ```yaml
 readonlyrest:
@@ -47,128 +55,48 @@ readonlyrest:
       ldap_authentication: "ldap1"
 ```
 
-We can read it as follows:
+In the example above, we see that we have two impersonators: `admin1` and `admin2`. The first one can impersonate any user (`*`) and they are able to authenticate using basic auth (`admin1:pass`). The second impersonator can impersonate only `dev2` user. They will be authenticated using `ldap1` connector.
 
-1. The impersonator "admin1" can impersonate users whose names match pattern `*` (any user) and the impersonator should be authenticated using `auth_key` rule.
+When an impersonator passes wrong credentials ROR will tell Kibana that impersonation is not allowed.
 
-2. The impersonator "admin2" can impersonate only `dev2` and the impersonator should be authenticated using LDAP by `ldap1` connector.
+#### Defining mocks of the external services (optional)
 
-## Request with user impersonation
+ROR has many sophisticated authentication & authorization methods. Some of them are based on external systems like LDAP. A problem with such systems according to the impersonation feature is that, the systems don't support it by default, or the configuration is difficult, or they don't support it at all. 
 
-Let's suppose our `user1` wants to search `twitter` index. He probably will call:
+That's why we decided to solve it totally differently - using mocks. [Wikipedia](https://en.wiktionary.org/wiki/mock) defines `mock` as `an imitation, usually of lesser quality.` And in case of external authentication system we are going provide an imitation of it that tell us what users can be authenticated by it. When we consider and authorization service, a mock of it will return us users with their roles in the service. And this is enough for ROR to support impersonation. 
 
-```bash
-curl -vk -u user1:user_secret "https://localhost:9200/twitter/_search?pretty"
-```
+How does ROR use the mocks? Let's suppose we have `ldap_auth` rule. When ROR processes the rule, it:
+* asks a given LDAP if the username can be authenticated with a given password, and if they can ...
+* asks the LDAP to tell what groups the user has
 
-Now, how the same request would look like if our `admin1` wants to impersonate `user1` and search `twitter` on their behalf?
+In the impersonation case, it looks pretty the same. The only difference is that ROR not calling the LDAP but the LDAP's mock and it:
+* asks the mock if the username exists (we don't need to check any password here - we have authenticated the impersonator before, so the only thing ROR needs is to know if the impersonating user exists)
+* asks the mock to tell what groups the user has
 
-```bash
-curl -vk -u admin1:pass -H "x-ror-impersonating: user1" "https://localhost:9200/twitter/_search?pretty"
-```
+When some external service is not mocked, ROR might return to Kibana information that the impersonation is not supported. It's better to always define all mocks, to avoid the "not supported impersonation" ES response.
 
-As we can see the request looks pretty much the same. The main difference is the `x-ror-impersonating` header that contains `user1`, and authorization header value has the admin's credentials now. 
+How to define mocks in Kibana is described [here](../examples/impersonation/external-services-mocks-ui.md).
 
-Responses of both requests should be the same.
+#### Impersonating a chosen user
 
-Should the admin pass wrong credentials, or should they not be allowed to impersonate the user provided in the `x-ror-impersonating` header, 
-ROR is going to return a response like the following:
+Now, when we have configured Test Settings and External Services Mocks, we can try to impersonate a user. In ROR Settings, user can be:
+* provided statically (defined in the settings),
+* provided dynamically:
+   * from external, dependant systems (like LDAP) - we mock them
+   * from upstream systems (eg. through headers) - they are unknown
 
-> ```text
-> HTTP/1.1 403 Forbidden
-> content-type: application/json; charset=UTF-8
-> 
->{
->  "error":{
->    "root_cause":[
->      {
->        "type":"forbidden_response",
->        "reason":"forbidden",
->        "due_to":["OPERATION_NOT_ALLOWED", "IMPERSONATION_NOT_ALLOWED"]
->      }
->    ],
->    "type":"forbidden_response",
->    "reason":"forbidden",
->    "due_to":["OPERATION_NOT_ALLOWED", "IMPERSONATION_NOT_ALLOWED"]
->  },
->  "status":403
->}
->```
+It means that we pick the users defined in Settings or Mocks, but also we can enter the username and try to impersonate such user.
 
-Some authentication or/and authorization rules (like LDAP ones or related to external systems) don't support impersonation by default (the support will be possible with cooperation with Kibana plugin soon). 
+[Here](../examples/impersonation/impersonate-user-ui.md) you find a description how to impersonate an user in ROR Kibana.
 
-When a request with impersonation is rejected because it triggers a rule that doesn't support impersonation, the caller will see this kind of response:
+## Logs & audit
 
-> ```text
-> HTTP/1.1 403 Forbidden
-> content-type: application/json; charset=UTF-8
-> 
->{
->  "error":{
->    "root_cause":[
->      {
->        "type":"forbidden_response",
->        "reason":"forbidden",
->        "due_to":["OPERATION_NOT_ALLOWED", "IMPERSONATION_NOT_SUPPORTED"]
->      }
->    ],
->    "type":"forbidden_response",
->    "reason":"forbidden",
->    "due_to":["OPERATION_NOT_ALLOWED", "IMPERSONATION_NOT_SUPPORTED"]
->  },
->  "status":403
->}
->```
+In ES logs in `USR` admin is going to find sth like this: `admin1 as (user1)` - it means that `admin1` was authenticated and they are the impersonator who is impersonating `user1`. 
 
-## Writing test settings
+All logs of impersonated user in Kibana will have this format `[<log level>][plugins][ReadonlyREST][<filename>][impersonating <impersonated user username>]`
 
-For impersonation to work, some valid test settings should be created and saved. It's important that the main ROR setting will be unaffected, so you, as an admin/user don't need to worry that you will break something. Here is how to write test settings:
+When auditing is enabled, the audit document is going to contain an `impersonated_by` field.
 
-1. Open the ROR menu
-2. Click the Edit security settings button
-
-![Test settings ror menu](<../.gitbook/assets/test_settings_ror_menu.png>)
-
-3. Go into the Test settings tab
-4. You can set the "time to live" (TTL), that is a time interval after which the test settings will be automatically deactivated and impersonation session will also abruptly exit
-5. You can load current settings as test settings
-6. You can deactivate settings manually
-7. You can save test settings as settings
-
-![test settings tab](<../.gitbook/assets/test_settings_tab.png>)
-
-## Local and auth mock services users configuration
-
-1. Open the ROR menu
-2. Click the Edit security settings button
-
-![Impersonate ror menu](<../.gitbook/assets/test_settings_ror_menu.png>)
-
-3. Go into the Impersonate tab
-4. You can free type impersonate. This button is available only in the situation when in some cases, the system is not able to receive all usernames. In this case, to impersonate, you need to type impersonating username manually.
-5. You can add/edit user in a specific external auth mock service
-6. You can impersonate a user and imitate his behavior and actions
-
-![Impersonate tab](<../.gitbook/assets/impersonate_tab.png>)
-
-## Add/edit auth mock user
-External services mock is used to simulate the response of existing authentication or authorization service like LDAP.
-You don't need to create a user account for configuration testing.
-You will only need to define users (and their associated groups) that would normally be returned by the external services, listed in test settings.
-
-After clicking add/edit user buttons(5), you will see a dialog with an option to add(6) or remove(7) user from external auth mock
-
-![Add/edit auth mock service](<../.gitbook/assets/add_edit_auth_mock_service.png>)
-
-
-## Impersonate a user
-
-1. When an impersonation session is started correctly, the "impersonating" will be visible in the ROR menu a shown in the picture.
-2. Click the Finish impersonation button to stop impersonation and go back into Impersonate tab
-
-All logs of impersonated user will have this format `[<log level>][plugins][ReadonlyREST][<filename>][impersonating <impersonated user username>]`
-
-![Impersonate user](<../.gitbook/assets/impersonate_impersonated_menu.png>)
 
 ## Impersonation limitations
 
@@ -179,29 +107,31 @@ Some rules used in ROR ACL do not support impersonation. For example, auth rule 
 A list of the rules with info about impersonation support can be found [here](../elasticsearch.md#rules).
 
 * Test settings are stored in the memory of the node that handled the POST tests settings request.
-Impersonation support will be limited to this node.
+Impersonation support will be limited to this node. We are going to improve it in the future, but for now your kibana should talk only to one ES node.
 
 * Sometimes is impossible to fetch usernames defined in the test settings.
 If a `users` rule contains a username pattern with a wildcard, to impersonate a user matching a given pattern, you need to enter the username manually.
-```yaml
-readonlyrest:
-  access_control_rules:
-   - name: "LDAP group g1"
-     type: allow
-     groups: ["g1"]
-     
-  users:
-  - username: "admin*"  // To impersonate a user with a username matching 'admin*' you need to enter the username manually, like 'admin123'
-    groups:
-      - g1: group1
-    ldap_auth:
-      name: "ldap1"
-      groups: ["group1"]
+
+  ```yaml
+  readonlyrest:
+
+    access_control_rules:
+      - name: "LDAP group g1"
+        type: allow
+        groups: ["g1"]
       
-  ldaps:
-    - name: ldap1
-      [..]
-      
-  impersonation:
-    [...]
-```
+    users:
+      - username: "admin*"  // To impersonate a user with a username matching 'admin*' you need to enter the username manually, like 'admin123'
+        groups:
+          - g1: group1
+        ldap_auth:
+          name: "ldap1"
+          groups: ["group1"]
+        
+    ldaps:
+      - name: ldap1
+        [..]
+        
+    impersonation:
+      [...]
+  ```
