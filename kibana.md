@@ -4,7 +4,7 @@ description: User manual for ReadonlyREST Enterprise/PRO/Free
 
 # For Kibana
 
-🧙 **Are you using Kibana version 7.8.x or older? Go to the** [**old platform manual page**](kibana-7.8.x-and-older.md)**.**
+🧙 **Are you using Kibana version 7.8.x or older? Go to the** [**old platform manual page**](kibana-details/kibana-7.8.x-and-older.md)**.**
 
 ### Kibana Plugin overview
 
@@ -181,7 +181,7 @@ $ bin/kibana-plugin remove readonlyrest_kbn
 To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 
 * [Unpatch Kibana](./#unpatching-kibana)
-* [Uninstall](kibana-7.8.x-and-older.md#uninstall) the old plugin
+* [Uninstall](./kibana-details/kibana-7.8.x-and-older.md#uninstall) the old plugin
 * Delete all the content of "optimize" directory (in the main Kibana installation directory) `rm -rf optimize/`
 * [Install](./#installation) the new one
 * [Patch Kibana](./#patching-kibana)

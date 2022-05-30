@@ -2,8 +2,8 @@
 
 * [README](README.md)
 * [For Elasticsearch](elasticsearch.md)
-* [For Kibana](kibana/README.md)
-  * [Kibana 7.8.x and older](kibana/kibana-7.8.x-and-older.md)
+* [For Kibana](kibana.md)
+  * [Kibana 7.8.x and older](kibana-details/kibana-7.8.x-and-older.md)
 * [Examples](examples/README.md)
   * [Multi-tenancy Elastic Stack](examples/multitenancy_guide.md)
   * [Multi-user Elastic Stack](examples/multiuser_guide.md)
@@ -17,5 +17,3 @@
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
 * [Changelog](changelog.md)
-* [\[Beta\] Enterprise New Platform](beta-new-platform.md)
-
