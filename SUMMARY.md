@@ -17,5 +17,3 @@
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
 * [Changelog](changelog.md)
-* [\[Beta\] Enterprise New Platform](kibana-details/beta-new-platform.md)
-
