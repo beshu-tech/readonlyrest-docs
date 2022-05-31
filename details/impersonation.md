@@ -63,7 +63,7 @@ When an impersonator passes wrong credentials ROR will tell Kibana that imperson
 
 ROR has many sophisticated authentication & authorization methods. Some of them are based on external systems like LDAP. A problem with such systems according to the impersonation feature is that, the systems don't support it by default, or the configuration is difficult, or they don't support it at all. 
 
-That's why we decided to solve it totally differently - using mocks. [Wikipedia](https://en.wiktionary.org/wiki/mock) defines `mock` as `an imitation, usually of lesser quality.` And in case of external authentication system we are going provide an imitation of it that tell ACL what users can be authenticated by it. When we consider and authorization service, a mock of it will return the ACL users with their roles in the service. And this is enough for ROR to support impersonation. 
+That's why we decided to solve it totally differently - using mocks. [Wikipedia](https://en.wiktionary.org/wiki/mock) defines `mock` as `an imitation, usually of lesser quality.` And in case of external authentication system we are going provide an imitation of it that tell ACL what users can be authenticated by it. When we consider an authorization service, a mock of it will return the ACL users with their roles in the service. And this is enough for ROR to support impersonation. 
 
 How does ROR use the mocks? Let's suppose we have `ldap_auth` rule. When ROR processes the rule, it:
 * asks a given LDAP if the username can be authenticated with a given password, and if they can ...
