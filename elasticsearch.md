@@ -992,7 +992,7 @@ Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authenticat
 
 **⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
 
-[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule by default.
 
 #### `auth_key_sha512`
 
@@ -1008,7 +1008,7 @@ The rules support also alternative syntax, where only password is hashed, eg:
 
 In the example below `admin` is the username and `280ac6f...94bf9` is the hashed secret.
 
-[Impersonation](elasticsearch-details/impersonation.md) is supported by these rules by default.
+[Impersonation](details/impersonation.md) is supported by these rules by default.
 
 #### `auth_key_pbkdf2`
 
@@ -1027,7 +1027,7 @@ Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authenticat
 
 The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
 
-[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule by default.
 #### `auth_key_unix`
 
 `auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 # Hashed for "test:test"`
@@ -1088,7 +1088,7 @@ if __name__ == '__main__':
 
 For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
 
-[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule by default.
 
 #### `proxy_auth: "*"`
 
@@ -1102,7 +1102,7 @@ If you are using this technique for authentication using our **Kibana** plugins,
 
 So that Kibana will forward the necessary headers to Elasticsearch.
 
-[Impersonation](elasticsearch-details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule by default.
 
 #### `users`
 
@@ -1132,7 +1132,7 @@ The ACL block will match when the user belongs to any of the specified groups. T
 In the `users` section, each entry tells us that:
 
 * A given user with a username matching one of patterns in the `username` array ...
-* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](elasticsearch-details/groups-rule-mapping.md) between local group name and external groups (example 3 below).
+* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](details/groups-rule-mapping.md) between local group name and external groups (example 3 below).
 * when they can be authenticated and (if authorization rule is present) authorized by the present rule(s).
 
 In general it looks like this:
@@ -1163,7 +1163,7 @@ In general it looks like this:
 
 For details see [User management](elasticsearch.md#users-and-groups).
 
-[Impersonation](elasticsearch-details/impersonation.md) supports depends on 
+[Impersonation](details/impersonation.md) supports depends on 
 authentication and authorization rules used in `users` section.
 
 #### `groups_and`
@@ -1242,26 +1242,26 @@ ldap_authorization:
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
-[Impersonation](elasticsearch-details/impersonation.md) is not supported by default 
+[Impersonation](details/impersonation.md) is not supported by default 
 by LDAP rules.
 
 #### `jwt_auth`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth)
 
-[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
 
 #### `external-basic-auth`
 
 Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
 
-[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
 
 #### `groups_provider_authorization`
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#groups_provider_authorization)
 
-[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
 
 #### `ror_kbn_auth`
 
@@ -1292,7 +1292,7 @@ This authentication and authorization connector represents the secure channel \(
 
 Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana/#saml)
 
-[Impersonation](elasticsearch-details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
 
 ### Ancillary rules
 
@@ -1646,7 +1646,7 @@ _Example: rules are associated to groups \(instead of users\) and users-group as
 
 ### Group mapping
 
-Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](elasticsearch-details/groups-rule-mapping.md).
+Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](details/groups-rule-mapping.md).
 
 ### Username case sensitivity
 

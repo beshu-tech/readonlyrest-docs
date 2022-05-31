@@ -4,7 +4,7 @@ description: User manual for ReadonlyREST Enterprise/PRO/Free
 
 # For Kibana
 
-🧙 **Are you using Kibana version 7.8.x or older? Go to the** [**old platform manual page**](kibana-details/kibana-7.8.x-and-older.md)**.**
+🧙 **Are you using Kibana version 7.8.x or older? Go to the** [**old platform manual page**](details/kibana-7.8.x-and-older.md)**.**
 
 ### Kibana Plugin overview
 
@@ -181,7 +181,7 @@ $ bin/kibana-plugin remove readonlyrest_kbn
 To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 
 * [Unpatch Kibana](./#unpatching-kibana)
-* [Uninstall](./kibana-details/kibana-7.8.x-and-older.md#uninstall) the old plugin
+* [Uninstall](./details/kibana-7.8.x-and-older.md#uninstall) the old plugin
 * Delete all the content of "optimize" directory (in the main Kibana installation directory) `rm -rf optimize/`
 * [Install](./#installation) the new one
 * [Patch Kibana](./#patching-kibana)
@@ -1014,4 +1014,4 @@ of another user. Why would we want it? Let's suppose the first user is
 an admin, who has just configured access for a new user. They would like 
 to know if the rule(s) are configured correctly. And here it comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. 
 
-You can check more detailed information about impersonation feature [here](./kibana-details/impersonation.md)
+You can check more detailed information about impersonation feature [here](./details/impersonation.md)

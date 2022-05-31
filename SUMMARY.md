@@ -3,7 +3,7 @@
 * [README](README.md)
 * [For Elasticsearch](elasticsearch.md)
 * [For Kibana](kibana.md)
-  * [Kibana 7.8.x and older](kibana-details/kibana-7.8.x-and-older.md)
+  * [Kibana 7.8.x and older](details/kibana-7.8.x-and-older.md)
 * [Examples](examples/README.md)
   * [Multi-tenancy Elastic Stack](examples/multitenancy_guide.md)
   * [Multi-user Elastic Stack](examples/multiuser_guide.md)

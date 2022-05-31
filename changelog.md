@@ -6,7 +6,7 @@
 * **🚀New** (ES) New Support for 8.2.2, 8.2.1, 7.17.4
 * **🚀New** (KBN) New Support for 8.2.2 8.2.1, 7.17.4
 * **🚀New** (ES & KBN) The Impersonation feature
-* **🚀New** (ES) [FIPS compliant SSL mode](/elasticsearch-details/fips.md)
+* **🚀New** (ES) [FIPS compliant SSL mode](/details/fips.md)
 * **🧐Enhancement** (KBN) SAML cert is now required
 * **🧐Enhancement** (KBN) moved OIDC to better library
 * **🧐Enhancement** (KBN) OIDC jwksURL is now required
@@ -84,7 +84,7 @@
 
 * **🚀New** (KBN) Support Kibana 7.15.0, 7.14.2
 * **🚀New** (ES) New Support for 7.15.1, 6.8.19, 6.8.20
-* **🧐Enhancement** (ES) [local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch-details/groups-rule-mapping.md)
+* **🧐Enhancement** (ES) [local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/details/groups-rule-mapping.md)
 * **🧐Enhancement** (ES) when ROR is starting any request is going to end up with HTTP 403 response, instead of HTTP 503
 * **🧐Enhancement** (KBN) "server.basePath" kibana option implementation
 * **🧐Enhancement** (KBN) Support full regex in kibana_hidden_apps rule
