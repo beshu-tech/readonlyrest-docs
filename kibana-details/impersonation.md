@@ -4,20 +4,20 @@ After describing what [the impersonation is](../kibana.md#impersonate), it's hig
 
 ## Use cases
 
-The impersonation feature is prepared for a ROR admin. It's not rather useful for users (at least not directly). We can point out two the most obvious use cases when the admin could take advantage of the feature:
+The impersonation feature is intended for ROR administrators, rather than users. We can point out two the most obvious use cases when the admin could take advantage of the feature:
 
 #### Debugging users' problems:
 
-Let's imagine that some user has a problem with its ROR configuration (eg. the user doesn't has an access to some feature that was blocked at ROR's level by you, the admin). They are not able to clearly describe what the issue is (sounds familiar?). For the admin, it'd be better if they can see what the user sees. Thanks to impersonation feature, an admin is allowed to impersonate the user and feel and see the same the user sees. 
+Let's imagine that some user has a problem with its ROR configuration (eg. the user doesn't have an access to some feature that was blocked at ROR's level by you, the admin). And they are not able to clearly describe what the issue is (sounds familiar?). As an administrator, it would be extremely beneficial if you could see what he user sees. Thanks to impersonation feature, an admin is allowed to impersonate the user and feel and see the same the user sees. 
 
 #### Configuring a new user:
 
 When an admin configures a new user in ROR settings, they face two problems:
 
-1. `Won't the updated configuration break the production cluster?`
-1. `How do I know that the new user is correctly configured? Do they have correct permissions?`
+1. `Will the updated configuration break the production cluster?`
+1. `How do I know that the new user is correctly configured? Did I configure all their permission correctly??`
 
-Both of the problems can be solved using the ROR's impersonation. Thanks to the fact that the impersonation operates on different than production (main) settings, the admin can alter it without worries that their actions will break something and users won't be able to do their job. 
+Both of the problems can be solved using the ROR's impersonation. Thanks to the fact that the impersonation feature always uses its own test settings, that is completely independent from the main production settings, the admin can alter it without worries that their actions will break something and users won't be able to do their job. 
 
 Admin can add the new user configuration without worries and then test it by impersonate the user. They can check if the user can log in without problems and if the user has access only to the Kibana's features the admin wanted to grant. When the admin is sure that everything is configured correctly, they can promote the settings (test) to production. 
 
@@ -63,17 +63,17 @@ When an impersonator passes wrong credentials ROR will tell Kibana that imperson
 
 ROR has many sophisticated authentication & authorization methods. Some of them are based on external systems like LDAP. A problem with such systems according to the impersonation feature is that, the systems don't support it by default, or the configuration is difficult, or they don't support it at all. 
 
-That's why we decided to solve it totally differently - using mocks. [Wikipedia](https://en.wiktionary.org/wiki/mock) defines `mock` as `an imitation, usually of lesser quality.` And in case of external authentication system we are going provide an imitation of it that tell us what users can be authenticated by it. When we consider and authorization service, a mock of it will return us users with their roles in the service. And this is enough for ROR to support impersonation. 
+That's why we decided to solve it totally differently - using mocks. [Wikipedia](https://en.wiktionary.org/wiki/mock) defines `mock` as `an imitation, usually of lesser quality.` And in case of external authentication system we are going provide an imitation of it that tell ACL what users can be authenticated by it. When we consider and authorization service, a mock of it will return the ACL users with their roles in the service. And this is enough for ROR to support impersonation. 
 
 How does ROR use the mocks? Let's suppose we have `ldap_auth` rule. When ROR processes the rule, it:
 * asks a given LDAP if the username can be authenticated with a given password, and if they can ...
-* asks the LDAP to tell what groups the user has
+* asks LDAP to list what groups the user belongs to
 
-In the impersonation case, it looks pretty the same. The only difference is that ROR not calling the LDAP but the LDAP's mock and it:
-* asks the mock if the username exists (we don't need to check any password here - we have authenticated the impersonator before, so the only thing ROR needs is to know if the impersonating user exists)
-* asks the mock to tell what groups the user has
+In the impersonation case, it looks pretty much the same. Just we won't call any LDAP server, rather, the mock will provide the required information (no passwords required):
+* asks the mock if the username exists, and if it does ...
+* asks the mock to tell what groups the user belongs to
 
-When some external service is not mocked, ROR might return to Kibana information that the impersonation is not supported. It's better to always define all mocks, to avoid the "not supported impersonation" ES response.
+**⚠️ IMPORTANT:** When some external service is not mocked, ROR might return to Kibana information that the impersonation is not supported. It's better to always define all mocks, to avoid the "not supported impersonation" ES response.
 
 How to define mocks in Kibana is described [here](../examples/impersonation/external-services-mocks-ui.md).
 
@@ -87,7 +87,7 @@ Now, when we have configured Test Settings and External Services Mocks, we can t
 
 It means that we pick the users defined in Settings or Mocks, but also we can enter the username and try to impersonate such user.
 
-[Here](../examples/impersonation/impersonate-user-ui.md) you find a description how to impersonate an user in ROR Kibana.
+[Here](../examples/impersonation/impersonate-user-ui.md) you find a description how to impersonate a user in ROR Kibana.
 
 ## Logs & audit
 
