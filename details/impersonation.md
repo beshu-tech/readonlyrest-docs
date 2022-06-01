@@ -97,7 +97,6 @@ All logs of impersonated user in Kibana will have this format `[<log level>][plu
 
 When auditing is enabled, the audit document is going to contain an `impersonated_by` field.
 
-
 ## Impersonation limitations
 
 Impersonation mode has some limitations. Please check if they have an impact on your use cases:
@@ -135,3 +134,11 @@ If a `users` rule contains a username pattern with a wildcard, to impersonate a 
     impersonation:
       [...]
   ```
+
+## Glossary
+
+* **Impersonator** - someone who imitates or copies the behavior or actions of another,
+* **Impersonation** - imitating behaviors or actions of a given user,
+* **Main Settings** - the ROR's settings that apply to ACL that handles request during regular sessions (not the impersonation ones),
+* **Test Settings** - the ROR's settings that apply to ACL that handles impersonating requests (the ones during impersonation session),
+* **External Service Mock** - an imitation of an external service (the supported ones: LDAP, an external authentication service, an external authorization service).
