@@ -1238,7 +1238,7 @@ ldap_authentication: ldap1
 ldap_authorization:
   name: "ldap1"
   groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
-``
+```
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
