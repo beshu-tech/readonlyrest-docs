@@ -1,9 +1,29 @@
 # Changelog
 
+### (2021-05-24) What's new in **ROR 1.40.0**
+* **🚨Security Fix** (ES) [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)
+* **🚨Security Fix** (KBN) “Security” app not entirely hidden in 8.2.x
+* **🚀New** (ES) New Support for 8.2.2, 8.2.1, 7.17.4
+* **🚀New** (KBN) New Support for 8.2.2 8.2.1, 7.17.4
+* **🚀New** (ES & KBN) The Impersonation feature
+* **🚀New** (ES) [FIPS compliant SSL mode](/details/fips.md)
+* **🧐Enhancement** (KBN) SAML cert is now required
+* **🧐Enhancement** (KBN) moved OIDC to better library
+* **🧐Enhancement** (KBN) OIDC jwksURL is now required
+* **🐞Fix** (ES) `indices: ["1"]` interpreted as integer and fails to parse
+* **🐞Fix** (KBN) /login?jwt=xxx authorization now works again
+* **🐞Fix** (KBN) OIDC/SAML assertion claims were not forwarded to ES
+* **🐞Fix** (KBN) include whitelisted headers while logging
+* **🐞Fix** (KBN) basepath handling fixes (too many redirects)
+* **🐞Fix** (KBN) Make ROR default space the actual default one
+* **🐞Fix** (KBN) RORDEV-641 Fix oidc connection error
+
 ### (2021-03-19) What's new in **ROR 1.39.0**
 * **🚨Security Fix** (KBN) XSS sanitize path requested
 * **🚨Security Fix** (ES) [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) & [CVE-2022-21653](https://nvd.nist.gov/vuln/detail/CVE-2022-21653)
-* **🚀New** (ES) New Support for 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#3-patch-es))
+* **🚀New** (KBN) New Support for 8.2.0 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1, 7.17.3, 7.17.2
+* **🚀New** (ES) New Support for 8.2.0, 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#3-patch-es))
+* **🚀New** (ES) New Support for 7.17.3, 7.17.2
 * **🚀New** (ES) [New `groups_and` ACL rule](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#groups_and)
 * **🧐Enhancement** (KBN) Stop inlining whitelisted headers into Authorization header
 * **🧐Enhancement** (KBN) Log additional errors and info related to HA
@@ -64,7 +84,7 @@
 
 * **🚀New** (KBN) Support Kibana 7.15.0, 7.14.2
 * **🚀New** (ES) New Support for 7.15.1, 6.8.19, 6.8.20
-* **🧐Enhancement** (ES) [local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch-details/groups-rule-mapping.md)
+* **🧐Enhancement** (ES) [local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/details/groups-rule-mapping.md)
 * **🧐Enhancement** (ES) when ROR is starting any request is going to end up with HTTP 403 response, instead of HTTP 503
 * **🧐Enhancement** (KBN) "server.basePath" kibana option implementation
 * **🧐Enhancement** (KBN) Support full regex in kibana_hidden_apps rule

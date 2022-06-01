@@ -103,3 +103,6 @@ ENV/
 # idea
 .idea/
 *.iml
+
+# macos
+.DS_Store

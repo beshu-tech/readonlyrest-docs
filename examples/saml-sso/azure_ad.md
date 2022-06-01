@@ -16,11 +16,11 @@ Make sure you have a functioning installation of Kibana, backed by an instance o
 
 ## Set up the ReadonlyREST plugins
 
-In order to use ReadonlyREST Enterprise for Kibana, make sure you have installed ReadonlyREST Free for Elasticsearch first. Head to our [setup guide](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#installing-the-plugin) to find instructions.
+In order to use ReadonlyREST Enterprise for Kibana, make sure you have installed ReadonlyREST Free for Elasticsearch first. Head to our [setup guide](../../elasticsearch.md#installing-the-plugin) to find instructions.
 
-Once ReadonlyREST Free plugin is installed, configure an ACL for accepting SAML sessions from ReadonlyREST Enterprise for Kibana. This is also [explained in our guide](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#ror\_kbn\_auth). Remember to choose a very long secret phrase (256+ characters)
+Once ReadonlyREST Free plugin is installed, configure an ACL for accepting SAML sessions from ReadonlyREST Enterprise for Kibana. This is also [explained in our guide](../../elasticsearch.md#ror\_kbn\_auth). Remember to choose a very long secret phrase (256+ characters)
 
-Now head to the Kibana directory, and install a trial (or full) version of ReadonlyREST Enterprise, which can be freely downloaded from [our download page](https://readonlyrest.com/download). For [installation instructions](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#installation), see our Kibana plugin guide.
+Now head to the Kibana directory, and install a trial (or full) version of ReadonlyREST Enterprise, which can be freely downloaded from [our download page](https://readonlyrest.com/download). For [installation instructions](../../kibana.md#installation), see our Kibana plugin guide.
 
 Azure AD only speaks with "https" websites, so make sure your Kibana web server is configured to serve pages in https. See a guide from Elastic on how to enable SSL
 
@@ -131,31 +131,31 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Login in your Microsoft Azure dashboard, and head to Enterprise Applications.
 
-![Azure Dashboard](<../../.gitbook/assets/azure\_dashboard (1) (1) (1) (3) (6) (7) (9) (10).png>)
+![Azure Dashboard](<../../.gitbook/assets/azure\_dashboard (1) (1) (1) (3) (6) (7) (2) (14).png>)
 
 1. Click on "Non-gallery application".
 
-![Azure Enterprise apps](<../../.gitbook/assets/azure\_enterprise\_apps (1).png>)
+![Azure Enterprise apps](<../../.gitbook/assets/azure\_enterprise\_apps (1) (1).png>)
 
 1. Create a new app called "Readonlyrest Enterprise".
 
-![Azure App Name](<../../.gitbook/assets/azure\_app\_name (3) (3) (3) (4) (6) (7).png>)
+![Azure App Name](<../../.gitbook/assets/azure\_app\_name (3) (3) (3) (4) (2) (11).png>)
 
 1. Click "Single Sign On" to configure the app for SAML.
 
-![Azure ror app](<../../.gitbook/assets/azure\_ror\_app (1).png>)
+![Azure ror app](<../../.gitbook/assets/azure\_ror\_app (1) (1).png>)
 
 1. Insert URLs and data about our Kibana server as shown in the picture. And press SAVE.
 
-![Azure ror basic saml settings](<../../.gitbook/assets/azure\_ror\_basic\_saml (1) (1) (1).png>)
+![Azure ror basic saml settings](<../../.gitbook/assets/azure\_ror\_basic\_saml (1) (1) (1) (1).png>)
 
 1. Download the base64 encoded "pem" file, and place it under the **absolute path** `/etc/kibana/config/cert.pem`.
 
-![Azure ror cert](<../../.gitbook/assets/azure\_cert (1).png>)
+![Azure ror cert](<../../.gitbook/assets/azure\_cert (1) (1).png>)
 
 7 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.
 
-![Azure ror app users](<../../.gitbook/assets/azure\_ror\_app\_users (1).png>)
+![Azure ror app users](<../../.gitbook/assets/azure\_ror\_app\_users (1) (1).png>)
 
 ## Testing if this all works.
 
@@ -163,19 +163,19 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
     You should now see a new blue button that says "Azure AD SAML SSO".
 
-![ROR login](<../../.gitbook/assets/ror\_ent\_login (1) (1) (1) (3) (5) (8) (9) (8) (12).png>)
+![ROR login](<../../.gitbook/assets/ror\_ent\_login (1) (1) (1) (3) (5) (8) (9) (10) (16).png>)
 
 1. Press it, and you should see the Azure AD login page. Place your credentials here, or pick an already authenticated identity to enter Kibana.
 
-![Azure Login](<../../.gitbook/assets/azure\_login (1).png>)
+![Azure Login](<../../.gitbook/assets/azure\_login (1) (1).png>)
 
 1. You will now be redirected to Kibana, logged in as your Azure AD identity.
 
-![Azure Login](<../../.gitbook/assets/kibana\_welcome (1).png>)
+![Azure Login](<../../.gitbook/assets/kibana\_welcome (1) (1).png>)
 
 1. You can now logout from the "ReadonlyREST SAML SSO" Azure AD Enterprise app by pressing the exit button right beside the username in the bottom right corner.
 
-![Azure Login](<../../.gitbook/assets/logout (1) (3) (5) (5) (6) (1) (7).png>)
+![Azure Login](<../../.gitbook/assets/logout (1) (3) (5) (5) (6) (1) (2).png>)
 
 ## Authorization using Azure AD groups
 
@@ -190,13 +190,13 @@ Users in Azure AD can belong to groups. The list of group associated to a user i
 
 ### Example: ReadonlyREST Admins group
 
-Suppose we would like to authorise the group "ReadonlyREST Admins" to access the administrative dashboard that can oversee all the indices, and we want to grant them access to an "admin" tenancy that contains dashboards based on the real time [ReadonlyREST audit logs](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#audit-logs) indices.
+Suppose we would like to authorise the group "ReadonlyREST Admins" to access the administrative dashboard that can oversee all the indices, and we want to grant them access to an "admin" tenancy that contains dashboards based on the real time [ReadonlyREST audit logs](../../elasticsearch.md#audit-logs) indices.
 
 #### Creating and assigning the group in Azure Ad
 
 Let's go to Azure and make sure the "ReadonlyREST Admins" group is created, and one or more users - including ours - belongs to it.
 
-![Azure Create Groups](<../../.gitbook/assets/azure\_create\_group (1).png>)
+![Azure Create Groups](<../../.gitbook/assets/azure\_create\_group (1) (1).png>)
 
 #### Finding the new group's Azure object ID
 
@@ -204,7 +204,7 @@ From ReadonlyREST settings, we will refer to the newly created group using its a
 
 `Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups > [your user] - Groups`
 
-![Azure Show Groups](<../../.gitbook/assets/azure\_groups\_list (1).png>)
+![Azure Show Groups](<../../.gitbook/assets/azure\_groups\_list (1) (1).png>)
 
 The object ID of the new group is "3f8ebed8-f742-42a6-94ba-2d57550fc3cf", let's take note of this. We will use it in our ACL.
 

@@ -15,7 +15,7 @@ But with some more enterprise requirements:
 * Users need to be able to change their passwords independently
 * Users need to verify their emails
 * Group managers need to be able to add, remove, block (only) their users.
-* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/latest/server_admin/#one-time-password-otp-policies) is a requirement.
+* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/latest/server\_admin/#one-time-password-otp-policies) is a requirement.
 
 ## What is Keycloak
 
@@ -26,25 +26,25 @@ Keycloak is an advanced authentication server that lets user administer their cr
 This tutorial was created using KeyCloak 14.0.0.
 
 1. Download the Keycloak from their [official website](https://www.keycloak.org/archive/downloads-14.0.0.html). This guide will use [keycloak docker image](https://hub.docker.com/r/jboss/keycloak/)
-2. Run Keycloak: run docker run -e KEYCLOAK_USER=<USERNAME> -e KEYCLOAK_PASSWORD=<PASSWORD> jboss/keycloak where USERNAME and PASSWORD are credentials for your admin account
-4. log in as admin
-5. Follow the explanation below, or (if your KC version is the same or close enough to this) use the import function to load this [configuration file](https://github.com/beshu-tech/readonlyrest-docs/blob/master/keycloak_ror_OIDC.json)
+2. Run Keycloak: run docker run -e KEYCLOAK\_USER= -e KEYCLOAK\_PASSWORD= jboss/keycloak where USERNAME and PASSWORD are credentials for your admin account
+3. log in as admin
+4. Follow the explanation below, or (if your KC version is the same or close enough to this) use the import function to load this [configuration file](../../keycloak\_ror\_OIDC.json)
 
-If you imported the JSON file, you should have a "ror" realm, and an OpenID Connect (OIDC) client called "ror_oidc" (keep this ID or change the "clientID" setting in kibana.yml). Please now select "ror" realm, navigate to "clients", click "ror_oidc" client and double-check everything matches with your use case, as this guide assumes both Kibana, Elasticsearch, and Keycloak are running on "localhost".
+If you imported the JSON file, you should have a "ror" realm, and an OpenID Connect (OIDC) client called "ror\_oidc" (keep this ID or change the "clientID" setting in kibana.yml). Please now select "ror" realm, navigate to "clients", click "ror\_oidc" client and double-check everything matches with your use case, as this guide assumes both Kibana, Elasticsearch, and Keycloak are running on "localhost".
 
 ### Configure Keycloak to work with ROR
 
 First, we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2) (5).png>)
 
 Then, let's create an OpenId Connect client for this realm:
 
-![keycloak\_screenshot](<../../.gitbook/assets/oidc_create_client.png>)
+![keycloak\_screenshot](../../.gitbook/assets/oidc\_create\_client.png)
 
 Then, configure the OpenID Connect (OIDC) client
 
-![keycloak\_screenshot](<../../.gitbook/assets/oidc_configure_client.png>)
+![keycloak\_screenshot](../../.gitbook/assets/oidc\_configure\_client.png)
 
 **kibana.yml** (without ssl enabled)
 
@@ -83,18 +83,17 @@ readonlyrest_kbn:
       jwksURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/certs' <-- Value from from OpenID Endpoint Configuration
 ```
 
-
 To verify all OpenID Endpoint Configuration-based, you can open OpenID Endpoint Configuration page in the kibana realm
 
-![keycloak\_screenshot](<../../.gitbook/assets/oidc_openid_endpoint_configuration.png>)
+![keycloak\_screenshot](../../.gitbook/assets/oidc\_openid\_endpoint\_configuration.png)
 
-To provide clientSecret value, you need to open ror_oidc client (or your custom client name)
+To provide clientSecret value, you need to open ror\_oidc client (or your custom client name)
 
-![keycloak\_screenshot](<../../.gitbook/assets/oidc_client_secret.png>)
+![keycloak\_screenshot](../../.gitbook/assets/oidc\_client\_secret.png)
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our elasticsearch can be run with or without SSL. To make it available on HTTPS (more detailed info in our [documentation](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#encryption)), so we modify the elasticsearch.yml
+Our elasticsearch can be run with or without SSL. To make it available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)), so we modify the elasticsearch.yml
 
 **append to elasticsearch.yml**
 
