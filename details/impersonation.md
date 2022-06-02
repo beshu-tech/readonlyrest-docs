@@ -19,7 +19,7 @@ When an admin configures a new user in ROR settings, they face two problems:
 
 Both of the problems can be solved using the ROR's impersonation. Thanks to the fact that the impersonation feature always uses its own test settings, that is completely independent from the main production settings, the admin can alter it without worries that their actions will break something and users won't be able to do their job. 
 
-Admin can add the new user configuration without worries and then test it by impersonate the user. They can check if the user can log in without problems and if the user has access only to the Kibana's features the admin wanted to grant. When the admin is sure that everything is configured correctly, they can promote the settings (test) to production. 
+Admin can add the new user configuration without worries and then test it by impersonate the user. They can check if the user can log in without problems and if the user has access only to the Kibana features the admin wanted to grant. When the admin is sure that everything is configured correctly, they can promote the settings (test) to production. 
 
 ## Impersonation configuration
 
@@ -31,11 +31,11 @@ Before an admin will be able to impersonate the user, they have to configure ROR
 
 #### Creating ROR's Test Settings
 
-When you call Elasticsearch directly or through ROR Kibana, ROR ACL is defined by Settings (we can assume they are main settings). The Test Settings define another ACL, that is taken into consideration by ROR ES only then a proper impersonation header is passed. The Test Settings are active only for a strictly defined amount of time. After the time is expired, they are automatically invalidated (for a security reasons). 
+When you call Elasticsearch directly or through ROR Kibana, ROR ACL is defined by Settings (we can assume they are main settings). The Test Settings define another ACL, that is taken into consideration by ROR ES only when a proper impersonation header is passed. The Test Settings are active only for a strictly defined amount of time. After the time is expired, they are automatically invalidated (for security reasons). 
 
 Detailed instruction how to define Test Settings can be find [here](../examples/impersonation/test-settings-ui.md).
 
-Copying Main Settings as Test Settings is not enough. We have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate any other user). The list of allowed impersonators and their permissions are defined in the `impersonation` section in ROR Settings:
+Copying Main Settings as Test Settings is not enough. We also have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate any other user). The list of allowed impersonators and their permissions are defined in the `impersonation` section in ROR Settings:
 
 ```yaml
 readonlyrest:
