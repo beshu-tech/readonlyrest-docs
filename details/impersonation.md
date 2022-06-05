@@ -33,9 +33,11 @@ Before an admin will be able to impersonate a user, they have to configure ROR p
 
 When you call Elasticsearch directly or through ROR Kibana, ROR ACL is defined by Settings (we can assume they are Main Settings). The Test Settings define another ACL, that is taken into consideration by ROR ES only when a proper impersonation header is passed. The header is managed by ROR internally. The Test Settings are active only for a strictly defined amount of time (by default it's *30 minutes*, but the admin can change it before applying Test Settings). After the time has expired, they are automatically invalidated (for security reasons). Obviously, the admin is allowed to invalidate the configured Test Settings in any time. There is no way to have more than one Test Settings configured at time.
 
-Detailed instructions on how to define Test Settings can be found [here](../examples/impersonation/test-settings-ui.md).
+ROR Kibana plugin provides dedicated UI to easily manage Test Settings. The [detailed instruction](../examples/impersonation/test-settings-ui.md) describes how to do that.
 
-Copying Main Settings as Test Settings is not enough. We also have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate other users). The list of allowed impersonators and users they can impersonate are defined in the `impersonation` section in ROR Settings:
+--- 
+
+But copying Main Settings as Test Settings is not enough. We also have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate other users). The list of allowed impersonators and users they can impersonate are defined in the `impersonation` section in ROR Settings:
 
 ```yaml
 readonlyrest:
@@ -75,7 +77,7 @@ In the impersonation case, it looks pretty much the same. The difference being t
 
 **⚠️ IMPORTANT:** If one or more of the external services are not mocked, ROR might inform Kibana that the impersonation is not supported. It's better to always define all mocks, to avoid the "Impersonation not supported" Elasticsearch response.
 
-How to define mocks in Kibana is described [here](../examples/impersonation/external-services-mocks-ui.md).
+ROR Kibana plugin obviously helps admins to define mocks in the easy way. The [detailed instruction](../examples/impersonation/external-services-mocks-ui.md) describes how to do that. 
 
 #### Impersonating a chosen user
 
@@ -87,7 +89,7 @@ Now that we have configured Test Settings and External Services Mocks, we can tr
 
 It means that we pick the users defined in Settings or Mocks, but also we can enter the username and try to impersonate such user.
 
-[Here](../examples/impersonation/impersonate-user-ui.md) you can find a description how to impersonate a user in ROR Kibana.
+The [step by step instruction](../examples/impersonation/impersonate-user-ui.md) shows on how to impersonate a user using ROR Kibana plugin UI.
 
 ## Logs & audit
 
@@ -102,8 +104,7 @@ When auditing is enabled, the audit document is going to contain an `impersonate
 Impersonation mode has some limitations. Please check if they have an impact on your use cases:
 
 * Not all features available in the ROR configuration are testable with impersonation mode.
-Some rules used in ROR ACL do not support impersonation. For example, auth rule with hashed credentials (e.g. `auth_key_sha512`) can be used in impersonation mode only when credentials follow the format `USER_NAME: HASH(PASSWORD)`; A fully hashed username and password don't allow fetching a username. The auth rule in such a format won't match during impersonation.
-A list of the rules with info about impersonation support can be found [here](../elasticsearch.md#rules).
+Some rules used in ROR ACL do not support impersonation. For example, auth rule with hashed credentials (e.g. `auth_key_sha512`) can be used in impersonation mode only when credentials follow the format `USER_NAME: HASH(PASSWORD)`; A fully hashed username and password don't allow fetching a username. The auth rule in such a format won't match during impersonation. In the [rules description](../elasticsearch.md#rules) section you can find information about each rules impersonation support.
 
 * Test Settings are stored in the memory of the node that handled the saving request sent by ROR Kibana plugin.
 Impersonation support will be limited to this node. We are going to improve it in the future, but for now your Kibana should only communicate with one Elasticsearch node.
