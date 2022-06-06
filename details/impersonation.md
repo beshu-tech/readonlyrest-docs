@@ -33,7 +33,7 @@ Before an admin will be able to impersonate a user, they have to configure ROR p
 
 When you call Elasticsearch directly or through ROR Kibana, ROR ACL is defined by Settings (we can assume they are Main Settings). The Test Settings define another ACL, that is taken into consideration by ROR ES only when a proper impersonation header is passed. The header is managed by ROR internally. The Test Settings are active only for a strictly defined amount of time (by default it's *30 minutes*, but the admin can change it before applying Test Settings). After the time has expired, they are automatically invalidated (for security reasons). Obviously, the admin is allowed to invalidate the configured Test Settings in any time. There is no way to have more than one Test Settings configured at time.
 
-ROR Kibana plugin provides dedicated UI to easily manage Test Settings. The [detailed instruction](../examples/impersonation/test-settings-ui.md) describes how to do that.
+See how to manage [Test Settings using ROR Kibana plugin](../examples/impersonation/test-settings-ui.md) with the dedicated UI.
 
 --- 
 
@@ -77,7 +77,7 @@ In the impersonation case, it looks pretty much the same. The difference being t
 
 **⚠️ IMPORTANT:** If one or more of the external services are not mocked, ROR might inform Kibana that the impersonation is not supported. It's better to always define all mocks, to avoid the "Impersonation not supported" Elasticsearch response.
 
-ROR Kibana plugin obviously helps admins to define mocks in the easy way. The [detailed instruction](../examples/impersonation/external-services-mocks-ui.md) describes how to do that. 
+Follow the detailed instructions on how admins can [define and configure services mocks](../examples/impersonation/external-services-mocks-ui.md) using the dedicated graphical user interface. 
 
 #### Impersonating a chosen user
 
@@ -89,7 +89,7 @@ Now that we have configured Test Settings and External Services Mocks, we can tr
 
 It means that we pick the users defined in Settings or Mocks, but also we can enter the username and try to impersonate such user.
 
-The [step by step instruction](../examples/impersonation/impersonate-user-ui.md) shows on how to impersonate a user using ROR Kibana plugin UI.
+Follow the instructions on how to [impersonate a user using the ROR Kibana plugin UI](../examples/impersonation/impersonate-user-ui.md).
 
 ## Logs & audit
 
