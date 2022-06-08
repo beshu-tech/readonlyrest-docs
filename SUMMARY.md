@@ -2,7 +2,13 @@
 
 * [README](README.md)
 * [For Elasticsearch](elasticsearch.md)
+  * [External to local groups mapping](details/groups-rule-mapping.md)
+  * [FIPS mode](details/fips.md) 
+  * [FLS engine](details/fls-engine.md)
+  * [`indices` rule - `Index not found` scenario](details/index-not-found-examples.md)
+  * [`indices` rule - ES Templates handling](details/indices-rule-templates.md)
 * [For Kibana](kibana.md)
+  * [Impersonation](details/impersonation.md)
   * [Kibana 7.8.x and older](details/kibana-7.8.x-and-older.md)
 * [Examples](examples/README.md)
   * [Multi-tenancy Elastic Stack](examples/multitenancy_guide.md)
