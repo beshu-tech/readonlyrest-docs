@@ -5,8 +5,8 @@
 * **🚨Security Fix** (KBN) “Security” app not entirely hidden in 8.2.x
 * **🚀New** (ES) New Support for 8.2.2, 8.2.1, 7.17.4
 * **🚀New** (KBN) New Support for 8.2.2 8.2.1, 7.17.4
-* **🚀New** (ES & KBN) The Impersonation feature
-* **🚀New** (ES) [FIPS compliant SSL mode](/details/fips.md)
+* **🚀New** (ES & KBN) [The Impersonation feature](https://docs.readonlyrest.com/kibana#impersonation)
+* **🚀New** (ES) [FIPS compliant SSL mode](https://docs.readonlyrest.com/elasticsearch/fips)
 * **🧐Enhancement** (KBN) SAML cert is now required
 * **🧐Enhancement** (KBN) moved OIDC to better library
 * **🧐Enhancement** (KBN) OIDC jwksURL is now required
