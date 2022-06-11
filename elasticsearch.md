@@ -1274,7 +1274,12 @@ readonlyrest:
     - name: "ReadonlyREST Enterprise instance #1"
       ror_kbn_auth:
         name: "kbn1"
-        roles: ["SAML_GRP_1"]
+        roles: ["SAML_GRP_1", "SAML_GRP_2"] # <-  use this rule when a user should have one of the listed roles
+        
+    - name: "ReadonlyREST Enterprise instance #1 - two roles required"
+      ror_kbn_auth:
+        name: "kbn1"
+        roles_and: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this rule when a user should have all the listed roles
 
     - name: "ReadonlyREST Enterprise instance #2"
       ror_kbn_auth:
@@ -2115,7 +2120,7 @@ As usual, the cache behaviour can be defined at service level or/and at rule lev
 
 ### JSON Web Token \(JWT\) Auth
 
-The information about the user name can be extracted from the "claims" inside a JSON Web Token. Here is an example.
+The information about the username can be extracted from the "claims" inside a JSON Web Token. Here is an example.
 
 ```text
 readonlyrest:
@@ -2131,6 +2136,12 @@ readonlyrest:
       jwt_auth:
         name: "jwt_provider_1"
         roles: ["writer"]
+        
+    - name: Valid JWT token with a viewer and writer roles
+      kibana_access: rw
+      jwt_auth:
+        name: "jwt_provider_1"
+        roles_and: ["writer", "viewer"]
 
     jwt:
     - name: jwt_provider_1
@@ -2140,8 +2151,9 @@ readonlyrest:
       roles_claim: resource_access.client-app.roles # JSON-path style
       header_name: Authorization
 ```
+You can verify assigned user roles with the `roles` rule. The rule matches when the user has at least one of the configured `roles` (OR logic). Alternatively, `roles_and` matches when the user has all the listed roles (AND logic).
 
-The `user_claim` indicates which field in the JSON will be interpreted as the user name.
+The `user_claim` indicates which field in the JSON will be interpreted as the username.
 
 The `signature_key` is used shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
 
