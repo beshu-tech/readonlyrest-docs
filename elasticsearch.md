@@ -1120,7 +1120,7 @@ readonlyrest:
       users: ["root", "*@mydomain.com"]
       jwt_auth:
         name: "jwt_provider_1"
-        roles: ["viewer"]
+        groups: ["viewer"]
 ```
 
 #### `groups`
@@ -1274,12 +1274,12 @@ readonlyrest:
     - name: "ReadonlyREST Enterprise instance #1"
       ror_kbn_auth:
         name: "kbn1"
-        roles: ["SAML_GRP_1", "SAML_GRP_2"] # <-  use this rule when a user should have one of the listed roles
+        groups: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to at least one of the configured groups
         
-    - name: "ReadonlyREST Enterprise instance #1 - two roles required"
+    - name: "ReadonlyREST Enterprise instance #1 - two groups required"
       ror_kbn_auth:
         name: "kbn1"
-        roles_and: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this rule when a user should have all the listed roles
+        groups_and: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
 
     - name: "ReadonlyREST Enterprise instance #2"
       ror_kbn_auth:
@@ -2125,33 +2125,33 @@ The information about the username can be extracted from the "claims" inside a J
 ```text
 readonlyrest:
     access_control_rules:
-    - name: Valid JWT token with a viewer role
+    - name: Valid JWT token with a viewer group
       kibana_access: ro
       jwt_auth:
         name: "jwt_provider_1"
-        roles: ["viewer"]
+        groups: ["viewer"]
 
-    - name: Valid JWT token with a writer role
+    - name: Valid JWT token with a writer group
       kibana_access: rw
       jwt_auth:
         name: "jwt_provider_1"
-        roles: ["writer"]
+        groups: ["writer"]
         
-    - name: Valid JWT token with a viewer and writer roles
+    - name: Valid JWT token with a viewer and writer groups
       kibana_access: rw
       jwt_auth:
         name: "jwt_provider_1"
-        roles_and: ["writer", "viewer"]
+        groups_and: ["writer", "viewer"]
 
     jwt:
     - name: jwt_provider_1
       signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC
       signature_key: "your_signature_min_256_chars"
       user_claim: email
-      roles_claim: resource_access.client-app.roles # JSON-path style
+      groups_claim: resource_access.client-app.groups # JSON-path style
       header_name: Authorization
 ```
-You can verify assigned user roles with the `roles` rule. The rule matches when the user has at least one of the configured `roles` (OR logic). Alternatively, `roles_and` matches when the user has all the listed roles (AND logic).
+You can verify groups assigned to the user with the `groups` field. The rule matches when the user belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` matches when the user belongs to all given groups (AND logic).
 
 The `user_claim` indicates which field in the JSON will be interpreted as the username.
 
