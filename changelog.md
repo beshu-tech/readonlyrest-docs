@@ -3,7 +3,7 @@
 ### (2021-05-24) What's new in **ROR 1.40.0**
 * **🚨Security Fix** (ES) [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)
 * **🚨Security Fix** (KBN) “Security” app not entirely hidden in 8.2.x
-* **🚀New** (ES) New Support for 8.2.2, 8.2.1, 7.17.4
+* **🚀New** (ES) New Support for 8.2.3, 8.2.2, 8.2.1, 7.17.4
 * **🚀New** (KBN) New Support for 8.2.2 8.2.1, 7.17.4
 * **🚀New** (ES & KBN) [The Impersonation feature](https://docs.readonlyrest.com/kibana#impersonation)
 * **🚀New** (ES) [FIPS compliant SSL mode](https://docs.readonlyrest.com/elasticsearch/fips)
