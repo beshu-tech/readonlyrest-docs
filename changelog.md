@@ -1,5 +1,9 @@
 # Changelog
 
+### (2021-06-21) What's new in **ROR 1.41.0**
+* **🚀New** (ES) Added `groups_and` mode to [`ror_kbn_auth`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_auth) and [`jwt_auth`](https://docs.readonlyrest.com/elasticsearch#jwt_auth) rules
+* **🐞Fix** (ES|KBN) tenancy selector didn't work well with `jwt_auth` and `ror_kbn_auth` rules
+
 ### (2021-05-24) What's new in **ROR 1.40.0**
 * **🚨Security Fix** (ES) [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)
 * **🚨Security Fix** (KBN) “Security” app not entirely hidden in 8.2.x
@@ -22,9 +26,9 @@
 * **🚨Security Fix** (KBN) XSS sanitize path requested
 * **🚨Security Fix** (ES) [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) & [CVE-2022-21653](https://nvd.nist.gov/vuln/detail/CVE-2022-21653)
 * **🚀New** (KBN) New Support for 8.2.0 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1, 7.17.3, 7.17.2
-* **🚀New** (ES) New Support for 8.2.0, 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#3-patch-es))
+* **🚀New** (ES) New Support for 8.2.0, 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://docs.readonlyrest.com/elasticsearch#3.-patch-es))
 * **🚀New** (ES) New Support for 7.17.3, 7.17.2
-* **🚀New** (ES) [New `groups_and` ACL rule](https://github.com/beshu-tech/readonlyrest-docs/blob/b06b59b79c4de1ab67301bf83c32aa4bb631ed22/elasticsearch.md#groups_and)
+* **🚀New** (ES) [New `groups_and` ACL rule](https://docs.readonlyrest.com/elasticsearch#groups_and)
 * **🧐Enhancement** (KBN) Stop inlining whitelisted headers into Authorization header
 * **🧐Enhancement** (KBN) Log additional errors and info related to HA
 * **🧐Enhancement** (KBN) Misc internal dependencies upgrades 
