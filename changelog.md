@@ -8,6 +8,7 @@
 * **🐞Fix** (ES|KBN) tenancy selector didn't work well with `jwt_auth` and `ror_kbn_auth` rules
 * **🐞Fix** (KBN) Support for special characters in tenancy names
 * **🐞Fix** (KBN) OIDC logout flow redirecting to bad request error
+* **🐞Fix** (KBN) OIDC connector not working in Kibana < 7.12.0
 
 ### (2021-05-24) What's new in **ROR 1.40.0**
 * **🚨Security Fix** (ES) [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)
