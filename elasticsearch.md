@@ -1108,14 +1108,14 @@ So that Kibana will forward the necessary headers to Elasticsearch.
 
 `users: ["root", "*@mydomain.com"]`
 
-Limit access to of specific users whose username is contained or matches the patterns in the array. This rule is independent from the authentication mathod chosen, so it will work well in conjunction LDAP, JWT, proxy\_auth, and all others.
+Limit access to of specific users whose username is contained or matches the patterns in the array. This rule is independent from the authentication method chosen, so it will work well in conjunction LDAP, JWT, proxy\_auth, and all others.
 
 For example:
 
 ```yaml
 readonlyrest:
   access_control_rules:
-    - name: "JWT auth for viewer role, limited to certain usernames"
+    - name: "JWT auth for viewer group (role), limited to certain usernames"
       kibana_access: ro
       users: ["root", "*@mydomain.com"]
       jwt_auth:
@@ -1651,7 +1651,7 @@ _Example: rules are associated to groups \(instead of users\) and users-group as
 
 ### Group mapping
 
-Sometimes we'd like to take advantage of roles existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](details/groups-rule-mapping.md).
+Sometimes we'd like to take advantage of groups (roles) existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](details/groups-rule-mapping.md).
 
 ### Username case sensitivity
 
