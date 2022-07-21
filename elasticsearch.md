@@ -64,13 +64,31 @@ Notice how we need to type in the format `file://` + absolute path \(yes, with t
 
 When prompted about additional permissions, answer **y**.
 
-#### 3. Patch ES
+#### 3. Patch Elasticsearch
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools/src/main/scala/tech/beshu/ror/tools/patches/Es8xxPatch.scala), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
+If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 # Patch ES 
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+```
+
+**⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
+
+You can verify if Elasticsearch was correctly patched using command `verify`:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
+```
+
+Please note that the tool assumes that the default installation directory is `/usr/share/elasticsearch`. You can instruct it to use different directory by executing one of tool's command with `--es-path` parameter:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --es-path /my/custom/path/to/es/folder
+```
+or
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify --es-path /my/custom/path/to/es/folder
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
@@ -158,13 +176,19 @@ service stop elasticsearch
 
 depending on your environment.
 
-#### 2. Unpatch ES
+#### 2. Unpatch Elasticsearch
 
 If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 # Unpatch ES
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
+```
+
+You can verify if Elasticsearch was correctly unpatched using command `verify`:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
@@ -191,13 +215,21 @@ e.g.
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 ```
 
-#### 5. Patch ES
+#### 5. Patch Elasticsearch
 
 If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools/src/main/scala/tech/beshu/ror/tools/patches/Es8xxPatch.scala), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 # Patch ES 
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+```
+
+**⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
+
+You can verify if Elasticsearch was correctly patched using command `verify`:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
@@ -236,13 +268,19 @@ service stop elasticsearch
 
 depending on your environment.
 
-#### 2. Unpatch ES
+#### 2. Unpatch Elasticsearch
 
 If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 # Unpatch ES
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
+```
+
+You can verify if Elasticsearch was correctly unpatched using command `verify`:
+
+```bash
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
