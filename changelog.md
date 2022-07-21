@@ -1,6 +1,6 @@
 # Changelog
 
-### (2021-06-21) What's new in **ROR 1.41.0**
+### (2022-06-21) What's new in **ROR 1.41.0**
 * **🚀New** (ES) Added `groups_and` mode to [`ror_kbn_auth`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_auth) and [`jwt_auth`](https://docs.readonlyrest.com/elasticsearch#jwt_auth) rules
 * **🧐Enhancement** (KBN) Prevent native credentials dialogue to appear in Kibana when ES responds 401
 * **🧐Enhancement** (KBN) Logging in after logout shows the same page you last visited
@@ -10,7 +10,7 @@
 * **🐞Fix** (KBN) OIDC logout flow redirecting to bad request error
 * **🐞Fix** (KBN) OIDC connector not working in Kibana < 7.12.0
 
-### (2021-05-24) What's new in **ROR 1.40.0**
+### (2022-05-24) What's new in **ROR 1.40.0**
 * **🚨Security Fix** (ES) [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)
 * **🚨Security Fix** (KBN) “Security” app not entirely hidden in 8.2.x
 * **🚀New** (ES) New Support for 8.2.3, 8.2.2, 8.2.1, 7.17.4
@@ -28,7 +28,7 @@
 * **🐞Fix** (KBN) Make ROR default space the actual default one
 * **🐞Fix** (KBN) RORDEV-641 Fix oidc connection error
 
-### (2021-03-19) What's new in **ROR 1.39.0**
+### (2022-03-19) What's new in **ROR 1.39.0**
 * **🚨Security Fix** (KBN) XSS sanitize path requested
 * **🚨Security Fix** (ES) [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) & [CVE-2022-21653](https://nvd.nist.gov/vuln/detail/CVE-2022-21653)
 * **🚀New** (KBN) New Support for 8.2.0 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1, 7.17.3, 7.17.2
@@ -47,7 +47,7 @@
 * **🐞Fix** (ES) X-Pack SSL nodes cooperation with ROR SSL nodes
 * **🐞Fix** (ES) _msearch issue when filter rules was used in matched block
 
-### (2021-01-17) What's new in **ROR 1.38.0**
+### (2022-01-17) What's new in **ROR 1.38.0**
 * **🚀New** (ES) New Support for 7.17.0, 7.17.1
 * **🚀New** (KBN) New Support for 7.17.0
 * **🚀New** (ES) [Configuration for custom audit cluster](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.38.x/elasticsearch.md#custom-audit-cluster)
