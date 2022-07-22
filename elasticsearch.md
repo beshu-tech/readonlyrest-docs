@@ -81,7 +81,7 @@ You can verify if Elasticsearch was correctly patched using command `verify`:
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
 ```
 
-Please note that the tool assumes that the default installation directory is `/usr/share/elasticsearch`. You can instruct it to use different directory by executing one of tool's command with `--es-path` parameter:
+Please note that the tool assumes that you run it from the root of your ES installation directory or the default installation directory is `/usr/share/elasticsearch`. But if you want or need, you can instruct it where your Elasticsearch is installed by executing one of tool's command with `--es-path` parameter:
 
 ```bash
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --es-path /my/custom/path/to/es/folder
