@@ -1,5 +1,13 @@
 # Changelog
 
+### (2022-07-25) What's new in **ROR 1.42.0**
+* **🚀New** (KBN|ES) 8.3.2, 8.3.1, 8.3.0, 7.15.5 support
+* **🧐Enhancement** (KBN) Search box in tenancy switcher (when #tenancies > 5)
+* **🧐Enhancement** (ES) added configuration warnings in the Impersonation Feature
+* **🐞Fix** (KBN) Logout didn’t delete the SAML session on the IdP
+* **🐞Fix** (KBN) 5xx errors from Elasticsearch break Kibana users’ session unrecoverably
+* **🐞Fix** (ES) ROR node cooperation with X-pack nodes
+
 ### (2022-06-21) What's new in **ROR 1.41.0**
 * **🚀New** (ES) Added `groups_and` mode to [`ror_kbn_auth`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_auth) and [`jwt_auth`](https://docs.readonlyrest.com/elasticsearch#jwt_auth) rules
 * **🧐Enhancement** (KBN) Prevent native credentials dialogue to appear in Kibana when ES responds 401
