@@ -1,7 +1,7 @@
 # Changelog
 
 ### (2022-07-25) What's new in **ROR 1.42.0**
-* **🚀New** (KBN|ES) 8.3.2, 8.3.1, 8.3.0, 7.15.5 support
+* **🚀New** (KBN|ES) 8.3.3, 8.3.2, 8.3.1, 8.3.0, 7.15.5 support
 * **🧐Enhancement** (KBN) Search box in tenancy switcher (when #tenancies > 5)
 * **🧐Enhancement** (ES) added configuration warnings in the Impersonation Feature
 * **🐞Fix** (KBN) Logout didn’t delete the SAML session on the IdP
