@@ -889,6 +889,12 @@ readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
 
+Alternatively, it's possible to load the JS from a file in the filesystem:
+
+```
+readonlyrest_kbn.kibana_custom_js_inject_file: '/tmp/custom.js'
+```
+
 ### Map groups to aliases
 
 You can provide a function, mapping group names to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
