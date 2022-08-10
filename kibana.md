@@ -883,11 +883,21 @@ Alternatively, it's possible to load the CSS from a file in the filesystem:
 readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 ```
 
+**⚠️IMPORTANT** If you use relative paths, you end up pointing to kibana home, i.e. `readonlyrest_kbn.kibana_custom_css_inject_file: 'config/custom.css'` will refer to `$KBN_HOME/config/custom.css` which is the same directory where `kibana.yml` can normally be found.
+
 ### Inject custom JS in Kibana
 
 ```
 readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
+
+Alternatively, it's possible to load the JS from a file in the filesystem:
+
+```
+readonlyrest_kbn.kibana_custom_js_inject_file: '/tmp/custom.js'
+```
+
+**⚠️IMPORTANT** If you use relative paths, you end up pointing to kibana home, i.e. `readonlyrest_kbn.kibana_custom_js_inject: 'config/custom.js'` will refer to `$KBN_HOME/config/custom.js` which is the same directory where `kibana.yml` can normally be found.
 
 ### Map groups to aliases
 
