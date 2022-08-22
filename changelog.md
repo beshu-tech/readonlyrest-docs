@@ -1,5 +1,14 @@
 # Changelog
 
+### (2022-08-22) What's new in **ROR 1.44.0**
+* **🚀New** (KBN) `kibana_custom_js_inject_file` feature
+* **🐞Fix** (ES) [`ror-tools` fix for Windows OS (patching ES 3.x issue)](https://forum.readonlyrest.com/t/ror-plugin-for-es-8-x-patch-error/2115)
+* **🐞Fix** (ES) resolving indices in the remote x-pack cluster
+* **🐞Fix** (KBN|PRO) ROR menu title wraps when version text is too short (cosmetic)
+* **🐞Fix** (KBN) infinite loading when kibana_access not defined for user
+* **🐞Fix** (KBN) transient error with randomly choosing off range bind port on localhost
+* **🐞Fix** (KBN) 404 on login when `xpack.spaces.enabled: false`
+
 ### (2022-07-25) What's new in **ROR 1.42.0**
 * **🚀New** (KBN|ES) 8.3.2, 8.3.1, 8.3.0, 7.15.5 support
 * **🧐Enhancement** (KBN) Search box in tenancy switcher (when #tenancies > 5)
