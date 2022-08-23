@@ -1,0 +1,1927 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Integration manual for ReadonlyREST Enterprise with the on-premises Active Directory Federated Services  Single Sign-on from Microsoft.">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.1">
+    
+    
+      
+        <title>Microsoft ADFS - ReadonlyREST Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#microsoft-adfs" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="ReadonlyREST Documentation" class="md-header__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ReadonlyREST Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Microsoft ADFS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ReadonlyREST Documentation" class="md-nav__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ReadonlyREST Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        README
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../SUMMARY/" class="md-nav__link">
+        Table of contents
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../commercial/" class="md-nav__link">
+        Commercial Licenses
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/" class="md-nav__link">
+        Contribution License Agreement
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../elasticsearch/" class="md-nav__link">
+        For Elasticsearch
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kibana/" class="md-nav__link">
+        For Kibana
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Actionstrings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Actionstrings" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Actionstrings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../actionstrings/" class="md-nav__link">
+        List of Elasticsearch actions available in various Elasticsearch versions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Details
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Details" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Details
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/fips/" class="md-nav__link">
+        FIPS mode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/fls-engine/" class="md-nav__link">
+        FLS engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/groups-rule-mapping/" class="md-nav__link">
+        External to local groups mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/impersonation/" class="md-nav__link">
+        Impersonation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/index-not-found-examples/" class="md-nav__link">
+        "Index not found" scenario
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/indices-rule-templates/" class="md-nav__link">
+        Templates handling in `indices` rule
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/kibana-7.8.x-and-older/" class="md-nav__link">
+        Kibana 7.8.x and older
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../multitenancy_guide/" class="md-nav__link">
+        Multi-tenancy Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../multiuser_guide/" class="md-nav__link">
+        Multi-user Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_4" type="checkbox" id="__nav_10_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_4">
+          Impersonation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Impersonation" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_4">
+          <span class="md-nav__icon md-icon"></span>
+          Impersonation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../impersonation/external-services-mocks-ui/" class="md-nav__link">
+        External services mocks configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../impersonation/impersonate-user-ui/" class="md-nav__link">
+        Impersonate user ui
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../impersonation/test-settings-ui/" class="md-nav__link">
+        Writing Test Settings
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_5" type="checkbox" id="__nav_10_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_5">
+          Oidc sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Oidc sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_5">
+          <span class="md-nav__icon md-icon"></span>
+          Oidc sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../oidc-sso/" class="md-nav__link">
+        OpenID Connect (OIDC) SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../oidc-sso/keycloak_oidc/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_6" type="checkbox" id="__nav_10_6" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_6">
+          Saml sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Saml sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_6">
+          <span class="md-nav__icon md-icon"></span>
+          Saml sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        SAML SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Microsoft ADFS
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Microsoft ADFS
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#provisioning-azure-virtual-machines-to-host-active-directory-elasticsearch-and-kibana" class="md-nav__link">
+    Provisioning Azure Virtual Machines to Host Active Directory, Elasticsearch, and Kibana
+  </a>
+  
+    <nav class="md-nav" aria-label="Provisioning Azure Virtual Machines to Host Active Directory, Elasticsearch, and Kibana">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provisioning-virtual-machines" class="md-nav__link">
+    Provisioning Virtual Machines
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-active-directory-ad-services" class="md-nav__link">
+    Installing and Configuring Active Directory (AD) Services
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Active Directory (AD) Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-active-directory-services" class="md-nav__link">
+    Installing Active Directory Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-active-directory-services" class="md-nav__link">
+    Configuring Active Directory Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-the-domain-name-services-dns-role" class="md-nav__link">
+    Configuring the Domain Name Services (DNS) Role
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#joining-computers-to-the-domain" class="md-nav__link">
+    Joining Computers to the Domain
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provisioning-sample-ad-users" class="md-nav__link">
+    Provisioning Sample AD Users
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-active-directory-certificate-services-ad-cs" class="md-nav__link">
+    Installing Active Directory Certificate Services (AD CS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing Active Directory Certificate Services (AD CS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuring-active-directory-certificate-services" class="md-nav__link">
+    Configuring Active Directory Certificate Services
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-active-directory-federation-services-ad-fs" class="md-nav__link">
+    Installing and Configuring Active Directory Federation Services (AD FS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Active Directory Federation Services (AD FS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provisioning-ssl-certificate-templates" class="md-nav__link">
+    Provisioning SSL Certificate Templates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provisioning-the-ssl-certificate" class="md-nav__link">
+    Provisioning the SSL Certificate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-active-directory-federation-services" class="md-nav__link">
+    Setting up Active Directory Federation Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-group-managed-service-account-and-adding-a-kds-key" class="md-nav__link">
+    Creating a Group Managed Service Account and Adding a KDS Key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-federation-services" class="md-nav__link">
+    Configuring Federation Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-readonlyrest-relying-trust" class="md-nav__link">
+    Setting Up ReadonlyREST Relying Trust
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-claims" class="md-nav__link">
+    Configuring Claims
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-relying-party-trusts" class="md-nav__link">
+    Updating Relying Party Trusts
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-elasticsearch-and-the-readonlyrest-free-plugin" class="md-nav__link">
+    Installing and Configuring Elasticsearch and the ReadonlyREST Free Plugin
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Elasticsearch and the ReadonlyREST Free Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-elasticsearch" class="md-nav__link">
+    Installing Elasticsearch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-the-elasticsearch-plugin" class="md-nav__link">
+    Installing the Elasticsearch Plugin
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-kibana-and-the-readonlyrest-enterprise-plugin" class="md-nav__link">
+    Installing and Configuring Kibana and the ReadonlyREST Enterprise Plugin
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Kibana and the ReadonlyREST Enterprise Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-kibana" class="md-nav__link">
+    Installing Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-self-signed-certificate-for-kibana" class="md-nav__link">
+    Creating a Self-Signed Certificate for Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-the-readonlyrest-enterprise-plugin" class="md-nav__link">
+    Installing the ReadonlyREST Enterprise Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opening-the-firewall-port" class="md-nav__link">
+    Opening the Firewall Port
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demonstration" class="md-nav__link">
+    Demonstration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure_ad/" class="md-nav__link">
+        Microsoft Azure AD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keycloak_saml/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multifactor_authentication_with_duo_via_saml/" class="md-nav__link">
+        Duo Security MFA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#provisioning-azure-virtual-machines-to-host-active-directory-elasticsearch-and-kibana" class="md-nav__link">
+    Provisioning Azure Virtual Machines to Host Active Directory, Elasticsearch, and Kibana
+  </a>
+  
+    <nav class="md-nav" aria-label="Provisioning Azure Virtual Machines to Host Active Directory, Elasticsearch, and Kibana">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provisioning-virtual-machines" class="md-nav__link">
+    Provisioning Virtual Machines
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-active-directory-ad-services" class="md-nav__link">
+    Installing and Configuring Active Directory (AD) Services
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Active Directory (AD) Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-active-directory-services" class="md-nav__link">
+    Installing Active Directory Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-active-directory-services" class="md-nav__link">
+    Configuring Active Directory Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-the-domain-name-services-dns-role" class="md-nav__link">
+    Configuring the Domain Name Services (DNS) Role
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#joining-computers-to-the-domain" class="md-nav__link">
+    Joining Computers to the Domain
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provisioning-sample-ad-users" class="md-nav__link">
+    Provisioning Sample AD Users
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-active-directory-certificate-services-ad-cs" class="md-nav__link">
+    Installing Active Directory Certificate Services (AD CS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing Active Directory Certificate Services (AD CS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuring-active-directory-certificate-services" class="md-nav__link">
+    Configuring Active Directory Certificate Services
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-active-directory-federation-services-ad-fs" class="md-nav__link">
+    Installing and Configuring Active Directory Federation Services (AD FS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Active Directory Federation Services (AD FS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provisioning-ssl-certificate-templates" class="md-nav__link">
+    Provisioning SSL Certificate Templates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provisioning-the-ssl-certificate" class="md-nav__link">
+    Provisioning the SSL Certificate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-active-directory-federation-services" class="md-nav__link">
+    Setting up Active Directory Federation Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-group-managed-service-account-and-adding-a-kds-key" class="md-nav__link">
+    Creating a Group Managed Service Account and Adding a KDS Key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-federation-services" class="md-nav__link">
+    Configuring Federation Services
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-readonlyrest-relying-trust" class="md-nav__link">
+    Setting Up ReadonlyREST Relying Trust
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-claims" class="md-nav__link">
+    Configuring Claims
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-relying-party-trusts" class="md-nav__link">
+    Updating Relying Party Trusts
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-elasticsearch-and-the-readonlyrest-free-plugin" class="md-nav__link">
+    Installing and Configuring Elasticsearch and the ReadonlyREST Free Plugin
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Elasticsearch and the ReadonlyREST Free Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-elasticsearch" class="md-nav__link">
+    Installing Elasticsearch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-the-elasticsearch-plugin" class="md-nav__link">
+    Installing the Elasticsearch Plugin
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-and-configuring-kibana-and-the-readonlyrest-enterprise-plugin" class="md-nav__link">
+    Installing and Configuring Kibana and the ReadonlyREST Enterprise Plugin
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing and Configuring Kibana and the ReadonlyREST Enterprise Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-kibana" class="md-nav__link">
+    Installing Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-self-signed-certificate-for-kibana" class="md-nav__link">
+    Creating a Self-Signed Certificate for Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-the-readonlyrest-enterprise-plugin" class="md-nav__link">
+    Installing the ReadonlyREST Enterprise Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opening-the-firewall-port" class="md-nav__link">
+    Opening the Firewall Port
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demonstration" class="md-nav__link">
+    Demonstration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="microsoft-adfs">Microsoft ADFS</h1>
+<p>How to Connect ROR Enterprise with SAML and ADFS</p>
+<p>ReadonlyREST (ROR) Enterprise allows for complex authentication and authorization configurations with Kibana and Elasticsearch. When Elasticsearch is combined with Kibana, a data visualization dashboard, the combination provides a powerful way to ingest logs and analyze data.</p>
+<p>To access that data, many enterprises manage users in a central directory. This directory could be an Active Directory (AD) instance, in the case of a Windows-centric environment, or a cloud directory provider, such as Google Cloud Identity, in a cloud-based environment. Instead of integrating these services directly into a product, an abstraction layer such as SAML can provide authentication and authorization and tie into different back ends as necessary.</p>
+<p>ReadonlyREST provides a free Elasticsearch plugin that provides advanced authentication options. When it is combined with the ReadonlyREST Enterprise plugin for Kibana, integrating SAML authentication into the authentication process becomes easy.</p>
+<p>This article will walk through the process of setting up an entire environment in order to demonstrate how the ReadonlyREST free and Enterprise plugins integrate with Active Directory Federation Services (AD FS) to provide SAML authentication.</p>
+<p>In this tutorial, you will learn how to:</p>
+<ul>
+<li>Provision Azure Virtual Machines to host Active Directory, Elasticsearch, and Kibana</li>
+<li>Install and configure Active Directory (AD) Services</li>
+<li>Provision sample AD users</li>
+<li>Install and configure Active Directory Certificate Services (AD CS)</li>
+<li>Install and configure Active Directory Federation Services (AD FS)</li>
+<li>Install and configure ElasticSearch and the ReadonlyREST Free Plugin</li>
+<li>Install and configure Kibana and the ReadonlyREST Enterprise Plugin</li>
+</ul>
+<h2 id="provisioning-azure-virtual-machines-to-host-active-directory-elasticsearch-and-kibana">Provisioning Azure Virtual Machines to Host Active Directory, Elasticsearch, and Kibana</h2>
+<p>Any Windows Server 2016 Virtual Machines (VM) can be used for this process; however, in this demonstration, the Microsoft Azure environment will be used to provision and host the VMs.</p>
+<p>You can name your VMs whatever you would like. This article will refer to the names listed below for consistency.</p>
+<ul>
+<li>Virtual Machine 1: lc-win2019-02</li>
+<li><strong>Roles</strong>: Active Directory, AD Certificate Services, AD Federation Services, DNS</li>
+<li><strong>Memory</strong>: 4GB</li>
+<li>Virtual Machine 2: lc-win2019-03</li>
+<li><strong>Roles</strong>: Elasticsearch, Kibana</li>
+<li><strong>Memory</strong>: 8GB</li>
+</ul>
+<p>These Azure VMs will be Pay-As-You-Go and Spot Instances for affordability. The example shown below is for the Elasticsearch and Kibana VM which will be duplicated for the Active Directory VM but will have 4GBs of memory instead of 8GB.</p>
+<p><em>Please note that Azure Spot Instances cannot be resized after creation.</em></p>
+<h3 id="provisioning-virtual-machines">Provisioning Virtual Machines</h3>
+<ol>
+<li>Log into the <strong>Azure portal</strong> using a <strong>Pay-As-You-Go</strong> subscription.</li>
+<li>Create a <strong>new virtual machine.</strong></li>
+<li>If you do not already have a <strong>resource group</strong> created to serve as a home for the VMs, select <strong>Create new</strong> and create the <strong>resource group.</strong></li>
+<li>Name your virtual machine appropriately, and choose the details for your instance, as shown in the example below.</li>
+<li>You can use the default hard drive sizes and <strong>Standard HDD</strong> disks for this environment.</li>
+<li><img alt="" src="../../.gitbook/assets/2.png" /></li>
+<li>The default <strong>Networking</strong> options will also work here.</li>
+<li><img alt="" src="../../.gitbook/assets/3.png" /></li>
+<li>As will the default <strong>Management</strong> options.</li>
+<li><img alt="" src="../../.gitbook/assets/4.png" /></li>
+<li>No additional <strong>Advanced</strong> options are necessary.</li>
+<li><img alt="" src="../../.gitbook/assets/5.png" /></li>
+<li>If you would like to tag your VMs for later categorization and tracking, you can do so here.</li>
+<li><img alt="" src="../../.gitbook/assets/6.png" /></li>
+<li>Finally, create the VM.</li>
+</ol>
+<p>After this VM has been created, create one more to host the Active Directory and related services. In the end, you should have two VMs as outlined above.</p>
+<h2 id="installing-and-configuring-active-directory-ad-services">Installing and Configuring Active Directory (AD) Services</h2>
+<p>After the two VMs have been provisioned, the next step is to set up directory services on the first VM, lc-win2019-02.</p>
+<h3 id="installing-active-directory-services">Installing Active Directory Services</h3>
+<ol>
+<li>Once you are logged into lc-win2019-02, choose <strong>Add Roles and Features</strong> on the <strong>Server Manager</strong> screen.</li>
+<li>Select <strong>Role-based or feature-based installation</strong>.</li>
+<li><img alt="" src="../../.gitbook/assets/9.png" /></li>
+<li>Select the correct server from the server pool.</li>
+<li><img alt="" src="../../.gitbook/assets/10.png" /></li>
+<li>Select <strong>Active Directory Domain Services,</strong> and add the additional features as prompted.</li>
+<li>No additional features are necessary since the default options work.</li>
+<li><img alt="" src="../../.gitbook/assets/13.png" /></li>
+<li>Click <strong>Next</strong> on the <strong>Active Directory Domain Services</strong> informational screen.</li>
+<li><img alt="" src="../../.gitbook/assets/14.png" /></li>
+<li>Finally, select <strong>Restart the destination server automatically if required</strong>. Click <strong>Yes</strong> when prompted, and then click <strong>Install.</strong></li>
+<li>Once installation has finished, click on <strong>Close.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/17.png" /></li>
+</ol>
+<h3 id="configuring-active-directory-services">Configuring Active Directory Services</h3>
+<p>If DNS has not been installed already, the role installation screen may pop up in the middle of the Active Directory installation. Installation instructions for the DNS role are shown after the Configuring Active Directory Services section below.</p>
+<ol>
+<li>Click on <strong>Promote this server to a domain controller,</strong> which will allow you to see the <strong>Deployment Configuration</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/18.png" /></li>
+<li>Name the domain. In this case, use ad.lc-test.local.</li>
+<li>This name was arbitrarily chosen. Using a subdomain such as “ad” instead of your actual domain (i.e., [lc-test.local](<a href="http://lc-test.local/))%20by%20itself/">http://lc-test.local\</a> is recommended.</li>
+<li><img alt="" src="../../.gitbook/assets/19.png" /></li>
+<li>Select <strong>Windows Server 2016</strong> as the <strong>functional level</strong>. For the <strong>domain controller capabilities</strong>, choose <strong>Domain Name System (DNS) server</strong>. Set a Directory Services Restore Mode (DSRM) <strong>password.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/20.png" /></li>
+<li>The following <strong>DNS Options</strong> warning message can be disregarded:</li>
+<li><img alt="" src="../../.gitbook/assets/21.png" /></li>
+<li>Set the <strong>NetBIOS domain name</strong>, which is usually the short name prior to the host name (e.g., AD), and click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/22.png" /></li>
+<li>Use the default paths, and click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/23.png" /></li>
+<li>On the <strong>Review Options</strong> screen, click <strong>Next</strong> if everything looks correct.</li>
+<li><img alt="" src="../../.gitbook/assets/24.png" /></li>
+<li>On the <strong>Prerequisites Check</strong> screen, click <strong>Install.</strong></li>
+<li>You’ll see a number of warnings related to the fact that this is a test environment. They can be safely ignored.</li>
+<li><img alt="" src="../../.gitbook/assets/25.png" /></li>
+<li>When you click <strong>Close</strong>, you will have a successful configuration.</li>
+<li><img alt="" src="../../.gitbook/assets/26.png" /></li>
+<li>Click <strong>Close</strong> on the restart prompt.</li>
+<li><img alt="" src="../../.gitbook/assets/27.png" /></li>
+</ol>
+<h3 id="configuring-the-domain-name-services-dns-role">Configuring the Domain Name Services (DNS) Role</h3>
+<ol>
+<li>Click on the <strong>DNS Services</strong> role, add the additional features as requested, and click <strong>Next.</strong></li>
+<li>If you are using DHCP for the server (this is not recommended for a production service), then you will see the validation warning shown below. It can be disregarded. Click on <strong>Continue</strong> and <strong>Install.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/30.png" /></li>
+<li>Click <strong>Next</strong> on the <strong>Features</strong> screen, since no additional features are necessary.</li>
+<li><img alt="" src="../../.gitbook/assets/31.png" /></li>
+<li>Click <strong>Next</strong> on the informational <strong>DNS Server</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/32.png" /></li>
+<li>Click <strong>Install</strong> on the <strong>Confirmation</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/33.png" /></li>
+<li>Select <strong>Restart the destination server automatically if required,</strong> and click <strong>Install.</strong> Finally, click <strong>Close,</strong> and you will have a successful installation.</li>
+<li><img alt="" src="../../.gitbook/assets/34.png" /></li>
+</ol>
+<h3 id="joining-computers-to-the-domain">Joining Computers to the Domain</h3>
+<p>Next we need to join the second server—the one hosting Elasticsearch and Kibana—to the domain.</p>
+<ol>
+<li>Open an RDP connection to the second server. Then, open <strong>Notepad</strong> as an Administrator, and open the file C:\Windows\System32\drivers\etc\hosts.</li>
+<li><img alt="" src="../../.gitbook/assets/35.png" /></li>
+<li>Add the IP address and hostnames for the domain controller.</li>
+<li>These will reflect the IP addresses and hostnames you chose for your configuration:</li>
+<li><strong>FQDN</strong>: 10.0.0.5 - ad.lc-test.local</li>
+<li><strong>NetBIOS</strong>: 10.0.0.5 - ad</li>
+<li><img alt="" src="../../.gitbook/assets/36.png" /></li>
+<li>Additionally, you will need to change your network adapter DNS to point to your domain server; in this case, it is 10.0.0.5.</li>
+<li>If the system restarted, open an RDP connection, and then open the <strong>System</strong> screen under the <strong>Control Pane</strong> and select <strong>Advanced System</strong> settings.</li>
+<li><img alt="" src="../../.gitbook/assets/39.png" /></li>
+<li>Click on <strong>Change</strong> to add this server to the domain.</li>
+<li><img alt="" src="../../.gitbook/assets/40.png" /></li>
+<li>Enter the domain (e.g., ad.lc-test.local).</li>
+<li><img alt="" src="../../.gitbook/assets/41.png" /></li>
+<li>Click on <strong>OK,</strong> and enter the credentials of the account that has privileges enabling it to add the domain.</li>
+<li><img alt="" src="../../.gitbook/assets/42.png" /></li>
+<li>Restart the server after joining it to the domain.</li>
+</ol>
+<h2 id="provisioning-sample-ad-users">Provisioning Sample AD Users</h2>
+<p>For testing purposes, it can be useful to provision additional users within the Active Directory. The following PowerShell script, which should be run on the domain controller, will make this easy. Note that we are setting the mail attribute which will be used for the SAML username.</p>
+<p>Import-Module -Name 'ActiveDirectory'</p>
+<p>$Domain = 'ad.lc-test.local'\
+$OU = 'CN=Users,DC=ad,DC=lc-test,DC=local'</p>
+<p>$Users = @{\
+"TestUser1" = "testPass1"\
+"TestUser2" = "testPass2"\
+"TestUser3" = "testPass3"\
+"TestUser4" = "testPass4"\
+"TestUser5" = "testPass5"\
+}</p>
+<p>$Users.GetEnumerator() | ForEach-Object {\
+$Name = $_.Key\
+$Password = $_.Value</p>
+<p>$Params = @{\
+"Name" = $Name\
+"Path" = $OU\
+"AccountPassword" = (ConvertTo-SecureString -AsPlainText $Password -Force)\
+"Enabled" = $True\
+"DisplayName" = $Name\
+"PasswordNeverExpires" = $True\
+"CannotChangePassword" = $True\
+"EmailAddres" = "$Name@$Domain"\
+}</p>
+<p>New-ADUser @Params\
+}</p>
+<h2 id="installing-active-directory-certificate-services-ad-cs">Installing Active Directory Certificate Services (AD CS)</h2>
+<ol>
+<li>Click on <strong>Active Directory Certificate Services,</strong> and add the additional features as prompted.</li>
+<li>Since no additional features are necessary, allow defaults, and click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/45.png" /></li>
+<li>On the <strong>Active Directory Certificate Services</strong> informational screen, click <strong>Next</strong> to continue.</li>
+<li><img alt="" src="../../.gitbook/assets/46.png" /></li>
+<li>Select the <strong>Certification Authority</strong> role services, and click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/47.png" /></li>
+<li>Select <strong>Restart the destination server automatically if required,</strong> and click on <strong>Install.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/48.png" /></li>
+<li>Finally, click on <strong>Close</strong> when the installation has been completed.</li>
+<li><img alt="" src="../../.gitbook/assets/49.png" /></li>
+</ol>
+<h3 id="configuring-active-directory-certificate-services">Configuring Active Directory Certificate Services</h3>
+<ol>
+<li>Click on <strong>Configure Active Directory Certificate Services.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/50.png" /></li>
+<li>Select the default administrative user for AD CS credentials.</li>
+<li><img alt="" src="../../.gitbook/assets/51.png" /></li>
+<li>Under <strong>Role Services</strong>, check <strong>Certification Authority,</strong> and click Next.</li>
+<li><img alt="" src="../../.gitbook/assets/52.png" /></li>
+<li>Select <strong>Enterprise CA,</strong> and click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/53.png" /></li>
+<li>Click on <strong>Root CA</strong>, then click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/54.png" /></li>
+<li>Click on <strong>Create a new private key,</strong> and then click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/55.png" /></li>
+<li>Select <strong>RSA#Microsoft Software Key Storage Provider</strong>, a default key length of <strong>2048</strong>, and a hash algorithm of <strong>SHA256.</strong> Click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/56.png" /></li>
+<li>Use the defaults given for the CA Name, and click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/57.png" /></li>
+<li>Select a validity period of 5 years, and click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/58.png" /></li>
+<li>Leave the default database locations in place, and click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/59.png" /></li>
+<li>Click on <strong>Configure</strong> and <strong>Close</strong> when the configuration process has been completed.</li>
+<li><img alt="" src="../../.gitbook/assets/60.png" /></li>
+</ol>
+<h2 id="installing-and-configuring-active-directory-federation-services-ad-fs">Installing and Configuring Active Directory Federation Services (AD FS)</h2>
+<p>Previously, it was recommended that AD FS should not be installed on the same server as the DC because IIS was installed as part of that process. As of 2012, this recommendation has changed, since AD FS does not use IIS anymore. Now, mounting AD FS and DC on the same server is advised for domains under 1000 users.</p>
+<h3 id="provisioning-ssl-certificate-templates">Provisioning SSL Certificate Templates</h3>
+<ol>
+<li>Open the <strong>Certification Authority</strong> MMC snapin, right-click on <strong>Certificate Templates,</strong> and click on <strong>Manage.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/61.png" /></li>
+<li>Select <strong>Duplicate Template</strong> on the <strong>Web Server</strong> template.</li>
+<li><img alt="" src="../../.gitbook/assets/62.png" /></li>
+<li>Enter “SSL Certificates” in the box labeled <strong>Template display name</strong> on the <strong>General</strong> tab.</li>
+<li><img alt="" src="../../.gitbook/assets/63.png" /></li>
+<li>On the <strong>Security</strong> tab, click on <strong>Enroll</strong> and <strong>Allow for Authenticated Users,</strong> and, finally, <strong>Apply</strong> the configuration.</li>
+<li><img alt="" src="../../.gitbook/assets/64.png" /></li>
+<li>Right-click on <strong>Certificate Templates → New → Certificate Template to Issue.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/65.png" /></li>
+<li>Select <strong>SSL Certificates</strong> from the <strong>Certificate Template</strong> list, and click <strong>OK.</strong></li>
+</ol>
+<h3 id="provisioning-the-ssl-certificate">Provisioning the SSL Certificate</h3>
+<ol>
+<li>Open the Certificates MMC snapin for the Local Computer. Navigate to <strong>Personal → Certificates,</strong> and right-click to open <strong>All Tasks → Request New Certificate.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/68.png" /></li>
+<li>Click <strong>Next</strong> on the <strong>Before you Begin</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/69.png" /></li>
+<li>Click <strong>Next</strong> on the <strong>Select Certificate Enrollment Policy</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/70.png" /></li>
+<li>Select <strong>SSL Certificates,</strong> and click on <strong>More information is required to enroll for this certificate.</strong> Select <strong>Click here to configure settings</strong> to configure the certificate.</li>
+<li><img alt="" src="../../.gitbook/assets/71.png" /></li>
+<li>Add the following details on the <strong>Certificate Properties Subject</strong> screen, then click <strong>OK</strong>:</li>
+<li><strong>Subject Name</strong><ul>
+<li><strong>Common Name</strong>: CN=lc-win2019-02.ad.lc-test.local</li>
+</ul>
+</li>
+<li><strong>Alternative Name</strong><ul>
+<li><strong>DNS</strong>: lc-win2019-02.ad.lc-test.local</li>
+<li><strong>DNS</strong>: enterpriseregistration.ad.lc-test.local</li>
+</ul>
+</li>
+<li><img alt="" src="../../.gitbook/assets/72.png" /></li>
+<li>Click on <strong>Enroll</strong> to request the certificate, then click <strong>Finish</strong>.</li>
+<li><img alt="" src="../../.gitbook/assets/73.png" /></li>
+</ol>
+<h3 id="setting-up-active-directory-federation-services">Setting up Active Directory Federation Services</h3>
+<ol>
+<li>Select the <strong>Active Directory Federation Services</strong> role, and click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/74.png" /></li>
+<li>Click <strong>Next</strong> on <strong>Select Features</strong>, since no additional features are needed.</li>
+<li><img alt="" src="../../.gitbook/assets/75.png" /></li>
+<li>Click <strong>Next</strong> on the <strong>Active Directory Federation Services</strong> informational screen.</li>
+<li><img alt="" src="../../.gitbook/assets/76.png" /></li>
+<li>Check <strong>Restart the destination server automatically if required,</strong> and click <strong>Install</strong> and <strong>Close</strong> when the installation has completed.</li>
+<li><img alt="" src="../../.gitbook/assets/77.png" /></li>
+</ol>
+<h3 id="creating-a-group-managed-service-account-and-adding-a-kds-key">Creating a Group Managed Service Account and Adding a KDS Key</h3>
+<p>It is best to use a <strong>gMSA</strong> (group Managed Service Account) instead of a traditional <strong>sMSA</strong> (standalone Managed Service Account). The primary difference between the two is that, in a gMSA, the Windows operating system manages the password for the account instead of relying on the administrator to do it.</p>
+<p>Before we can select the gMSA, however, we need to add a <strong>KDS Root Key</strong>. To avoid non-blocking warnings later in the process, this key should be added with an effective date of 10 hours prior to the current date and time.</p>
+<p>Open a <strong>PowerShell</strong> session as an Administrator, and run the following command to add the KDS root key:</p>
+<p>Add-KdsRootKey -EffectiveTime ((Get-Date).AddHours(-10))</p>
+<p>If you do not take this step, you will see the following error when attempting to add the gMSA account:</p>
+<p><img alt="" src="../../.gitbook/assets/78.png" /></p>
+<p>To create a gMSA account to use with the AD FS service, use the PowerShell script provided below. If you get an “access denied” error when running Install-ADServiceAccount, you may need to restart the server first.</p>
+<p>$Name = 'sa_adfs'</p>
+<p>$Params = @{\
+"Name" = $Name\
+"DNSHostName" = 'lc-win2019-02.ad.lc-test.local'\
+"PrincipalsAllowedToRetrieveManagedPassword" = 'lc-win2019-02$'\
+"ServicePrincipalNames" = 'http/lc-win2019-02.ad.lc-test.local'\
+}</p>
+<p>$ServiceAccount = New-ADServiceAccount @Params</p>
+<p>Install-ADServiceAccount -Identity $Name</p>
+<p>Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceAccount</p>
+<h3 id="configuring-federation-services">Configuring Federation Services</h3>
+<ol>
+<li>Click on the link that says <strong>Configure the federation service on this server</strong>.</li>
+<li><img alt="" src="../../.gitbook/assets/79.png" /></li>
+<li>Select <strong>Create the first federation server in a federation server farm,</strong> and click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/80.png" /></li>
+<li>On the <strong>Connect to Active Directory Domain Services</strong> screen, leave the default user selected, then click on <strong>Next</strong>.</li>
+<li><img alt="" src="../../.gitbook/assets/81.png" /></li>
+<li>Select the previously created SSL Certificate, and enter “LC Test” for the <strong>Federation Service Display Name.</strong> Click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/82.png" /></li>
+<li>On the <strong>Specify Service Account</strong> screen, click on <strong>Select</strong> to use an existing account and locate the sa_adfs service account that was previously created. Click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/83.png" /></li>
+<li>Select <strong>Create a database on this server using Windows Internal Database,</strong> and click <strong>Next</strong>.</li>
+<li><img alt="" src="../../.gitbook/assets/84.png" /></li>
+<li>Click on <strong>Next</strong> under <strong>Review Options.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/85.png" /></li>
+<li>Verify the <strong>Pre-requisite Checks,</strong> and click on <strong>Configure.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/86.png" /></li>
+<li>Click on <strong>Close,</strong> and restart the server.</li>
+<li>The warnings shown below can be disregarded for this test instance:</li>
+<li><img alt="" src="../../.gitbook/assets/87.png" /></li>
+<li>Once the server has restarted, open an Administrative PowerShell session, and run the following command to enable the <strong>IdP Signon Page:</strong></li>
+<li>Set-ADFSProperties -EnableIdPInitiatedSignonPage $True</li>
+<li>Verify that AD FS metadata is being returned by navigating to the following URL:</li>
+<li><a href="https://{fqdn">https://{FQDN</a> of AD FS Server}/adfs/fs/federationserverservice.asmx</li>
+<li><img alt="" src="../../.gitbook/assets/88.png" /></li>
+</ol>
+<h3 id="setting-up-readonlyrest-relying-trust">Setting Up ReadonlyREST Relying Trust</h3>
+<ol>
+<li>Open the <strong>AD FS</strong> MMC snapin, right-click on the <strong>Relying Party Trusts</strong> folder, and select <strong>Add Relying Party Trust.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/89.png" /></li>
+<li>Select <strong>Claims aware,</strong> and click <strong>Start.</strong></li>
+<li>Choose <strong>Enter data about the relying party manually,</strong> and click <strong>Next.</strong></li>
+<li>Enter a <strong>Display Name</strong> (in this case, “ror”), and click <strong>Next.</strong></li>
+<li>It’s not necessary to specify a token encryption certificate, so click <strong>Next</strong> to continue.</li>
+<li>Select the option <strong>Enable support for the SAML 2.0 SSL service URL,</strong> and enter:</li>
+<li><a href="https://10.0.0.6:5601/ror_kbn_sso_saml_adfs/assert">https://{IP Address of Kibana Server}:5601/ror_kbn_sso_saml_adfs/assert</a></li>
+<li>The saml_adfs will change depending on the name chosen in the configuration of the kibana.yml file.</li>
+<li>Enter the <strong>Relying party trust identifiers</strong>, in this case, “ror.” This will match the <strong>Issuer</strong> in the Kibana configuration. Click <strong>Next</strong> when you are done with this step.</li>
+<li>On the <strong>Access Control Policy</strong> screen, select <strong>Permit everyone,</strong> and click <strong>Next.</strong></li>
+<li>Click <strong>Next</strong> to finish adding the trust.</li>
+<li>Verify that <strong>Configure claims insurance policy for this application</strong> is selected, and click on <strong>Close.</strong></li>
+</ol>
+<h3 id="configuring-claims">Configuring Claims</h3>
+<p>Though we have not yet configured claims for Kibana, the metadata for the SAML configuration in Kibana would look similar to the following, if you were able to view it:</p>
+<p><img alt="" src="../../.gitbook/assets/90.png" /></p>
+<p>The important section to note concerns the claims issuance policy. We need to return a <strong>NameID</strong> format in the form of an <strong>emailAddress</strong> by entering the following code<strong>:</strong></p>
+<p>\<NameIDFormat>\
+urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress\
+\</NameIDFormat></p>
+<p>Therefore, we need two rules: one to pull back the LDAP attribute from the Active Directory, and another to transform that data into the correct format.</p>
+<ol>
+<li>Click on <strong>Add Rule</strong> on the <strong>Edit Claim Issuance Policy</strong> <strong>for ror</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/91.png" /></li>
+<li>For the first rule, choose <strong>Send LDAP Attributes as Claims,</strong> and click <strong>Next.</strong></li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/92.png" /></p>
+<ol>
+<li>Choose the AD Attribute to return—in this case, the email address—and click <strong>Finish</strong> on the <strong>Configure Rule</strong> screen of the <strong>Add Transform Claim Rule Wizard.</strong></li>
+<li><strong>Claim rule name</strong>: LDAP Email</li>
+<li><strong>Active Store</strong>: Active Directory</li>
+<li><strong>LDAP Attribute</strong>: E-Mail-Addresses</li>
+<li><strong>Outgoing Claim Type</strong>: E-Mail Address</li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/93.png" /></p>
+<ol>
+<li>Click on <strong>Add Rule,</strong> then choose the <strong>Transform an Incoming Claim</strong> claim rule template, and click on <strong>Next.</strong></li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/94.png" /></p>
+<ol>
+<li>Enter the transformation details as listed below, and, on the <strong>Edit Rule</strong> screen, click on <strong>OK.</strong></li>
+<li><strong>Claim rule name</strong>: Email Transform</li>
+<li><strong>Incoming claim type</strong>: E-Mail Address</li>
+<li><strong>Outgoing claim type</strong>: Name ID</li>
+<li><strong>Outgoing name ID format</strong>: Email</li>
+<li><strong>Pass through all claim values</strong>: Selected</li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/95.png" /></p>
+<ol>
+<li>Click <strong>OK</strong> to save the rules.</li>
+<li>Please note that the order of the rules on the <strong>Edit Claim Issuance Policy</strong> screen is important.</li>
+<li><img alt="" src="../../.gitbook/assets/96.png" /></li>
+</ol>
+<h3 id="updating-relying-party-trusts">Updating Relying Party Trusts</h3>
+<ol>
+<li>Navigate to the <strong>Relying Party Trusts</strong> folder, right-click on the <strong>ror trust,</strong> and select <strong>Properties.</strong></li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/97.png" /></p>
+<ol>
+<li>Click on the <strong>Endpoints</strong> tab, select the <strong>SAML Assertion Consumer Endpoints,</strong> and click on <strong>Edit.</strong></li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/98.png" /></p>
+<ol>
+<li>Click on <strong>Set the trusted URL as default,</strong> and change the Index to 1 from 0. Click <strong>OK.</strong></li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/99.png" /></p>
+<ol>
+<li>On the <strong>Endpoints</strong> screen, click on <strong>Add SAML,</strong> and enter the <strong>SAML Logout</strong> details as follows:</li>
+<li><strong>Endpoint Type</strong>: SAML Logout</li>
+<li><strong>Binding</strong>: POST</li>
+<li><strong>Trusted URL</strong>: <a href="https://{ip">https://{IP</a> Address of Kibana Server}:5601/ror_kbn_sso_saml_adfs/notifylogout</li>
+</ol>
+<p><img alt="" src="../../.gitbook/assets/100.png" /></p>
+<ol>
+<li>Click on <strong>OK</strong> to save the modified properties. <img alt="" src="../../.gitbook/assets/101.png" /></li>
+</ol>
+<h2 id="installing-and-configuring-elasticsearch-and-the-readonlyrest-free-plugin">Installing and Configuring Elasticsearch and the ReadonlyREST Free Plugin</h2>
+<h3 id="installing-elasticsearch">Installing Elasticsearch</h3>
+<p>Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB of RAM in Azure.</p>
+<ol>
+<li>Locate a recent download of <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.6/windows.html">Elasticsearch</a>, and install the <a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2.msi">MSI</a> package.</li>
+<li>At the time this article was written, the most recent version available was 7.6.2; however, you may want to check for more updated versions as they become available.</li>
+<li>Launch the downloaded installer and click <strong>Next</strong> on the <strong>Locations</strong> screen, leaving the defaults in place.</li>
+<li><img alt="" src="../../.gitbook/assets/102.png" /></li>
+<li>Use the defaults on the <strong>Service</strong> screen, and click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/103.png" /></li>
+<li>Use the defaults on the <strong>Configuration</strong> screen, and click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/104.png" /></li>
+<li>No additional plugins are necessary; therefore, click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/105.png" /></li>
+<li>Leave the <strong>X-Pack</strong> licenses set to <strong>Basic,</strong> and click on <strong>Install.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/106.png" /></li>
+<li>Click on <strong>Exit.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/107.png" /></li>
+</ol>
+<h3 id="installing-the-elasticsearch-plugin">Installing the Elasticsearch Plugin</h3>
+<ol>
+<li>Navigate to the <a href="https://readonlyrest.com/download/">ReadonlyREST Plugin download page</a> to enter your details. You will receive the download link in your email. Make sure to choose the <strong>Free Elasticsearch Plugin</strong> that matches your Elasticstack version.</li>
+<li><img alt="" src="../../.gitbook/assets/108.png" /></li>
+<li>Download the plugin, open an Administrative command prompt, and navigate to the Elasticsearch program directory. Run the plugin installation by entering the following:</li>
+<li>
+<p>cd "C:\Program Files\Elastic\ElasticSearch\7.6.2\bin"</p>
+<p>elasticsearch-plugin.bat install file:///C:/Users/lc-admin.AD/Downloads/readonlyrest-1.19.4_es7.6.2.zip
+5. <img alt="" src="../../.gitbook/assets/109.png" />
+6. Navigate to the C:\ProgramData\Elastic\ElasticSearch\config directory, and create the file readonlyrest.yml.
+7. <img alt="" src="../../.gitbook/assets/110.png" />
+8. Open the readonlyrest.yml file in Notepad to run this very basic configuration that configures the following two different access control rules: 1. <strong>“</strong>::KIBANA-SRV::<strong>”</strong>—this rule allows the Kibana server to authenticate to Elasticsearch using digest authentication with the username “kibana” and password “kibana.” 2. “ADFS Users”—this rule uses the ror_kbn_auth method which allows SAML authenticates to succeed.
+9. Create a random 256-character signature_key. This key will be shared between Kibana and Elasticsearch.
+10. Please note that the kbn1 identifier must match in the ror_kbn_auth and ror_kbn sections; however, any names can be used for them.</p>
+<p>```
+readonlyrest:<br />
+ access_control_rules:</p>
+<ul>
+<li>
+<p>name: "::KIBANA-SRV::"<br />
+   auth_key: kibana:kibana</p>
+</li>
+<li>
+<p>name: "ADFS Users"<br />
+   ror_kbn_auth:<br />
+     name: "kbn1"</p>
+</li>
+</ul>
+<p>ror_kbn:<br />
+ - name: kbn1<br />
+   signature_key: "VEGj@YLLhsAigspnNi2Xsopsqja_nrKUqU__eQW9VQ2!9p!RoeHwc-G.y-MVJtYYcDFCH.e3W2BKcZsoynJaHyjjXyh7kDHjsYKPkczvai-xCzP@Ez3QW23ZBFuReA7kPAqnc6pQ3VeNeFf3sWNoKeJAt_d9J7aFwEvCP2Gb-kQcA8YR<em>wNWHQuo-jwmmo2Qqpu_Fq3aKFCbNFWUbK@BVwmmKezxn3h687mAkuyhV4.hnfrjVjF-Rphjqmy4.tB8"
+```
+11. Restart </em><em>Elasticsearch</em><em> </em><em>Windows Service</em><em>. This can be done in the </em><em>Services</em>* MMC snapin.</p>
+</li>
+</ol>
+<h2 id="installing-and-configuring-kibana-and-the-readonlyrest-enterprise-plugin">Installing and Configuring Kibana and the ReadonlyREST Enterprise Plugin</h2>
+<h3 id="installing-kibana">Installing Kibana</h3>
+<ol>
+<li>Locate a recent download of <a href="https://artifacts.elastic.co/downloads/kibana/kibana-7.6.2-windows-x86_64.zip">Kibana</a>, and download the zip package. At the time this article was written, the most recent version was 7.6.2. You may want to check for more updated links as they become available.</li>
+<li>Extract the Kibana installation. Note that this is a rather large file. If you have trouble with the default Windows zip extractor, you may want to try a tool such as 7-Zip.</li>
+<li><img alt="" src="../../.gitbook/assets/111.png" /></li>
+<li>Move the extracted folder to C:\kibana. This may require you to rename the folder.</li>
+<li><img alt="" src="../../.gitbook/assets/112.png" /></li>
+<li>Open an administrative command prompt, and navigate to the <strong>Kibana</strong> directory to run the kibana.bat batch file and start <strong>Kibana.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/113.png" /></li>
+<li>Once Kibana has started, navigate to [<a href="http://localhost/:5601](http://localhost:5601)/">http://localhost:5601](http://localhost:5601\</a> to verify that Kibana is functional.</li>
+<li><img alt="" src="../../.gitbook/assets/114.png" /></li>
+</ol>
+<h3 id="creating-a-self-signed-certificate-for-kibana">Creating a Self-Signed Certificate for Kibana</h3>
+<p>It is necessary to make Kibana operate under SSL for AD FS to perform SAML authentication.</p>
+<ol>
+<li>The easiest way to generate a self-signed certificate using the required format is to use <strong>OpenSSL</strong>. A Windows version of this tool available for download is located <a href="https://slproweb.com/products/Win32OpenSSL.html">here</a>.</li>
+<li><img alt="" src="../../.gitbook/assets/115.png" /></li>
+<li>If <strong>Microsoft Visual C++ 2017 Redistributables (64-bit)</strong> is not already installed, click <strong>Yes</strong> to download the installation and run the installer first.</li>
+<li>Accept the license agreement, and click on <strong>Install.</strong></li>
+<li>Back on the OpenSSL installation, click on <strong>I accept the agreement</strong>, then click on <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/120.png" /></li>
+<li>Click <strong>Next</strong> on the <strong>Destination Location</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/121.png" /></li>
+<li>Click <strong>Next</strong> on the <strong>Select Start Menu Folder</strong> screen.</li>
+<li><img alt="" src="../../.gitbook/assets/122.png" /></li>
+<li>Select <strong>The</strong> <strong>Windows system directory</strong> on the <strong>Additional Tasks</strong> screen, and click <strong>Next.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/123.png" /></li>
+<li>Click on <strong>Install.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/124.png" /></li>
+<li>Click on <strong>Finish.</strong></li>
+<li><img alt="" src="../../.gitbook/assets/125.png" /></li>
+<li>Open an administrative command prompt, and run the following command to create the certificates in the specific X509 PEM format that Kibana requires:</li>
+<li>
+<p>"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"</p>
+<p>req -x509 -sha256 -nodes -days 730 -newkey rsa:2048 -keyout localhost-key.pem -out localhost.pem -subj "/C=US/ST=IL/L=Bloomington/O=lc-test/CN=10.0.0.6"
+19. Change the subj to one that is more indicative of your installation. Make sure the CN={IP Address} matches the accessible IP of your Elasticsearch/Kibana server.
+20. <img alt="" src="../../.gitbook/assets/126.png" />
+21. Locate the newly created pem certificates and copy them to C:\kibana\ssl_cert.
+22. The ssl_cert directory will need to be created first. For our purposes here, it has been arbitrarily named.
+23. <img alt="" src="../../.gitbook/assets/127.png" />
+24. Restart Kibana by entering <strong>Ctrl-C</strong> in the running command prompt window and then re-running kibana.bat.</p>
+</li>
+</ol>
+<h3 id="installing-the-readonlyrest-enterprise-plugin">Installing the ReadonlyREST Enterprise Plugin</h3>
+<ol>
+<li>Navigate to the <a href="https://readonlyrest.com/download/">ReadonlyREST Plugin download page</a> to enter your details. You will get the download link in your email. Making sure to choose the <strong>Enterprise Kibana Plugin</strong> and match it with your Elasticstack version.</li>
+<li>The email that you receive will contain installation instructions. The link will be time-limited, as shown below.</li>
+<li>Navigate to C:\kibana\config, and locate the kibana.yml configuration file.</li>
+<li>Open the kibana.yml file in Notepad and update it with the following details:</li>
+<li>elasticsearch.username—This field matches the first part (pre-colon) of the auth_key in the readonlyrest.yml Elasticsearch configuration file.</li>
+<li>elasticsearch.password—This field matches the second part (post-colon) of the auth_key in the readonlyrest.yml Elasticsearch configuration file.</li>
+<li>elasticsearch.ssl.verificationMode—Set the value to “true” to ignore SSL errors. This is useful when working in a test environment.</li>
+<li>xpack.security.enabled—This must be disabled for ReadonlyREST to work.</li>
+<li>[server.host](<a href="http://server.xn--hostby-6g0c">http://server.host—By</a> default, this will be [localhost](<a href="http://localhost)">http://localhost\</a>; but, we need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.</li>
+<li>server.ssl.enabled—This is used to turn on SSL and respond to https.</li>
+<li>server.ssl.certificate—This is the location of the public key certificate.</li>
+<li>server.ssl.key—This is the location of the private key for the certificate.</li>
+<li>readonlyrest_kbn.logLevel—The value is set to “debug” to enable troubleshooting in the console.</li>
+<li>readonlyrest_kbn.clearSessionOnEvents—This clears the session on a successful login event.</li>
+<li>readonlyrest_kbn.auth.signature_key—This must match the 256-character value in the signature_key attribute of the readonlyrest.yml Elasticsearch configuration file.</li>
+<li>readonlyrest_kbn.auth.saml_adfs.buttonName—This is the name of the login button on the login screen of Kibana.</li>
+<li>readonlyrest_kbn.auth.saml_adfs.enabled—This enables the SAML SSO configuration.</li>
+<li>readonlyrest_kbn.auth.saml_adfs.type—For AD FS, this must be “saml.”</li>
+<li>readonlyrest_kbn.auth.saml_adfs.issue —This is the unique identifier that was defined in the AD FS Relying Party Trust configuration, in this case, “ror.”</li>
+<li>readonlyrest_kbn.auth.saml_adfs.protocol—AD FS requires https.</li>
+<li>readonlyrest_kbn.auth.saml_adfs.entryPoint—This is the entry point for AD FS—<a href="https://{ad">https://{AD</a> FS Server}/adfs/ls.</li>
+<li>readonlyrest_kbn.auth.saml_adfs.logoutUrl—This is the logout call to AD FS— <a href="https://{ad">https://{AD</a> FS Server}/adfs/ls?wa=wsignout1.0.</li>
+<li>readonlyrest_kbn.auth.saml_adfs.kibanaExternalHost—This is the address and port without the protocol preceding (i.e., https).</li>
+<li>readonlyrest_kbn.auth.saml_adfs.usernameParameter—This configuration is only doing authentication, and it must match the nameID parameter.</li>
+</ol>
+<h3 id="opening-the-firewall-port">Opening the Firewall Port</h3>
+<p>To allow the AD FS server to talk to Kibana, we need to open the 5601 port on the Kibana server since [localhost](<a href="http://localhost)">http://localhost\</a> is not routable.</p>
+<ol>
+<li>Open the <strong>Windows Firewall with Advanced Security</strong> screen, and add a new rule under <strong>Inbound Rules.</strong> Choose <strong>Port.</strong></li>
+<li>Add the specific local port of <strong>5601,</strong> and click <strong>Next.</strong></li>
+<li>Select <strong>Allow the connection,</strong> and click <strong>Next.</strong></li>
+<li>Choose all profiles (the default), and click <strong>Next.</strong></li>
+<li>Name the rule “Kibana,” and click <strong>Finish.</strong></li>
+</ol>
+<h2 id="demonstration">Demonstration</h2>
+<ol>
+<li>Navigate to your Kibana URL (<a href="https://10.0.0.6/:5601)/">https://10.0.0.6:5601\</a> using Chrome or Firefox. Do not use IE or the SSO button may not show up.</li>
+<li><img alt="" src="../../.gitbook/assets/128.png" /></li>
+<li>Click on ADFS, the button configured in the kibana.yml file, and log in with one of the created AD users. Use the defined mail attribute on the AD account (an email address).</li>
+<li><img alt="" src="../../.gitbook/assets/129.png" /></li>
+<li>With a successful login, the Kibana screen will appear, and you will see your SAML authenticated user in the lower right corner.</li>
+<li><img alt="" src="../../.gitbook/assets/130.png" /></li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>ReadonlyREST combined with Elasticsearch and Kibana opens a world of advanced authentication and authorization options to you. Though only a basic configuration was outlined here, many more useful configuration options are available. You can find out more information about these advanced configurations in the ReadonlyREST documentation and in the ROR forums.</p>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: SAML SSO" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              SAML SSO
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../azure_ad/" class="md-footer__link md-footer__link--next" aria-label="Next: Microsoft Azure AD" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Microsoft Azure AD
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2760 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="User manual for ReadonlyREST Enterprise/PRO/Free">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.1">
+    
+    
+      
+        <title>For Kibana - ReadonlyREST Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#for-kibana" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ReadonlyREST Documentation" class="md-header__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ReadonlyREST Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              For Kibana
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ReadonlyREST Documentation" class="md-nav__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ReadonlyREST Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        README
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SUMMARY/" class="md-nav__link">
+        Table of contents
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commercial/" class="md-nav__link">
+        Commercial Licenses
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        Contribution License Agreement
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elasticsearch/" class="md-nav__link">
+        For Elasticsearch
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          For Kibana
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        For Kibana
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#kibana-plugin-overview" class="md-nav__link">
+    Kibana Plugin overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#after-purchasing" class="md-nav__link">
+    After purchasing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-strings" class="md-nav__link">
+    Version strings
+  </a>
+  
+    <nav class="md-nav" aria-label="Version strings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-version-strings" class="md-nav__link">
+    Reading version strings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trial-builds-version-strings" class="md-nav__link">
+    Trial builds version strings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-an-update-is-out" class="md-nav__link">
+    When an update is out
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-via-url" class="md-nav__link">
+    Installing via URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-from-zip-file" class="md-nav__link">
+    Installing from zip file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patching-kibana" class="md-nav__link">
+    Patching Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unpatching-kibana" class="md-nav__link">
+    Unpatching Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uninstalling" class="md-nav__link">
+    Uninstalling
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading" class="md-nav__link">
+    Upgrading
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-ror-with-a-reverse-proxy" class="md-nav__link">
+    Using RoR with a reverse proxy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clusterwide-settings-vs-readonlyrestyml" class="md-nav__link">
+    Clusterwide Settings VS readonlyrest.yml
+  </a>
+  
+    <nav class="md-nav" aria-label="Clusterwide Settings VS readonlyrest.yml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-settings-order-of-precedence" class="md-nav__link">
+    Loading settings: order of precedence
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malformed-in-index-settings" class="md-nav__link">
+    Malformed in-index settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-multiuser-elk" class="md-nav__link">
+    Example: multiuser ELK
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#very-important" class="md-nav__link">
+    Very important
+  </a>
+  
+    <nav class="md-nav" aria-label="Very important">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acl-blocks-ordering-matters" class="md-nav__link">
+    ACL blocks ordering matters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-cookie-expiration" class="md-nav__link">
+    Session cookie expiration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing-session-history" class="md-nav__link">
+    Clearing Session History
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hiding-kibana-apps" class="md-nav__link">
+    Hiding Kibana Apps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hiding-readonlyrest-menu-elements" class="md-nav__link">
+    Hiding ReadonlyREST menu elements
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kibana-configuration" class="md-nav__link">
+    Kibana configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-auth" class="md-nav__link">
+    Proxy Auth
+  </a>
+  
+    <nav class="md-nav" aria-label="Proxy Auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-logout-link" class="md-nav__link">
+    Custom Logout link
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-login-link" class="md-nav__link">
+    Custom Login link
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caveat" class="md-nav__link">
+    Caveat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jwt-token-forwarding-as-url-query-parameter" class="md-nav__link">
+    JWT Token Forwarding as URL Query Parameter
+  </a>
+  
+    <nav class="md-nav" aria-label="JWT Token Forwarding as URL Query Parameter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-action" class="md-nav__link">
+    In Action
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssltls-server" class="md-nav__link">
+    SSL/TLS server
+  </a>
+  
+    <nav class="md-nav" aria-label="SSL/TLS server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secure-cookies" class="md-nav__link">
+    Secure cookies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log" class="md-nav__link">
+    Audit log
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-visualization" class="md-nav__link">
+    Loading visualization
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboard" class="md-nav__link">
+    Dashboard
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saml" class="md-nav__link">
+    SAML
+  </a>
+  
+    <nav class="md-nav" aria-label="SAML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-ror_kbn_auth-bridge" class="md-nav__link">
+    Configure ror_kbn_auth bridge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elasticsearch-side" class="md-nav__link">
+    Elasticsearch side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kibana-side" class="md-nav__link">
+    Kibana side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-provider-side" class="md-nav__link">
+    Identity provider side
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openid-connect-oidc" class="md-nav__link">
+    OpenID Connect (OIDC)
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenID Connect (OIDC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-ror_kbn_auth-bridge_1" class="md-nav__link">
+    Configure ror_kbn_auth bridge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elasticsearch-side_1" class="md-nav__link">
+    Elasticsearch side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kibana-side_1" class="md-nav__link">
+    Kibana side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-provider-side_1" class="md-nav__link">
+    Identity provider side
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-balancers" class="md-nav__link">
+    Load balancers
+  </a>
+  
+    <nav class="md-nav" aria-label="Load balancers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-health-check-endpoint" class="md-nav__link">
+    Enable health check endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-management-with-multiple-kibana-instances" class="md-nav__link">
+    Session management with multiple Kibana instances
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#login-screen-tweaking" class="md-nav__link">
+    Login screen tweaking
+  </a>
+  
+    <nav class="md-nav" aria-label="Login screen tweaking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-column-layout" class="md-nav__link">
+    Two column layout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-your-company-logo" class="md-nav__link">
+    Add your company logo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-custom-cssjs" class="md-nav__link">
+    Add custom CSS/JS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kibana-ui-tweaking" class="md-nav__link">
+    Kibana UI tweaking
+  </a>
+  
+    <nav class="md-nav" aria-label="Kibana UI tweaking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inject-custom-css-in-kibana" class="md-nav__link">
+    Inject custom CSS in Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inject-custom-js-in-kibana" class="md-nav__link">
+    Inject custom JS in Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map-groups-to-aliases" class="md-nav__link">
+    Map groups to aliases
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tenancy-index-templating" class="md-nav__link">
+    Tenancy index templating
+  </a>
+  
+    <nav class="md-nav" aria-label="Tenancy index templating">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-tenancy-templating" class="md-nav__link">
+    How to use tenancy templating
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use tenancy templating">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-template-tenancy" class="md-nav__link">
+    Create the template tenancy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-template-tenancy" class="md-nav__link">
+    Configure the template tenancy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-template-tenancy-index-in-readonlyrest-enterprise" class="md-nav__link">
+    Configure the template tenancy index in ReadonlyREST Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-it-out" class="md-nav__link">
+    Try it out
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impersonation" class="md-nav__link">
+    Impersonation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Actionstrings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Actionstrings" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Actionstrings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actionstrings/" class="md-nav__link">
+        List of Elasticsearch actions available in various Elasticsearch versions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Details
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Details" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Details
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/fips/" class="md-nav__link">
+        FIPS mode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/fls-engine/" class="md-nav__link">
+        FLS engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/groups-rule-mapping/" class="md-nav__link">
+        External to local groups mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/impersonation/" class="md-nav__link">
+        Impersonation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/index-not-found-examples/" class="md-nav__link">
+        "Index not found" scenario
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/indices-rule-templates/" class="md-nav__link">
+        Templates handling in `indices` rule
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/kibana-7.8.x-and-older/" class="md-nav__link">
+        Kibana 7.8.x and older
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/multitenancy_guide/" class="md-nav__link">
+        Multi-tenancy Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/multiuser_guide/" class="md-nav__link">
+        Multi-user Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_4" type="checkbox" id="__nav_10_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_4">
+          Impersonation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Impersonation" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_4">
+          <span class="md-nav__icon md-icon"></span>
+          Impersonation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/impersonation/external-services-mocks-ui/" class="md-nav__link">
+        External services mocks configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/impersonation/impersonate-user-ui/" class="md-nav__link">
+        Impersonate user ui
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/impersonation/test-settings-ui/" class="md-nav__link">
+        Writing Test Settings
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_5" type="checkbox" id="__nav_10_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_5">
+          Oidc sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Oidc sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_5">
+          <span class="md-nav__icon md-icon"></span>
+          Oidc sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/oidc-sso/" class="md-nav__link">
+        OpenID Connect (OIDC) SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/oidc-sso/keycloak_oidc/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_6" type="checkbox" id="__nav_10_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_6">
+          Saml sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Saml sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_6">
+          <span class="md-nav__icon md-icon"></span>
+          Saml sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/" class="md-nav__link">
+        SAML SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/adfs/" class="md-nav__link">
+        Microsoft ADFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/azure_ad/" class="md-nav__link">
+        Microsoft Azure AD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/keycloak_saml/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/multifactor_authentication_with_duo_via_saml/" class="md-nav__link">
+        Duo Security MFA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#kibana-plugin-overview" class="md-nav__link">
+    Kibana Plugin overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#after-purchasing" class="md-nav__link">
+    After purchasing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-strings" class="md-nav__link">
+    Version strings
+  </a>
+  
+    <nav class="md-nav" aria-label="Version strings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-version-strings" class="md-nav__link">
+    Reading version strings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trial-builds-version-strings" class="md-nav__link">
+    Trial builds version strings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-an-update-is-out" class="md-nav__link">
+    When an update is out
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-via-url" class="md-nav__link">
+    Installing via URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-from-zip-file" class="md-nav__link">
+    Installing from zip file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patching-kibana" class="md-nav__link">
+    Patching Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unpatching-kibana" class="md-nav__link">
+    Unpatching Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uninstalling" class="md-nav__link">
+    Uninstalling
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading" class="md-nav__link">
+    Upgrading
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-ror-with-a-reverse-proxy" class="md-nav__link">
+    Using RoR with a reverse proxy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clusterwide-settings-vs-readonlyrestyml" class="md-nav__link">
+    Clusterwide Settings VS readonlyrest.yml
+  </a>
+  
+    <nav class="md-nav" aria-label="Clusterwide Settings VS readonlyrest.yml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-settings-order-of-precedence" class="md-nav__link">
+    Loading settings: order of precedence
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malformed-in-index-settings" class="md-nav__link">
+    Malformed in-index settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-multiuser-elk" class="md-nav__link">
+    Example: multiuser ELK
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#very-important" class="md-nav__link">
+    Very important
+  </a>
+  
+    <nav class="md-nav" aria-label="Very important">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acl-blocks-ordering-matters" class="md-nav__link">
+    ACL blocks ordering matters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-cookie-expiration" class="md-nav__link">
+    Session cookie expiration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing-session-history" class="md-nav__link">
+    Clearing Session History
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hiding-kibana-apps" class="md-nav__link">
+    Hiding Kibana Apps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hiding-readonlyrest-menu-elements" class="md-nav__link">
+    Hiding ReadonlyREST menu elements
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kibana-configuration" class="md-nav__link">
+    Kibana configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-auth" class="md-nav__link">
+    Proxy Auth
+  </a>
+  
+    <nav class="md-nav" aria-label="Proxy Auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-logout-link" class="md-nav__link">
+    Custom Logout link
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-login-link" class="md-nav__link">
+    Custom Login link
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caveat" class="md-nav__link">
+    Caveat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jwt-token-forwarding-as-url-query-parameter" class="md-nav__link">
+    JWT Token Forwarding as URL Query Parameter
+  </a>
+  
+    <nav class="md-nav" aria-label="JWT Token Forwarding as URL Query Parameter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-action" class="md-nav__link">
+    In Action
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssltls-server" class="md-nav__link">
+    SSL/TLS server
+  </a>
+  
+    <nav class="md-nav" aria-label="SSL/TLS server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secure-cookies" class="md-nav__link">
+    Secure cookies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log" class="md-nav__link">
+    Audit log
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-visualization" class="md-nav__link">
+    Loading visualization
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboard" class="md-nav__link">
+    Dashboard
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saml" class="md-nav__link">
+    SAML
+  </a>
+  
+    <nav class="md-nav" aria-label="SAML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-ror_kbn_auth-bridge" class="md-nav__link">
+    Configure ror_kbn_auth bridge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elasticsearch-side" class="md-nav__link">
+    Elasticsearch side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kibana-side" class="md-nav__link">
+    Kibana side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-provider-side" class="md-nav__link">
+    Identity provider side
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openid-connect-oidc" class="md-nav__link">
+    OpenID Connect (OIDC)
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenID Connect (OIDC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-ror_kbn_auth-bridge_1" class="md-nav__link">
+    Configure ror_kbn_auth bridge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elasticsearch-side_1" class="md-nav__link">
+    Elasticsearch side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kibana-side_1" class="md-nav__link">
+    Kibana side
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-provider-side_1" class="md-nav__link">
+    Identity provider side
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-balancers" class="md-nav__link">
+    Load balancers
+  </a>
+  
+    <nav class="md-nav" aria-label="Load balancers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-health-check-endpoint" class="md-nav__link">
+    Enable health check endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-management-with-multiple-kibana-instances" class="md-nav__link">
+    Session management with multiple Kibana instances
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#login-screen-tweaking" class="md-nav__link">
+    Login screen tweaking
+  </a>
+  
+    <nav class="md-nav" aria-label="Login screen tweaking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-column-layout" class="md-nav__link">
+    Two column layout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-your-company-logo" class="md-nav__link">
+    Add your company logo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-custom-cssjs" class="md-nav__link">
+    Add custom CSS/JS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kibana-ui-tweaking" class="md-nav__link">
+    Kibana UI tweaking
+  </a>
+  
+    <nav class="md-nav" aria-label="Kibana UI tweaking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inject-custom-css-in-kibana" class="md-nav__link">
+    Inject custom CSS in Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inject-custom-js-in-kibana" class="md-nav__link">
+    Inject custom JS in Kibana
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map-groups-to-aliases" class="md-nav__link">
+    Map groups to aliases
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tenancy-index-templating" class="md-nav__link">
+    Tenancy index templating
+  </a>
+  
+    <nav class="md-nav" aria-label="Tenancy index templating">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-tenancy-templating" class="md-nav__link">
+    How to use tenancy templating
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use tenancy templating">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-template-tenancy" class="md-nav__link">
+    Create the template tenancy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-template-tenancy" class="md-nav__link">
+    Configure the template tenancy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-template-tenancy-index-in-readonlyrest-enterprise" class="md-nav__link">
+    Configure the template tenancy index in ReadonlyREST Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-it-out" class="md-nav__link">
+    Try it out
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impersonation" class="md-nav__link">
+    Impersonation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="for-kibana">For Kibana</h1>
+<p>🧙 <strong>Are you using Kibana version 7.8.x or older? Go to the</strong> <a href="../details/kibana-7.8.x-and-older/"><strong>old platform manual page</strong></a><strong>.</strong></p>
+<h3 id="kibana-plugin-overview">Kibana Plugin overview</h3>
+<p>ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the <a href="https://readonlyrest.com/pro.html">ReadonlyREST PRO</a> and <a href="https://readonlyrest.com/enterprise.html">ReadonlyREST ENTERPRISE</a>, and <a href="https://readonlyrest.com/free">ReadonlyREST Free</a> packages. See product descriptions and a comparison chart in the official <a href="https://readonlyrest.com">ReadonlyREST website</a></p>
+<p>ReadonlyREST plugins for Kibana <strong>always require</strong> ReadonlyREST Free to be installed in the Elasticsearch nodes your Kibana instance(s) will connect to.</p>
+<p>It's not mandatory to install ReadonlyREST Free in all Elasticsearch nodes, but only in the ones in where you need the HTTP interface to be secured.</p>
+<h3 id="after-purchasing">After purchasing</h3>
+<p>You will receive a link to the plugin zip file in an email. Download your zip.</p>
+<p>You will be able to download it also in the future as long as your subscription is active.</p>
+<h3 id="version-strings">Version strings</h3>
+<p>All our plugins include in their file name a version string. For example the file <code>readonlyrest-1.16.26_es6.4.0.zip</code> has a version string <code>1.16.26_es6.4.0</code>.</p>
+<h4 id="reading-version-strings">Reading version strings</h4>
+<p>Given the version string <code>1.16.26_es6.4.0</code></p>
+<ul>
+<li>ReadonlyREST plugin code version <code>1.16.26</code></li>
+<li>Works only with Elasticsearch/Kibana version <code>6.4.0</code></li>
+</ul>
+<p>The "es" stands for "Elastic stack" which used to mean the family of products made by Elastic which get released at the same time under the same version number. This was chosen <strong>before</strong> Elastic renamed their X-Pack commercial offer to Elastic Stack.</p>
+<p>To be clear, there is no affiliation between ReadonlyREST and Elastic, or their commercial products.</p>
+<h4 id="trial-builds-version-strings">Trial builds version strings</h4>
+<p>Trial builds are valid for 30 days after they were built, and they will stop working soon after the time is elapsed. Trial builds have a special version string which includes a build-time timestamp.</p>
+<p>I.e. <code>readonlyrest_kbn_pro-1.16.26-20180911_es6.0.0.zip</code></p>
+<ul>
+<li>ReadonlyREST PRO plugin version 1.16.26</li>
+<li>Build date 11th September 2018, expiring on the 11th of October 2018.</li>
+<li>Works only with Kibana version 6.0.0</li>
+</ul>
+<h3 id="when-an-update-is-out">When an update is out</h3>
+<p>You will receive another email notification that a new deliverable is available.</p>
+<p>If the update contains a security fix, it is very important that you take action and <strong>update the plugin immediately</strong>.</p>
+<h2 id="installation">Installation</h2>
+<p>You can install this as a normal Kibana plugin using the <code>bin/kibana-plugin</code> utility. Let's see a two ways to use this utility with ReadonlyREST.</p>
+<p>{% hint style="warning" %}
+<strong>Don't forget</strong></p>
+<p>After Kibana 7.9.x, it's necessary to <a href="./#patching-kibana">patch</a> Kibana after you install, otherwise ReadonlyREST will NOT work.
+{% endhint %}</p>
+<h3 id="installing-via-url">Installing via URL</h3>
+<p>This installation method is more practical if your Kibana server is connected to the internet.</p>
+<p>According to what edition of ReadonlyREST you want to install, from your Kibana installation, launch one of the commands:</p>
+<p>Please note that this will always download the latest version of Kibana plugin available for the current supported Elasticsearch version.</p>
+<pre><code class="language-bash"># ReadonlyREST Free edition
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/kbn?edition=kbn_free&amp;email=&lt;your_email_address&gt;&quot;
+
+# ReadonlyREST PRO (30 days trial) edition
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_pro&amp;email=&lt;your_email_address&gt;&quot;
+
+# ReadonlyREST Enterprise (30 days trial) edition
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_enterprise&amp;email=&lt;your_email_address&gt;&quot;
+</code></pre>
+<p>If you want to download the latest version of plugin for a specific version of Elasticsearch, then use query parameter esVersion to specify your required Elasticsearch version.</p>
+<pre><code class="language-bash"># ReadonlyREST Free edition for Elasticsearch 7.6.1
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/kbn?edition=kbn_free&amp;esVersion=7.6.1&amp;email=&lt;your_email_address&gt;&quot;
+
+# ReadonlyREST PRO (30 days trial) edition for Elasticsearch 7.6.1
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_pro&amp;esVersion=7.6.1&amp;email=&lt;your_email_address&gt;&quot;
+
+# ReadonlyREST Enterprise (30 days trial) edition for Elasticsearch 7.6.1
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_enterprise&amp;esVersion=7.6.1&amp;email=&lt;your_email_address&gt;&quot;
+</code></pre>
+<p>If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter <code>pluginVersion</code> along with <code>esVersion</code>.</p>
+<pre><code class="language-bash"># ReadonlyREST Free edition - version 1.22.0 for Elasticsearch 7.6.1
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/kbn?edition=kbn_free&amp;esVersion=7.6.1&amp;pluginVersion=1.22.0&amp;email=&lt;your_email_address&gt;&quot;
+
+# ReadonlyREST PRO (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_pro&amp;esVersion=7.6.1&amp;pluginVersion=1.22.0&amp;email=&lt;your_email_address&gt;&quot;
+
+# ReadonlyREST Enterprise (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_enterprise&amp;esVersion=7.6.1&amp;pluginVersion=1.22.0&amp;email=&lt;your_email_address&gt;&quot;
+</code></pre>
+<p>If you are a PRO or Enterprise subscriber, the link will include an extra parameter "token" which can only be used in association with the provided email address.</p>
+<p>You can append required plugin version and Elasticsearch version query parameters to download specific version as described above.</p>
+<p><strong>NB: This URL is personal, and should be handled as a secret.</strong></p>
+<pre><code class="language-bash"># ReadonlyREST PRO (Official) edition
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_pro&amp;email=&lt;your_email_address&gt;&amp;token=&lt;your_secret_token&gt;&quot;
+
+# ReadonlyREST Enterprise (30 days trial) edition
+$ bin/kibana-plugin install &quot;https://api.beshu.tech/download/trial?edition=kbn_enterprise&amp;email=&lt;your_email_address&gt;&amp;token=&lt;your_secret_token&gt;&quot;
+</code></pre>
+<p>You can obtain official links with personal secret tokens using our self service <a href="https://readonlyrest.com/download/">download form</a>, once your email address has been recognized as active subscriber.</p>
+<p>Now you are ready to <a href="./#patching-kibana">patch Kibana</a>.</p>
+<h3 id="installing-from-zip-file">Installing from zip file</h3>
+<pre><code class="language-bash">$ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
+</code></pre>
+<p>Notice how we need to type in the format <code>file://</code> + absolute path (yes, with three slashes).</p>
+<h3 id="patching-kibana">Patching Kibana</h3>
+<p>If you are using Kibana 7.9.x or newer, you need <strong>an extra post-installation step</strong>. This will slightly modify some core Kibana files.</p>
+<pre><code class="language-bash"># Patch Kibana core files 
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js patch
+</code></pre>
+<h3 id="unpatching-kibana">Unpatching Kibana</h3>
+<p>If you are using Kibana 7.9.x or newer, you need <strong>an extra pre-uninstallation step</strong>. This will restore the core Kibana files to the original state.</p>
+<pre><code class="language-bash"># Unpatch Kibana core files 
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+</code></pre>
+<h3 id="uninstalling">Uninstalling</h3>
+<p>{% hint style="info" %}
+To uninstall, you should unpatch Kibana first, then uninstall ReadonlyREST plugin. However <strong>the Kibana plugin system uninstallation process is highly unreliable</strong>.</p>
+<p>So we highly recomend to throw away the entire Kibana directory, and start from scratch. Ideally, use ephemeral docker containers.</p>
+<p>Need inspiration? Try <a href="https://github.com/sscarduzio/ror-docker-demo">ROR Docker demo</a>!
+{% endhint %}</p>
+<p>To bring Kibana to its pre-patching original state, it's possible to unpatch.</p>
+<pre><code class="language-bash"># Un-patch Kibana core files 
+$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+
+# Uninstall normally
+$ bin/kibana-plugin remove readonlyrestkbn
+</code></pre>
+<p>And the classic uninstall command...</p>
+<pre><code class="language-bash">$ bin/kibana-plugin remove readonlyrest_kbn
+</code></pre>
+<h3 id="upgrading">Upgrading</h3>
+<p>To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:</p>
+<ul>
+<li><a href="./#unpatching-kibana">Unpatch Kibana</a></li>
+<li><a href="../details/kibana-7.8.x-and-older/#uninstall">Uninstall</a> the old plugin</li>
+<li>Delete all the content of "optimize" directory (in the main Kibana installation directory) <code>rm -rf optimize/</code></li>
+<li><a href="./#installation">Install</a> the new one</li>
+<li><a href="./#patching-kibana">Patch Kibana</a></li>
+<li>Restart Kibana.</li>
+</ul>
+<h3 id="using-ror-with-a-reverse-proxy">Using RoR with a reverse proxy</h3>
+<p>RoR - just like Kibana itself - is meant to be used either with a proxy or without one.</p>
+<ul>
+<li>If you decide to set the <code>server.basePath</code> property in <code>kibana.yml</code> and set <code>server.rewriteBasePath</code> into a <code>true</code>, RoR will be accessed directly and via a reverse proxy,</li>
+<li>If you decided to rewrite the base path manually by your reverse proxy and set the <code>server.rewriteBasePath</code> property in <code>kibana.yml</code> into a <code>false</code>, be sure to access RoR via a proxy, as it will not work properly when accessed directly.</li>
+</ul>
+<h2 id="configuration">Configuration</h2>
+<p>ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.</p>
+<blockquote>
+<p>In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring to the configuration files <strong>in the Elasticsearch plugin</strong> (our Kibana plugins do not need a "readonlyrest.yml").</p>
+</blockquote>
+<p>In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.</p>
+<h3 id="clusterwide-settings-vs-readonlyrestyml">Clusterwide Settings VS readonlyrest.yml</h3>
+<p>This feature is available in Free and PRO editions</p>
+<p>Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.</p>
+<p>When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. You can customize a name of the index by setting <code>readonlyrest.settings_index: .my_custom_readonlyrest</code> in <code>elasticsearch.yml</code> file (remember to set the same value for all your ES nodes).</p>
+<p>When an Elasticsearch node restarts, the order of settings evaluation is the following: 1. Attempt to find valid settings in readonlyrest.yml 2. If none is found, look inside elasticsearch.yml 3. Once successfully bootstrapped using file-based settings, attempt to read ".readonlyrest" index 4. If the index exists and contains valid settings, override file based settings with the ones from the index. 5. Pressing "save" in the cluster wide settings app, will <strong>not overwrite the readonlyrest.yml</strong> file.</p>
+<p>Best practices:</p>
+<ul>
+<li>Build and update your production security settings from the Kibana app (will be saved in index)</li>
+<li>Protect the ".readonlyrest" Kibana index with an ACL rule</li>
+</ul>
+<h4 id="loading-settings-order-of-precedence">Loading settings: order of precedence</h4>
+<p>As you read, there are two possible places where the settings can be read from:</p>
+<ul>
+<li><code>readonlyrest.yml</code> a file the user needs to create in the same directory where <code>elasticsearch.yml</code> is found.</li>
+<li><code>.readonlyrest</code> index. Our Kibana plugins' GUI (PRO/Enterprise) is programmed to write this index.</li>
+</ul>
+<p>When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.</p>
+<p><img alt="config loading diagram" src="../.gitbook/assets/ror_config_loading_diagram (1) (1).png" /></p>
+<h4 id="malformed-in-index-settings">Malformed in-index settings</h4>
+<p>If for some reason the in-index settings get corrupted and ROR can't parse them, then neither settings from file or in-index settings can be loaded, so ES can't start. In this case ES would print message like:</p>
+<pre><code>Loading ReadonlyREST settings from index failed: Settings config content is malformed. Details: while scanning a quoted scalar
+ in 'reader', line 9, column 17:
+          auth_key: &quot;admin:container
+                    ^
+</code></pre>
+<p>To recover from this state, set <code>readonlyrest.force_load_from_file: true</code> in <code>elasticsearch.yaml</code> on one node <code>es1</code>.</p>
+<p>Example recovery settings:</p>
+<p>elasticsearch.yaml</p>
+<pre><code class="language-yaml">[...]
+readonlyrest:
+  force_load_from_file: true
+</code></pre>
+<p>readonlyrest.yaml</p>
+<pre><code class="language-yaml">readonlyrest:
+
+  access_control_rules:
+  - name: &quot;::ADMIN recover::&quot;
+    auth_key: admin:dev
+    indices: [&quot;*&quot;]
+</code></pre>
+<p>Then remove in-index settings index manually.</p>
+<pre><code class="language-bash">curl -X DELETE &quot;admin:dev@es1:9200/.readonlyrest?pretty&quot;
+</code></pre>
+<p>Now you can restore your settings to <code>readonlyrest.yml</code>, remove <code>readonlyrest.force_load_from_file: true</code> <code>from elasticsearch.yaml</code> and restart node.</p>
+<h3 id="example-multiuser-elk">Example: multiuser ELK</h3>
+<p>This configuration will work in PRO and Enterprise editions</p>
+<p>Make sure X-Pack is uninstalled or disabled from <code>elasticsearch.yml</code> (on the Elasticsearch side) and <code>kibana.yml</code> (on the Kibana side): This is how you disable X-pack modules:</p>
+<pre><code class="language-yaml"># For X-Pack users: you may only leave monitoring on. 
+# Don't add this if X-Pack is not installed at all, or Kibana won't start.
+xpack.monitoring.enabled: true
+xpack.security.enabled: false
+xpack.watcher.enabled: false
+xpack.telemetry.enabled: false
+</code></pre>
+<p>This is a typical example of configuration snippet to add at the end of your <code>readonlyrest.yml</code> (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.</p>
+<pre><code class="language-yaml">readonlyrest:
+
+    access_control_rules:
+
+    - name: &quot;::LOGSTASH::&quot;
+      auth_key: logstash:logstash
+      actions: [&quot;indices:data/read/*&quot;,&quot;indices:data/write/*&quot;,&quot;indices:admin/template/*&quot;,&quot;indices:admin/create&quot;]
+      indices: [&quot;logstash-*&quot;]
+
+    - name: &quot;::KIBANA-SRV::&quot;
+      auth_key: kibana:kibana
+
+    - name: &quot;::RO::&quot;
+      auth_key: ro:dev
+      kibana_access: ro
+      indices: [ &quot;.kibana&quot;, &quot;logstash-*&quot;]
+      kibana_hide_apps: [ &quot;Security&quot;, &quot;Enterprise Search&quot;]
+
+    - name: &quot;::RW::&quot;
+      auth_key: rw:dev
+      kibana_access: rw
+      indices: [&quot;.kibana&quot;, &quot;logstash-*&quot;]
+      kibana_hide_apps: [ &quot;Security&quot;, &quot;Enterprise Search&quot;]
+
+
+    - name: &quot;::ADMIN::&quot;
+      auth_key: admin:dev
+      # KIBANA ADMIN ACCESS NEEDED TO EDIT SECURITY SETTINGS IN ROR KIBANA APP!
+      kibana_access: admin
+
+    - name: &quot;::WEBSITE SEARCH BOX::&quot;
+      indices: [&quot;public&quot;]
+      actions: [&quot;indices:data/read/*&quot;]
+</code></pre>
+<h3 id="very-important">Very important</h3>
+<h4 id="acl-blocks-ordering-matters">ACL blocks ordering matters</h4>
+<blockquote>
+<p>Blocks related to the authentication of the users should be at the top of the ACL</p>
+</blockquote>
+<p>One of the most common mistakes is forgetting that the ACL blocks are evaluated in order from the first to the last.</p>
+<p>So, some request with credentials can be let through from one of the first blocks and come back to Kibana with no user identity metadata associated.</p>
+<p>Take this example of troublesome ACL:</p>
+<pre><code>    # PROBLEMATIC SETTINGS (EXAMPLE) ⚠️
+
+    access_control_rules:
+
+    - name: &quot;::FIRST BLOCK::&quot;
+      hosts: [&quot;127.0.0.1&quot;]
+      actions: [...]
+
+    - name: &quot;::ADMIN::&quot;
+      auth_key: admin:dev
+      kibana_access: admin
+</code></pre>
+<p>The user will be able to login because the login request will be allowed by the first ACL block. But the ACL will not have resolved any metadata about the user identity (credentials checking was ignored)!</p>
+<p>This means the response to the Kibana login request will contain no user identity metadata (username, hidden apps, etc) and ReadonlyREST for Kibana won't be able to function correctly.</p>
+<p>The solution to this is to reorder the ACL blocks, so the ones that authenticate Kibana users are on the top.</p>
+<pre><code>    # SOLUTION: KIBANA USER AUTH RELATED BLOCKS GO FIRST! ✅👍
+
+    access_control_rules:
+
+    - name: &quot;::ADMIN::&quot;
+      auth_key: admin:dev
+      kibana_access: admin
+
+    - name: &quot;::FIRST BLOCK::&quot;
+      hosts: [&quot;127.0.0.1&quot;]
+      actions: [...]
+</code></pre>
+<h4 id="session-cookie-expiration">Session cookie expiration</h4>
+<p>When a user logs in, ReadonlyREST will write an encrypted cookie in the browser. This cookie has an time to live that can be tweaked with the following configuration key in <code>kibana.yml</code>.</p>
+<pre><code>readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
+</code></pre>
+<h4 id="clearing-session-history">Clearing Session History</h4>
+<p>By default, all the session data like search history, dev tool commands history, etc, will be wiped out from the browser whenever a new user is logged in, or a user changes tenancy. To override this behaviour, use this setting:</p>
+<pre><code>readonlyrest_kbn.clearSessionOnEvents: [&quot;never&quot;]
+</code></pre>
+<p>Possible values: <code>"login", "tenancyHop", "never"</code>.</p>
+<h3 id="hiding-kibana-apps">Hiding Kibana Apps</h3>
+<p>This feature will work in ReadonlyREST PRO and Enteprise.</p>
+<p>Previously we needed to keep track and document all Kibana apps IDs, and you had to look them up all the time. Now we made it simpler by letting you type the apps and submenu titles exactly as you see them in the UI.</p>
+<p>For example, this is how you hide the whole Enterprise Search submenu.</p>
+<p><img alt="kibana_hide_apps: [&quot;Enterprise Search&quot;]" src="../.gitbook/assets/image (2).png" /></p>
+<p>And this is how you hide only one app from the Enterprise Search menu:</p>
+<p><img alt="kibana_hide_apps: [&quot;Enterprise Search|Workplace Search&quot;]" src="../.gitbook/assets/image (3).png" /></p>
+<p>More generally, either of these two ways will work:</p>
+<pre><code class="language-bash">kibana_hide_apps: [ &quot;&lt;submenu-title&gt;&quot; ]
+kibana_hide_apps: [ &quot;&lt;submenu-title|app-title&gt;&quot; ]
+</code></pre>
+<p>For example the following is a valid rule:</p>
+<pre><code class="language-bash">kibana_hide_apps: [ &quot;Security&quot;, &quot;Management|Stack Management&quot;, &quot;Enterprise Search&quot; ]
+</code></pre>
+<h3 id="hiding-readonlyrest-menu-elements">Hiding ReadonlyREST menu elements</h3>
+<p>This feature will work in ReadonlyREST PRO and Enteprise.</p>
+<p>To hide the <code>Manage kibana</code> button for the specific user you need to provide <code>ROR Manage Kibana</code> value into a <code>kibana_hide_apps</code></p>
+<pre><code class="language-bash">kibana_hide_apps: [ &quot;ROR Manage Kibana&quot; ]
+</code></pre>
+<p>To hide the <code>Edit security settings</code> button for the specific user you need to provide <code>ROR Security Settings</code> or <code>readonlyrest_kbn</code> value into a <code>kibana_hide_apps</code></p>
+<pre><code class="language-bash">kibana_hide_apps: [ &quot;ROR Security Settings&quot; ]
+</code></pre>
+<p><img alt="Hiding ReadonlyREST menu elements" src="../.gitbook/assets/hiding_readonlyrest_menu_elements.png" /></p>
+<h3 id="kibana-configuration">Kibana configuration</h3>
+<p>Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using a pair of credentials we just defined in <code>readonlyrest.yml</code> (see above, the ::KIBANA-SRV:: block).</p>
+<p>Open up <code>conf/kibana.yml</code> and add the following:</p>
+<pre><code class="language-yaml"># This is kibana.yml, but copy the exact same in elasticsearch.yml if you have to use some X-pack features.
+xpack.graph.enabled: false
+xpack.ml.enabled: false
+xpack.monitoring.enabled: true
+xpack.security.enabled: false # this is fundamental!
+xpack.watcher.enabled: false
+
+# Kibana server use ::KIBANA-SRV:: credentials
+elasticsearch.username: &quot;kibana&quot;
+elasticsearch.password: &quot;kibana&quot;
+</code></pre>
+<p>And of course also make sure <code>elasticsearch.url</code> points to the designated Elasticsearch instance (check also the http or https)</p>
+<h3 id="proxy-auth">Proxy Auth</h3>
+<p>This feature will work in all ReadonlyREST editions.</p>
+<p>ROR for Elasticsearch can delegate authentication to a reverse proxy which will enforce some kind of authentication, and pass the successfully authenticated user's name inside a <code>X-Forwarded-User</code> header.</p>
+<blockquote>
+<p>Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.</p>
+</blockquote>
+<ol>
+<li>Configure ROR for ES to expect delegated authentication (see <a href="../elasticsearch.md#proxy_auth-"><code>proxy_auth</code> rule</a>) in ROR for ES documentation.</li>
+<li>Open up <code>conf/kibana.yml</code> and add <code>readonlyrest_kbn.proxy_auth_passthrough: true</code></li>
+</ol>
+<p>Now ROR for Kibana will <strong>skip the login form entirely</strong>, and will only require that all incoming requests must carry a <code>X-Forwarded-User</code> header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.</p>
+<h4 id="custom-logout-link">Custom Logout link</h4>
+<p>This feature will work in all ReadonlyREST editions.</p>
+<p>Normally, when a user presses the logout button in ROR for Kibana, it deletes the encrypted cookie that represents the users identity and the login form is shown.</p>
+<p>However, when the authentication is delegated to a proxy, the logout button needs to become a link to some URL capable to unregister the session a user initiated within the proxy.</p>
+<p>For this, ROR for Kibana offers a way to customize the logout button's URL:</p>
+<ol>
+<li>Find a link that will delete the reverse proxy's user session</li>
+<li>Open up <code>conf/kibana.yml</code> and add <code>readonlyrest_kbn.custom_logout_link: https://..../logout</code></li>
+</ol>
+<p>Now users that gained a session through delegated auth, can also click on the logout button in ROR for kibana and actually exit their session.</p>
+<h4 id="custom-login-link">Custom Login link</h4>
+<p>This feature will work in all ReadonlyREST editions.</p>
+<p>When you delegate authentication to an external service, you can tell ReadonlyREST to skip the classic login form entirely and redirect users to your proxy or identity provider's login screen.</p>
+<p>To enable this:</p>
+<ol>
+<li>Find your authentication proxy or identity provider login URL for the ROR app</li>
+<li>Open up <code>conf/kibana.yml</code> and add <code>readonlyrest_kbn.custom_login_link: "https://../login"</code></li>
+</ol>
+<p>The advantage of this approach is a streamlined user experience for users that login with an external IdP. The disadvantage is that you give up the possibility to login as a local user in ROR, as the login form will be always skipped.</p>
+<h4 id="caveat">Caveat</h4>
+<p>Enabling proxy auth passthrough will relax the requirement to provide a password. Therefore, don't enable this option if you don't make sure Kibana can <strong>only be accessed through the reverse proxy*</strong>.</p>
+<h3 id="jwt-token-forwarding-as-url-query-parameter">JWT Token Forwarding as URL Query Parameter</h3>
+<p>This feature will work in all ReadonlyREST editions.</p>
+<p>Alternatively to typing in credentials in the standard login form, it is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.</p>
+<h4 id="configuration_1">Configuration</h4>
+<p>To enable this feature in ReadonlyREST, you need to:</p>
+<ul>
+<li>Have JWT authentication configured in ReadonlyREST (modifying <code>readonlyrest.yml</code> or the cluster wide settings UI in the Kibana plugin). <a href="../elasticsearch.md#json-web-token-jwt-auth">See how</a>.</li>
+<li>Specify the query parameter name in <code>kibana.yml</code> by adding the line <code>readonlyrest_kbn.jwt_query_param: "jwt"</code> as a string, in our case "jwt".</li>
+</ul>
+<h4 id="in-action">In Action</h4>
+<p>Once Kibana is restarted, you will be able to navigate to a link like this:</p>
+<pre><code>http://kibana:5601/login?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+</code></pre>
+<p>The following will happen:</p>
+<ol>
+<li>The Kibana plugin will forward the JWT token found in the query parameter into the <code>Authorization</code> header in a request to Elasticsearch.</li>
+<li>Elasticsearch will cryptographically authenticate and resolve the user's identity from the JWT claims.</li>
+<li>Kibana will write an encrypted cookie in your browser and use that from now on for the length of the authenticated session. From here onwards, the session management will be identical to the normal login form flow.</li>
+<li>When the user presses logout, Kibana will delete the cookie and redirect you to the login form, or whatever link you configured as <code>readonlyrest_kbn.custom_logout_link</code>.</li>
+</ol>
+<p><strong>Deep linking with JWT</strong></p>
+<p>Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the call on the fly, the JWT authentication can be used in conjunction with <code>nextUrl</code> query parameter for sharing deep links inside Kibana apps, or embedding visualizations and dashboards inside I-Frames.</p>
+<p><strong>Anatomy of a JWT deep link</strong></p>
+<pre><code>http://kibana:5601/login?jwt=&lt;the-token&gt;&amp;nextUrl=urlEncode(&lt;kibana-path&gt;)
+</code></pre>
+<p>In Javascript one can compose a JWT deep link as follows:</p>
+<pre><code class="language-javascript">var absoluteKibanaPath = '/app/kibana#/visualize/edit/28dcde30-2258-11e8-82a3-af58d04b3c02?_g=()';
+
+var url = 'http://kibana:5601/login?jwt=' + 
+           jwtToken + 
+           '&amp;nextUrl=' + 
+           encodeURI(absoluteKibanaPath);
+
+console.log(&quot;Final JWT deep link: &quot; + url)
+</code></pre>
+<p>The result may look something like this:</p>
+<pre><code>http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&amp;jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+</code></pre>
+<h2 id="ssltls-server">SSL/TLS server</h2>
+<p>You can configure Kibana with ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example, in <code>kibana.yml</code>:</p>
+<pre><code>server.ssl.enabled: true
+server.ssl.keystore.path: &quot;/usr/share/kibana/config/certificates/kibana-server.p12&quot;
+server.ssl.keystore.password: &quot;&quot;
+server.ssl.supportedProtocols: [&quot;TLSv1.2&quot;, &quot;TLSv1.3&quot;]
+</code></pre>
+<h3 id="secure-cookies">Secure cookies</h3>
+<p>ReadonlyREST will set the "secure" flag to its Kibana session cookie ("ror-cookie") automatically when SSL is enabled in Kibana.\
+\
+This is because modern browsers like Chrome won't accept "secure"-flagged cookies if the website is not HTTPS).</p>
+<p>However, a common situation is when SSL is configured in a reverse proxy (SSL termination): so the browser will interact with Kibana using HTTPS. But because ROR doesn't know it, it will still serve session cookies without the "secure" flag.\
+\
+In this case, you can force ReadonlyREST to create "secure"-flagged cookies by adding this line in <code>kibana.yml</code>:</p>
+<pre><code>xpack.security.secureCookies: true 
+</code></pre>
+<h2 id="audit-log">Audit log</h2>
+<p>This feature will work in all ReadonlyREST editions.</p>
+<p>The audit log feature is widely described in <a href="../elasticsearch.md#audit-logs">📖docs for Elasticsearch plugin</a>. Kibana plugin has predefined dashboard representing collected audit data.</p>
+<h3 id="loading-visualization">Loading visualization</h3>
+<p>In the <em>Audit</em> tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.</p>
+<p><img alt="audit log tab" src="../.gitbook/assets/audit_tab (1) (1).png" /></p>
+<p>Click the <em>Load</em> button to load the dashboard and visualizations. An <em>Override</em> checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.</p>
+<p><img alt="loading visualization" src="../.gitbook/assets/load_audit_dashboard (1) (1) (1) (1) (4) (6) (7) (10) (15).png" /></p>
+<p>In detail, this feature creates three Kibana "saved objects":</p>
+<ul>
+<li>an index pattern for <code>readonlyrest_audit-*</code></li>
+<li>a dashboard called <code>ReadonlyREST Audit Log</code></li>
+<li>some visualizations</li>
+</ul>
+<h3 id="dashboard">Dashboard</h3>
+<p>The audit log dashboard, by default, has only a few basic visualizations. They cover security, access logs, and performance metrics.</p>
+<h2 id="saml">SAML</h2>
+<p>This feature will work in ReadonlyREST Enterprise.</p>
+<p>ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO (single sign on) and SLO (single log out). Here is how to configure it.</p>
+<h3 id="configure-ror_kbn_auth-bridge">Configure <code>ror_kbn_auth</code> bridge</h3>
+<p>In order for the user identity information to flow securely from Kibana to Elasticsearch, we need to set up the two plugin with a shared secret, that is: an arbitrarily long string.</p>
+<h3 id="elasticsearch-side">Elasticsearch side</h3>
+<p>Edit <code>readonlyrest.yml</code></p>
+<pre><code>readonlyrest:
+    access_control_rules:
+
+    - name: &quot;::KIBANA-SRV::&quot;
+      auth_key: kibana:kibana
+
+    ... all usual blocks of rules...
+
+    - name: &quot;ReadonlyREST Enterprise instance #1&quot;
+      ror_kbn_auth:
+        name: &quot;kbn1&quot;
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: &quot;my_shared_secret_kibana1_(min 256 chars)&quot; # &lt;- use environmental variables for better security!
+</code></pre>
+<p><strong>⚠️IMPORTANT</strong> the Basic HTTP auth credentials for the Kibana server are <strong>still needed</strong> for now, due to how Kibana works.</p>
+<h3 id="kibana-side">Kibana side</h3>
+<p>Edit <code>kibana.yml</code> and append:</p>
+<pre><code class="language-yaml">readonlyrest_kbn.auth:
+  signature_key: &quot;my_shared_secret_kibana1(min 256 chars)&quot;
+  saml_serv1:
+    enabled: true
+    type: saml
+    issuer: ror
+    buttonName: &quot;Partner's SSO Login&quot;
+    entryPoint: 'https://my-saml-idp/saml2/http-post/sso' # &lt;-- identity Provider's URL, to request to sign on
+    kibanaExternalHost: 'my.public.hostname.com' # &lt;-- public URL used by the Identity Provider to call back Kibana with the &quot;assertion&quot; message
+    protocol: http # &lt;-- is the Kibana server listening for &quot;http&quot; &quot;https&quot; connections? Default: http
+    usernameParameter: 'nameID'
+    groupsParameter: 'memberOf'
+    logoutUrl: 'https://my-saml-idp/saml2/http-post/slo'
+    cert: /etc/ror/integration/certs/dag.crt # &lt;-- It can be also provided a string value 
+
+    # OPTIONAL, advanced parameters
+    # decryptionCert: /etc/ror/integration/certs/pub.crt
+    # decryptionPvk: /etc/ror/integration/certs/decrypt_pvk.crt
+    # issuer: saml_sso_idp
+</code></pre>
+<ul>
+<li><code>issuer</code>: issuer string to supply to identity provider during sign on request. Defaults to 'ror'</li>
+<li><code>disableRequestedAuthnContext</code>: if truthy, do not request a specific authentication context. This is known to help when authenticating against Active Directory (AD FS) servers.</li>
+<li><code>decryptionPvk</code>: Service Provider Private Key. Private key that will be used to attempt to decrypt any encrypted assertions that are received.</li>
+<li><code>cert</code>: The downloadable certificate in IDP Metadata (file, absolute path) or single line string value</li>
+</ul>
+<p>For advanced SAML options, see <a href="https://github.com/bergie/passport-saml">passport-saml documentation</a>.</p>
+<h3 id="identity-provider-side">Identity provider side</h3>
+<ol>
+<li>Enter the settings of your identity provider, create a new app.</li>
+<li>Configure it using the information found by connecting to <code>http://my.public.hostname.com/ror_kbn_saml_serv1/metadata.xml</code></li>
+</ol>
+<p>Example response:</p>
+<pre><code class="language-markup">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;EntityDescriptor xmlns=&quot;urn:oasis:names:tc:SAML:2.0:metadata&quot; xmlns:ds=&quot;http://www.w3.org/2000/09/xmldsig#&quot; entityID=&quot;onelogin_saml&quot; ID=&quot;onelogin_saml&quot;&gt;
+  &lt;SPSSODescriptor protocolSupportEnumeration=&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;&gt;
+    &lt;SingleLogoutService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&quot; Location=&quot;http://my.public.hostname.com/ror_kbn/notifylogout&quot;/&gt;
+    &lt;NameIDFormat&gt;urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress&lt;/NameIDFormat&gt;
+    &lt;AssertionConsumerService index=&quot;1&quot; isDefault=&quot;true&quot; Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&quot; Location=&quot;http://my.public.hostname.com/ror_kbn/assert&quot;/&gt;
+  &lt;/SPSSODescriptor&gt;
+&lt;/EntityDescriptor&gt;
+</code></pre>
+<ol>
+<li>Create some users and some groups in the identity provider app</li>
+<li>Check the user profile parameter names that the identity provider uses during the assertion callback ( <strong>TIP</strong>: set kibana in debug mode so ReadonlyREST will print the user profile).</li>
+<li>Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the <code>usernameParameter</code> kibana YAML setting.</li>
+<li>If you want to use SAML for authorization, take care of matching also the <code>groupsParameter</code> to the parameter name found in the assertion message to the kibana YAML setting.</li>
+</ol>
+<h2 id="openid-connect-oidc">OpenID Connect (OIDC)</h2>
+<p>This feature will work in ReadonlyREST Enterprise.</p>
+<p>ReadonlyREST Enterprise support OpenID Connect for both authentication and authorization.</p>
+<p>Here is how to configure it.</p>
+<h3 id="configure-ror_kbn_auth-bridge_1">Configure <code>ror_kbn_auth</code> bridge</h3>
+<p>This part is identical as seen in SAML connectors. In order for the user identity information to flow securely from Kibana to Elasticsearch, we need to set up the two plugin with a shared secret, that is: an arbitrarily long string.</p>
+<h3 id="elasticsearch-side_1">Elasticsearch side</h3>
+<p>Edit <code>readonlyrest.yml</code></p>
+<pre><code>readonlyrest:
+    access_control_rules:
+
+    - name: &quot;::KIBANA-SRV::&quot;
+      auth_key: kibana:kibana
+
+    ... all usual blocks of rules...
+
+    - name: &quot;ReadonlyREST Enterprise instance #1&quot;
+      ror_kbn_auth:
+        name: &quot;kbn1&quot;
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: &quot;my_shared_secret_kibana1_(min 256 chars)&quot; # &lt;- use environmental variables for better security!
+</code></pre>
+<p><strong>⚠️IMPORTANT</strong> the Basic HTTP auth credentials for the Kibana server are <strong>still needed</strong> for now, due to how Kibana works.</p>
+<p>If you have configured OIDC with the <code>groupsParameter</code> ( <em>See below</em> ), you can also restrict ACL to specific groups:</p>
+<pre><code>readonlyrest:
+    access_control_rules:
+
+    - name: &quot;::KIBANA-SRV::&quot;
+      auth_key: kibana:kibana
+
+    ... all usual blocks of rules...
+
+    - name: &quot;ReadonlyREST Enterprise instance #1 for group 1&quot;
+      ror_kbn_auth:
+        name: &quot;kbn1&quot;
+        groups: [&quot;group1&quot;]
+
+    - name: &quot;ReadonlyREST Enterprise instance #1 for group 2&quot;
+      ror_kbn_auth:
+        name: &quot;kbn1&quot;
+        groups: [&quot;group2&quot;]
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: &quot;my_shared_secret_kibana1_(min 256 chars)&quot; # &lt;- use environmental variables for better security!
+</code></pre>
+<p>You may also use any custom claim from the OIDC <code>userinfo</code> token in ACL rules by using <code>{{jwt:assertion.&lt;path_to_your_claim&gt;}}</code> syntax. See the <a href="../elasticsearch.md#Dynamic variables from JWT claims">dedicated section </a>for more information. ( <strong>TIP</strong> : Do not forget the <code>assertion</code> prefix in front of you jsonpath. )</p>
+<h3 id="kibana-side_1">Kibana side</h3>
+<p>We will assume the OpenID identity provider responds to port 8080 of localhost. In our example, we used Keycloak, an open source implementation of OpenID Connect identity provide.</p>
+<p>Edit <code>kibana.yml</code> and append:</p>
+<pre><code class="language-yaml">readonlyrest_kbn.auth:
+  signature_key: &quot;my_shared_secret_kibana1(min 256 chars)&quot;
+  oidc_kc: 
+    buttonName: &quot;KeyCloak OpenID&quot;
+    type: &quot;oidc&quot;
+    issuer: 'http://localhost:8080/auth/realms/ror'
+    authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth'
+    tokenURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/token'
+    userInfoURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/userinfo'
+    clientID: 'ror_oidc'
+    clientSecret: '9f1d39c8-a211-460a-84b6-0a4a1499c455'
+    scope: 'openid profile roles role_list email'
+    usernameParameter: 'preferred_username'
+    groupsParameter: 'groups'
+    kibanaExternalHost: 'localhost:5601'
+    logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout'
+    jwksURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/certs'
+</code></pre>
+<h3 id="identity-provider-side_1">Identity provider side</h3>
+<ol>
+<li>Enter the settings interface of your identity provider, and create a new OpenID app .</li>
+<li>The redirect URL should be configured as <code>http://localhost:5601/*</code> assuming kibana is listening on localhost and on the default port.</li>
+<li>Create some users and some groups in the identity provider if not present.</li>
+<li>Check the user profile parameter names that the identity provider uses during the assertion callback ( <strong>TIP</strong>: set readonlyrest_kbn.logLevel: debug` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).</li>
+<li>Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the <code>usernameParameter</code> kibana YAML setting.</li>
+<li>If you want to use OpenID for authorization, take care of matching also the <code>groupsParameter</code> to the parameter name found in the assertion message to the kibana YAML setting. ( <strong>TIP</strong>: the <code>groupsParameter</code> must be present in the <code>userinfo</code> token of your OIDC provider.)</li>
+<li>If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to <code>server.host:server.port</code> defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)</li>
+</ol>
+<h2 id="load-balancers">Load balancers</h2>
+<p>These features will work with all ReadonlyREST Editions</p>
+<h3 id="enable-health-check-endpoint">Enable health check endpoint</h3>
+<p>Normally a load balancer needs a health check URL to see if the instance is still running, you can whitelist this Kibana path so the load balancer avoids a redirection to <code>/login</code>.</p>
+<p>Edit <code>kibana.yml</code></p>
+<pre><code>readonlyrest_kbn.whitelistedPaths: [&quot;.*/api/status$&quot;]
+</code></pre>
+<h3 id="session-management-with-multiple-kibana-instances">Session management with multiple Kibana instances</h3>
+<p>Each Kibana node stores user sessions in-memory. This will cause problems when using multiple Kibana instances behind a load balancer (especially without sticky sessions), as there would be no synchronization between nodes' sessions cache. To avoid this, session synchronization via an Elasticsearch index should be enabled. Follow these steps:</p>
+<ol>
+<li>Come up with a string of at least 32 characters length or more to be used as the shared cookie encryption key, called <code>cookiePass</code>.</li>
+<li>Open up <code>conf/kibana.yml</code> and add:</li>
+<li><code>readonlyrest_kbn.cookiePass: "generatedStringIn1step"</code> (example: "12345678901234567890123456789012")</li>
+<li><code>readonlyrest_kbn.cookieName</code> (custom cookie name - this property is optional, if not specified default cookie name would be <code>rorCookie</code>)</li>
+<li><code>readonlyrest_kbn.store_sessions_in_index: true</code> (enable session storage in index)</li>
+<li><code>readonlyrest_kbn.sessions_index_name: "someCustomIndexName"</code> (index name - this property is optional, if not specified default index would be <code>.readonlyrest_kbn_sessions</code>)</li>
+<li><code>readonlyrest_kbn.sessions_refresh_after: 5000</code> (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)</li>
+<li><code>readonlyrest_kbn.sessions_probe_interval_seconds: 120</code> (default 60s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.</li>
+<li>Add the above config in all Kibana nodes behind the load balancer, and restart them.</li>
+</ol>
+<h2 id="login-screen-tweaking">Login screen tweaking</h2>
+<p>These features will work with ReadonlyREST PRO and Enterprise.</p>
+<p>It is possible to customize the look of the login screen.</p>
+<h3 id="two-column-layout">Two column layout</h3>
+<p>By default,the login form appears in a single column view. <img alt="one column" src="blob:https://imgur.com/f7514ca2-7f8f-4f96-aecd-09e7ea636b62" /></p>
+<p>But once title and subtitle are configured, it will switch to two columns for making room to the new text.</p>
+<pre><code>readonlyrest_kbn.login_title: &quot;Some Title&quot;
+readonlyrest_kbn.login_subtitle: &quot;Longer text &lt;b&gt;any HTML is supported&lt;b/&gt; including ifrmaes&quot;
+</code></pre>
+<p><img alt="two columns" src="https://i.imgur.com/Sqf1GIL.png" /></p>
+<h3 id="add-your-company-logo">Add your company logo</h3>
+<p>It's recommended to use a transparent PNG, negative logo. Ideally a white foreground, and transparent background.</p>
+<p>Open <code>config/kibana.yml</code> and append the following:</p>
+<pre><code>readonlyrest_kbn.login_custom_logo: 'https://.../logo.png'
+</code></pre>
+<h3 id="add-custom-cssjs">Add custom CSS/JS</h3>
+<p>You have the opportunity to inject HTML code right before the closing head tag (<code>&lt;/head&gt;</code>).</p>
+<p>Open <code>config/kibana.yml</code> and append the following:</p>
+<pre><code>readonlyrest_kbn.login_html_head_inject: '&lt;style&gt; * { color:red; }&lt;/style&gt;'
+</code></pre>
+<h2 id="kibana-ui-tweaking">Kibana UI tweaking</h2>
+<p>This feature will work with Readonlyrest Enterprise</p>
+<p>It's possible to inject custom CSS and Javascript to achieve a customised user experience for your users/tenants.</p>
+<h3 id="inject-custom-css-in-kibana">Inject custom CSS in Kibana</h3>
+<p>Open <code>config/kibana.yml</code> and append the following:</p>
+<pre><code>readonlyrest_kbn.kibana_custom_css_inject: '.global-nav, kbnGlobalNav { background-color: green }'
+</code></pre>
+<p>Alternatively, it's possible to load the CSS from a file in the filesystem:</p>
+<pre><code>readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
+</code></pre>
+<p><strong>⚠️IMPORTANT</strong> If you use relative paths, you end up pointing to kibana home, i.e. <code>readonlyrest_kbn.kibana_custom_css_inject_file: 'config/custom.css'</code> will refer to <code>$KBN_HOME/config/custom.css</code> which is the same directory where <code>kibana.yml</code> can normally be found.</p>
+<h3 id="inject-custom-js-in-kibana">Inject custom JS in Kibana</h3>
+<pre><code>readonlyrest_kbn.kibana_custom_js_inject: '$(&quot;.global-nav__logo&quot;).hide(); alert(&quot;hello!&quot;)'
+</code></pre>
+<p>Alternatively, it's possible to load the JS from a file in the filesystem:</p>
+<pre><code>readonlyrest_kbn.kibana_custom_js_inject_file: '/tmp/custom.js'
+</code></pre>
+<p><strong>⚠️IMPORTANT</strong> If you use relative paths, you end up pointing to kibana home, i.e. <code>readonlyrest_kbn.kibana_custom_js_inject: 'config/custom.js'</code> will refer to <code>$KBN_HOME/config/custom.js</code> which is the same directory where <code>kibana.yml</code> can normally be found.</p>
+<h3 id="map-groups-to-aliases">Map groups to aliases</h3>
+<p>You can provide a function, mapping group names to aliases of your choosing. To do so, add the following line to <code>config/kibana.yml</code>:</p>
+<pre><code>readonlyrest_kbn.groupsMapping: '(group) =&gt; group.toLowerCase()'
+</code></pre>
+<p><strong>⚠️IMPORTANT</strong> The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group name will be used as fallback. Also, if the mapping function is not specified, the original group name value will be used.</p>
+<h2 id="tenancy-index-templating">Tenancy index templating</h2>
+<p>This feature will work only with ReadonlyREST Enterprise</p>
+<p>When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.</p>
+<p>The issue is that "user1"'s user experience will be really raw as they will see a completely blank Kibana tenancy. Not even a default index pattern will be present. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana_access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.</p>
+<p>To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy.</p>
+<h3 id="how-to-use-tenancy-templating">How to use tenancy templating</h3>
+<p>An administrator will need to create the template tenancy, populate it with the default Kibana objects (index-patterns, dashboards) and configure ReadonlyREST Enterprise to take the index template it in use. Let's see this step by step:</p>
+<h4 id="create-the-template-tenancy">Create the template tenancy</h4>
+<p>Let's start to add to our access control list (found in $ES_PATH_CONF/config/readonlyrest.yml, or ReadonlyREST App in Kibana) a local user "administrator" that will belong to two tenancies: the default one (stored in .kibana index), and the template one (stored in .kibana_template index).</p>
+<pre><code>readonlyrest:
+  audit_collector: true
+
+  access_control_rules:
+
+  - name: &quot;::KIBANA-SRV::&quot;
+    auth_key: kibana:kibana
+    verbosity: error
+
+  - name: &quot;Admin Tenancy&quot;
+    groups: [&quot;Admins&quot;]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: &quot;.kibana&quot;
+
+  - name: &quot;Template Tenancy&quot;
+    groups: [&quot;Template&quot;]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: &quot;.kibana_template&quot;
+
+ users:
+ - username: administrator
+   auth_key: administrator:dev
+   groups: [&quot;Admins&quot;, &quot;Template&quot;] # can hop between two tenancies with top-left drop-down menu
+</code></pre>
+<p>NB: If you know what you are doing, you can add a tenancy with kibana_index: ".kibana_template" adding a LDAP/SAML group to your administrative user.</p>
+<h3 id="configure-the-template-tenancy">Configure the template tenancy</h3>
+<p>Now login as administrator in Kibana, hop into the "Template" tenancy, and start configuring the default UX for your future tenants. Add all the index patterns, create or import all the dashboards you want.</p>
+<h3 id="configure-the-template-tenancy-index-in-readonlyrest-enterprise">Configure the template tenancy index in ReadonlyREST Enterprise</h3>
+<p>Open kibana.yml and add the following line:</p>
+<pre><code>readonlyrest_kbn.kibanaIndexTemplate: &quot;.kibana_template&quot;
+</code></pre>
+<p>Now, ReadonlyREST Enterprise will look for the ".kibana_template" index, and try to copy over all its documents every time a new kibana index is initialised to support a new tenancy.</p>
+<h3 id="try-it-out">Try it out</h3>
+<p>Restart Kibana with the new setting. Add a new tenancy to the ACL:</p>
+<pre><code>readonlyrest:
+  audit_collector: true
+
+  access_control_rules:
+
+  - name: &quot;::KIBANA-SRV::&quot;
+    auth_key: kibana:kibana
+    verbosity: error
+
+  - name: &quot;Admin Tenancy&quot;
+    groups: [&quot;Admins&quot;]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: &quot;.kibana&quot;
+
+  - name: &quot;Template Tenancy&quot;
+    groups: [&quot;Template&quot;]
+    verbosity: error
+    kibana_access: admin
+    kibana_index: &quot;.kibana_template&quot;
+
+  # Newly added tenant!
+  - name: user1
+    auth_key: user1:passwd
+    kibana_access: rw
+    kibana_index: &quot;.kibana_user1&quot;
+
+ users:
+ - username: administrator
+   auth_key: administrator:dev
+   groups: [&quot;Admins&quot;, &quot;Template&quot;] # can hop between two tenancies with top-left drop-down menu
+`
+</code></pre>
+<p>Now try to login as user1, and ReadonlyREST Enterprise should initialise the index ".kibana_user1" with all the index patterns and dashboards contained in the template tenancy.</p>
+<h2 id="impersonation">Impersonation</h2>
+<p>According to <a href="https://en.wikipedia.org/wiki/Impersonator">Wikipedia</a>:</p>
+<blockquote>
+<p>An impersonator is someone who imitates or copies the behavior or actions of another.</p>
+</blockquote>
+<p>So, an impersonation can be understood as imitating behaviors or actions.
+In the context of ReadonlyREST: one user could imitate an action 
+of another user. Why would we want it? Let's suppose the first user is 
+an admin, who has just configured access for a new user. They would like 
+to know if the rule(s) are configured correctly. And here comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. </p>
+<p>ROR plugins support impersonation and provide UI for configuring cluster before using it. Visit the <a href="../details/impersonation/">impersonation details page</a> to know more.</p>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../elasticsearch/" class="md-footer__link md-footer__link--prev" aria-label="Previous: For Elasticsearch" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              For Elasticsearch
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../actionstrings/" class="md-footer__link md-footer__link--next" aria-label="Next: List of Elasticsearch actions available in various Elasticsearch versions" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              List of Elasticsearch actions available in various Elasticsearch versions
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>
