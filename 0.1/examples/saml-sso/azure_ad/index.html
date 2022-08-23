@@ -1,0 +1,1345 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Integration with the managed cloud service Microsoft Azure Active Directory.">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.1">
+    
+    
+      
+        <title>Microsoft Azure AD - ReadonlyREST Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#microsoft-azure-ad" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="ReadonlyREST Documentation" class="md-header__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ReadonlyREST Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Microsoft Azure AD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ReadonlyREST Documentation" class="md-nav__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ReadonlyREST Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        README
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../SUMMARY/" class="md-nav__link">
+        Table of contents
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../commercial/" class="md-nav__link">
+        Commercial Licenses
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/" class="md-nav__link">
+        Contribution License Agreement
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../elasticsearch/" class="md-nav__link">
+        For Elasticsearch
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kibana/" class="md-nav__link">
+        For Kibana
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Actionstrings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Actionstrings" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Actionstrings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../actionstrings/" class="md-nav__link">
+        List of Elasticsearch actions available in various Elasticsearch versions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Details
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Details" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Details
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/fips/" class="md-nav__link">
+        FIPS mode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/fls-engine/" class="md-nav__link">
+        FLS engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/groups-rule-mapping/" class="md-nav__link">
+        External to local groups mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/impersonation/" class="md-nav__link">
+        Impersonation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/index-not-found-examples/" class="md-nav__link">
+        "Index not found" scenario
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/indices-rule-templates/" class="md-nav__link">
+        Templates handling in `indices` rule
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../details/kibana-7.8.x-and-older/" class="md-nav__link">
+        Kibana 7.8.x and older
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../multitenancy_guide/" class="md-nav__link">
+        Multi-tenancy Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../multiuser_guide/" class="md-nav__link">
+        Multi-user Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_4" type="checkbox" id="__nav_10_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_4">
+          Impersonation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Impersonation" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_4">
+          <span class="md-nav__icon md-icon"></span>
+          Impersonation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../impersonation/external-services-mocks-ui/" class="md-nav__link">
+        External services mocks configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../impersonation/impersonate-user-ui/" class="md-nav__link">
+        Impersonate user ui
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../impersonation/test-settings-ui/" class="md-nav__link">
+        Writing Test Settings
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_5" type="checkbox" id="__nav_10_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_5">
+          Oidc sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Oidc sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_5">
+          <span class="md-nav__icon md-icon"></span>
+          Oidc sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../oidc-sso/" class="md-nav__link">
+        OpenID Connect (OIDC) SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../oidc-sso/keycloak_oidc/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_6" type="checkbox" id="__nav_10_6" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_6">
+          Saml sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Saml sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_6">
+          <span class="md-nav__icon md-icon"></span>
+          Saml sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        SAML SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adfs/" class="md-nav__link">
+        Microsoft ADFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Microsoft Azure AD
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Microsoft Azure AD
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install-elasticsearch-and-kibana" class="md-nav__link">
+    Install Elasticsearch and Kibana
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-the-readonlyrest-plugins" class="md-nav__link">
+    Set up the ReadonlyREST plugins
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up the ReadonlyREST plugins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conventions-and-assumptions-in-this-guide" class="md-nav__link">
+    Conventions and assumptions in this guide
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readonlyrest-configuration" class="md-nav__link">
+    ReadonlyREST Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="ReadonlyREST Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#notes-about-readonlyrest-kibana-settings" class="md-nav__link">
+    Notes about ReadonlyREST Kibana settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-ad-configuration" class="md-nav__link">
+    Azure AD configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-if-this-all-works" class="md-nav__link">
+    Testing if this all works.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-using-azure-ad-groups" class="md-nav__link">
+    Authorization using Azure AD groups
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization using Azure AD groups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-readonlyrest-admins-group" class="md-nav__link">
+    Example: ReadonlyREST Admins group
+  </a>
+  
+    <nav class="md-nav" aria-label="Example: ReadonlyREST Admins group">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-and-assigning-the-group-in-azure-ad" class="md-nav__link">
+    Creating and assigning the group in Azure Ad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-the-new-groups-azure-object-id" class="md-nav__link">
+    Finding the new group's Azure object ID
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-readonlyrest-acl-to-authorize-the-group" class="md-nav__link">
+    Using ReadonlyREST ACL to authorize the group
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keycloak_saml/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multifactor_authentication_with_duo_via_saml/" class="md-nav__link">
+        Duo Security MFA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install-elasticsearch-and-kibana" class="md-nav__link">
+    Install Elasticsearch and Kibana
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-the-readonlyrest-plugins" class="md-nav__link">
+    Set up the ReadonlyREST plugins
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up the ReadonlyREST plugins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conventions-and-assumptions-in-this-guide" class="md-nav__link">
+    Conventions and assumptions in this guide
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readonlyrest-configuration" class="md-nav__link">
+    ReadonlyREST Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="ReadonlyREST Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#notes-about-readonlyrest-kibana-settings" class="md-nav__link">
+    Notes about ReadonlyREST Kibana settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-ad-configuration" class="md-nav__link">
+    Azure AD configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-if-this-all-works" class="md-nav__link">
+    Testing if this all works.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-using-azure-ad-groups" class="md-nav__link">
+    Authorization using Azure AD groups
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization using Azure AD groups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-readonlyrest-admins-group" class="md-nav__link">
+    Example: ReadonlyREST Admins group
+  </a>
+  
+    <nav class="md-nav" aria-label="Example: ReadonlyREST Admins group">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-and-assigning-the-group-in-azure-ad" class="md-nav__link">
+    Creating and assigning the group in Azure Ad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-the-new-groups-azure-object-id" class="md-nav__link">
+    Finding the new group's Azure object ID
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-readonlyrest-acl-to-authorize-the-group" class="md-nav__link">
+    Using ReadonlyREST ACL to authorize the group
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="microsoft-azure-ad">Microsoft Azure AD</h1>
+<p><a href="https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis">Azure Active Directory (Azure AD)</a> is Microsoft’s cloud-based identity and access management (<a href="https://en.wikipedia.org/wiki/Identity_management">IAM</a>) service. And it can be used as a SAML Single Sign-On (SSO) [identity provider (IdP)](<a href="https://en.wikipedia.org/wiki/Identity_provider_(SAML">https://en.wikipedia.org/wiki/Identity_provider_(SAML</a>)) for a pool of exiting users to sign in and access resources in external service providers like <a href="https://readonlyrest.com/enterprise/">ReadonlyREST Enterprise</a>.</p>
+<p>With Azure AD, you can graphically manage users, groups, credentials and permissions. ReadonlyREST Enterprise for Kibana will collaborate with Azure AD to authenticate, grant permissions and access to tenancies for users that are entirely managed within Azure AD.</p>
+<p>In this guide, we are going to see how to configure Elasticsearch and Kibana with ReadonlyREST Enterprise to make use of Azure AD via the SAML protocol. The result will be a multi-user, optionally multi-tenant Kibana instance powered by <a href="https://readonlyrest.com">ReadonlyREST</a>.</p>
+<h2 id="install-elasticsearch-and-kibana">Install Elasticsearch and Kibana</h2>
+<p>Make sure you have a functioning installation of Kibana, backed by an instance of Elasticsearch. You can find <a href="https://www.elastic.co/guide/en/kibana/current/install.html">the installation guide</a> in Elastic's website.</p>
+<h2 id="set-up-the-readonlyrest-plugins">Set up the ReadonlyREST plugins</h2>
+<p>In order to use ReadonlyREST Enterprise for Kibana, make sure you have installed ReadonlyREST Free for Elasticsearch first. Head to our <a href="../../../elasticsearch/#installing-the-plugin">setup guide</a> to find instructions.</p>
+<p>Once ReadonlyREST Free plugin is installed, configure an ACL for accepting SAML sessions from ReadonlyREST Enterprise for Kibana. This is also <a href="../../../elasticsearch/#ror_kbn_auth">explained in our guide</a>. Remember to choose a very long secret phrase (256+ characters)</p>
+<p>Now head to the Kibana directory, and install a trial (or full) version of ReadonlyREST Enterprise, which can be freely downloaded from <a href="https://readonlyrest.com/download">our download page</a>. For <a href="../../../kibana/#installation">installation instructions</a>, see our Kibana plugin guide.</p>
+<p>Azure AD only speaks with "https" websites, so make sure your Kibana web server is configured to serve pages in https. See a guide from Elastic on how to enable SSL</p>
+<h3 id="conventions-and-assumptions-in-this-guide">Conventions and assumptions in this guide</h3>
+<p>This tutorial assumes that Kibana runs in <a href="https://localhost:5601">https://localhost:5601</a>, which is clearly only valid if you are trying this authentication system in your local computer.</p>
+<p>And it also assumes you used something like <a href="https://blog.filippo.io/mkcert-valid-https-certificates-for-localhost/">mkcert</a> to let your browser trust SSL certificates for localhost URLs.</p>
+<p>In the real world, when you are configuring Kibana in production, make sure: 1. You have a valid SSL certificate for the Kibana server 2. You replace all the references to <code>localhost:5601</code> with the publicly reachable host name of your actual Kibana server.</p>
+<h2 id="readonlyrest-configuration">ReadonlyREST Configuration</h2>
+<p>Now, <strong>on the Elasticsearch side</strong>, you should have the <code>$ES_HOME/config/readonlyrest.yml</code> file configured to accept SAML sessions from kibana using the <code>ror_kbn_auth</code> rule. I.e.</p>
+<pre><code>readonlyrest:
+    access_control_rules:
+
+    - name: &quot;::KIBANA-SRV::&quot;
+      auth_key: kibana:kibana
+
+    ... all usual blocks of rules...
+
+    - name: &quot;ReadonlyREST Enterprise sessions&quot;
+      ror_kbn_auth:
+        name: &quot;kbn1&quot;
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: &quot;my_shared_secret_kibana1_(min 256 chars)&quot; # &lt;- use environmental variables for better security!
+</code></pre>
+<p><strong>On the Kibana side</strong>, we will now configure our Kibana plugin to speak with Azure AD. Open your <code>$KBN_HOME/config/kibana.yml</code>, it should look something like:</p>
+<pre><code>xpack.security.enabled: false
+
+elasticsearch.hosts: [&quot;http://localhost:9200&quot;] # &lt;-- consider enabling &quot;https&quot; using the SSL feature in ReadonlyREST Free!
+elasticsearch.username: &quot;kibana&quot;
+elasticsearch.password: &quot;kibana&quot;
+# elasticsearch.ssl.verificationMode: none  # &lt;-- uncomment if your Elasticsearch uses &quot;https&quot; with self signed certificates
+
+server.ssl.enabled: true # &lt;-- It's mandatory for Azure AD that we enable SSL in our Kibana server!
+server.ssl.certificate: '/etc/kibana/ssl_cert/localhost.pem'
+server.ssl.key: '/etc/kibana/ssl_cert/localhost-key.pem'
+
+readonlyrest_kbn:
+
+  logLevel: debug
+  clearSessionOnEvents: [&quot;login&quot;]
+
+  auth:
+    signature_key: &quot;my_shared_secret_kibana1_(min 256 chars)&quot; # &lt;- use environmental variables for better security!
+
+    saml_azure:
+      buttonName: 'Azure AD SAML SSO'
+      enabled: true
+      type: saml
+      issuer: 'ror'
+      protocol: 'https'
+      cert: '/etc/kibana/config/cert.pem' # &lt;-- will download later from Azure enterprise app dashboard
+      entryPoint: 'https://login.microsoftonline.com/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2'
+      kibanaExternalHost: 'localhost:5601'
+      usernameParameter: 'http://schemas.microsoft.com/identity/claims/displayname'
+      groupsParameter: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/groups'
+</code></pre>
+<h3 id="notes-about-readonlyrest-kibana-settings">Notes about ReadonlyREST Kibana settings</h3>
+<p>The <code>issuer</code> parameter is important and should be ideantical to what you wrote in the field <em>(1) Basic SAML Configuration - Identifier (Entity ID)</em> in the Azure AD settings.</p>
+<p>The <code>entryPoint</code> value should be copied from the field <code>(4) Set up ReadonlyREST Enterprise &gt; Login URL</code> in Azure AD settings.</p>
+<p>The <code>kibanaExternalHost</code> only accepts the browser facing hostname (or IP address) and optionally the port of our Kibana server. Do not put any "https://" prefix here.</p>
+<p>The <code>cert</code> is an <strong>absolute</strong> path to the <strong>base64</strong> version of the certificate ReadonlyREST Enterprise will use to verify the signature of the SAML assertion coming from Azure AD. This file can be downloaded from : <code>(3) SAML Signing Certificate &gt; Certificate (Base64)</code></p>
+<p>The <code>groupsParameter</code> and <code>usernameParameter</code> values represent the JSON fields names from the SAML assertion object coming from Azure AD. They represent the field names we take the username and groups information from.</p>
+<p>An example of SAML assertion object coming from Azure AD after successful authentication looks like so:</p>
+<pre><code class="language-javascript">{
+  &quot;http://schemas.microsoft.com/claims/authnmethodsreferences&quot;: &quot;urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport&quot;,
+  &quot;http://schemas.microsoft.com/identity/claims/displayname&quot;: &quot;Simone Scarduzio&quot;,
+  &quot;http://schemas.microsoft.com/identity/claims/identityprovider&quot;: &quot;https://sts.windows.net/88af1572-1347-45b6-8f65-xxxxxxxxx/&quot;,
+  &quot;http://schemas.microsoft.com/identity/claims/objectidentifier&quot;: &quot;486abf50-a61f-40e9-8a37-3ff6a6eeda26&quot;,
+  &quot;http://schemas.microsoft.com/identity/claims/tenantid&quot;: &quot;88af1572-1347-45b6-8f65-xxxxxxxxxxxx&quot;,
+  &quot;http://schemas.microsoft.com/ws/2008/06/identity/claims/groups&quot;: [
+    &quot;00f22de3-0d59-4867-8e1a-xxxxxxxxxxxx&quot;,
+    &quot;dbe4ff5a-deba-419f-a653-xxxxxxxxxxxx&quot;,
+    &quot;3c19b288-263c-4dd1-9947-xxxxxxxxxxxx&quot;
+  ],
+  &quot;http://schemas.microsoft.com/ws/2008/06/identity/claims/wids&quot;: &quot;62e90394-69f5-4237-9190-xxxxxxxxxxxx&quot;,
+  &quot;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname&quot;: &quot;Simone&quot;,
+  &quot;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name&quot;: &quot;Simone@ror-enterprise-test.com&quot;,
+  &quot;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname&quot;: &quot;Scarduzio&quot;,
+  &quot;issuer&quot;: &quot;https://sts.windows.net/88af1572-1347-45b6-8f65-xxxxxxxxxxxx/&quot;,
+  &quot;nameID&quot;: &quot;Simone@ror-enterprise-test.com&quot;,
+  &quot;nameIDFormat&quot;: &quot;urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress&quot;,
+  &quot;sessionIndex&quot;: &quot;_97f290ee-2ff6-445f-a0c6-xxxxxxxxxxxx&quot;,
+  &quot;user&quot;: &quot;Simone Scarduzio&quot;
+}
+</code></pre>
+<h2 id="azure-ad-configuration">Azure AD configuration</h2>
+<ol>
+<li>Login in your Microsoft Azure dashboard, and head to Enterprise Applications.</li>
+</ol>
+<p><img alt="Azure Dashboard" src="../../.gitbook/assets/azure_dashboard (1) (1) (1) (3) (6) (7) (2) (14).png" /></p>
+<ol>
+<li>Click on "Non-gallery application".</li>
+</ol>
+<p><img alt="Azure Enterprise apps" src="../../.gitbook/assets/azure_enterprise_apps (1) (1).png" /></p>
+<ol>
+<li>Create a new app called "Readonlyrest Enterprise".</li>
+</ol>
+<p><img alt="Azure App Name" src="../../.gitbook/assets/azure_app_name (3) (3) (3) (4) (2) (11).png" /></p>
+<ol>
+<li>Click "Single Sign On" to configure the app for SAML.</li>
+</ol>
+<p><img alt="Azure ror app" src="../../.gitbook/assets/azure_ror_app (1) (1).png" /></p>
+<ol>
+<li>Insert URLs and data about our Kibana server as shown in the picture. And press SAVE.</li>
+</ol>
+<p><img alt="Azure ror basic saml settings" src="../../.gitbook/assets/azure_ror_basic_saml (1) (1) (1) (1).png" /></p>
+<ol>
+<li>Download the base64 encoded "pem" file, and place it under the <strong>absolute path</strong> <code>/etc/kibana/config/cert.pem</code>.</li>
+</ol>
+<p><img alt="Azure ror cert" src="../../.gitbook/assets/azure_cert (1) (1).png" /></p>
+<p>7 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.</p>
+<p><img alt="Azure ror app users" src="../../.gitbook/assets/azure_ror_app_users (1) (1).png" /></p>
+<h2 id="testing-if-this-all-works">Testing if this all works.</h2>
+<ol>
+<li>
+<p>Now point your browser to your Kibana installation (in the example <a href="https://localhost:5601">https://localhost:5601</a>).</p>
+<p>You should now see a new blue button that says "Azure AD SAML SSO".</p>
+</li>
+</ol>
+<p><img alt="ROR login" src="../../.gitbook/assets/ror_ent_login (1) (1) (1) (3) (5) (8) (9) (10) (16).png" /></p>
+<ol>
+<li>Press it, and you should see the Azure AD login page. Place your credentials here, or pick an already authenticated identity to enter Kibana.</li>
+</ol>
+<p><img alt="Azure Login" src="../../.gitbook/assets/azure_login (1) (1).png" /></p>
+<ol>
+<li>You will now be redirected to Kibana, logged in as your Azure AD identity.</li>
+</ol>
+<p><img alt="Azure Login" src="../../.gitbook/assets/kibana_welcome (1) (1).png" /></p>
+<ol>
+<li>You can now logout from the "ReadonlyREST SAML SSO" Azure AD Enterprise app by pressing the exit button right beside the username in the bottom right corner.</li>
+</ol>
+<p><img alt="Azure Login" src="../../.gitbook/assets/logout (1) (3) (5) (5) (6) (1) (2).png" /></p>
+<h2 id="authorization-using-azure-ad-groups">Authorization using Azure AD groups</h2>
+<p>Users in Azure AD can belong to groups. The list of group associated to a user is useful information for ReadonlyREST Enterprise for identifying sets of users that we want to authorize to:</p>
+<ul>
+<li>see certain indices</li>
+<li>perform certain actions over certain indices</li>
+<li>belong to a tenancy</li>
+<li>have read or read/write permission to a tenancy</li>
+<li>have administrative rights over ReadonlyREST cluster-wide security settings</li>
+<li>many more things, or even a combination of all these.</li>
+</ul>
+<h3 id="example-readonlyrest-admins-group">Example: ReadonlyREST Admins group</h3>
+<p>Suppose we would like to authorise the group "ReadonlyREST Admins" to access the administrative dashboard that can oversee all the indices, and we want to grant them access to an "admin" tenancy that contains dashboards based on the real time <a href="../../../elasticsearch/#audit-logs">ReadonlyREST audit logs</a> indices.</p>
+<h4 id="creating-and-assigning-the-group-in-azure-ad">Creating and assigning the group in Azure Ad</h4>
+<p>Let's go to Azure and make sure the "ReadonlyREST Admins" group is created, and one or more users - including ours - belongs to it.</p>
+<p><img alt="Azure Create Groups" src="../../.gitbook/assets/azure_create_group (1) (1).png" /></p>
+<h4 id="finding-the-new-groups-azure-object-id">Finding the new group's Azure object ID</h4>
+<p>From ReadonlyREST settings, we will refer to the newly created group using its associated object ID provided by Azure platform. To discover it, navigate the Azure AD dashboard to:</p>
+<p><code>Dashboard &gt; Enterprise applications - All applications &gt; ReadonlyREST Enterprise - Users and groups &gt; [your user] - Groups</code></p>
+<p><img alt="Azure Show Groups" src="../../.gitbook/assets/azure_groups_list (1) (1).png" /></p>
+<p>The object ID of the new group is "3f8ebed8-f742-42a6-94ba-2d57550fc3cf", let's take note of this. We will use it in our ACL.</p>
+<h4 id="using-readonlyrest-acl-to-authorize-the-group">Using ReadonlyREST ACL to authorize the group</h4>
+<p>Let's head back to Elasticsearch, and open <code>readonlyrest.yml</code>. Let's now add the authorization.</p>
+<pre><code>readonlyrest:
+    access_control_rules:
+
+    - name: &quot;::KIBANA-SRV::&quot;
+      auth_key: kibana:kibana
+
+
+    - name: &quot;Azure AD - ReadonlyREST Admins group&quot;
+      kibana_index: &quot;.kibana_admin_tenancy&quot;
+      indices: [&quot;.kibana_admin_tenancy&quot;, &quot;readonlyrest-audit*&quot;]
+      kibana_access: &quot;admin&quot;
+      ror_kbn_auth:
+        roles: [&quot;3f8ebed8-f742-42a6-94ba-2d57550fc3cf&quot;]
+        name: &quot;kbn1&quot;
+
+
+    - name: &quot;Azure AD - Anyone else&quot;
+      indices: [&quot;.kibana_generic_tenancy&quot;, &quot;readonlyrest-audit*&quot;]
+      kibana_index: &quot;.kibana_generic_tenancy&quot;
+      kibana_access: &quot;rw&quot;
+      kibana_hide_apps: [&quot;readonlyrest_kbn&quot;]
+      ror_kbn_auth:
+        name: &quot;kbn1&quot;
+
+    ror_kbn:
+    - name: kbn1
+      signature_key: &quot;my_shared_secret_kibana1_(min 256 chars)&quot; # &lt;- use environmental variables for better security!
+</code></pre>
+<p>Now we have two ACL blocks dedicated to Azure AD: one will match for users that belong to "ReadonlyREST Admins" (a.k.a object ID <code>3f8ebed8-f742-42a6-94ba-2d57550fc3cf</code>), the other will match for Azure AD users that do not belong to the group.</p>
+<p>The key here is the use of the <code>roles</code> option in the <code>ror_kbn_auth</code> rule, as an extra constraint so that the ACL block is only matched when the user has the "3f8ebed8-f742-42a6-94ba-2d57550fc3cf" string in the list of their groups.</p>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../adfs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Microsoft ADFS" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Microsoft ADFS
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../keycloak_saml/" class="md-footer__link md-footer__link--next" aria-label="Next: Keycloak" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Keycloak
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>

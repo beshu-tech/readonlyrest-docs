@@ -1,0 +1,1833 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.1">
+    
+    
+      
+        <title>Templates handling in `indices` rule - ReadonlyREST Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#templates-handling-in-indices-rule" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ReadonlyREST Documentation" class="md-header__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ReadonlyREST Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Templates handling in `indices` rule
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ReadonlyREST Documentation" class="md-nav__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ReadonlyREST Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        README
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SUMMARY/" class="md-nav__link">
+        Table of contents
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commercial/" class="md-nav__link">
+        Commercial Licenses
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        Contribution License Agreement
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../elasticsearch/" class="md-nav__link">
+        For Elasticsearch
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kibana/" class="md-nav__link">
+        For Kibana
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Actionstrings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Actionstrings" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Actionstrings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../actionstrings/" class="md-nav__link">
+        List of Elasticsearch actions available in various Elasticsearch versions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Details
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Details" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Details
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fips/" class="md-nav__link">
+        FIPS mode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fls-engine/" class="md-nav__link">
+        FLS engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../groups-rule-mapping/" class="md-nav__link">
+        External to local groups mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../impersonation/" class="md-nav__link">
+        Impersonation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index-not-found-examples/" class="md-nav__link">
+        "Index not found" scenario
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Templates handling in `indices` rule
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Templates handling in `indices` rule
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#index-templates" class="md-nav__link">
+    Index templates
+  </a>
+  
+    <nav class="md-nav" aria-label="Index templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-an-index-template" class="md-nav__link">
+    Create an index template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modify-an-index-template" class="md-nav__link">
+    Modify an index template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-an-index-template" class="md-nav__link">
+    Delete an index template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-index-templates" class="md-nav__link">
+    Get index templates
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-templates" class="md-nav__link">
+    Component templates
+  </a>
+  
+    <nav class="md-nav" aria-label="Component templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-component-template" class="md-nav__link">
+    Create a component template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modify-a-component-template" class="md-nav__link">
+    Modify a component template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-a-component-template" class="md-nav__link">
+    Delete a component template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-component-templates" class="md-nav__link">
+    Get component templates
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kibana-7.8.x-and-older/" class="md-nav__link">
+        Kibana 7.8.x and older
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multitenancy_guide/" class="md-nav__link">
+        Multi-tenancy Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiuser_guide/" class="md-nav__link">
+        Multi-user Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_4" type="checkbox" id="__nav_10_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_4">
+          Impersonation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Impersonation" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_4">
+          <span class="md-nav__icon md-icon"></span>
+          Impersonation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/impersonation/external-services-mocks-ui/" class="md-nav__link">
+        External services mocks configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/impersonation/impersonate-user-ui/" class="md-nav__link">
+        Impersonate user ui
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/impersonation/test-settings-ui/" class="md-nav__link">
+        Writing Test Settings
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_5" type="checkbox" id="__nav_10_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_5">
+          Oidc sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Oidc sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_5">
+          <span class="md-nav__icon md-icon"></span>
+          Oidc sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/oidc-sso/" class="md-nav__link">
+        OpenID Connect (OIDC) SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/oidc-sso/keycloak_oidc/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_6" type="checkbox" id="__nav_10_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_6">
+          Saml sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Saml sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_6">
+          <span class="md-nav__icon md-icon"></span>
+          Saml sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/" class="md-nav__link">
+        SAML SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/adfs/" class="md-nav__link">
+        Microsoft ADFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/azure_ad/" class="md-nav__link">
+        Microsoft Azure AD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/keycloak_saml/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/multifactor_authentication_with_duo_via_saml/" class="md-nav__link">
+        Duo Security MFA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#index-templates" class="md-nav__link">
+    Index templates
+  </a>
+  
+    <nav class="md-nav" aria-label="Index templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-an-index-template" class="md-nav__link">
+    Create an index template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modify-an-index-template" class="md-nav__link">
+    Modify an index template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-an-index-template" class="md-nav__link">
+    Delete an index template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-index-templates" class="md-nav__link">
+    Get index templates
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-templates" class="md-nav__link">
+    Component templates
+  </a>
+  
+    <nav class="md-nav" aria-label="Component templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-component-template" class="md-nav__link">
+    Create a component template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modify-a-component-template" class="md-nav__link">
+    Modify a component template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-a-component-template" class="md-nav__link">
+    Delete a component template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-component-templates" class="md-nav__link">
+    Get component templates
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="templates-handling-in-indices-rule">Templates handling in <code>indices</code> rule</h1>
+<details>
+  <summary>A ROR configuration for all examples below (click to expand)</summary>
+
+  ```yaml
+    readonlyrest:
+      prompt_for_basic_auth: false
+
+      access_control_rules:
+        - name: "admin block"
+          verbosity: error
+          type: allow
+          auth_key: admin:admin
+
+        - name: "dev1 block"
+          indices: ["idev1", "idev1_*"]
+          auth_key: dev1:test
+
+        - name: "dev2 block"
+          indices: ["idev2", "idev2_*"]
+          auth_key: dev2:test
+
+  ```
+</details>
+<p><br></p>
+<hr />
+<h2 id="index-templates">Index templates</h2>
+<p>An <code>indices</code> rule takes into consideration index patterns and aliases which are a part of a template definition. We should consider four types of template related requests:</p>
+<h3 id="create-an-index-template">Create an index template</h3>
+<p>The request will be allowed when all of following conditions are met:
+* a template with requested name does not exist (if it does, it's rather a template modification, than a creation),
+* all index patterns of the new, requested template are allowed,
+* all aliases of the new, requested template are allowed.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+Let's try to add an index template. We can see, using `admin` account, that
+there are no templates defined yet.
+
+
+<pre><code class="language-text">$ curl -vk -u admin:admin &quot;http://localhost:9200/_index_template?pretty&quot;
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;index_templates&quot; : [ ]
+  }
+</code></pre>
+
+
+Now, let's use `dev1` user account to create an index template `temp1`:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test -XPUT &quot;http://127.0.0.1:9200/_index_template/test?pretty&quot; -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;index_patterns&quot;:[&quot;index*&quot;],
+     &quot;template&quot;: {
+       &quot;aliases&quot;: { 
+         &quot;dev1_index&quot;: {},
+         &quot;dev2_index&quot;: {}
+       }
+     }
+  }'
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+Oh, something went wrong. It seems that, a user `dev1` is not allowed to add this template. Let's check ROR logs to figure out why:
+
+> FORBIDDEN by default req={ ID:193441275-173645661#8, TYP:PutComposableIndexTemplateAction$Request, CGR:N/A, USR:dev1 (attempted), BRS:true, KDX:null, ACT:indices:admin/index_template/put, OA:127.0.0.1/32, XFF:null, DA:127.0.0.1/32, `IDX:index*,dev2_index,dev1_index`, MET:PUT,  `PTH:/_index_template/test`, CNT:<OMITTED, LENGTH=157.0 B> , HDR:Accept=*/*, Authorization=<OMITTED>, Content-Length=157, Content-Type=application/json, Host=127.0.0.1:9200, User-Agent=curl/7.64.1, HIS:[CONTAINER ADMIN-> RULES:[auth_key->false] RESOLVED:[indices=index*,dev2_index,dev1_index;template=ADD(test:index*:dev2_index,dev1_index)]], `[dev1 block-> RULES:[auth_key->true, indices->false]` RESOLVED:[user=dev1;indices=index*,dev2_index,dev1_index;template=ADD(test:index*:dev2_index,dev1_index)]], [dev2 block-> RULES:[auth_key->false] RESOLVED:[indices=index*,dev2_index,dev1_index;template=ADD(test:index*:dev2_index,dev1_index)]], }
+
+We can see that our request was forbidden - credentials were OK, but `indices` rule was not matched in `dev1 block`. We can see also that ROR found 3 indices which are related to the request: 
+* `index*` - an index pattern from our request
+* `dev1_index` - a first alias from out request
+* `dev2_index` - a second alias from out request
+
+When we take a look at indices configured in `indices` rule for our user, we 
+can see that, he has an access only to `idev1` and `idev1_*` indices. Now, 
+it's pretty much obvious why the request was blocked - the user has no access to index pattern and aliases used in the request. Let's try to fix that:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test -XPUT &quot;http://127.0.0.1:9200/_index_template/test?pretty&quot; -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;index_patterns&quot;:[&quot;idev1_test*&quot;],
+     &quot;template&quot;: {
+       &quot;aliases&quot;: { 
+         &quot;idev1&quot;: {},
+         &quot;idev1_test&quot;: {}
+       }
+     }
+  }'
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;acknowledged&quot; : true
+  }
+</code></pre>
+
+
+Hooray! The index template was added. This time ROR allowed us to do so. It's because `dev1` user has an access to index pattern `idev1_test*`, because it is contained in `idev1_*`. Used aliases are also allowed. 
+
+</details>
+
+<hr />
+<h3 id="modify-an-index-template">Modify an index template</h3>
+<p>The request will be allowed when all of following conditions are met:
+* a template with requested name does exist,
+* all index patterns of the existing template are allowed,
+* all aliases of the existing template are allowed,
+* all index patterns of the requested template are allowed,
+* all aliases of the requested template are allowed.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+Let's assume the user `dev1` would like to modify the previously created template, because the index pattern is too detailed:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test -XPUT &quot;http://127.0.0.1:9200/_index_template/test?pretty&quot; -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;index_patterns&quot;:[&quot;idev*&quot;],
+     &quot;template&quot;: {
+       &quot;aliases&quot;: {
+         &quot;idev1&quot;: {},
+         &quot;idev1_test&quot;: {}
+       }
+     }
+   }'
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+Ups! Something is wrong. Let's check the ROR forbidden log:
+
+> FORBIDDEN by default req={ ID:918326057-1726421783#75, TYP:PutComposableIndexTemplateAction$Request, CGR:N/A, USR:dev1 (attempted), BRS:true, KDX:null, ACT:indices:admin/index_template/put, OA:127.0.0.1/32, XFF:null, DA:127.0.0.1/32, `IDX:idev*,idev1,idev1_test`, MET:PUT, PTH:/_index_template/test, CNT:<OMITTED, LENGTH=151.0 B> , HDR:Accept=*/*, Authorization=<OMITTED>, Content-Length=151, Content-Type=application/json, Host=127.0.0.1:9200, User-Agent=curl/7.64.1, HIS:[CONTAINER ADMIN-> RULES:[auth_key->false] RESOLVED:[indices=idev*,idev1,idev1_test;template=ADD(test:idev*:idev1,idev1_test)]], `[dev1 block-> RULES:[auth_key->true, indices->false]` RESOLVED:[user=dev1;indices=idev*,idev1,idev1_test;template=ADD(test:idev*:idev1,idev1_test)]], [dev2 block-> RULES:[auth_key->false] RESOLVED:[indices=idev*,idev1,idev1_test;template=ADD(test:idev*:idev1,idev1_test)]], }
+
+We can see that `indices` rule hasn't not been matched. Looking at the IDX section, we can figure out that the index pattern we requested `idev*`, cannot be allowed. `idev*` is too generic, because in the `indices` list we have `["idev1", "idev1_*"]`. Let's try to fix that:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test -XPUT &quot;http://127.0.0.1:9200/_index_template/test?pretty&quot; -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;index_patterns&quot;:[&quot;idev1_*&quot;],
+     &quot;template&quot;: {
+       &quot;aliases&quot;: {
+         &quot;idev1&quot;: {},
+         &quot;idev1_test&quot;: {}
+       }
+     }
+   }'
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;acknowledged&quot; : true
+  }
+</code></pre>
+
+
+Yeah, now it works. Let's check if the template is modified (we will use `admin` user to do so):
+
+
+<pre><code class="language-text">$ curl -vk -u admin:admin &quot;http://127.0.0.1:9200/_index_template?pretty&quot;
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+All is good. We have only one template and the modifications was applied.
+
+So far, so good. But we can wonder what happens if `dev2` will try to modify (or override) template `temp`? Let's check:
+
+
+<pre><code class="language-text">$ curl -vk -u dev2:test -XPUT &quot;http://127.0.0.1:9200/_index_template/test?pretty&quot; -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;index_patterns&quot;:[&quot;idev2_*&quot;],
+     &quot;template&quot;: {
+       &quot;aliases&quot;: {
+         &quot;idev2&quot;: {},
+         &quot;idev2_test&quot;: {}
+       }
+     }
+   }'
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+Yes! This is something what we wanted like to see. Even if the request was correct and the user `dev2` has an access to the requested index pattern and aliases, the request was forbidden. Obviously, there is already existed template `temp` which has the index pattern and aliases, which are not allowed for `dev2`. ROR deduces that `dev2` cannot be considered as someone how can modify/overwrite it. 
+
+Pretty awesome. Won't `dev2` also be able to remove it? We'll see in next section ...
+
+</details>
+
+<hr />
+<h3 id="delete-an-index-template">Delete an index template</h3>
+<p>The request will be allowed when template does not exist OR all of the following conditions are met:
+* a template with requested name does exist,
+* all index patterns of the existing template are allowed,
+* all aliases of the existing template are allowed.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+In the last section we wondered, if ROR will be able to block removing the template `temp` by the user `dev2`. Let's recall, that we proved that the user is not able to modify this template, because ROR considers that he doesn't have permissions to change/remove it. 
+
+
+<pre><code class="language-text">$ curl -vk -u dev2:test -XDELETE &quot;http://127.0.0.1:9200/_index_template/test?pretty&quot;
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+Perfect! OK, but we also would like to know if `user1` will be able to remove his template. Let's check it:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test -XDELETE &quot;http://127.0.0.1:9200/_index_template/test?pretty&quot;
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;acknowledged&quot; : true
+  }
+</code></pre>
+
+
+Great! Everything works.
+
+</details>
+
+<hr />
+<h3 id="get-index-templates">Get index templates</h3>
+<p>At the moment ROR doesn't have <code>templates</code> rule (similar to
+<code>snapshots</code> or <code>repositories</code>), which allows to restrict which
+templates can be visible to the user (it is going to change in the
+future). But the <code>indices</code> rule is enough to filter templates based
+on index patterns in their definitions. An index template is
+considered to be visible for a user, when the user has access to 
+AT LEAST ONE index pattern of the template's index pattern list. 
+ROR is going to show the template but to hide the information about not allowed index patterns and not allowed aliases.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+In previous sections we proved that ROR gets along with index templates adding, modifying and removing pretty well. Now, we'd like check what index templates are supposed to be visible for users. Let's assume we have 4 index templates:
+
+
+<pre><code class="language-text">$ curl -vk -u admin:admin &quot;http://127.0.0.1:9200/_index_template?pretty&quot;
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;index_templates&quot; : [
+      {
+        &quot;name&quot; : &quot;t1&quot;,
+        &quot;index_template&quot; : {
+          &quot;index_patterns&quot; : [&quot;i*&quot;],
+          &quot;template&quot; : {
+            &quot;aliases&quot; : {
+              &quot;idev2&quot; : { },
+              &quot;idev3&quot; : { },
+              &quot;idev1&quot; : { }
+            }
+          },
+          &quot;composed_of&quot; : [ ]
+        }
+      },
+      {
+        &quot;name&quot; : &quot;t2&quot;,
+        &quot;index_template&quot; : {
+          &quot;index_patterns&quot; : [&quot;idev1_*&quot;],
+          &quot;template&quot; : {
+            &quot;aliases&quot; : {
+              &quot;admin_idev&quot; : { },
+              &quot;idev1&quot; : { }
+            }
+          },
+          &quot;composed_of&quot; : [ ],
+          &quot;priority&quot; : 1
+        }
+      },
+      {
+        &quot;name&quot; : &quot;t3&quot;,
+        &quot;index_template&quot; : {
+          &quot;index_patterns&quot; : [&quot;idev2_*&quot;],
+          &quot;template&quot; : {
+            &quot;aliases&quot; : {
+              &quot;idev2&quot; : { },
+              &quot;admin_idev&quot; : { }
+            }
+          },
+          &quot;composed_of&quot; : [ ],
+          &quot;priority&quot; : 1
+        }
+      },
+      {
+        &quot;name&quot; : &quot;t4&quot;,
+        &quot;index_template&quot; : {
+          &quot;index_patterns&quot; : [&quot;idev1_*&quot;, &quot;idev2_*&quot;],
+          &quot;template&quot; : {
+            &quot;aliases&quot; : {
+              &quot;idev2&quot; : { },
+              &quot;admin_idev&quot; : { },
+              &quot;idev1&quot; : { }
+            }
+          },
+          &quot;composed_of&quot; : [ ],
+          &quot;priority&quot; : 2
+        }
+      }
+    ]
+  }
+</code></pre>
+
+
+`admin` has unrestricted access to all templates. Now, let's check which templates `dev` are supposed to see:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test &quot;http://127.0.0.1:9200/_index_template?pretty&quot;
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;index_templates&quot; : [
+      {
+        &quot;name&quot; : &quot;t1&quot;,
+        &quot;index_template&quot; : {
+          &quot;index_patterns&quot; : [&quot;i*&quot;],
+          &quot;template&quot; : {
+            &quot;aliases&quot; : {
+              &quot;idev1&quot; : { }
+            }
+          },
+          &quot;composed_of&quot; : [ ]
+        }
+      },
+      {
+        &quot;name&quot; : &quot;t2&quot;,
+        &quot;index_template&quot; : {
+          &quot;index_patterns&quot; : [&quot;idev1_*&quot;],
+          &quot;template&quot; : {
+            &quot;aliases&quot; : {
+              &quot;idev1&quot; : { }
+            }
+          },
+          &quot;composed_of&quot; : [ ],
+          &quot;priority&quot; : 1
+        }
+      },
+      {
+        &quot;name&quot; : &quot;t4&quot;,
+        &quot;index_template&quot; : {
+          &quot;index_patterns&quot; : [&quot;idev1_*&quot;],
+          &quot;template&quot; : {
+            &quot;aliases&quot; : {
+              &quot;idev1&quot; : { }
+            }
+          },
+          &quot;composed_of&quot; : [ ],
+          &quot;priority&quot; : 2
+        }
+      }
+    ]
+  }
+</code></pre>
+
+
+Hmm, we can see many weird things here. Let's start with the simplest case: index template `t2` is allowed for the user, because the used index pattern is allowed by `indices` rule. But we can also see that user `dev1` is not aware of existence the `admin_idev` alias - it was filter out from the aliases list. The user has no access to the alias, so he should not be able to see it. 
+
+What about the index template `t3`? `dev1` is not allowed to see it because the index pattern `idev2_*` is not allowed for him. It was also pretty much obvious!
+
+The next is `t4`. When `admin` had listed index templates, we saw that template `t4` has 2 index patterns. But `dev1` can see only one. This is great, because he has an access to a part of that template, so he definitely should be able to see it. ROR behaviour here is pretty neat - it allows the user to see a template with filtered, not allowed parts of it, but at the same time, the user doesn't have permissions to modify/remove the template (Don't believe me? Go ahead and check!)   
+
+And the last one to explain - `t1`. The index pattern of the template is `i*`. Obviously user `dev1` has no access to it, because his allowed indices are `idev1, idev1_*`. But if we imagine all possible values generated from pattern `i*` and all possible values generated from `idev1, idev1_*`, we can notice that the latter will be a subset of the first. It means that this template can be interesting for the user `dev1`, because it will ba applied to indices created by him. That's why ROR decides to show it. 
+
+</details>
+
+<hr />
+<h2 id="component-templates">Component templates</h2>
+<p>Component templates doesn't have index patterns but could have aliases. So, in this case, we should also consider four  types of template related requests:</p>
+<hr />
+<h3 id="create-a-component-template">Create a component template</h3>
+<p>The request will be allowed when all of following conditions are met:
+* a template with requested name does not exist (if it does, it's rather a template modification, than a creation),
+* all aliases of the new, requested template are allowed.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+Unlike index templates, component templates don't have index patterns. But they still have aliases. So, their behaviour according to an aliases usage is quite similar, but there are several differences which are worth mentioning. 
+
+Let's check if `dev1` user can create a component template:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test &quot;http://localhost:9200/_component_template/ctemp1?pretty&quot; -XPUT -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;template&quot;: {
+       &quot;settings&quot;: {
+         &quot;index.number_of_replicas&quot;: 0
+       },
+       &quot;aliases&quot;: { 
+         &quot;idev1&quot;: {},
+         &quot;idev2&quot;: {}
+       }
+     }
+  }'
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+Oh, user `dev1` is not allowed to create this template. But wait! It looks like we have the same problem as had while creating index template. Alias `idev2` is not allowed. Let's try to do the same without this alias:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test &quot;http://localhost:9200/_component_template/ctemp1?pretty&quot; -XPUT -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;template&quot;: {
+       &quot;settings&quot;: {
+         &quot;index.number_of_replicas&quot;: 0
+       },
+       &quot;aliases&quot;: { 
+         &quot;idev1&quot;: {}
+       }
+     }
+  }'
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;acknowledged&quot; : true
+  }
+</code></pre>
+
+
+Ha! As expected. A user has to have access to all aliases during adding a component template which has aliases defined.
+
+*Note*
+If a component template doesn't involve aliases, there is no restriction from ROR side to add one. It can be changed in future, when we add sth like `templates` rule.
+
+</details>
+
+<hr />
+<h3 id="modify-a-component-template">Modify a component template</h3>
+<p>The request will be allowed when all of following conditions are met:
+* a template with requested name does exist,
+* all aliases of the existing template are allowed,
+* all aliases of the requested template are allowed.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+In the previous example, user `dev1` created the component template `ctemp1` with one alias `idev1`. Let's check if user `dev2` will be able to modify it:
+
+
+<pre><code class="language-text">$ curl -vk -u dev2:test &quot;http://localhost:9200/_component_template/ctemp1?pretty&quot; -XPUT -H &quot;Content-Type: application/json&quot; -d \
+  '{
+     &quot;template&quot;: {
+       &quot;settings&quot;: {
+         &quot;index.number_of_replicas&quot;: 0
+       },
+       &quot;aliases&quot;: { 
+         &quot;idev2&quot;: {}
+       }
+     }
+  }'
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+No. And this is a good behaviour, because `dev2` doesn't have an access to the alias `idev1` which the `ctemp1` has. ROR assumes, that he cannot modify the component template (please notice, that the same request will be allowed when a different, nonexistent component template name is used). I can assure you that `dev1` is able to modify the template (you can check if you want).
+
+</details>
+
+<hr />
+<h3 id="delete-a-component-template">Delete a component template</h3>
+<p>The request will be allowed when template does not exist OR all of the following conditions are met:
+* a template with requested name does exist,
+* all aliases of the existing template are allowed.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+If you read the previous example, you won't find anything interesting here. A component template can be removed only by someone whom ROR considers to have modification rights of the template. See that `dev2` is not able to remove `ctemp1`:
+
+
+<pre><code class="language-text">$ curl -vk -u dev2:test -XDELETE &quot;http://localhost:9200/_component_template/ctemp1?pretty&quot;
+
+  HTTP/1.1 403 Forbidden
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;error&quot; : {
+      &quot;root_cause&quot; : [
+        {
+          &quot;reason&quot; : &quot;forbidden&quot;,
+          &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;]
+        }
+      ],
+      &quot;reason&quot; : &quot;forbidden&quot;,
+      &quot;due_to&quot; : [&quot;OPERATION_NOT_ALLOWED&quot;],
+      &quot;status&quot; : 403
+    }
+  }
+</code></pre>
+
+
+I told you. But please remember that only aliases are checked by ROR when it's trying to figure out modification rights of a component template. If a component template doesn't have any aliases, it can be modified or deleted by any user.
+
+</details>
+
+<hr />
+<h3 id="get-component-templates">Get component templates</h3>
+<p>At the moment there is no way to restrict which component templates can be visible to the user (it is going to change in the
+future - see a corresponding index template section). But ROR is 
+going to hide the information about not allowed aliases of returned
+component templates.</p>
+<details>
+  <summary>Example (click to expand)</summary>
+
+A careful reader can guess that ROR won't forbid showing component templates. But similar to indices templates, ROR will filter out aliases list depending on an aliases accessability of current user. Let's see an example:
+
+
+<pre><code class="language-text">$ curl -vk -u admin:admin &quot;http://localhost:9200/_component_template?pretty&quot;
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;component_templates&quot; : [
+      {
+        &quot;name&quot; : &quot;ctemp2&quot;,
+        &quot;component_template&quot; : {
+          &quot;template&quot; : {
+            &quot;settings&quot; : {
+              &quot;index&quot; : {
+                &quot;number_of_replicas&quot; : &quot;0&quot;
+              }
+            },
+            &quot;aliases&quot; : {
+              &quot;idev2&quot; : { }
+            }
+          }
+        }
+      },
+      {
+        &quot;name&quot; : &quot;ctemp1&quot;,
+        &quot;component_template&quot; : {
+          &quot;template&quot; : {
+            &quot;settings&quot; : {
+              &quot;index&quot; : {
+                &quot;number_of_replicas&quot; : &quot;0&quot;
+              }
+            },
+            &quot;aliases&quot; : {
+              &quot;idev1&quot; : { }
+            }
+          }
+        }
+      }
+    ]
+  }
+</code></pre>
+
+
+We can see that we have two component templates. `ctemp1` has alias `idev1` and `ctemp2` alias `idev2`. Let check what templates `dev1` user will be able to see:
+
+
+<pre><code class="language-text">$ curl -vk -u dev1:test &quot;http://localhost:9200/_component_template?pretty&quot;
+
+  HTTP/1.1 200 OK
+  content-type: application/json; charset=UTF-8
+
+  {
+    &quot;component_templates&quot; : [
+      {
+        &quot;name&quot; : &quot;ctemp2&quot;,
+        &quot;component_template&quot; : {
+          &quot;template&quot; : {
+            &quot;settings&quot; : {
+              &quot;index&quot; : {
+                &quot;number_of_replicas&quot; : &quot;0&quot;
+              }
+            },
+            &quot;aliases&quot; : { }
+          }
+        }
+      },
+      {
+        &quot;name&quot; : &quot;ctemp1&quot;,
+        &quot;component_template&quot; : {
+          &quot;template&quot; : {
+            &quot;settings&quot; : {
+              &quot;index&quot; : {
+                &quot;number_of_replicas&quot; : &quot;0&quot;
+              }
+            },
+            &quot;aliases&quot; : {
+              &quot;idev1&quot; : { }
+            }
+          }
+        }
+      }
+    ]
+  }
+</code></pre>
+
+
+We can see that he is able to see all component templates, but `ctemp2` doesn't have `idev2` alias. User `dev1` has no access to the alias, so response returned by ROR doesn't contain the alias. Similar behaviour we will observe when `dev2` user will try to get all templates.
+
+</details>
+
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>To figure out why the template is not returned or/and cannot be altered, you should <a href="../../elasticsearch/#Troubleshooting">enable a DEBUG log level</a> and check your logs. ROR logs each step of template request handling in the <code>indices</code> rule, so detailed description should explain the given template is not allowed.</p>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../index-not-found-examples/" class="md-footer__link md-footer__link--prev" aria-label="Previous: &#34;Index not found&#34; scenario" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              "Index not found" scenario
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../kibana-7.8.x-and-older/" class="md-footer__link md-footer__link--next" aria-label="Next: Kibana 7.8.x and older" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Kibana 7.8.x and older
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>

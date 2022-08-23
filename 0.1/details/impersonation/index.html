@@ -1,0 +1,1210 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.1">
+    
+    
+      
+        <title>Impersonation - ReadonlyREST Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#impersonation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ReadonlyREST Documentation" class="md-header__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ReadonlyREST Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Impersonation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ReadonlyREST Documentation" class="md-nav__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ReadonlyREST Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        README
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SUMMARY/" class="md-nav__link">
+        Table of contents
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commercial/" class="md-nav__link">
+        Commercial Licenses
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        Contribution License Agreement
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../elasticsearch/" class="md-nav__link">
+        For Elasticsearch
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kibana/" class="md-nav__link">
+        For Kibana
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Actionstrings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Actionstrings" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Actionstrings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../actionstrings/" class="md-nav__link">
+        List of Elasticsearch actions available in various Elasticsearch versions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Details
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Details" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Details
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fips/" class="md-nav__link">
+        FIPS mode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fls-engine/" class="md-nav__link">
+        FLS engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../groups-rule-mapping/" class="md-nav__link">
+        External to local groups mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Impersonation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Impersonation
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    Use cases
+  </a>
+  
+    <nav class="md-nav" aria-label="Use cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debugging-users-problems" class="md-nav__link">
+    Debugging users' problems:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-a-new-user" class="md-nav__link">
+    Configuring a new user:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impersonation-configuration" class="md-nav__link">
+    Impersonation configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Impersonation configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-rors-test-settings" class="md-nav__link">
+    Creating ROR's Test Settings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-mocks-of-the-external-services-optional" class="md-nav__link">
+    Defining mocks of the external services (optional)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impersonating-a-chosen-user" class="md-nav__link">
+    Impersonating a chosen user
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logs-audit" class="md-nav__link">
+    Logs &amp; audit
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impersonation-limitations" class="md-nav__link">
+    Impersonation limitations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    Glossary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index-not-found-examples/" class="md-nav__link">
+        "Index not found" scenario
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../indices-rule-templates/" class="md-nav__link">
+        Templates handling in `indices` rule
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kibana-7.8.x-and-older/" class="md-nav__link">
+        Kibana 7.8.x and older
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multitenancy_guide/" class="md-nav__link">
+        Multi-tenancy Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/multiuser_guide/" class="md-nav__link">
+        Multi-user Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_4" type="checkbox" id="__nav_10_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_4">
+          Impersonation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Impersonation" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_4">
+          <span class="md-nav__icon md-icon"></span>
+          Impersonation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/impersonation/external-services-mocks-ui/" class="md-nav__link">
+        External services mocks configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/impersonation/impersonate-user-ui/" class="md-nav__link">
+        Impersonate user ui
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/impersonation/test-settings-ui/" class="md-nav__link">
+        Writing Test Settings
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_5" type="checkbox" id="__nav_10_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_5">
+          Oidc sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Oidc sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_5">
+          <span class="md-nav__icon md-icon"></span>
+          Oidc sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/oidc-sso/" class="md-nav__link">
+        OpenID Connect (OIDC) SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/oidc-sso/keycloak_oidc/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_6" type="checkbox" id="__nav_10_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_6">
+          Saml sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Saml sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_6">
+          <span class="md-nav__icon md-icon"></span>
+          Saml sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/" class="md-nav__link">
+        SAML SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/adfs/" class="md-nav__link">
+        Microsoft ADFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/azure_ad/" class="md-nav__link">
+        Microsoft Azure AD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/keycloak_saml/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/saml-sso/multifactor_authentication_with_duo_via_saml/" class="md-nav__link">
+        Duo Security MFA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    Use cases
+  </a>
+  
+    <nav class="md-nav" aria-label="Use cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debugging-users-problems" class="md-nav__link">
+    Debugging users' problems:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-a-new-user" class="md-nav__link">
+    Configuring a new user:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impersonation-configuration" class="md-nav__link">
+    Impersonation configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Impersonation configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-rors-test-settings" class="md-nav__link">
+    Creating ROR's Test Settings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-mocks-of-the-external-services-optional" class="md-nav__link">
+    Defining mocks of the external services (optional)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impersonating-a-chosen-user" class="md-nav__link">
+    Impersonating a chosen user
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logs-audit" class="md-nav__link">
+    Logs &amp; audit
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impersonation-limitations" class="md-nav__link">
+    Impersonation limitations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    Glossary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="impersonation">Impersonation</h1>
+<p>After describing what <a href="../../kibana/#impersonate">the impersonation is</a>, it's high time to see how ROR supports it and who and when could be interested in using this feature. Let's start with the latter.</p>
+<h2 id="use-cases">Use cases</h2>
+<p>The impersonation feature is intended for ROR administrators, rather than users. We can point out the two most obvious use cases when the admin could take advantage of the feature:</p>
+<h4 id="debugging-users-problems">Debugging users' problems:</h4>
+<p>Let's imagine that some user has a problem with their ROR configuration (eg. the user doesn't have access to some feature that was blocked at ROR's level by you, the admin). And they are not able to clearly describe what the issue is (sounds familiar?). As an administrator, it would be extremely beneficial if you could see what the user sees. Thanks to the impersonation feature, an admin is allowed to impersonate the user and experience exactly what the user experiences. </p>
+<h4 id="configuring-a-new-user">Configuring a new user:</h4>
+<p>When an admin configures a new user in ROR settings, they face two problems:</p>
+<ol>
+<li><code>Will the updated configuration break the production cluster?</code></li>
+<li><code>How do I know that the new user is correctly configured? Did I configure all their permissions correctly??</code></li>
+</ol>
+<p>Both of the problems can be solved using the ROR's impersonation. Thanks to the fact that the impersonation feature always uses its own Test Settings, that is completely independent from the main production settings, the admin can alter it without worries that their actions will break something and users won't be able to do their job. </p>
+<p>Admin can add the new user configuration without worrying and then test it by impersonating the user. They can check if the user can log in without problems and if the user has access only to the Kibana features the admin wanted to grant. When the admin is sure that everything is configured correctly, they can promote the settings (test) to production. </p>
+<h2 id="impersonation-configuration">Impersonation configuration</h2>
+<p>Before an admin will be able to impersonate a user, they have to configure ROR properly. The configuration consists of several parts:</p>
+<ol>
+<li>creating ROR's Test Settings,</li>
+<li>defining mocks of the external services (like <a href="../../elasticsearch/#ldap-connector">LDAP</a>, <a href="../../elasticsearch/#external-basic-auth">External Basic Auth</a> or <a href="../../elasticsearch/#custom-groups-providers">Custom groups provider</a>),</li>
+<li>impersonating a chosen user.</li>
+</ol>
+<h4 id="creating-rors-test-settings">Creating ROR's Test Settings</h4>
+<p>When you call Elasticsearch directly or through ROR Kibana, ROR ACL is defined by Settings (we can assume they are Main Settings). The Test Settings define another ACL, that is taken into consideration by ROR ES only when a proper impersonation header is passed. The header is managed by ROR internally. The Test Settings are active only for a strictly defined amount of time (by default it's <em>30 minutes</em>, but the admin can change it before applying Test Settings). After the time has expired, they are automatically invalidated (for security reasons). Obviously, the admin is allowed to invalidate the configured Test Settings in any time. There is no way to have more than one Test Settings configured at time.</p>
+<p>ROR Kibana plugin provides a dedicated Test Settings UI. See our <a href="../../examples/impersonation/test-settings-ui/">Test Settings management guide</a> for more information.</p>
+<hr />
+<p>But copying Main Settings as Test Settings is not enough. We also have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate other users). The list of allowed impersonators and users they can impersonate are defined in the <code>impersonation</code> section in ROR Settings:</p>
+<pre><code class="language-yaml">readonlyrest:
+
+  access_control_rules:
+
+    [...]
+
+  impersonation:
+
+    - impersonator: admin1      // Who can impersonate? (user name or pattern)
+      users: [&quot;*&quot;]              // Who can be impersonated? (user names or patterns)
+      auth_key: admin1:pass     // Authentication rule required to impersonate (any authentication rule can be used here)
+
+    - impersonator: admin2
+      users: [&quot;dev2&quot;]
+      ldap_authentication: &quot;ldap1&quot;
+</code></pre>
+<p>In the example above, we see that we have two impersonators: <code>admin1</code> and <code>admin2</code>. The first one can impersonate any user (<code>*</code>) and they are able to authenticate using basic auth (<code>admin1:pass</code>). The second impersonator can impersonate only <code>dev2</code> user. They will be authenticated using <code>ldap1</code> connector.</p>
+<p>When an impersonator passes wrong credentials ROR will tell Kibana that impersonation is not allowed.</p>
+<h4 id="defining-mocks-of-the-external-services-optional">Defining mocks of the external services (optional)</h4>
+<p>ROR has many sophisticated authentication &amp; authorization methods. Some of them are based on external systems like LDAP. The problem with such systems, in regard to to the impersonation feature, is that those systems either don't support it by default or don't support it at all and even if they do - the configuration is complex.</p>
+<p>That's why we decided to solve it totally differently - using mocks. <a href="https://en.wiktionary.org/wiki/mock">Wikipedia</a> defines <code>mock</code> as <code>an imitation, usually of lesser quality.</code> And in the case of external authentication systems we are going provide an imitation of it that will tell ACL which users should be successfully authenticated by it. When we consider an authorization service, a mock of it will return the ACL users with their roles in the service. And this is enough for ROR to support impersonation. </p>
+<p>How does ROR use the mocks? Let's suppose we have an <code>ldap_auth</code> rule. When ROR processes the rule, it:
+* asks the given LDAP service if the username can be authenticated with a given password, and if they can ...
+* asks LDAP to list what groups the user belongs to</p>
+<p>In the impersonation case, it looks pretty much the same. The difference being that ROR won't call any LDAP server - the mock will provide the required information instead (no password required). During impersonating, when ROR processes an LDAP rule, it:
+* asks the mock if the username exists, and if it does ...
+* asks the mock to tell what groups the user belongs to</p>
+<p><strong>⚠️ IMPORTANT:</strong> If one or more of the external services are not mocked, ROR might inform Kibana that the impersonation is not supported. It's better to always define all mocks, to avoid the "Impersonation not supported" Elasticsearch response.</p>
+<p>ROR Kibana plugin helps administrators to visually create and edit service mocks with a dedicated graphical UI. Follow our <a href="../../examples/impersonation/external-services-mocks-ui/">service mock configuration guide</a> for more. </p>
+<h4 id="impersonating-a-chosen-user">Impersonating a chosen user</h4>
+<p>Now that we have configured Test Settings and External Services Mocks, we can try to impersonate a user. In Elasticsearch ROR Settings, user can be:
+* provided statically (defined in the settings),
+* provided dynamically:
+   * from external, dependant systems (like LDAP) - we mock them
+   * from upstream systems (eg. through headers) - they are not known upfront</p>
+<p>It means that we pick the users defined in Settings or Mocks, but also we can enter the username and try to impersonate such user.</p>
+<p>Follow the instructions on how to <a href="../../examples/impersonation/impersonate-user-ui/">impersonate a user using the ROR Kibana plugin UI</a>.</p>
+<h2 id="logs-audit">Logs &amp; audit</h2>
+<p>In Elasticsearch logs, in <code>USR</code> field, if an admin user finds something like this: <code>admin1 as (user1)</code> - it means that <code>admin1</code> was authenticated and they are the impersonator who is impersonating <code>user1</code>. </p>
+<p>All logs of impersonated user in Kibana will have this format <code>[&lt;log level&gt;][plugins][ReadonlyREST][&lt;filename&gt;][impersonating &lt;impersonated user username&gt;]</code></p>
+<p>When auditing is enabled, the audit document is going to contain an <code>impersonated_by</code> field.</p>
+<h2 id="impersonation-limitations">Impersonation limitations</h2>
+<p>Impersonation mode has some limitations. Please check if they have an impact on your use cases:</p>
+<ul>
+<li>
+<p>Not all features available in the ROR configuration are testable with impersonation mode.
+Some rules used in ROR ACL do not support impersonation. For example, auth rule with hashed credentials (e.g. <code>auth_key_sha512</code>) can be used in impersonation mode only when credentials follow the format <code>USER_NAME: HASH(PASSWORD)</code>; A fully hashed username and password don't allow fetching a username. The auth rule in such a format won't match during impersonation. In the <a href="../../elasticsearch/#rules">rules description</a> section you can find information about each rules impersonation support.</p>
+</li>
+<li>
+<p>Test Settings are stored in the memory of the node that handled the saving request sent by ROR Kibana plugin.
+Impersonation support will be limited to this node. We are going to improve it in the future, but for now your Kibana should only communicate with one Elasticsearch node.</p>
+</li>
+<li>
+<p>Sometimes it is impossible to fetch usernames defined in the Test Settings.
+If a <code>users</code> rule contains a username pattern with a wildcard, to impersonate a user matching the pattern, you need to enter the username manually.</p>
+</li>
+</ul>
+<p>```yaml
+  readonlyrest:</p>
+<pre><code>access_control_rules:
+  - name: "LDAP group g1"
+    type: allow
+    groups: ["g1"]
+
+users:
+  - username: "admin*"  // To impersonate a user with a username matching 'admin*' you need to enter the username manually, like 'admin123'
+    groups:
+      - g1: group1
+    ldap_auth:
+      name: "ldap1"
+      groups: ["group1"]
+
+ldaps:
+  - name: ldap1
+    [..]
+
+impersonation:
+  [...]
+</code></pre>
+<p>```</p>
+<h2 id="glossary">Glossary</h2>
+<ul>
+<li><strong>Impersonator</strong> - someone who imitates or copies the behavior or actions of another,</li>
+<li><strong>Impersonation</strong> - imitating behaviors or actions of a given user,</li>
+<li><strong>Main Settings</strong> - the ROR's settings that apply to ACL that handles requests during regular sessions (not the impersonation ones),</li>
+<li><strong>Test Settings</strong> - the ROR's settings that apply to ACL that handles impersonating requests (the ones during impersonation session),</li>
+<li><strong>External Service Mock</strong> - an imitation of an external service (the supported ones: LDAP, an external authentication service, an external authorization service).</li>
+</ul>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../groups-rule-mapping/" class="md-footer__link md-footer__link--prev" aria-label="Previous: External to local groups mapping" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              External to local groups mapping
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../index-not-found-examples/" class="md-footer__link md-footer__link--next" aria-label="Next: &#34;Index not found&#34; scenario" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              "Index not found" scenario
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>

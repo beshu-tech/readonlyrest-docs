@@ -1,0 +1,2706 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.1">
+    
+    
+      
+        <title>Changelog - ReadonlyREST Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ReadonlyREST Documentation" class="md-header__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ReadonlyREST Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ReadonlyREST Documentation" class="md-nav__button md-logo" aria-label="ReadonlyREST Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ReadonlyREST Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        README
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SUMMARY/" class="md-nav__link">
+        Table of contents
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Changelog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Changelog
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2022-07-25-whats-new-in-ror-1420" class="md-nav__link">
+    (2022-07-25) What's new in ROR 1.42.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-06-21-whats-new-in-ror-1410" class="md-nav__link">
+    (2022-06-21) What's new in ROR 1.41.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-05-24-whats-new-in-ror-1400" class="md-nav__link">
+    (2022-05-24) What's new in ROR 1.40.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-03-19-whats-new-in-ror-1390" class="md-nav__link">
+    (2022-03-19) What's new in ROR 1.39.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-01-17-whats-new-in-ror-1380" class="md-nav__link">
+    (2022-01-17) What's new in ROR 1.38.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-12-14-whats-new-in-ror-1370" class="md-nav__link">
+    (2021-12-14) What's new in ROR 1.37.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-11-21-whats-new-in-ror-1360" class="md-nav__link">
+    (2021-11-21) What's new in ROR 1.36.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-10-17-whats-new-in-ror-1351" class="md-nav__link">
+    (2021-10-17) What's new in ROR 1.35.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-10-12-whats-new-in-ror-1350" class="md-nav__link">
+    (2021-10-12) What's new in ROR 1.35.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-09-24-whats-new-in-ror-1340" class="md-nav__link">
+    (2021-09-24) What's new in ROR 1.34.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-08-14-whats-new-in-ror-1331" class="md-nav__link">
+    (2021-08-14) What's new in ROR 1.33.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-08-09-whats-new-in-ror-1330" class="md-nav__link">
+    (2021-08-09) What's new in ROR 1.33.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-07-25-whats-new-in-ror-1320" class="md-nav__link">
+    (2021-07-25) What's new in ROR 1.32.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-06-29-whats-new-in-ror-1310" class="md-nav__link">
+    (2021-06-29) What's new in ROR 1.31.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-05-26-whats-new-in-ror-1301" class="md-nav__link">
+    (2021-05-26) What's new in ROR 1.30.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-05-16-whats-new-in-ror-1300" class="md-nav__link">
+    (2021-05-16) What's new in ROR 1.30.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-04-09-whats-new-in-ror-1290" class="md-nav__link">
+    (2021-04-09) What's new in ROR 1.29.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-04-01-whats-new-in-ror-1282" class="md-nav__link">
+    (2021-04-01) What's new in ROR 1.28.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-03-24-whats-new-in-ror-1281" class="md-nav__link">
+    (2021-03-24) What's new in ROR 1.28.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-03-14-whats-new-in-ror-1280" class="md-nav__link">
+    (2021-03-14) What's new in ROR 1.28.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-02-27-whats-new-in-ror-1271" class="md-nav__link">
+    (2021-02-27) What's new in ROR 1.27.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-02-16-whats-new-in-ror-1270" class="md-nav__link">
+    (2021-02-16) What's new in ROR 1.27.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-01-11-whats-new-in-ror-1261" class="md-nav__link">
+    (2021-01-11) What's new in ROR 1.26.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-01-02-whats-new-in-ror-1260" class="md-nav__link">
+    (2021-01-02) What's new in ROR 1.26.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1252" class="md-nav__link">
+    What's new in 1.25.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1251" class="md-nav__link">
+    What's new in 1.25.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1250" class="md-nav__link">
+    What's new in 1.25.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1240" class="md-nav__link">
+    What's new in 1.24.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1231" class="md-nav__link">
+    What's new in 1.23.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1230" class="md-nav__link">
+    What's new in 1.23.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1221" class="md-nav__link">
+    What's new in 1.22.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1220" class="md-nav__link">
+    What's new in 1.22.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1210" class="md-nav__link">
+    What's new in 1.21.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1200" class="md-nav__link">
+    What's new in 1.20.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1195" class="md-nav__link">
+    What's new in 1.19.5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1194" class="md-nav__link">
+    What's new in 1.19.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1193" class="md-nav__link">
+    What's new in 1.19.3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1192" class="md-nav__link">
+    What's new in 1.19.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1191" class="md-nav__link">
+    What's new in 1.19.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1190" class="md-nav__link">
+    What's new in 1.19.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11810" class="md-nav__link">
+    What's new in 1.18.10
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1189" class="md-nav__link">
+    What's new in 1.18.9
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1188" class="md-nav__link">
+    What's new in 1.18.8
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1187" class="md-nav__link">
+    What's new in 1.18.7
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1186" class="md-nav__link">
+    What's new in 1.18.6
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1185" class="md-nav__link">
+    What's new in 1.18.5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1184" class="md-nav__link">
+    What's new in 1.18.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1183" class="md-nav__link">
+    What's new in 1.18.3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1182" class="md-nav__link">
+    What's new in 1.18.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1181" class="md-nav__link">
+    What's new in 1.18.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1180" class="md-nav__link">
+    What's new in 1.18.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1177" class="md-nav__link">
+    What's new in 1.17.7
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1175" class="md-nav__link">
+    What's new in 1.17.5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1174" class="md-nav__link">
+    What's new in 1.17.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1173" class="md-nav__link">
+    What's new in 1.17.3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1171" class="md-nav__link">
+    What's new in 1.17.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1170" class="md-nav__link">
+    What's new in 1.17.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11634" class="md-nav__link">
+    What's new in 1.16.34
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11633" class="md-nav__link">
+    What's new in 1.16.33
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11632" class="md-nav__link">
+    What's new in 1.16.32
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11631" class="md-nav__link">
+    What's new in 1.16.31
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11629" class="md-nav__link">
+    What's new in 1.16.29
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11628" class="md-nav__link">
+    What's new in 1.16.28
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11627" class="md-nav__link">
+    What's new in 1.16.27
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11626" class="md-nav__link">
+    What's new in 1.16.26
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11625" class="md-nav__link">
+    What's new in 1.16.25
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11624" class="md-nav__link">
+    What's new in 1.16.24
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11623" class="md-nav__link">
+    What's new in 1.16.23
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11622" class="md-nav__link">
+    What's new in 1.16.22
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11621" class="md-nav__link">
+    What's new in 1.16.21
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11620" class="md-nav__link">
+    What's new in 1.16.20
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readonlyrest-proenterprise-for-kibana" class="md-nav__link">
+    ReadonlyREST PRO/Enterprise for Kibana
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readonlyrest-for-elasticsearch" class="md-nav__link">
+    ReadonlyREST for Elasticsearch
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commercial/" class="md-nav__link">
+        Commercial Licenses
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        Contribution License Agreement
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elasticsearch/" class="md-nav__link">
+        For Elasticsearch
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kibana/" class="md-nav__link">
+        For Kibana
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Actionstrings
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Actionstrings" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Actionstrings
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actionstrings/" class="md-nav__link">
+        List of Elasticsearch actions available in various Elasticsearch versions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Details
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Details" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Details
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/fips/" class="md-nav__link">
+        FIPS mode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/fls-engine/" class="md-nav__link">
+        FLS engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/groups-rule-mapping/" class="md-nav__link">
+        External to local groups mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/impersonation/" class="md-nav__link">
+        Impersonation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/index-not-found-examples/" class="md-nav__link">
+        "Index not found" scenario
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/indices-rule-templates/" class="md-nav__link">
+        Templates handling in `indices` rule
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/kibana-7.8.x-and-older/" class="md-nav__link">
+        Kibana 7.8.x and older
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/multitenancy_guide/" class="md-nav__link">
+        Multi-tenancy Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/multiuser_guide/" class="md-nav__link">
+        Multi-user Elastic Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_4" type="checkbox" id="__nav_10_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_4">
+          Impersonation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Impersonation" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_4">
+          <span class="md-nav__icon md-icon"></span>
+          Impersonation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/impersonation/external-services-mocks-ui/" class="md-nav__link">
+        External services mocks configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/impersonation/impersonate-user-ui/" class="md-nav__link">
+        Impersonate user ui
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/impersonation/test-settings-ui/" class="md-nav__link">
+        Writing Test Settings
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_5" type="checkbox" id="__nav_10_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_5">
+          Oidc sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Oidc sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_5">
+          <span class="md-nav__icon md-icon"></span>
+          Oidc sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/oidc-sso/" class="md-nav__link">
+        OpenID Connect (OIDC) SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/oidc-sso/keycloak_oidc/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10_6" type="checkbox" id="__nav_10_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10_6">
+          Saml sso
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Saml sso" data-md-level="2">
+        <label class="md-nav__title" for="__nav_10_6">
+          <span class="md-nav__icon md-icon"></span>
+          Saml sso
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/" class="md-nav__link">
+        SAML SSO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/adfs/" class="md-nav__link">
+        Microsoft ADFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/azure_ad/" class="md-nav__link">
+        Microsoft Azure AD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/keycloak_saml/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/saml-sso/multifactor_authentication_with_duo_via_saml/" class="md-nav__link">
+        Duo Security MFA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2022-07-25-whats-new-in-ror-1420" class="md-nav__link">
+    (2022-07-25) What's new in ROR 1.42.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-06-21-whats-new-in-ror-1410" class="md-nav__link">
+    (2022-06-21) What's new in ROR 1.41.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-05-24-whats-new-in-ror-1400" class="md-nav__link">
+    (2022-05-24) What's new in ROR 1.40.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-03-19-whats-new-in-ror-1390" class="md-nav__link">
+    (2022-03-19) What's new in ROR 1.39.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2022-01-17-whats-new-in-ror-1380" class="md-nav__link">
+    (2022-01-17) What's new in ROR 1.38.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-12-14-whats-new-in-ror-1370" class="md-nav__link">
+    (2021-12-14) What's new in ROR 1.37.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-11-21-whats-new-in-ror-1360" class="md-nav__link">
+    (2021-11-21) What's new in ROR 1.36.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-10-17-whats-new-in-ror-1351" class="md-nav__link">
+    (2021-10-17) What's new in ROR 1.35.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-10-12-whats-new-in-ror-1350" class="md-nav__link">
+    (2021-10-12) What's new in ROR 1.35.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-09-24-whats-new-in-ror-1340" class="md-nav__link">
+    (2021-09-24) What's new in ROR 1.34.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-08-14-whats-new-in-ror-1331" class="md-nav__link">
+    (2021-08-14) What's new in ROR 1.33.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-08-09-whats-new-in-ror-1330" class="md-nav__link">
+    (2021-08-09) What's new in ROR 1.33.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-07-25-whats-new-in-ror-1320" class="md-nav__link">
+    (2021-07-25) What's new in ROR 1.32.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-06-29-whats-new-in-ror-1310" class="md-nav__link">
+    (2021-06-29) What's new in ROR 1.31.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-05-26-whats-new-in-ror-1301" class="md-nav__link">
+    (2021-05-26) What's new in ROR 1.30.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-05-16-whats-new-in-ror-1300" class="md-nav__link">
+    (2021-05-16) What's new in ROR 1.30.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-04-09-whats-new-in-ror-1290" class="md-nav__link">
+    (2021-04-09) What's new in ROR 1.29.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-04-01-whats-new-in-ror-1282" class="md-nav__link">
+    (2021-04-01) What's new in ROR 1.28.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-03-24-whats-new-in-ror-1281" class="md-nav__link">
+    (2021-03-24) What's new in ROR 1.28.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-03-14-whats-new-in-ror-1280" class="md-nav__link">
+    (2021-03-14) What's new in ROR 1.28.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-02-27-whats-new-in-ror-1271" class="md-nav__link">
+    (2021-02-27) What's new in ROR 1.27.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-02-16-whats-new-in-ror-1270" class="md-nav__link">
+    (2021-02-16) What's new in ROR 1.27.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-01-11-whats-new-in-ror-1261" class="md-nav__link">
+    (2021-01-11) What's new in ROR 1.26.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2021-01-02-whats-new-in-ror-1260" class="md-nav__link">
+    (2021-01-02) What's new in ROR 1.26.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1252" class="md-nav__link">
+    What's new in 1.25.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1251" class="md-nav__link">
+    What's new in 1.25.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1250" class="md-nav__link">
+    What's new in 1.25.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1240" class="md-nav__link">
+    What's new in 1.24.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1231" class="md-nav__link">
+    What's new in 1.23.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1230" class="md-nav__link">
+    What's new in 1.23.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1221" class="md-nav__link">
+    What's new in 1.22.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1220" class="md-nav__link">
+    What's new in 1.22.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1210" class="md-nav__link">
+    What's new in 1.21.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1200" class="md-nav__link">
+    What's new in 1.20.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1195" class="md-nav__link">
+    What's new in 1.19.5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1194" class="md-nav__link">
+    What's new in 1.19.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1193" class="md-nav__link">
+    What's new in 1.19.3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1192" class="md-nav__link">
+    What's new in 1.19.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1191" class="md-nav__link">
+    What's new in 1.19.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1190" class="md-nav__link">
+    What's new in 1.19.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11810" class="md-nav__link">
+    What's new in 1.18.10
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1189" class="md-nav__link">
+    What's new in 1.18.9
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1188" class="md-nav__link">
+    What's new in 1.18.8
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1187" class="md-nav__link">
+    What's new in 1.18.7
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1186" class="md-nav__link">
+    What's new in 1.18.6
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1185" class="md-nav__link">
+    What's new in 1.18.5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1184" class="md-nav__link">
+    What's new in 1.18.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1183" class="md-nav__link">
+    What's new in 1.18.3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1182" class="md-nav__link">
+    What's new in 1.18.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1181" class="md-nav__link">
+    What's new in 1.18.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1180" class="md-nav__link">
+    What's new in 1.18.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1177" class="md-nav__link">
+    What's new in 1.17.7
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1175" class="md-nav__link">
+    What's new in 1.17.5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1174" class="md-nav__link">
+    What's new in 1.17.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1173" class="md-nav__link">
+    What's new in 1.17.3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1171" class="md-nav__link">
+    What's new in 1.17.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-1170" class="md-nav__link">
+    What's new in 1.17.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11634" class="md-nav__link">
+    What's new in 1.16.34
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11633" class="md-nav__link">
+    What's new in 1.16.33
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11632" class="md-nav__link">
+    What's new in 1.16.32
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11631" class="md-nav__link">
+    What's new in 1.16.31
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11629" class="md-nav__link">
+    What's new in 1.16.29
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11628" class="md-nav__link">
+    What's new in 1.16.28
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11627" class="md-nav__link">
+    What's new in 1.16.27
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11626" class="md-nav__link">
+    What's new in 1.16.26
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11625" class="md-nav__link">
+    What's new in 1.16.25
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11624" class="md-nav__link">
+    What's new in 1.16.24
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11623" class="md-nav__link">
+    What's new in 1.16.23
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11622" class="md-nav__link">
+    What's new in 1.16.22
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11621" class="md-nav__link">
+    What's new in 1.16.21
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new-in-11620" class="md-nav__link">
+    What's new in 1.16.20
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readonlyrest-proenterprise-for-kibana" class="md-nav__link">
+    ReadonlyREST PRO/Enterprise for Kibana
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readonlyrest-for-elasticsearch" class="md-nav__link">
+    ReadonlyREST for Elasticsearch
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="changelog">Changelog</h1>
+<h3 id="2022-07-25-whats-new-in-ror-1420">(2022-07-25) What's new in <strong>ROR 1.42.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (KBN|ES) 8.3.3, 8.3.2, 8.3.1, 8.3.0, 7.15.5 support</li>
+<li><strong>🧐Enhancement</strong> (KBN) Search box in tenancy switcher (when #tenancies &gt; 5)</li>
+<li><strong>🧐Enhancement</strong> (ES) added configuration warnings in the Impersonation Feature</li>
+<li><strong>🐞Fix</strong> (KBN) Logout didn’t delete the SAML session on the IdP</li>
+<li><strong>🐞Fix</strong> (KBN) 5xx errors from Elasticsearch break Kibana users’ session unrecoverably</li>
+<li><strong>🐞Fix</strong> (ES) ROR node cooperation with X-pack nodes</li>
+</ul>
+<h3 id="2022-06-21-whats-new-in-ror-1410">(2022-06-21) What's new in <strong>ROR 1.41.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (ES) Added <code>groups_and</code> mode to <a href="https://docs.readonlyrest.com/elasticsearch#ror_kbn_auth"><code>ror_kbn_auth</code></a> and <a href="https://docs.readonlyrest.com/elasticsearch#jwt_auth"><code>jwt_auth</code></a> rules</li>
+<li><strong>🧐Enhancement</strong> (KBN) Prevent native credentials dialogue to appear in Kibana when ES responds 401</li>
+<li><strong>🧐Enhancement</strong> (KBN) Logging in after logout shows the same page you last visited</li>
+<li><strong>🧐Enhancement</strong> (KBN) x-ror-correlation-id header lets you audit a whole Kibana session</li>
+<li><strong>🐞Fix</strong> (ES|KBN) tenancy selector didn't work well with <code>jwt_auth</code> and <code>ror_kbn_auth</code> rules</li>
+<li><strong>🐞Fix</strong> (KBN) Support for special characters in tenancy names</li>
+<li><strong>🐞Fix</strong> (KBN) OIDC logout flow redirecting to bad request error</li>
+<li><strong>🐞Fix</strong> (KBN) OIDC connector not working in Kibana &lt; 7.12.0</li>
+</ul>
+<h3 id="2022-05-24-whats-new-in-ror-1400">(2022-05-24) What's new in <strong>ROR 1.40.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-25647">CVE-2022-25647</a> &amp; <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-24823">CVE-2022-24823</a> &amp; <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-13956">CVE-2020-13956</a> &amp; <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-36518">CVE-2020-36518</a> &amp;  <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-13956">CVE-2020-13956</a> &amp; <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-36518">CVE-2020-36518</a></li>
+<li><strong>🚨Security Fix</strong> (KBN) “Security” app not entirely hidden in 8.2.x</li>
+<li><strong>🚀New</strong> (ES) New Support for 8.2.3, 8.2.2, 8.2.1, 7.17.4</li>
+<li><strong>🚀New</strong> (KBN) New Support for 8.2.2 8.2.1, 7.17.4</li>
+<li><strong>🚀New</strong> (ES &amp; KBN) <a href="https://docs.readonlyrest.com/kibana#impersonation">The Impersonation feature</a></li>
+<li><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/fips">FIPS compliant SSL mode</a></li>
+<li><strong>🧐Enhancement</strong> (KBN) SAML cert is now required</li>
+<li><strong>🧐Enhancement</strong> (KBN) moved OIDC to better library</li>
+<li><strong>🧐Enhancement</strong> (KBN) OIDC jwksURL is now required</li>
+<li><strong>🐞Fix</strong> (ES) <code>indices: ["1"]</code> interpreted as integer and fails to parse</li>
+<li><strong>🐞Fix</strong> (KBN) /login?jwt=xxx authorization now works again</li>
+<li><strong>🐞Fix</strong> (KBN) OIDC/SAML assertion claims were not forwarded to ES</li>
+<li><strong>🐞Fix</strong> (KBN) include whitelisted headers while logging</li>
+<li><strong>🐞Fix</strong> (KBN) basepath handling fixes (too many redirects)</li>
+<li><strong>🐞Fix</strong> (KBN) Make ROR default space the actual default one</li>
+<li><strong>🐞Fix</strong> (KBN) RORDEV-641 Fix oidc connection error</li>
+</ul>
+<h3 id="2022-03-19-whats-new-in-ror-1390">(2022-03-19) What's new in <strong>ROR 1.39.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (KBN) XSS sanitize path requested</li>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-36518">CVE-2020-36518</a> &amp; <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-21653">CVE-2022-21653</a></li>
+<li><strong>🚀New</strong> (KBN) New Support for 8.2.0 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1, 7.17.3, 7.17.2</li>
+<li><strong>🚀New</strong> (ES) New Support for 8.2.0, 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1 (<a href="https://docs.readonlyrest.com/elasticsearch#3.-patch-es">required additional patching step</a>)</li>
+<li><strong>🚀New</strong> (ES) New Support for 7.17.3, 7.17.2</li>
+<li><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch#groups_and">New <code>groups_and</code> ACL rule</a></li>
+<li><strong>🧐Enhancement</strong> (KBN) Stop inlining whitelisted headers into Authorization header</li>
+<li><strong>🧐Enhancement</strong> (KBN) Log additional errors and info related to HA</li>
+<li><strong>🧐Enhancement</strong> (KBN) Misc internal dependencies upgrades </li>
+<li><strong>🐞Fix</strong> (KBN) Mandatory elasticsearch credentials in kibana.yml </li>
+<li><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/when-hiding-stack-management-a-redirect-appears-with-report/2088">Reporting page redirect on refresh when kibana_hide_apps: ["Stack Management"]</a></li>
+<li><strong>🐞Fix</strong> (KBN) whitelistedPaths: log errors when 404 occurs</li>
+<li><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/issue-uploading-large-payload/2091">Issue uploading large payload</a></li>
+<li><strong>🐞Fix</strong> (KBN) <code>elasticsearch.requestHeadersWhitelist</code> should be case insensitive</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-1-37-0-indices-rule-and-alias-within-kibana/2078">Issue with handling data streams by <code>indices</code> rule</a></li>
+<li><strong>🐞Fix</strong> (ES) X-Pack SSL nodes cooperation with ROR SSL nodes</li>
+<li><strong>🐞Fix</strong> (ES) _msearch issue when filter rules was used in matched block</li>
+</ul>
+<h3 id="2022-01-17-whats-new-in-ror-1380">(2022-01-17) What's new in <strong>ROR 1.38.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (ES) New Support for 7.17.0, 7.17.1</li>
+<li><strong>🚀New</strong> (KBN) New Support for 7.17.0</li>
+<li><strong>🚀New</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/v1.38.x/elasticsearch.md#custom-audit-cluster">Configuration for custom audit cluster</a></li>
+<li><strong>🧐Enhancement</strong> (ES) Separate "audit" section for all audit settings</li>
+<li><strong>🐞Fix</strong> (KBN) Editor rendering issue with kibana basePath enabled</li>
+</ul>
+<h3 id="2021-12-14-whats-new-in-ror-1370">(2021-12-14) What's new in <strong>ROR 1.37.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-43797">CVE-2021-43797</a></li>
+<li><strong>🚀New</strong> (ES) New Support for 7.16.3, 7.16.2, 6.8.23, 6.8.22</li>
+<li><strong>🚀New</strong> (KBN) New Support for 7.16.3, 7.16.2, 7.16.1, 7.16.10, 6.8.23, 6.8.22, 6.8.21</li>
+<li><strong>🧐Enhancement</strong> (ES) fields rule handling in the context of x-Pack SQL requests</li>
+<li><strong>🐞Fix</strong> (ES) filter rule handling in the context of x-Pack SQL requests</li>
+<li><strong>🐞Fix</strong> (KBN) POST / bulk cause an 400 error in devtools console</li>
+<li><strong>🐞Fix</strong> (KBN) More robust Kibana patcher + better logs messages</li>
+</ul>
+<h3 id="2021-11-21-whats-new-in-ror-1360">(2021-11-21) What's new in <strong>ROR 1.36.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (ES) New Support for 7.16.1, 7.16.0, 6.8.21</li>
+<li><strong>🚀New</strong> (KBN) Support Kibana 7.15.2</li>
+<li><strong>🚀New</strong> (ES) <a href="https://forum.readonlyrest.com/t/ssl-internode-with-elk-cluster/1916">Added support for setting up cluster containing ES with ROR (with disabled XPack security) and ES with XPack security enabled</a></li>
+<li><strong>🧐Enhancement</strong> (KBN) kibana_hide_apps: [ror|kibana] to remove kibana mgmt button</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/756">/_snapshot/_status should return only running snapshots</a></li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/forbidden-by-readonlyrest-es-plugin-with-add-policy-to-index-template-action-in-kibana/1969">Adding policy to index template bug</a></li>
+<li><strong>🐞Fix</strong> (KBN) Index management tabs result in "forbidden" error</li>
+<li><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/ror-1-35-1-kibana-7-9-3-unable-to-patch/2018">corrupted patch file for Kibana 7.9.x</a></li>
+<li><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/readonlyrest-security-settings-editor-loading/2014/5">YAML editor not working in air-gapped environments</a></li>
+<li><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/kibana-devtools-error-does-not-support-having-a-body/2027">Devtools not working</a></li>
+<li><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/kibana-alerting-not-working-with-readonlyrest/1986">Monitoring not working in multi-tenancy</a></li>
+<li><strong>🐞Fix</strong> (KBN) Regression in Kibana &lt; 6.8.x front end crash</li>
+<li><strong>🐞Fix</strong> (KBN) Kibana &lt; 7.8.x prevent navigation to hidden apps from home links</li>
+<li><strong>🐞Fix</strong> (KBN) Kibana &lt; 7.8.x implicitly hide kibana:dashboard when kibana:dashboards is hidden (and viceversa)</li>
+<li><strong>🐞Fix</strong> (KBN) Kibana &lt; 7.8.x broken <code>clearSessionOnEvents: [tenancyHop]</code></li>
+</ul>
+<h3 id="2021-10-17-whats-new-in-ror-1351">(2021-10-17) What's new in <strong>ROR 1.35.1</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21409">CVE-2021-21409</a> &amp; <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-27568">CVE-2021-27568</a></li>
+<li><strong>🚀New</strong> (KBN) Support Kibana 7.15.1</li>
+<li><strong>🚀New</strong> (ES) New Support for 7.15.2</li>
+<li><strong>🧐Enhancement</strong> (KBN) Support "server.ssl.supportedProtocols" settings</li>
+<li><strong>🧐Enhancement</strong> (KBN) Support "server.ssl.cipherSuites"</li>
+<li><strong>🧐Enhancement</strong> (KBN) Always honor SSL cipher order</li>
+<li><strong>🐞Fix</strong> (KBN) Don'thide "Add/Remove field as column" in Discover app for RO users</li>
+<li><strong>🐞Fix</strong> (KBN) More alerting fixes (only for main tenancy)</li>
+</ul>
+<h3 id="2021-10-12-whats-new-in-ror-1350">(2021-10-12) What's new in <strong>ROR 1.35.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (KBN) Support Kibana 7.15.0, 7.14.2</li>
+<li><strong>🚀New</strong> (ES) New Support for 7.15.1, 6.8.19, 6.8.20</li>
+<li><strong>🧐Enhancement</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/master/details/groups-rule-mapping.md">local-&gt;external groups detailed mapping for groups rule</a></li>
+<li><strong>🧐Enhancement</strong> (ES) when ROR is starting any request is going to end up with HTTP 403 response, instead of HTTP 503</li>
+<li><strong>🧐Enhancement</strong> (KBN) "server.basePath" kibana option implementation</li>
+<li><strong>🧐Enhancement</strong> (KBN) Support full regex in kibana_hidden_apps rule</li>
+<li><strong>🧐Enhancement</strong> Crash if Kibana is not patched</li>
+<li><strong>🧐Enhancement</strong> (KBN) Honour kibana setting "logging.dest"</li>
+<li><strong>🧐Enhancement</strong> (KBN) Confirm before overwriting audit log dashboard</li>
+<li><strong>🐞Fix</strong> (ES) verbosity: error fix in case of ROR KBN login request</li>
+<li><strong>🐞Fix</strong> (KBN) Make alerting work on primary tenancy</li>
+<li><strong>🐞Fix</strong> (KBN) OIDC fix sameSite / secure cookie options</li>
+<li><strong>🐞Fix</strong> (KBN) Login form is stretched when long error</li>
+<li><strong>🐞Fix</strong> (KBN) Login form is stretched when long error</li>
+<li><strong>🐞Fix</strong> (KBN-PRO) <a href="https://forum.readonlyrest.com/t/upgrading-6-7-w-1-18-to-7-14-w-1-33-ldap-from-ms-active-directory-no-longer-understands-multiple-ad-group-memberships/1973/6">Don't send x-ror-currentgroup in PRO</a></li>
+<li><strong>🐞Fix</strong> (KBN) Resolve browser console errors on a popover close</li>
+</ul>
+<h3 id="2021-09-24-whats-new-in-ror-1340">(2021-09-24) What's new in <strong>ROR 1.34.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (ES) New Support for 7.15.0, 7.14.2</li>
+<li><strong>🚀New</strong> (KBN) VS Code style YAML editor</li>
+<li><strong>🚀New</strong> (KBN) Skip rendering hidden app groups entirely</li>
+<li><strong>🚀New</strong> (KBN) Redesigned ROR Menu</li>
+<li><strong>🚀New</strong> (KBN) Dark theme awareness</li>
+<li><strong>🐞Fix</strong> (KBN) Broken Kibana Spaces</li>
+<li><strong>🐞Fix</strong> (KBN) Support Kibana's undocumented "server.ssl.*" settings</li>
+<li><strong>🐞Fix</strong> (KBN) cookiePass config parsing broke load balancing</li>
+</ul>
+<h3 id="2021-08-14-whats-new-in-ror-1331">(2021-08-14) What's new in <strong>ROR 1.33.1</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (ES) New Support for 7.14.1</li>
+<li><strong>🐞Fix</strong> (KBN) Error in patching for 7.14.0</li>
+<li><strong>🐞Fix</strong> (KBN) clearSessionOnEvents now works as expected</li>
+<li><strong>🐞Fix</strong> (KBN) login form font loads correctly</li>
+</ul>
+<h3 id="2021-08-09-whats-new-in-ror-1330">(2021-08-09) What's new in <strong>ROR 1.33.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (KBN) xml-crypto dependency update</li>
+<li><strong>🚀New</strong> (KBN) New Support for 7.14.0, 6.8.18</li>
+<li><strong>🧐Enhancement</strong> (KBN) Parse credentials in /api/* requests, no need for valid cookie. Supersedes whitelistedPaths</li>
+<li><strong>🐞Fix</strong> (KBN)Caching issues switching tenancies with dark/light theme</li>
+<li><strong>🐞Fix</strong> (KBN) Newly created Space shows in all tenancies when using default kibana index</li>
+<li><strong>🐞Fix</strong> (KBN &lt; 7.9.x) nextUrl works again with SAML and OIDC</li>
+</ul>
+<h3 id="2021-07-25-whats-new-in-ror-1320">(2021-07-25) What's new in <strong>ROR 1.32.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/security-vulnerability-for-common-codec-1-10/1906">Apache Commons Codec vulnerability</a></li>
+<li><strong>🚨Security Fix</strong> (KBN) upgraded dependencies due to security fixes</li>
+<li><strong>🚨Security Fix</strong> (KBN) disable x-powered-by to avoid fingerprinting</li>
+<li><strong>🚀New</strong> (ES) Support for ES 7.14.0 &amp; 6.8.18</li>
+<li><strong>🚀New</strong> (KBN) Support for Kibana 7.13.x series</li>
+<li><strong>🧐Enhancement</strong> (KBN) honor configurations coming from ENV and CLI options</li>
+<li><strong>🧐Enhancement</strong> (KBN) when metadata has no username, login must be denied</li>
+<li><strong>🧐Enhancement</strong> (KBN) audit tab ported to new platform</li>
+<li><strong>🧐Enhancement</strong> (ES) improved ES resources cleaning when ROR returns FORBIDDEN response</li>
+<li><strong>🧐Enhancement</strong> (KBN &lt; 7.9.x) auto clean-up dangling SAML/OIDC cookies</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-return-incomplete-response-for-request-get-alias/1872">incomplete response for request GET */_alias</a></li>
+<li><strong>🐞Fix</strong> (ES) not allowed aliases should not present in a response for a Get Index API request</li>
+<li><strong>🐞Fix</strong> (KBN) fix dev-tools and import saved object not working</li>
+<li><strong>🐞Fix</strong> (KBN) honor <code>requestHeadersWhitelist</code> in user metadata request (login)</li>
+<li><strong>🐞Fix</strong> (KBN &lt; 7.9.x) do not crash on invalid metadata</li>
+</ul>
+<h3 id="2021-06-29-whats-new-in-ror-1310">(2021-06-29) What's new in <strong>ROR 1.31.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (KBN) prevent direct navigation to hidden apps</li>
+<li><strong>🚀New</strong> (ES) 7.13.4, 7.13.3, 7.13.2, 6.8.17 support</li>
+<li><strong>🚀New</strong> (KBN) new minimal Kibana Management menu when "Management" app is hidden</li>
+<li><strong>🧐Enhancement</strong> (KBN) logout active Kibana session if key metadata/permissions change in ACL</li>
+<li><strong>🧐Enhancement</strong> (KBN) better port number validation</li>
+<li><strong>🧐Enhancement</strong> (ES) improved cluster indices handling</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/es7-11-2-1-30-0-enterprise-two-contexts-rw-ro-issue/1855">Kibana access rule regression fix</a></li>
+<li><strong>🐞Fix</strong> (ES) search template API handling with <code>filter</code> and <code>fields</code> rule</li>
+<li><strong>🐞Fix</strong> (ES) multi-tenancy issue when groups_provider_authorization is used</li>
+<li><strong>🐞Fix</strong> (ES) <code>x_forwarded_for</code> rule: wrong handling of / request</li>
+<li><strong>🐞Fix</strong> (ES) Issue with handling ResizeRequest which made it unable to upgrade Kibana to version 7.12.0+</li>
+<li><strong>🐞Fix</strong> (KBN) some Kibana requests arrive to ES without credentials</li>
+<li><strong>🐞Fix</strong> (KBN) inconsistent read after write in session storage lead to issues with round robin load balancing</li>
+<li><strong>🐞Fix</strong> (KBN) bad multipart POST handling leads to saved object import errors</li>
+</ul>
+<h3 id="2021-05-26-whats-new-in-ror-1301">(2021-05-26) What's new in <strong>ROR 1.30.1</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-27568">CVE-2021-27568</a></li>
+<li><strong>🚀New</strong> (ES) 7.13.0, 7.13.1 support</li>
+<li><strong>🐞Fix</strong> (ES) Regression in multi-tenancy handling</li>
+<li><strong>🐞Fix</strong> (ES) Proper handling of _snapshot/_status endpoint</li>
+</ul>
+<h3 id="2021-05-16-whats-new-in-ror-1300">(2021-05-16) What's new in <strong>ROR 1.30.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (KBN) 7.12.x compatibility</li>
+<li><strong>🚀New</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#circuit-breaker">LDAP connector circuit breaker</a></li>
+<li><strong>🧐Enhancement</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#groups">Username with wildcard support in users section</a> and <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#group-mapping">groups mapping</a></li>
+<li><strong>🧐Enhancement</strong> (KBN &lt; 7.9.x) OIDC errors visibility</li>
+<li><strong>🧐Enhancement</strong> (KBN &lt; 7.9.x) Smarter session probe algorithm</li>
+<li><strong>🐞Fix</strong> (KBN &gt;= 7.9.x) <a href="https://forum.readonlyrest.com/t/kibana-crash-at-startup-with-the-new-7-10-2-version/1840">Load CertificateAuthorities as an array if not specified as an array</a></li>
+<li><strong>🐞Fix</strong> (KBN &lt; 7.9.x) Don't hide visualizations list search box in RO mode</li>
+</ul>
+<h3 id="2021-04-09-whats-new-in-ror-1290">(2021-04-09) What's new in <strong>ROR 1.29.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) Security Fix (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21409">CVE-2021-21409</a></li>
+<li><strong>🚀New</strong> (KBN) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 (<a href="https://beta.readonlyrest.com/">with ROR new platform</a>) </li>
+<li><strong>🚀New</strong> (ES) 7.12.1 support </li>
+<li><strong>🧐Enhancement</strong> (KBN) logout if the credentials/metadata of the current user change in the ACL</li>
+</ul>
+<h3 id="2021-04-01-whats-new-in-ror-1282">(2021-04-01) What's new in <strong>ROR 1.28.2</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21295">CVE-2021-21295</a></li>
+<li><strong>🐞Fix</strong> (KBN) prevent SAML/OIDC initiated Kibana sessions from expiring after <code>session_timeout_minutes</code> despite continued interaction</li>
+</ul>
+<h3 id="2021-03-24-whats-new-in-ror-1281">(2021-03-24) What's new in <strong>ROR 1.28.1</strong></h3>
+<ul>
+<li><strong>🐞Fix</strong> (ES) Getting index templates issue when no <code>indices</code> rule was used in matched block</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/cannot-put-index-template-template-1/1681/25">NPE on getting template aliases</a></li>
+</ul>
+<h3 id="2021-03-14-whats-new-in-ror-1280">(2021-03-14) What's new in <strong>ROR 1.28.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (ES) 7.12.0, 7.11.2 support </li>
+<li><strong>🚀New</strong> (ES) full <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html">Index and Component Templates API</a> support </li>
+<li><strong>🧐Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/ldap-based-user-authentication/1667">Username case sensitivity settings</a></li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/kibana-plugin-software-licensing-and-expiration/1808/5">Kibana logout event storing fix</a></li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/reindex-index-not-found-exception/1708/20">Fixed remote reindex operation with "type" parameter</a></li>
+<li><strong>🐞Fix</strong> (KBN) Prevent cookie expiration deadlock in browsers when using SAML/OIDC</li>
+<li><strong>🐞Fix</strong> (KBN) When credentials change in the ACL, make it possible to login again</li>
+<li><strong>🐞Fix</strong> (KBN) Kibana management app ID changed from "kibana:management" to "kibana:stack_management"</li>
+</ul>
+<h3 id="2021-02-27-whats-new-in-ror-1271">(2021-02-27) What's new in <strong>ROR 1.27.1</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21290">CVE-2021-21290</a></li>
+<li><strong>🚀New</strong> (ES) 7.11.1 support </li>
+</ul>
+<h3 id="2021-02-16-whats-new-in-ror-1270">(2021-02-16) What's new in <strong>ROR 1.27.0</strong></h3>
+<ul>
+<li><strong>🚀New</strong> (ES) 7.11.0, 7.10.2, 6.8.14 support</li>
+<li><strong>🧐Enhancement</strong> (KBN) X-Forwarded-For copied from incoming request (or filled with source IP) before forwarding to ES</li>
+<li><strong>🧐Enhancement</strong> (KBN) Kibana logout event generates a special audit log entry in ROR audit logs index</li>
+<li><strong>🧐Enhancement</strong> (KBN) ROR panel shows "reports" button if kibana:management app is hidden</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#fields">blocks containing filter and/or fields won't match internal kibana requests, so kibana_* rules won't have to be placed in such blocks</a></li>
+<li><strong>🐞Fix</strong> (ES) SQL API - better handling of invalid query</li>
+</ul>
+<h3 id="2021-01-11-whats-new-in-ror-1261">(2021-01-11) What's new in <strong>ROR 1.26.1</strong></h3>
+<ul>
+<li><strong>🐞Fix</strong> (ES) wrong behaviour of <code>kibana_access</code> rule for ROR actions when ADMIN value is set</li>
+</ul>
+<h3 id="2021-01-02-whats-new-in-ror-1260">(2021-01-02) What's new in <strong>ROR 1.26.0</strong></h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-35490">CVE-2020-35490</a> &amp; <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-35491">CVE-2020-35490</a> (removed Jackson dependency from ROR core)</li>
+<li><strong>🚀New</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-1-18-9-enterprise-es-7-2-0-enable-cluster-health-without-authentication/1567">New response_fields rule</a></li>
+<li><strong>🚀New</strong> (ES) <a href="https://forum.readonlyrest.com/t/does-ror-support-dc-locator/1211">Support for LDAP server discovery using _ldaps._tcp SRV record</a></li>
+<li><strong>🚀 New</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-cannot-start-if-ldap-is-not-available/1748">New configuration option allowing to ignore LDAP connectivity problems</a></li>
+<li><strong>🧐Enhancement</strong> (ES) Full support for ILM API</li>
+<li><strong>🧐Enhancement</strong> (KBN) Enforce read-after-write consistency between kibana nodes</li>
+<li><strong>🧐Enhancement</strong> (KBN ENT) OIDC custom claims incorporated in "assertion" claim</li>
+<li><strong>🧐Enhancement</strong> (KBN ENT) OIDC support for configurable kibanaExternalHost (good for Docker)</li>
+<li><strong>🧐Enhancement</strong> (KBN ENT) ROR adds "ror-user_" class to "body" tag for easy per-user CSS/JS</li>
+<li><strong>🧐Enhancement</strong> (KBN ENT/PRO) ROR adds "ror-group_" class to "body" tag for easy per-group CSS/JS</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/es-7-4-2-ror-1-18-9-rradmin-refreshsettings-by-block-default/1388">ROR authentication endpoint action</a></li>
+<li><strong>🐞Fix</strong> (ES) "username" in audit entry when request is rejected</li>
+</ul>
+<h3 id="whats-new-in-1252">What's new in 1.25.2</h3>
+<ul>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/elastic-message-cannot-extract-fields-for-query-after-readonlyrest-installation/1749">removed verbose logging</a></li>
+</ul>
+<h3 id="whats-new-in-1251">What's new in 1.25.1</h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-25649">CVE-2020-25649</a></li>
+<li><strong>🚀New</strong> (ES) 7.10.1 support</li>
+</ul>
+<h3 id="whats-new-in-1250">What's new in 1.25.0</h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/176">Common Vulnerabilities and Exposures (CVE)</a></li>
+<li><strong>🚀New</strong> (ES) 7.10.0 support</li>
+<li><strong>🚀New</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#auth_key_pbkdf2">auth_key_pbkdf2 rule</a></li>
+<li><strong>🚀New</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields">Introduced configuration property defining FLS engine used by fields rule</a></li>
+<li><strong>🧐Enhancement</strong> (ES) Fields rule performance improvement</li>
+<li><strong>🧐Enhancement</strong> (ES) Resolved index API support</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id">"username" in audit entry when user is authenticated via proxy_auth</a></li>
+<li><strong>🐞Fix</strong> (ES) index resolve action should be treated as readonly action</li>
+<li><strong>🐞Fix</strong> (ES) /_snapshot and /_snapshot/_all should behave the same</li>
+</ul>
+<h3 id="whats-new-in-1240">What's new in 1.24.0</h3>
+<ul>
+<li><strong>🚨Security Fix</strong> (ES) search template handling fix</li>
+<li><strong>🚀New</strong> (ES) 7.9.3 &amp; 6.8.13 support</li>
+<li><strong>🧐Enhancement</strong> (ES) full support for ES Snapshots and Restore APIs</li>
+<li><strong>🐞Fix</strong> (KBN) fix crash in error handling</li>
+<li><strong>🐞Fix</strong> (ES) don't remove ES response warning headers</li>
+<li><strong>🐞Fix</strong> (ES) issue when entropy of /dev/random could have been exhausted when using JwtToken rule</li>
+</ul>
+<h3 id="whats-new-in-1231">What's new in 1.23.1</h3>
+<ul>
+<li><strong>🚀New</strong> (ES) 7.9.2 support</li>
+<li><strong>🐞Fix</strong> (KBN) fix code 500 error on login in Kibana</li>
+</ul>
+<h3 id="whats-new-in-1230">What's new in 1.23.0</h3>
+<ul>
+<li><strong>🚀New</strong> (ES) introduced must_involve_indices option for indices rule</li>
+<li><strong>🧐Enhancement</strong> (ES) negation support in headers rules</li>
+<li><strong>🧐Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/actions-still-forbidden-to-unrestricted-user/1659">x-pack rollup API handling</a></li>
+<li><strong>🐞Fix</strong> (KBN) deep links query parameters are now handled</li>
+<li><strong>🐞Fix</strong> (KBN) make sure default kibana index is always discovered (fixes reporting in 6.x)</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/readonlyrest-for-elastic-wont-start-1-18-8-es6-8-1/1652">settings file permission issue with JDK 1.8.0 25.262-b10</a></li>
+<li><strong>🐞Fix</strong> (ES) /_cluster/allocation/explain request should not be forbidden if matched block doesn't have indices rules</li>
+<li><strong>🐞Fix</strong> (ES) remote address extracting issue</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/match-wrong-index-in-forbid-block/1653/2">fixed TYP audit field for some request types</a></li>
+</ul>
+<h3 id="whats-new-in-1221">What's new in 1.22.1</h3>
+<ul>
+<li><strong>🐞Fix</strong> (ES) missing handling of aliases API for ES 7.9.0</li>
+</ul>
+<h3 id="whats-new-in-1220">What's new in 1.22.0</h3>
+<ul>
+<li><strong>🚀New</strong> (ES) 7.9.0 support</li>
+<li><strong>🧐Enhancement</strong> (ES) aliases API handling</li>
+<li><strong>🧐Enhancement</strong> (ES) dynamic variables support in fields rule</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/actions-still-forbidden-to-unrestricted-user/1659">adding aliases issue</a></li>
+<li><strong>🐞Fix</strong> (ES) potential memory leak for ES 7.7.x and above</li>
+<li><strong>🐞Fix</strong> (ES) cross cluster search issue fix for X-Pack _async_search action</li>
+<li><strong>🐞Fix</strong> (ES) XFF entry in audit issue</li>
+<li><strong>🐞Fix</strong> (KBN) SAML certificate loading</li>
+<li><strong>🐞Fix</strong> (KBN) SAML loading groups from assertion</li>
+<li><strong>🐞Fix</strong> (KBN) fix reporting in pre-7.7.0</li>
+</ul>
+<h3 id="whats-new-in-1210">What's new in 1.21.0</h3>
+<ul>
+<li><strong>🧐Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/settings-problems/1616">cluster API support improvements</a></li>
+<li><strong>🐞Fix</strong> (ES) X-Pack _async_search support</li>
+<li><strong>🐞Fix</strong> (ES) _rollover request handling</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/numeric-passphrases-invalid-ssl-config/1512">handling numeric ssl configuration properties</a></li>
+<li><strong>🐞Fix</strong> (KBN) multitenancy+reporting regression fix (for 7.6.x and earlier)</li>
+<li><strong>🐞Fix</strong> (KBN) "x-" headers should be forwarded in /login route when proxy passthrough is enabled</li>
+<li><strong>🐞Fix</strong> <a href="https://forum.readonlyrest.com/t/kibana-ror-1-19-5-issue/1576/24">(KBN) Logout now redirects to login screen when using proxy</a></li>
+<li><strong>🐞Fix</strong> (KBN) SAML metadata.xml endpoint not responding</li>
+<li><strong>🐞Fix</strong> (KBN) NAT/reverse proxy support for SAML</li>
+<li><strong>🐞Fix</strong> (KBN) SAML login redirect error</li>
+<li><strong>🐞Fix</strong> (ES) _readonlyrest/metadata/current_user should be always allowed by filter/fields rule</li>
+</ul>
+<h3 id="whats-new-in-1200">What's new in 1.20.0</h3>
+<ul>
+<li><strong>🚀New</strong> 7.7.1, 7.8.0 support</li>
+<li><strong>🧐Enhancement</strong> (KBN) tidy up audit page</li>
+<li><strong>🧐Enhancement</strong> (KBN FREE) clearly inform when features are not available</li>
+<li><strong>🧐Enhancement</strong> (KBN) ship license report of libraries</li>
+<li><strong>🧐Enhancement</strong> (ES) filter rule performance improvement</li>
+<li><strong>🐞Fix</strong> (KBN) proxy_auth: avoid logout-login loop</li>
+<li><strong>🐞Fix</strong> (KBN) 404 error on font CSS file</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/wildcard-in-dls-filter-gives-error/1551">wildcard in filter query issue</a></li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/get-snapshot-permission-issue/1594">forbidden /_snapshot issue</a></li>
+<li><strong>🐞Fix</strong> (ES) /_mget handling by indices rule when no index from a list is found</li>
+<li><strong>🐞Fix</strong> (ES) available groups order in metadata response should match the order in which groups appear in ACL</li>
+<li><strong>🐞Fix</strong> (ES) .readonlyrest and audit index - removed usage of explicit index type</li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/lots-of-active-tasks-in-cat-tasks/1593">tasks leak bug</a></li>
+</ul>
+<h3 id="whats-new-in-1195">What's new in 1.19.5</h3>
+<ul>
+<li><strong>🚀New</strong> 7.7.0, 7.6.2, 6.8.9, 6.8.8 support</li>
+<li><strong>🧐Enhancement</strong> (ES/KBN) kibana_access can be explicitly set to unrestricted</li>
+<li><strong>🧐Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485">LDAP connection pool improvement</a></li>
+<li><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485">better LDAP request timeout handling</a></li>
+<li><strong>🐞Fix</strong> (ES) remote indices searching bug</li>
+<li><strong>🐞Fix</strong> (ES) cross cluster search support for _field_caps request</li>
+<li><strong>🚨Security Fix</strong> (ES) create and delete templates handling</li>
+<li><strong>🐞Fix</strong> (KBN) Regression in proxy_auth_passthrough</li>
+<li><strong>🧐Enhancement</strong> (KBN) whitelistedPaths now accepts basic auth credentials</li>
+<li><strong>🧐Enhancement</strong> (KBN) Dump logout button, <a href="https://forum.readonlyrest.com/t/new-logout-button-design-new-ror-panel/1476">new ROR Panel</a></li>
+<li><strong>🧐Enhancement</strong> (KBN) removed ROR from Kibana sidebar. Admins have a link in new panel.</li>
+<li><strong>🧐Enhancement</strong> (KBN) avoid show login form redirecting from SAML IdP</li>
+<li><strong>🚀New</strong> (KBN) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#openid-connect-oidc">OpenID Connect (OIDC) authentication connector</a></li>
+<li><strong>🚀New</strong> (KBN) <a href="https://forum.readonlyrest.com/t/ror-enterprise-show-support-contact-on-login-page/1508/2">login_title, login_subtitle enable 2 column login page</a></li>
+<li><strong>🚨Security Fix</strong> (KBN) server-side navigation prevention to hidden apps</li>
+</ul>
+<h3 id="whats-new-in-1194">What's new in 1.19.4</h3>
+<ul>
+<li><strong>🐞Fix</strong> (ES) Interpolating config with environment variables in SSL section</li>
+<li><strong>🐞Fix</strong> (KBN Ent 6.x) Fixed default space creation in</li>
+<li><strong>🐞Fix</strong> (KBN 6.x) Fixed error toast notification not showing</li>
+<li><strong>🐞Fix</strong> (KBN Ent) Fixed missing Axios dependency</li>
+<li><strong>🐞Fix</strong> (KBN Ent) Fixed SAML connector</li>
+<li><strong>🐞Fix</strong> (KBN) Toast notification overlap with logout bar</li>
+<li><strong>🧐Enhancement</strong> (KBN) Restyled logout bar</li>
+<li><strong>🧐Enhancement</strong> (KBN) Configurable periodic session checker</li>
+</ul>
+<h3 id="whats-new-in-1193">What's new in 1.19.3</h3>
+<ul>
+<li><strong>🚀New</strong> (ES/KBN) 7.6.1 compatibility</li>
+<li><strong>🚀New</strong> (ES) customizable name of settings index</li>
+<li><strong>🧐Enhancement</strong> (KBN) configurable ROR cookie name</li>
+<li><strong>🧐Enhancement</strong> (ES/KBN) handling of encoded ROR headers in Authorization header values</li>
+<li><strong>🧐Enhancement</strong> (KBN) user feedback on why login failed</li>
+<li><strong>🐞Fix</strong> (ES) support for multiple header values</li>
+<li><strong>🐞Fix</strong> (ES) releasing LDAP connection pool on reloading ROR settings</li>
+<li><strong>🐞Fix</strong> (KBN) multitenancy issue with 7.6.0+</li>
+<li><strong>🐞Fix</strong> (KBN) creation of default space for new tenant</li>
+<li><strong>🐞Fix</strong> (KBN 6.x) in RO mode, don't hide add/remove over fields in discovery</li>
+<li><strong>🐞Fix</strong> (KBN 6.x) index template &amp; in-index session manager issues</li>
+</ul>
+<h3 id="whats-new-in-1192">What's new in 1.19.2</h3>
+<ul>
+<li><strong>🚀New</strong> (KBN) 7.6.0 support</li>
+<li><strong>🧐Enhancement</strong> (KBN) less verbose info logging</li>
+<li><strong>🧐Enhancement</strong> (KBN) start up time semantic check for settings</li>
+<li><strong>🐞Fix</strong> (KBN Free) missing logout button</li>
+<li><strong>🐞Fix</strong> (KBN) error message creating internal proxy</li>
+<li><strong>🐞Fix</strong> (KBN 6.x) add field to filter button invisible in RO mode</li>
+</ul>
+<h3 id="whats-new-in-1191">What's new in 1.19.1</h3>
+<ul>
+<li><strong>🎁Product</strong> (KBN) <a href="https://forum.readonlyrest.com/t/provide-kibana-login-page-for-ror-oss-version/1441/2?u=sscarduzio">Launched ReadonlyREST Free for Kibana!</a></li>
+<li><strong>🚀New</strong> (ES) 7.6.0 support, Kibana support coming soon</li>
+<li><strong>🚀New</strong> (KBN) Audit log dashboard</li>
+<li><strong>🚀New</strong> (KBN) Template index can now be declared per tenant instead of globally</li>
+<li><strong>🚀New</strong> (ES) custom trust store file and password options in ROR settings</li>
+<li><strong>🧐Enhancement</strong> (ES) When "prompt_for_basic_auth" is enabled, ROR is going to return 401 instead of 404 when the index is not found or a user is not allowed to see the index</li>
+<li><strong>🧐Enhancement</strong> (ES) literal ipv6 with zone Id is acceptable network address</li>
+<li><strong>🧐Enhancement</strong> (ES) LDAP client cache improvements</li>
+<li><strong>🐞Fix</strong> (ES) /_all/_settings API issue</li>
+<li><strong>🐞Fix</strong> (ES) Index stats API &amp; Index shard stores API issue</li>
+<li><strong>🐞Fix</strong> (ES) readonlyrest.force_load_from_file setting decoding issue</li>
+<li><strong>🐞Fix</strong> (KBN) allowing user to be logged in in two tabs at the same time</li>
+<li><strong>🐞Fix</strong> (KBN) logging with JWT parameter issue</li>
+<li><strong>🐞Fix</strong> (KBN) parsing of sessions fetched from ES index</li>
+<li><strong>🐞Fix</strong> (KBN) logout issue</li>
+</ul>
+<h3 id="whats-new-in-1190">What's new in 1.19.0</h3>
+<ul>
+<li><strong>🚀New</strong> (KBN) Configurable option to delete docs from tenant index when not present in template</li>
+<li><strong>🧐Enhancement</strong> (ES) Less verbose logging of blocks history</li>
+<li><strong>🧐Enhancement</strong> (ES) Enriched logs and audit with attempted username</li>
+<li><strong>🧐Enhancement</strong> (ES) Better settings validation - only one authentication rule can be used in given block</li>
+<li><strong>🧐Enhancement</strong> (ES/KBN) Plugin versions printing in logs on launch</li>
+<li><strong>🧐Enhancement</strong> (ES) When user doesn't have access to given index, ROR pretends that the index doesn't exist and return 404 instead of 403</li>
+<li><strong>🐞Fix</strong> (ES) Searching for nonexistent/forbidden index with wildcard mirrors default ES behaviour instead of returning 403</li>
+<li><strong>🐞Fix</strong> (KBN) Switching groups bug</li>
+</ul>
+<h3 id="whats-new-in-11810">What's new in 1.18.10</h3>
+<ul>
+<li><strong>🚀New</strong> (ES/KBN) Support v6.8.6, v7.5.0, v7.5.1</li>
+<li><strong>🚀New</strong> (KBN) Group names can now be mapped to aliases</li>
+<li><strong>🚀New</strong> (ES) New, more robust and simple method of creating custom audit log serializers</li>
+<li><strong>🚀New</strong> (ES) Example projects with custom audit log serializers</li>
+<li>🐞<strong>Fix</strong> (KBN) Prevent index migration after kibana startup</li>
+<li><strong>🧐Enhancement</strong> (KBN) If default space doesn't exist in kibana index then copy from default one</li>
+<li><strong>🧐Enhancement</strong> (KBN) Crypto improvements - store init vector with encrypted data as base64 encoded json.</li>
+<li><strong>🧐Enhancement</strong> (ES) Better settings validation - prevent duplicated keys in readonlyrest.yml</li>
+</ul>
+<h3 id="whats-new-in-1189">What's new in 1.18.9</h3>
+<ul>
+<li><strong>🚀New</strong> (ES/KBN) Support v7.4.1, v7.4.2</li>
+<li><strong>🚀New</strong> (KBN) Kibana sessions stored in ES index</li>
+<li>🐞<strong>Fix</strong> (ES) issue with in-index settings auto-reloading</li>
+<li>🐞<strong>Fix</strong> (ES) _cat/indices empty response when matched block doesn't contain 'indices' rule</li>
+</ul>
+<h3 id="whats-new-in-1188">What's new in 1.18.8</h3>
+<ul>
+<li><strong>🚀New</strong> (ES/KBN) Support v7.4.0</li>
+<li><strong>🚀New</strong> (ES) Elasticsearch SQL Support</li>
+<li><strong>🚀New</strong> (ES) Internode ssl support for es5x, es60x, es61x and es62x</li>
+<li><strong>🚀New</strong> (ES) new runtime variable @{acl:current_group}</li>
+<li><strong>🚀New</strong> (ES) namespace for user variable and support for both versions: @{user} and @{acl:user}</li>
+<li><strong>🚀New</strong> (ES) support for multiple values in uri_re rule</li>
+<li><strong>🧐Enhancement</strong> (ES) more reliable in-index settings loading of ES with ROR startup</li>
+<li><strong>🧐Enhancement</strong> (ES) less verbose logs in JWT rules</li>
+<li><strong>🧐Enhancement</strong> (ES) Better response from ROR API when plugin is disabled</li>
+<li><strong>🧐Enhancement</strong> (ES) Splitting verification ssl property to client_authentication and certificate_verification</li>
+<li><strong>🐞Fix</strong> (ES) issue with backward compatibility of proxy_auth settings</li>
+<li><strong>🐞Fix</strong> (ES) /_render/template request NPE</li>
+<li><strong>🐞Fix</strong> (ES) _cat/indices API bug fixes</li>
+<li><strong>🐞Fix</strong> (ES) _cat/templates API return empty list instead of FORBIDDEN when no indices are found</li>
+<li><strong>🐞Fix</strong> (ES) updated regex for kibana access rule to support 7.3 ES</li>
+<li><strong>🐞Fix</strong> (ES) proper resolving of non-string ENV variables in readonlyrest.yml</li>
+<li><strong>🐞Fix</strong> (ES) lang-mustache search template handling</li>
+</ul>
+<h3 id="whats-new-in-1187">What's new in 1.18.7</h3>
+<ul>
+<li><strong>🚀New</strong> (ES) Field level security (FLS) supports nested JSON fields</li>
+<li><strong>🐞Security Fix</strong> (ES) Authorization headers appeared in clear in logs</li>
+<li><strong>🧐Enhancement</strong> (KBN) Don't logout users when they are not allowed to search a index-pattern</li>
+<li><strong>🧐Enhancement</strong> (ES) Headers obfuscation is now case insensitive</li>
+</ul>
+<h3 id="whats-new-in-1186">What's new in 1.18.6</h3>
+<ul>
+<li><strong>🚀New</strong> (ES/KBN) Support v7.3.1, v7.3.2</li>
+<li><strong>🚀New</strong> (ES) Configurable header names whose value should be obfuscated in logs</li>
+<li><strong>🚀New</strong> (KBN) Dynamic variables from user identity available in custom_logout_link</li>
+<li><strong>🧐Enhancement</strong> (ES) Richer logs for JWT errors</li>
+<li><strong>🧐Enhancement</strong> (ENT) nextUrl works also with SAML now</li>
+<li><strong>🧐Enhancement</strong> (ENT) SAML assertion object available in ACL dynamic variables</li>
+<li><strong>🧐Enhancement</strong> (KBN) Validate LDAP server(s) before accepting new YAML settings</li>
+<li><strong>🧐Enhancement</strong> (KBN) Ensure a read-only UX for 'ro' users in older Kibana</li>
+<li><strong>🐞Fix</strong> (ES) Fix memory leak from dependency (snakeYAML)</li>
+</ul>
+<h3 id="whats-new-in-1185">What's new in 1.18.5</h3>
+<ul>
+<li><strong>🐞Security Fix</strong> (ES) indices rule can now properly handle also the templates API</li>
+<li><strong>🧐Enhancement</strong> (ES) Array dynamic variables are serialized as CSV wrapped in double quotes</li>
+<li><strong>🧐Enhancement</strong> (ES) Cleaner debug logs (no stacktraces on forbidden requests)</li>
+<li><strong>🧐Enhancement</strong> (ES) LDAP debug logs fire also when cache is hit</li>
+<li><strong>🚀New</strong> (ES/KBN) Support v7.2.1, v7.3.0</li>
+<li><strong>🐞Fix</strong> (PRO) PRO plugin crashing for some Kibana versions</li>
+<li><strong>🐞Fix</strong> (ENT) SAML library wrote a too large cookie sometimes</li>
+<li><strong>🐞Fix</strong> (ENT) SAML logout not working</li>
+<li><strong>🐞Fix</strong> (ENT) JWT fix exception "cannot set requestHeadersWhitelist"</li>
+<li><strong>🐞Fix</strong> (PRO/ENT) Hide more UI elements for RO users</li>
+<li><strong>🐞Fix</strong> (PRO/ENT) Sometimes not all the available groups appear in tenancy selector</li>
+<li><strong>🐞Fix</strong> (PRO/ENT) Feature "nextUrl" broke</li>
+<li><strong>🐞Fix</strong> (PRO/ENT) prevent user kick-out when APM is not configured and you are not an admin</li>
+<li><strong>🚀New</strong> (PRO/ENT) Kibana request path/method now sent to ES (good for policing dev-tools)</li>
+</ul>
+<h3 id="whats-new-in-1184">What's new in 1.18.4</h3>
+<ul>
+<li><strong>🚀New</strong> (ES) User impersonation API</li>
+<li><strong>🚀New</strong> (ES) Support latest 6.x and 5.x versions</li>
+<li><strong>🐞Security Fix</strong> (ES) filter/fields rules leak</li>
+<li><strong>🐞Fix</strong> (KBN/ENT) allow more action for kibana_access, prevent sudden logout</li>
+<li><strong>🐞Fix</strong> (KBN/ENT) temporarily roll back "support for unlimited tenancies"</li>
+</ul>
+<h3 id="whats-new-in-1183">What's new in 1.18.3</h3>
+<ul>
+<li><strong>🚀New</strong> Support added for ES/Kibana 6.8.1</li>
+<li><strong>🧐Enhancement</strong> (ES) Crash ES on invalid settings instead of stalling forever</li>
+<li><strong>🧐Enhancement</strong> (ES) Better logging on JWT, JSON-paths, LDAP, YAML errors</li>
+<li><strong>🧐Enhancement</strong> (ES) Block level settings validation to user with precious hints</li>
+<li><strong>🧐Enhancement</strong> (ES) If force_load_from_file: true, don't poll index settings</li>
+<li><strong>🧐Enhancement</strong> (ES) Order now counts declaring LDAP Failover HA servers</li>
+<li><strong>🐞Fix</strong> (ES) "EsIndexJsonContentProvider" had a null pointer exception</li>
+<li><strong>🐞Fix</strong> (ES) "es.set.netty.runtime.available.processors" exception</li>
+<li><strong>🧐Enhancement</strong> (KBN) Collapsible logout button</li>
+<li><strong>🧐Enhancement</strong> (KBN) ROR App now uses a HA http client</li>
+<li><strong>🧐Enhancement</strong> (KBN) Automatic logout for inactivity</li>
+<li><strong>🧐Enhancement</strong> (KBN) Support unlimited amount of tenancies</li>
+<li><strong>🐞Fix</strong> (KBN/ENT) concurrent multitenancy bug</li>
+<li><strong>🐞Fix</strong> (KBN) Avoid sporadic errors on Save/Load buttons</li>
+</ul>
+<h3 id="whats-new-in-1182">What's new in 1.18.2</h3>
+<ul>
+<li><strong>🚀New</strong> Support for Elasticsearch &amp; Kibana 7.2.0</li>
+<li><strong>🐞Fix</strong> (ES) restore indices ("IDX") in audit logging</li>
+<li><strong>🧐Enhancement</strong> (ES) New algorithm of setting evaluation order</li>
+<li><strong>🚀New</strong> (ES) JWT claims as dynamic variables. I.e. "@{jwt:claim.json.path}"</li>
+<li><strong>🚀New</strong> (ES) "explode" dynamic variables. I.e. indices: ["@explode{x-indices}"]</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) preserve comments and formatting in YAML editor</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) Print error message when session is expired</li>
+<li><strong>🐞Regression</strong> (PRO/Enterprise) Redirect to original link after login</li>
+<li><strong>🐞Regression</strong> (PRO/Enterprise) Broken CSV reporting</li>
+<li><strong>🧐Enhancement</strong> (PRO/Enterprise) Prevent navigating away from YAML editor w/ unsaved changes</li>
+<li><strong>🐞Fix</strong> (Enterprise) Exception when SAML connectors were all disabled</li>
+<li><strong>🐞Fix</strong> (Enterprise) Concurrent tenants could mix up each other kibana index</li>
+<li><strong>🐞Fix</strong> (Enterprise) Cannot inject custom JS if no custom CSS was also declared</li>
+<li><strong>🐞Fix</strong> (Enterprise) Injected JS had no effect on ROR logout button</li>
+<li><strong>🐞Fix</strong> (Enterprise) On narrow screens, the YAML editor showed buttons twice</li>
+</ul>
+<h3 id="whats-new-in-1181">What's new in 1.18.1</h3>
+<ul>
+<li><strong>🐞Fix</strong> (Elasticsearch) Reindex requests failed for a regression in indices extraction</li>
+<li><strong>🐞Fix</strong> (Elasticsearch) Groups rule erratically failed</li>
+<li><strong>🐞Fix</strong> (Elasticsearch) JWT claims can now contain special characters</li>
+<li><strong>🧐Enhancement</strong> (Elasticsearch) Better ACL History logging</li>
+<li><strong>🧐Enhancement</strong> (Elasticsearch) QueryLogSerializer and old custom log serializers work again</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) ReadonlyREST icon in Kibana was white on white</li>
+<li><strong>🐞Fix</strong> (Enterprise) SAML connectors could not be disabled</li>
+<li><strong>🐞Fix</strong> (Enterprise) SAML connector "buttonName" didn't work</li>
+</ul>
+<h3 id="whats-new-in-1180">What's new in 1.18.0</h3>
+<ul>
+<li><strong>🚀New</strong> Support for Elasticsearch &amp; Kibana 7.0.1</li>
+<li><strong>🧐Enhancement</strong> (Elasticsearch) empty array values in settings are invalid</li>
+<li><strong>🐞Security Fix</strong> (Elasticsearch) arbitrary x-cluster search referencing local cluster</li>
+<li><strong>🐞Fix</strong> (Elasticsearch) ArrayOutOfBoundException on snapshot operations</li>
+<li><strong>🧐Enhancement</strong> (PRO/Enterprise) History cleaning can now be disabled ("clearSessionOnEvents")</li>
+</ul>
+<h3 id="whats-new-in-1177">What's new in 1.17.7</h3>
+<ul>
+<li><strong>🚀New</strong> Support for Elasticsearch 7.0.0 (Kibana is coming soon)</li>
+<li><strong>🧐Enhancement</strong> (Elasticsearch) rewritten LDAP connector</li>
+<li><strong>🧐Enhancement</strong> (Elasticsearch) new core written in Scala is now GA</li>
+<li><strong>🐞Fix</strong> (Enterprise) devtools requests now honor the currently selected tenancy</li>
+<li><strong>🐞Security Fix</strong> (Enterprise/PRO) Fix "connectorsService" error in installation</li>
+</ul>
+<h3 id="whats-new-in-1175">What's new in 1.17.5</h3>
+<ul>
+<li><strong>🚀New</strong> Support for Kibana/Elasticsearch 6.7.1</li>
+<li><strong>🧐Enhancement</strong> (Enterprise &gt;= Kibana 6.6.0) Multiple SAML identity provider</li>
+<li><strong>🐞Security Fix</strong> (Enterprise/PRO) Don't pass auth headers back to the browser</li>
+<li><strong>🐞Fix</strong> (Enterprise/PRO) Missing null check caused error in reporting (CSV)</li>
+<li><strong>🐞Fix</strong> (Enterprise) Don't reject requests if SAML groups are not configured</li>
+<li><strong>🐞Fix</strong> filter/fields rules not working in msearch (in 6.7.x)</li>
+<li><strong>🧐Enhancement</strong> Print whole LDAP search query in debug log</li>
+</ul>
+<h3 id="whats-new-in-1174">What's new in 1.17.4</h3>
+<ul>
+<li><strong>🚀New</strong> Support for Kibana/Elasticsearch 6.7.0</li>
+<li><strong>🧐Enhancement</strong> (PRO/Enterprise) JWT query param is the preferred credentials provider</li>
+<li><strong>🧐Enhancement</strong> (PRO/Enterprise) admin users can use indices management</li>
+<li><strong>🧐Enhancement</strong> (PRO/Enterprise) ro users can dismiss telemetry form</li>
+<li><strong>🐞Fix</strong> Audit logging in 5.1.x now works again</li>
+<li><strong>🐞Fix</strong> unpredictable behaviour of "filter" and "fields" when using external auth</li>
+<li><strong>🐞Fix</strong> LDAP ConcurrentModificationException</li>
+<li><strong>🐞Fix</strong> Audit logging in 5.1.x now works again</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) JWT deep-link works again</li>
+</ul>
+<h3 id="whats-new-in-1173">What's new in 1.17.3</h3>
+<p>1.17.2 went unreleased, all changes have been merged in 1.17.3 directly</p>
+<ul>
+<li><strong>🐞Fix</strong> (Enterprise) Tenancy selector showing if user belonged to one group</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) RW buttons not hiding for RO users in React Kibana apps</li>
+<li><strong>🐞Fix</strong> (Enterprise) Tenancy templating now works much more reliably</li>
+<li><strong>🐞Fix</strong> (Enterprise) Missing tenancy selector icon after switching tenancy</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) barring static files requests caused sudden logout</li>
+<li><strong>🐞Fix</strong> Numerous fixes to better support Kibana 6.6.x</li>
+<li><strong>🐞Fix</strong> Critical fixes in new Scala core</li>
+<li><strong>🐞Fix</strong> Exception in reindex requests caused tenancy templating to fail</li>
+<li><strong>🧐Enhancement</strong> Bypass cross-cluster search logic if single cluster</li>
+</ul>
+<h3 id="whats-new-in-1171">What's new in 1.17.1</h3>
+<ul>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) SAML now works well in 6.6.x</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) "undefined" authentication error before login</li>
+<li><strong>🐞Fix</strong> (Enterprise) Default space creation failures for new tenants</li>
+<li><strong>🐞Fix</strong> (Enterprise) Icons/titles CSS misalignment in sidebar (Firefox)</li>
+<li><strong>🧐Enhancement</strong>(Enterprise) UX: Larger tenancy selector</li>
+<li><strong>🐞Security Fix</strong> (Enterprise) Privilege escalation when changing tenancies under monitoring</li>
+<li><strong>🐞Fix</strong> (Elasticsearch) compatibility fixes to support new Kibana features</li>
+<li><strong>🧐Enhancements</strong> (Elasticsearch) New core and LDAP connector written in Scala is finished, now under QA.</li>
+</ul>
+<h3 id="whats-new-in-1170">What's new in 1.17.0</h3>
+<ul>
+<li><strong>🚀New Feature</strong> Support for Kibana/Elasticsearch 6.6.0, 6.6.1</li>
+<li><strong>🚀New Feature</strong> Internode SSL (ES 6.3.x onwards)</li>
+<li><strong>🧐Enhancement</strong>(PRO/Enterprise) UI appearence</li>
+<li><strong>🧐Enhancement</strong> Made HTTP Connection configurable (PR #410)</li>
+<li><strong>🐞Fix</strong> slow boot due to SecureRandom waiting for sufficient entropy</li>
+<li><strong>🐞Fix</strong> Enable kibana_access:ro to create short urls in es6.3+ (PR #408)</li>
+</ul>
+<h3 id="whats-new-in-11634">What's new in 1.16.34</h3>
+<ul>
+<li><strong>🧐Enhancement</strong> X-Forwarded-For header in printed es logs ("XFF")</li>
+<li><strong>🧐Enhancement</strong> kibana_index: ".kibana_@{user}" when user is "John Doe" becomes .kibana_john_doe</li>
+<li><strong>🐞Fix</strong> (Enteprise) parse SAML groups from assertion as array of strings</li>
+<li><strong>🐞Fix</strong> (Enteprise) SAMLRequest in location header was URLEncoded twice, broke on some IdP</li>
+<li><strong>🐞Fix</strong> (PRO/Enteprise) "cookiePass" works again, no more need for sticky cookies in load balancers!</li>
+<li><strong>🐞Fix</strong> (PRO/Enteprise) fix redirect loop with JWT deep linking when JWT token expires</li>
+<li><strong>🧐Enhancement</strong> (PRO/Enteprise) fix audit demo page CSS</li>
+<li><strong>🧐Enhancement</strong> (Enteprise) SAML more configuration parameters available</li>
+<li><strong>🚀New Feature</strong> (PRO/Enteprise) set ROR to debug mode (readonlyrest_kbn.logLevel: "debug")</li>
+</ul>
+<h3 id="whats-new-in-11633">What's new in 1.16.33</h3>
+<ul>
+<li><strong>🐞Fix</strong>(PRO/Enteprise) compatibility problems with older Kibana versions</li>
+<li><strong>🐞Fix</strong>(PRO/Enteprise) compatibility problems with OSS Kibana version</li>
+</ul>
+<h3 id="whats-new-in-11632">What's new in 1.16.32</h3>
+<ul>
+<li><strong>🚀New Feature</strong> "kibanaIndexTemplate": default dashboards and spaces for new tenants</li>
+<li><strong>🧐Enhancement</strong> Support for ES/Kibana 6.5.4</li>
+<li><strong>🧐Enhancement</strong> Upgraded LDAP library</li>
+<li><strong>🧐Enhancement</strong> (Enterprise) Now tenants save their CSV exports in their own reporting index</li>
+<li><strong>🐞Fix</strong>(PRO/Enteprise) Support passwords that start and/or end with spaces</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) Now reporting works again</li>
+</ul>
+<h3 id="whats-new-in-11631">What's new in 1.16.31</h3>
+<ul>
+<li><strong>🧐Enhancement</strong> Support for ES/Kibana 6.5.2, 6.5.3</li>
+<li><strong>🚧WIP</strong>: Laid out the foundation for LDAP HA support</li>
+</ul>
+<h3 id="whats-new-in-11629">What's new in 1.16.29</h3>
+<ul>
+<li><strong>🧐Enhancement</strong> Support for ES/Kibana 6.4.3</li>
+<li><strong>🚀New Feature</strong> (PRO/Enterprise) configurable server side session duration</li>
+<li><strong>🚀New Feature</strong> [LDAP] High Availability: Round Robin or Failover</li>
+</ul>
+<h3 id="whats-new-in-11628">What's new in 1.16.28</h3>
+<ul>
+<li><strong>🧐Enhancement</strong> Support for ES/Kibana 6.4.2</li>
+<li><strong>🐞Fix</strong> (Enterprise) Multi tenancy: sometimes changing tenancy would not change kibana index</li>
+<li><strong>🐞Security Fix</strong> (Enterprise/PRO) Avoid echoing Base64 encoded credentials in login form error message</li>
+<li><strong>🧐Enhancement</strong> (Enterprise/PRO) Remove latest search/visualization/dashboard history on logout</li>
+<li><strong>🧐Enhancement</strong> (Enterprise/PRO) Clear transient authentication cookies on login error to avoid authentication deadlocks</li>
+<li><strong>🐞Fix</strong>: External JWT verification may throw ArrayOutOfBoundException</li>
+<li><strong>🚧WIP</strong>: Laid out the foundation for internode SSL transport (port 9300)</li>
+</ul>
+<h3 id="whats-new-in-11627">What's new in 1.16.27</h3>
+<ul>
+<li><strong>🚀New Feature</strong> [JWT] external validator: it's now possible to avoid storing the private key in settings</li>
+<li><strong>🧐Enhancement</strong> Support for ES/Kibana 6.4.1</li>
+<li><strong>🧐Enhancement</strong> Rewritten big part of ES plugin <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md">documentation</a></li>
+<li><strong>🧐Enhancement</strong> SAML Single log out flow</li>
+<li><strong>🐞Fix</strong> (Enterprise/PRO) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#common-cookie-encryption-secret">cookiePass</a> works again, but only for Kibana 5.x. Newer Kibana needs sticky sessions in LB.</li>
+<li><strong>🧐Enhancement</strong> (Enterprise/PRO) much faster logout</li>
+</ul>
+<h3 id="whats-new-in-11626">What's new in 1.16.26</h3>
+<ul>
+<li><strong>🐞 Fix</strong> (PRO/Enterprise) bugs during plugin packaging and installation process</li>
+</ul>
+<h3 id="whats-new-in-11625">What's new in 1.16.25</h3>
+<ul>
+<li><strong>🚀New Feature</strong> Users rule: easily restrict external authentication to a list of users</li>
+<li><strong>🧐Enhancement</strong> Support for ES 5.6.11</li>
+<li><strong>🐞Hot Fix</strong> (Enterprise/PRO) Error 404 when logging in with older versions of Kibana</li>
+</ul>
+<h3 id="whats-new-in-11624">What's new in 1.16.24</h3>
+<ul>
+<li><strong>🚀New Feature</strong> (Enterprise) SAML Authentication</li>
+<li><strong>🚀New Feature</strong> Support for Elasticsearch and Kibana 6.4.0</li>
+<li><strong>🚀New Feature</strong> Headers rule now split in headers_or and headers_and</li>
+<li><strong>🧐Enhancement</strong> Headers rule now allows wildcards</li>
+<li><strong>🚀New Feature</strong> (Enterprise) Multi-tenancy now works also with JSON groups provider</li>
+<li><strong>🐞 Fix</strong> Multi-tenancy (Enterprise) incoherent initial kibana_index and current group</li>
+</ul>
+<h3 id="whats-new-in-11623">What's new in 1.16.23</h3>
+<ul>
+<li><strong>🧐Enhancement</strong> Support for Elastic Stack 6.3.1 and 5.6.10</li>
+<li><strong>🚀New Feature</strong> (Enterprise) Custom CSS injection for Kibana</li>
+<li><strong>🚀New Feature</strong> (Enterprise) Custom Javascript injection for Kibana</li>
+<li><strong>🚀New Feature</strong> (PRO/Enterprise) access paths without need to login (i.e. /api/status)</li>
+<li><strong>🐞Fix</strong> (PRO/Enterprise) Navigating to X-Pack APM caused hidden Kibana apps to reappear</li>
+</ul>
+<h3 id="whats-new-in-11622">What's new in 1.16.22</h3>
+<ul>
+<li><strong>🚀New Feature:</strong>  map LDAP groups to local groups (a.k.a. role mapping)</li>
+<li><strong>🐞 Fix</strong> (Elasticsearch) wildcard aliases resolution not working in "indices" rule.</li>
+<li><strong>🧐Enhancement:</strong> it is now possible now to use JDK 9 and 10</li>
+<li><strong>🐞 Fix</strong> (PRO/Enterprise) wait forever for login request (i.e.  slow LDAP servers)</li>
+<li><strong>🐞 Fix</strong> (PRO/Enterprise) add spinner and block UI if login request is being sent</li>
+<li><strong>🐞 Fix</strong> (PRO/Enterprise) if user is logged out because of LDAP cache expiring + slow authentication, redirect to login.</li>
+<li><strong>🐞 Fix</strong> (PRO/Enterprise) let RO users delete/edit search filters</li>
+</ul>
+<h3 id="whats-new-in-11621">What's new in 1.16.21</h3>
+<ul>
+<li><strong>🚀New Feature:</strong> Introducing support for Elasticsearch and Kibana v6.3.0</li>
+<li><strong>🐞 Fix</strong> (Enterprise) multi tenancy - switching tenancy does not always switch kibana index</li>
+</ul>
+<h3 id="whats-new-in-11620">What's new in 1.16.20</h3>
+<h2 id="readonlyrest-proenterprise-for-kibana">ReadonlyREST PRO/Enterprise for Kibana</h2>
+<ul>
+<li><strong>🧐 Enhancement</strong>: when login, forward "elasticsearch.requestHeadersWhitelist" headers. (useful for "headers" rule  and "proxy_auth" to work well.)</li>
+</ul>
+<h2 id="readonlyrest-for-elasticsearch">ReadonlyREST for Elasticsearch</h2>
+<ul>
+<li><strong>🚀New Feature</strong>: DLS (with dynamic variables suppoort) Thanks <a href="http://www.datasweet.fr/">DataSweet</a>!</li>
+<li><strong>🚀 New feature</strong>: Field level security</li>
+<li><strong>🚀 New rules</strong>: Snapshot, Repositories, Headers</li>
+<li><strong>🧐 Enhancement</strong>: custom audit serializers: the request content is available</li>
+<li><strong>🐞 Fix</strong> readonlyrest.yml path discovery</li>
+<li><strong>🐞 Fix:</strong> LDAP available groups discovery (tenancy switcher) corner cases</li>
+<li><strong>🐞 Fix</strong>: auth_key_sha1, auth_key_sha256 hashes in settings should be case insensitive</li>
+<li><strong>🐞 Fix</strong>: LDAP authentication didn't work with local group</li>
+</ul>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../SUMMARY/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Table of contents" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Table of contents
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../commercial/" class="md-footer__link md-footer__link--next" aria-label="Next: Commercial Licenses" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Commercial Licenses
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+    
+  </body>
+</html>
