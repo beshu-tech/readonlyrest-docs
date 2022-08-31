@@ -463,13 +463,13 @@ under `ssl` or `ssl_internode` section. This option is applicable for both ssl m
 
 If you are using ReadonlyREST in version above 1.44.0 then you are able to use PEM files directly without the need of placing them inside a keystore or truststore.  
 
-To use PEM files instead of keystore file, use such configuration instead of `keystore_file`, `keystore_pass`, `key_pass` options: 
+To use PEM files instead of keystore file, use such configuration instead of `keystore_file`, `keystore_pass`, `key_pass` fields: 
 ```text
 server_certificate_key_file: private_key.pem
 server_certificate_file: cert_chain.pem
 ```
 
-To use PEM file instead of truststore file, use such configuration instead of `truststore_file`, `truststore_pass` options: 
+To use PEM file instead of truststore file, use such configuration instead of `truststore_file`, `truststore_pass` fields: 
 ```text
 client_trusted_certificate_file: trusted_certs.pem
 ```
@@ -477,6 +477,8 @@ client_trusted_certificate_file: trusted_certs.pem
 
 #### Using Let's encrypt
 We are  going to show how to first add all the certificates and private key into PKCS#12 keystore, and then (optionally) converting it to JKS keystore. ReadonlyREST supports both formats.
+
+**⚠️IMPORTANT**: if you are using ReadonlyREST in version above 1.44.0 then you don't have to create a keystore. You are able to use PEM files directly using the description above. 
 
 This tutorial can be a useful example on how to use certificates from other providers. 
 
