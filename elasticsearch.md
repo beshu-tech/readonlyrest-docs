@@ -366,7 +366,7 @@ The YAML snippet above, like all of this plugin's settings should be saved insid
 
 ### Encryption
 
-An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Both files, certificate and private key, have to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section.
+An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore. 
 
 ReadonlyREST can be configured to encrypt network traffic on two independent levels:
 1. HTTP (port 9200)
@@ -497,8 +497,26 @@ truststore_pass: truststorepass
 under `ssl` or `ssl_internode` section. This option is applicable for both ssl modes - external ssl and internode ssl. The truststore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml` \(like keystore\). When not specifed, ReadonlyREST uses default truststore.
 
 
+#### PEM files instead of a keystore and/or truststore
+
+If you are using ReadonlyREST 1.44.0 or newer then you are able to use PEM files directly without the need of placing them inside a keystore or truststore.  
+
+To use PEM files instead of keystore file, use such configuration instead of `keystore_file`, `keystore_pass`, `key_pass` fields: 
+```text
+server_certificate_key_file: private_key.pem
+server_certificate_file: cert_chain.pem
+```
+
+To use PEM file instead of truststore file, use such configuration instead of `truststore_file`, `truststore_pass` fields: 
+```text
+client_trusted_certificate_file: trusted_certs.pem
+```
+
+
 #### Using Let's encrypt
 We are  going to show how to first add all the certificates and private key into PKCS#12 keystore, and then (optionally) converting it to JKS keystore. ReadonlyREST supports both formats.
+
+**⚠️IMPORTANT**: if you are using ReadonlyREST in version above 1.44.0 then you don't have to create a keystore. You are able to use PEM files directly using the description above. 
 
 This tutorial can be a useful example on how to use certificates from other providers. 
 
@@ -508,7 +526,7 @@ This tutorial can be a useful example on how to use certificates from other prov
 ```
 Now change to the directory (probably /etc/letsencrypt/live/DOMAIN.tld) where the certificates were created.
 
-##### 2. Create a PKCS12 file with the full chain and private key
+##### 2. Create a PKCS12 keystore with the full chain and private key
 ```
 openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out pkcs.p12 -name NAME
 ```
