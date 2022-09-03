@@ -328,7 +328,7 @@ The YAML snippet above, like all of this plugin's settings should be saved insid
 
 ### Encryption
 
-An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST above 1.44.0 supports using PEM files directly, without the need to use a keystore. 
+An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore. 
 
 ReadonlyREST can be configured to encrypt network traffic on two independent levels:
 1. HTTP (port 9200)
@@ -461,7 +461,7 @@ under `ssl` or `ssl_internode` section. This option is applicable for both ssl m
 
 #### PEM files instead of a keystore and/or truststore
 
-If you are using ReadonlyREST in version above 1.44.0 then you are able to use PEM files directly without the need of placing them inside a keystore or truststore.  
+If you are using ReadonlyREST 1.44.0 or newer then you are able to use PEM files directly without the need of placing them inside a keystore or truststore.  
 
 To use PEM files instead of keystore file, use such configuration instead of `keystore_file`, `keystore_pass`, `key_pass` fields: 
 ```text
