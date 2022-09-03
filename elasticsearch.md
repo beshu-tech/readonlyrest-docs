@@ -1968,13 +1968,13 @@ readonlyrest:
       user_id_attribute: "uid"                                  
       search_groups_base_DN: "ou=Groups,dc=example,dc=com"
       unique_member_attribute: "uniqueMember"                   
-      connection_pool_size: 10                                  
-      connection_timeout: 10s                                   
-      request_timeout: 10s                                      
+      connection_pool_size: 20                                  
+      connection_timeout: 1s                                   
+      request_timeout: 2s                                      
       cache_ttl: 60s                                            
       group_search_filter: "(objectClass=group)(cn=application*)"
       group_name_attribute: "cn"                                 
-      circuit_breaker:                                           
+      circuit_breaker:                                        
         max_retries: 2                                           
         reset_duration: 5s                                       
 
@@ -2034,9 +2034,9 @@ readonlyrest:
       user_id_attribute: "uid"                                  
       search_groups_base_DN: "ou=Groups,dc=example,dc=com"
       unique_member_attribute: "uniqueMember"                   
-      connection_pool_size: 10                                  
-      connection_timeout: 10s                                   
-      request_timeout: 10s                                      
+      connection_pool_size: 20                                  
+      connection_timeout: 1s                                   
+      request_timeout: 2s                                      
       cache_ttl: 60s                                            
 
     # High availability LDAP settings (using "hosts", rather than "host")
@@ -2076,10 +2076,10 @@ readonlyrest:
       cache_ttl_in_sec: 60
       validate: false # SSL certificate validation (default to true)
       http_connection_settings:
-        connection_timeout_in_sec: 5           # default 2
-        socket_timeout_in_sec: 3               # default 5
-        connection_request_timeout_in_sec: 3   # default 5  
-        connection_pool_size: 10               # default 30
+        connection_timeout_in_sec: 1           # default 2
+        socket_timeout_in_sec: 2               # default 5
+        connection_request_timeout_in_sec: 1   # default 5  
+        connection_pool_size: 20               # default 30
 
     - name: "ext2"
       authentication_endpoint: "http://external-website2:8080/auth2"
@@ -2138,10 +2138,10 @@ readonlyrest:
       response_groups_json_path: "$..groups[?(@.name)].name"   # see: https://github.com/json-path/JsonPath
       cache_ttl_in_sec: 60
       http_connection_settings:
-        connection_timeout_in_sec: 5                           # default 2
-        socket_timeout_in_sec: 3                               # default 5
-        connection_request_timeout_in_sec: 3                   # default 5  
-        connection_pool_size: 10                               # default 30
+        connection_timeout_in_sec: 1                           # default 2
+        socket_timeout_in_sec: 2                               # default 5
+        connection_request_timeout_in_sec: 2                   # default 5  
+        connection_pool_size: 20                               # default 30
 ```
 
 In example above, a user is authenticated by reverse proxy and then external service is asked for groups for that user. If groups returned by the service contain any group declared in `groups` list, user is authorized and rule matches.
