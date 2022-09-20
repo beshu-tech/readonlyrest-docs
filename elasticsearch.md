@@ -69,7 +69,7 @@ When prompted about additional permissions, answer **y**.
 If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
-# Patch ES 
+# Patch ES
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
@@ -78,7 +78,7 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 You can verify if Elasticsearch was correctly patched using command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
 Please note that the tool assumes that you run it from the root of your ES installation directory or the default installation directory is `/usr/share/elasticsearch`. But if you want or need, you can instruct it where your Elasticsearch is installed by executing one of tool's command with `--es-path` parameter:
@@ -188,7 +188,7 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
 You can verify if Elasticsearch was correctly unpatched using command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
@@ -220,7 +220,7 @@ bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools/src/main/scala/tech/beshu/ror/tools/patches/Es8xxPatch.scala), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
-# Patch ES 
+# Patch ES
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
@@ -229,7 +229,7 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 You can verify if Elasticsearch was correctly patched using command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
@@ -280,7 +280,7 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
 You can verify if Elasticsearch was correctly unpatched using command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify 
+$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
@@ -377,7 +377,7 @@ ReadonlyREST can be configured to encrypt network traffic on two independent lev
 
 #### External REST API
 
-It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.  
+It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.
 **⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and append this one line:
 
 ```text
@@ -420,11 +420,11 @@ Similar to `ssl` for HTTP, the keystore should be stored in the same directory w
 
 ##### Internode communication with XPack nodes
 
-It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.3. 
+It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.3.
 
-To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates. 
+To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates.
 
-Generated `elastic-certificates.p12` could be then used in ROR node with such configuration 
+Generated `elastic-certificates.p12` could be then used in ROR node with such configuration
 ```text
 readonlyrest:
   ssl_internode:
@@ -439,7 +439,7 @@ readonlyrest:
 
 #### Certificate verification
 
-By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.  
+By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.
 It is useful on local/test environment, where security is not the most important concern. On production environment it is adviced to enable this option. It can be done by means of:
 
 ```text
@@ -500,7 +500,7 @@ under `ssl` or `ssl_internode` section. This option is applicable for both ssl m
 #### Using Let's encrypt
 We are  going to show how to first add all the certificates and private key into PKCS#12 keystore, and then (optionally) converting it to JKS keystore. ReadonlyREST supports both formats.
 
-This tutorial can be a useful example on how to use certificates from other providers. 
+This tutorial can be a useful example on how to use certificates from other providers.
 
 ##### 1. Create keys
 ```
@@ -677,7 +677,7 @@ If a **read request** asks for a some indices they have permissions for and some
 When the subset of indices is empty, it means that user are not allowed to access requested indices. In multitenancy environment we should consider two options:
 
 * requested indices don't exist
-* requested indices exist but logged user is not authorized to access them  
+* requested indices exist but logged user is not authorized to access them
 
 For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled \(for nonexistent index\). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. See [detailed example](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/index-not-found-examples.md).
 
@@ -850,7 +850,7 @@ Specifies which fields should be allowed explicitly \(other fields from mapping 
 
 Return documents deprived of all the fields, except the ones that:
 
-* start with `allowed_fields_prefix_` 
+* start with `allowed_fields_prefix_`
 * start with underscore
 * are equal to `allowed_field.nested_field.text`
 
@@ -898,7 +898,7 @@ However, when we introduce a filter \(or fields\) rule, this block will be able 
 The solution is to duplicate the block. The first one will intercept \(and filter!\) the read requests. The second one will intercept the remaining actions. Both ACL blocks together will entirely support a whole Kibana session.
 
 ```yaml
-    - name: "::RW_USER (filter read requests)::"  
+    - name: "::RW_USER (filter read requests)::"
       auth_key: rw_user:pwd
       indices: ["r*"]  # <-- DO NOT FILTER THE .kibana INDEX!
       filter: '{"query_string":{"query":"DestCountry:FR"}}'
@@ -1180,7 +1180,7 @@ In general it looks like this:
   - name: "ACL block with groups rule"
     indices: [x, y]
     groups: ["local_group1"] # this group name is defined in the "users" section
-    
+
   users:
   - username: ["pattern1", "pattern2", ...]
     groups: ["local_group1", "local_group2", ...]
@@ -1192,16 +1192,16 @@ In general it looks like this:
     <optionally_any_authorization_rule>: ...
 
   - username: ["pattern1", "pattern2", ...]
-    groups: 
+    groups:
       - local_group1: ["external_group1", "external_group2"]
-      - local_group2: ["external_group2"] 
+      - local_group2: ["external_group2"]
     <authentication_with_authorization_rule>: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
 ```
 
 
 For details see [User management](elasticsearch.md#users-and-groups).
 
-[Impersonation](details/impersonation.md) supports depends on 
+[Impersonation](details/impersonation.md) supports depends on
 authentication and authorization rules used in `users` section.
 
 #### `groups_and`
@@ -1219,7 +1219,7 @@ This rule is identical to the above defined `groups` rule, but this time ALL the
 
 #### `ldap_authentication`
 
-simple version: 
+simple version:
 `ldap_authentication: ldap1`
 
 extended version:
@@ -1249,7 +1249,7 @@ Shorthand rule that combines `ldap_authentication` and `ldap_authorization` rule
 ```yaml
 ldap_auth:
   name: "ldap1"
-  groups: ["group1", "group2"] 
+  groups: ["group1", "group2"]
 ```
 
 The same functionality can be achieved using the two rules described below:
@@ -1280,7 +1280,7 @@ ldap_authorization:
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
-[Impersonation](details/impersonation.md) is not supported by default 
+[Impersonation](details/impersonation.md) is not supported by default
 by LDAP rules.
 
 #### `jwt_auth`
@@ -1313,7 +1313,7 @@ readonlyrest:
       ror_kbn_auth:
         name: "kbn1"
         groups: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to at least one of the configured groups
-        
+
     - name: "ReadonlyREST Enterprise instance #1 - two groups required"
       ror_kbn_auth:
         name: "kbn1"
@@ -1669,7 +1669,7 @@ The `groups` rule accepts a list of group names. This rule will match if the res
     - name: Accept requests from users in groups team1 AND team2 on index3
       groups_and: ["team1", "team2"]
       indices: ["index3"]
-      
+
     users:
 
     - username: "alice"
@@ -1718,11 +1718,11 @@ ldaps:
 
     - name: ldap1
       host: "ldap1.example.com"
-      port: 389                                                     
-      ssl_enabled: false                                            
-      ssl_trust_all_certs: true                                     
-      bind_dn: "cn=admin,dc=example,dc=com"                         
-      bind_password: "${LDAP_PASSWORD}"                                     
+      port: 389
+      ssl_enabled: false
+      ssl_trust_all_certs: true
+      bind_dn: "cn=admin,dc=example,dc=com"
+      bind_password: "${LDAP_PASSWORD}"
       search_user_base_DN: "ou=People,dc=example,dc=com"
 ....
 ```
@@ -1808,17 +1808,17 @@ indices: [ ".kibana_@{jwt:department}", "otherIdx" ]
 # -> indices: [".kibana_infosec", "otherIdx"]
 
 # Using nested values in JWT using JSONPATH as dynamic variables
-indices: [ ".kibana_@{jwt:jsonpath.to.department}", "otherIdx"]  
+indices: [ ".kibana_@{jwt:jsonpath.to.department}", "otherIdx"]
 # claims = { "jsonpath": {"to": { "department": "infosec" }}}
 # -> indices: [".kibana_infosec", "otherIdx"]
 
 # Referencing array-typed values from JWT claims will expand in a list of strings
-indices: [ ".kibana_@explode{jwt:allowedIndices}", "otherIdx"]  
+indices: [ ".kibana_@explode{jwt:allowedIndices}", "otherIdx"]
 # claims = {"username": "u1", "allowedIndices":  ["x", "y"] }
 # -> indices: [".kibana_x", ".kibana_y", "otherIdx"]
 
 # Explode operator will generate an array of strings from a comma-separated string
-indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]  
+indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
 # HTTP Headers: [{ "x-indices_csv_string": "a,b"}]
 # -> indices: ["logstash_a*", "logstash_b*", "otherIdx"]
 ```
@@ -1836,14 +1836,14 @@ There are also plenty of technical settings which can be useful:
     * single host:
       * `host` (String, required) - LDAP server address
       * `port` (Integer, optional, default: `389`) - LDAP server port
-      * `ssl_enabled` (Boolean, optional, default: `true`) - enables or disables SSL for LDAP connection 
+      * `ssl_enabled` (Boolean, optional, default: `true`) - enables or disables SSL for LDAP connection
     * several hosts:
       * `hosts` (List, required) - list of LDAP server addresses. The address should look like this `ldap://[HOST]:[PORT]` or/and `ldaps://[HOST]:[PORT]`
       * `ha` (enum: [`FAILOVER`, `ROUND_ROBIN`], optional, default: `FAILOVER`) - provides high availability strategy for LDAP
     * auto-discovery:
       * `server_discovery` (Boolean|YAML object, optional, default: `false`) - for details see [LDAP server discovery section](#ldap-server-discovery)
-* `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server 
-* `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server 
+* `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server
+* `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server
 * `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving a whole response from LDAP server
 * `ssl_trust_all_certs` (Boolean, optional, default: `false`) - if it is set to `true`, untrusted certificates will be accepted
 * `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default, ROR starts only after it's able to connect to each server
@@ -1857,7 +1857,7 @@ Usually, we would like to configure three main things for defining the way LDAP 
 1. a way to **authenticate client** (LDAP binding; used by all LDAP rules):
     * `bind_dn` (string, optional, default: [not present]) - a username used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
     * `bind_password` (string, optional, default: [not present]) - a password used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
-    
+
 2. a way to **search users**. In ROR it can be done using the following YAML keys (used by all LDAP rules):
    * `search_user_base_DN` (string, required) - should refer to the base Distinguished Name of the users to be authenticated
    * `user_id_attribute` (string, optional, default: `uid`) - should refer to a unique ID for the user within the base DN
@@ -1869,14 +1869,14 @@ Usually, we would like to configure three main things for defining the way LDAP 
       * `unique_member_attribute` (string, optional, default: `uniqueMember`) - is the LDAP group object attribute that contains the names of the ROR groups
       * `group_search_filter` (string, optional, default: `(cn=*)`) - is the LDAP search filter (or filters) to limit the user groups returned by LDAP. By default, this filter will be joined (with `&`) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute=user_dn))`.
       * `group_attribute_is_dn` (boolean, optional, default: `true`) -
-        * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))` 
+        * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))`
         * then `false` the search filer will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_ID_ATTRIBUTE_VALUE}))`
    2. User entry - it has an attribute that refers to Group entries:
       * `search_groups_base_DN` (string, required) - should refer to the base Distinguished Name of the groups to which these users may belong
       * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
       * `groups_from_user_attribute` (string, optional, default: `memberOf`) -  is the LDAP user object attribute that contains the names of the ROR groups
 
-Examples: 
+Examples:
 
 ```text
 group_search_filter: "(objectClass=group)"
@@ -1885,7 +1885,7 @@ group_search_filter: "(cn=*)" # basically no group filtering
 ```
 
 #### Caching
-Too many calls made by ROR to our LDAP service can sometimes be problematic (eg. when one LDAP connector is used in many rules). The problem can be simply solved by using caching functionality. Caching can be configured per LDAP connector or per LDAP rule (see [`ldap_auth`](#ldap_auth), [`ldap_authentication`](#ldap_authentication), [`ldap_authorization`](#ldap_authorization) rules). By default cache is diabled. We can enabled it by set `cache_ttl` > `0 sec`. In the cache will be stored only results of successful requests - info about authentication result and/or returned LDAP groups for the given credentials. When LDAP connector level cache is used any rule that use the connector can take advantage of cached results. When we configure `cache_ttl` at LDAP rule level, the results of LDAP calls made by the rule will be stored in cache. Other LDAP rules won't have access to this cache. 
+Too many calls made by ROR to our LDAP service can sometimes be problematic (eg. when one LDAP connector is used in many rules). The problem can be simply solved by using caching functionality. Caching can be configured per LDAP connector or per LDAP rule (see [`ldap_auth`](#ldap_auth), [`ldap_authentication`](#ldap_authentication), [`ldap_authorization`](#ldap_authorization) rules). By default cache is diabled. We can enabled it by set `cache_ttl` > `0 sec`. In the cache will be stored only results of successful requests - info about authentication result and/or returned LDAP groups for the given credentials. When LDAP connector level cache is used any rule that use the connector can take advantage of cached results. When we configure `cache_ttl` at LDAP rule level, the results of LDAP calls made by the rule will be stored in cache. Other LDAP rules won't have access to this cache.
 
 #### Circuit Breaker
 The LDAP connector is equipped by default with a circuit breaker functionality. The circuit breaker can disable the connector from sending new requests to the server when it doesn't respond properly. After receiving a configurable number of failed responses in a row, the circuit breaker feature disables sending any new requests by terminating them immediately with an exception. After a configurable amount of time, the circuit breaker feature allows one request to pass again. If it succeeds, the connector goes back to normal operation. If not, a test request is sent again after a configurable amount of time. A general description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
@@ -1903,7 +1903,7 @@ The simplest configuration example of an LDAP connector instance using server di
 
 ```text
     - name: ldap
-      server_discovery: true                                        
+      server_discovery: true
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
@@ -1925,12 +1925,12 @@ Example:
         record_name: "_ldap._tcp.example.com"
         dns_url: "dns://192.168.1.100"
         ttl: "3 hours"
-        use_ssl: true                                    
+        use_ssl: true
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
-#### ROR with LDAP - examples 
+#### ROR with LDAP - examples
 In this example, users' credentials are validated via LDAP. The groups associated with each validated user, are resolved using the same LDAP server.
 
 **Simpler: authentication and authorization in one rule**
@@ -1958,38 +1958,38 @@ readonlyrest:
 
     - name: ldap1
       host: "ldap1.example.com"
-      port: 389                                                  
-      ssl_enabled: false                                         
-      ssl_trust_all_certs: true                                  
-      ignore_ldap_connectivity_problems: true                   
-      bind_dn: "cn=admin,dc=example,dc=com"                     
-      bind_password: "password"                                 
+      port: 389
+      ssl_enabled: false
+      ssl_trust_all_certs: true
+      ignore_ldap_connectivity_problems: true
+      bind_dn: "cn=admin,dc=example,dc=com"
+      bind_password: "password"
       search_user_base_DN: "ou=People,dc=example,dc=com"
-      user_id_attribute: "uid"                                  
+      user_id_attribute: "uid"
       search_groups_base_DN: "ou=Groups,dc=example,dc=com"
-      unique_member_attribute: "uniqueMember"                   
-      connection_pool_size: 10                                  
-      connection_timeout: 10s                                   
-      request_timeout: 10s                                      
-      cache_ttl: 60s                                            
+      unique_member_attribute: "uniqueMember"
+      connection_pool_size: 10
+      connection_timeout: 10s
+      request_timeout: 10s
+      cache_ttl: 60s
       group_search_filter: "(objectClass=group)(cn=application*)"
-      group_name_attribute: "cn"                                 
-      circuit_breaker:                                           
-        max_retries: 2                                           
-        reset_duration: 5s                                       
+      group_name_attribute: "cn"
+      circuit_breaker:
+        max_retries: 2
+        reset_duration: 5s
 
     # High availability LDAP settings (using "hosts", rather than "host")
     - name: ldap2
-      hosts:                                           
-      - "ldaps://ssl-ldap2.foo.com:636"                
-      - "ldaps://ssl-ldap3.foo.com:636"                
-      ha: "ROUND_ROBIN"                                
+      hosts:
+      - "ldaps://ssl-ldap2.foo.com:636"
+      - "ldaps://ssl-ldap3.foo.com:636"
+      ha: "ROUND_ROBIN"
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 
     # Server discovery variant
     - name: ldap3
-      server_discovery: true               
+      server_discovery: true
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
@@ -2004,7 +2004,7 @@ readonlyrest:
     access_control_rules:
 
     - name: Accept requests to index1 from users with valid LDAP credentials, belonging to LDAP group 'team1'
-      ldap_authentication: "ldap1"  
+      ldap_authentication: "ldap1"
       ldap_authorization:
         name: "ldap1"                                       # ldap name from 'ldaps' section
         groups: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
@@ -2012,7 +2012,7 @@ readonlyrest:
 
     - name: Accept requests to index2 from users with valid LDAP credentials, belonging to LDAP group 'team2'
       ldap_authentication:
-        name: "ldap2"  
+        name: "ldap2"
         cache_ttl: 60s
       ldap_authorization:
         name: "ldap2"
@@ -2024,27 +2024,27 @@ readonlyrest:
 
     - name: ldap1
       host: "ldap1.example.com"
-      port: 389                          
-      ssl_enabled: false                 
-      ssl_trust_all_certs: true          
-      ignore_ldap_connectivity_problems: true                   
-      bind_dn: "cn=admin,dc=example,dc=com"                     
-      bind_password: "password"                                 
+      port: 389
+      ssl_enabled: false
+      ssl_trust_all_certs: true
+      ignore_ldap_connectivity_problems: true
+      bind_dn: "cn=admin,dc=example,dc=com"
+      bind_password: "password"
       search_user_base_DN: "ou=People,dc=example,dc=com"
-      user_id_attribute: "uid"                                  
+      user_id_attribute: "uid"
       search_groups_base_DN: "ou=Groups,dc=example,dc=com"
-      unique_member_attribute: "uniqueMember"                   
-      connection_pool_size: 10                                  
-      connection_timeout: 10s                                   
-      request_timeout: 10s                                      
-      cache_ttl: 60s                                            
+      unique_member_attribute: "uniqueMember"
+      connection_pool_size: 10
+      connection_timeout: 10s
+      request_timeout: 10s
+      cache_ttl: 60s
 
     # High availability LDAP settings (using "hosts", rather than "host")
     - name: ldap2
-      hosts:                                                    
-      - "ldaps://ssl-ldap2.foo.com:636"                         
-      - "ldaps://ssl-ldap3.foo.com:636"                         
-      ha: "ROUND_ROBIN"                                         
+      hosts:
+      - "ldaps://ssl-ldap2.foo.com:636"
+      - "ldaps://ssl-ldap3.foo.com:636"
+      ha: "ROUND_ROBIN"
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
@@ -2053,7 +2053,7 @@ readonlyrest:
 ReadonlyREST will forward the received `Authorization` header to a website of choice and evaluate the returned HTTP status code to verify the provided credentials. This is useful if you already have a web server with all the credentials configured and the credentials are passed over the `Authorization` header.
 
 ```text
-readonlyrest:    
+readonlyrest:
     access_control_rules:
 
     - name: "::Tweets::"
@@ -2074,11 +2074,11 @@ readonlyrest:
       authentication_endpoint: "http://external-website1:8080/auth1"
       success_status_code: 200
       cache_ttl_in_sec: 60
-      validate: false # SSL certificate validation (default to true)
       http_connection_settings:
+        validate: false # SSL certificate validation (default to true)
         connection_timeout_in_sec: 5           # default 2
         socket_timeout_in_sec: 3               # default 5
-        connection_request_timeout_in_sec: 3   # default 5  
+        connection_request_timeout_in_sec: 3   # default 5
         connection_pool_size: 10               # default 30
 
     - name: "ext2"
@@ -2100,7 +2100,7 @@ Cache can be defined at the service level or/and at the rule level. In the examp
 This external authorization connector makes it possible to resolve to what groups a users belong, using an external JSON or XML service.
 
 ```text
-readonlyrest:    
+readonlyrest:
     access_control_rules:
 
     - name: "::Tweets::"
@@ -2140,7 +2140,7 @@ readonlyrest:
       http_connection_settings:
         connection_timeout_in_sec: 5                           # default 2
         socket_timeout_in_sec: 3                               # default 5
-        connection_request_timeout_in_sec: 3                   # default 5  
+        connection_request_timeout_in_sec: 3                   # default 5
         connection_pool_size: 10                               # default 30
 ```
 
@@ -2174,7 +2174,7 @@ readonlyrest:
       jwt_auth:
         name: "jwt_provider_1"
         groups: ["writer"]
-        
+
     - name: Valid JWT token with a viewer and writer groups
       kibana_access: rw
       jwt_auth:
