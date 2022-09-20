@@ -39,7 +39,11 @@ access_control_rules:
 ```
 
 ## Other "restricted" levels: admin, rw, ro, ro_strict
-The main idea is removing the possibility of accidental data loss, or tampering of the "data indices".
+The constant idea across all restricted levels is: removing the possibility of accidental data loss, or tampering of the "data indices".
+
+The rw, ro, and ro_strict levels have progressive restrictions to the alteration of the Kibana session, and Elasticsearch stack. And this is reflected in the removal of whole UI components (through CSS). For example, ro/ro_strict can't see "edit", "delete", "new" buttons all across Kibana.
+
+The only difference between "rw" and "admin" is the ability of interaction with ROR settings, activation keys APIs.
 
 In detail:
 
@@ -108,7 +112,7 @@ RW_ACTIONS = [
 ```
 </details>
   
-## Decision tree (from [KibanaAccessRule.scala](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/main/scala/tech/beshu/ror/accesscontrol/blocks/rules/KibanaAccessRule.scala)
+## Decision tree (from [KibanaAccessRule.scala](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/main/scala/tech/beshu/ror/accesscontrol/blocks/rules/KibanaAccessRule.scala))
 * If value is unrestricted: ALLOW
 * If user metadata API was requested (login attempt): ALLOW
 * If action in RO_ACTIONS: ALLOW
