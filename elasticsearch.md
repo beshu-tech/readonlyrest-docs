@@ -1760,14 +1760,50 @@ One of the neatest feature in ReadonlyREST is that you can use dynamic variables
 
 You can let users authenticate externally, i.e. via LDAP, and use their user name string inside the `indices` rule.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
-    - name: "Users can see only their logstash indices i.e. alice can see alice_logstash-20170922"
+    - name: "Users can see only their logstash indices" # i.e. alice can see alice_logstash-20170922
       ldap_authentication:
         name: "myLDAP"
-      indices: ["@{acl:user}_logstash-*"]
+      indices: ["@{acl:user}_logstash-*"] 
+
+    # LDAP connector settings omitted, see LDAP section below..
+```
+
+#### Indices from available groups
+
+You can let users authorize externally, i.e. via LDAP, and use their group names strings inside the `indices` rule.
+
+```yaml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Users can see only logstash indices for their departments" # i.e. alice belongs to 'dev' and 'ops' department groups, so she can see dev_logstash-20170922, ops_logstash-20170922
+      ldap_auth:
+        name: "myLDAP"
+        groups: ["dev", "ops", "qa"]
+      indices: ["@explode{acl:available_groups}_logstash-*"] #  notice that 'available_groups' is an array. `indices` rule has multi-value context (we can configure an array of index names in it). It means that we have to create several indices names from the available_groups array and the optional static part (here: _logstash-*) - it can be achieved with "explode" keyword i.e from available_groups=[dev, ops] we will get: indices: ["dev_logstash-*", "ops_logstash-*"] 
+
+    # LDAP connector settings omitted, see LDAP section below..
+```
+
+#### Filter from available groups
+
+You can let users authorize externally, i.e. via LDAP, and use their group names strings inside the `filter` rule.
+
+
+```yaml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Users can only see documents related to their departments" # i.e. alice belongs to 'dev' and 'ops' department groups, so she can see documents where "department" field is equal 'dev' or 'ops' 
+      ldap_auth:
+        name: "myLDAP"
+        groups: ["dev", "ops", "qa"]
+      filter: '{ "terms": { "department": [@{acl:available_groups}] }}' # here we don't use `explode` keyword, because it's a context of single value. `available_groups` array values will be surrounded by double quotes and contatenated with comma i.e. from availabe_groups=[dev, ops] we will get: filter: '{ "terms": { "department": ["dev","ops"] }}'
+      indices: ["logstash-*"]
 
     # LDAP connector settings omitted, see LDAP section below..
 ```
@@ -1776,7 +1812,7 @@ readonlyrest:
 
 You can let users authorize externally, i.e. via LDAP, and use their group inside the `uri_re` rule.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -1793,7 +1829,7 @@ readonlyrest:
 
 Imagine that we delegate authentication to a reverse proxy, so we know that only authenticated users will ever reach Elasticsearch. We can tell the reverse proxy \(i.e. Nginx\) to inject a header called `x-nginx-user` containing the username.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
