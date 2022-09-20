@@ -434,6 +434,7 @@ readonlyrest:
     key_pass: [ password for generated certificate ]
     truststore_file: "elastic-certificates.p12"
     truststore_pass: [ password for generated certificate ]
+    client_authentication: true # default: false
     certificate_verification: true # certificate verification is enabled by default on XPack nodes
 ```
 
@@ -446,7 +447,7 @@ It is useful on local/test environment, where security is not the most important
 certificate_verification: true
 ```
 
-under `ssl_internode` section. This option is applicable only for internode ssl.
+under `ssl_internode` section. This option is applicable only for internode SSL.
 
 #### Client authentication
 
@@ -456,9 +457,7 @@ By default the client authentication is disabled. When enabled, the server asks 
 client_authentication: true
 ```
 
-under `ssl` section. This option is applicable only for REST API external ssl.
-
-Both `certificate_verification` and `client_authentication` can be enabled with single property `verification`. Using this property is deprecated and allowed because of backward compatibility support. Specialized properties make configuration more readable and explicit.
+under `ssl` section. This option is applicable for REST API external SSL and internode SSL.
 
 #### Restrict SSL protocols and ciphers
 
@@ -1752,9 +1751,10 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 One of the neatest feature in ReadonlyREST is that you can use dynamic variables inside most rules values. The variables you can currently replace into rules values are these:
 
 * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is authentication rule \(of course it must be rule different from the one containing given variable\).
-* `@{user}` old style user variable definition. Preferred approach is to use `@{acl:user}`.
 * `@{acl:current_group}` gets replaced with user's current group. Usually resolved by authorization rule defined in block, but value can be also retrieved by means of kibana plugin. This variable doesn't specify usage requirements.
-* `@{xyz}` gets replaced with any `xyz` HTTP header included in the incoming request \(useful when reverse proxies handle authentication\)
+* `@{acl:available_groups}` gets replaced with available groups found in the authorization rule. 
+* `@{header:<header_name>}` gets replaced with the header value of the HTTP header name `<header_name>` included in the incoming request \(useful when reverse proxies handle authentication\)
+* `@{jwt:<json_path>}` get replaced with value (or values) found in JWT under the given JSON path
 
 #### Indices from user name
 
@@ -1799,7 +1799,7 @@ readonlyrest:
 
     - name: "Identify a personal kibana index where each user is supposed to save their dashboards"
       kibana_access: rw
-      kibana_index: ".kibana_@{x-nginx-user}"
+      kibana_index: ".kibana_@{header:x-nginx-user}"
 ```
 
 #### Dynamic variables from JWT claims
