@@ -73,7 +73,7 @@ Overview of levels and what a user is allowed to access with it:
 
 We identify groups of action patterns: CLUSTER_ACTIONS, ADMIN_ACTIONS, RW_ACTIONS, RO_ACTIONS. 
 
-### Action groups definitions (from [Constants.java](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/main/scala/tech/beshu/ror/Constants.java)
+### Action groups definitions (from [Constants.java](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/main/scala/tech/beshu/ror/Constants.java))
 
 <details>
   
@@ -109,6 +109,22 @@ RW_ACTIONS = [
       "cluster:admin/settings/*",
       "indices:admin/aliases/*"
 ]
+                                     
+RO_ACTIONS = [
+      "indices:admin/exists",
+      "indices:admin/mappings/fields/get*",
+      "indices:admin/mappings/get*",
+      "indices:admin/validate/query",
+      "indices:admin/get",
+      "indices:admin/refresh*",
+      "indices:data/read/*",
+      "indices:admin/resolve/*",
+      "indices:admin/aliases/get",
+      "indices:admin/*/explain",
+      "indices:monitor/settings/get",
+      "indices:data/read/xpack/rollup/get/*",
+      "indices:monitor/stats"
+]                                     
 ```
 </details>
   
