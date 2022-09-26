@@ -25,6 +25,7 @@ There are two ways to pass the activation key to Kibana:
 
 ### Via Environmental variable
 This method is useful for Docker deployments. Just set the `ROR_ACTIVATION_KEY` environment variable to the activation key you obtained from the customer portal.
+
 ```bash 
 $ export ROR_ACTIVATION_KEY=<your activation key>
 $ bin/kibana 
@@ -36,7 +37,7 @@ This method is useful for manual deployments.
 1. Start Kibana in the default "Free" edition mode
 2. Login in Kibana as an `admin` or `unrestricted` kibana access
 3. Toggle the ROR Menu on the top right
-[](assets/edit_activation_key.png)
+![](assets/edit_activation_key.png)
 4. Click on the "Free" text tag
-[](assets/activation_keys_gui.png)
+![](assets/activation_keys_gui.png)
 5. Enter the activation key you obtained from the customer portal in the license management UI
