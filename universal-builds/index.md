@@ -37,7 +37,10 @@ This method is useful for manual deployments.
 1. Start Kibana in the default "Free" edition mode
 2. Login in Kibana as an `admin` or `unrestricted` kibana access
 3. Toggle the ROR Menu on the top right
-![](assets/edit_activation_key.png)
 4. Click on the "Free" text tag
-![](assets/activation_keys_gui.png)
+
+![](assets/edit_activation_key.png)
+
 5. Enter the activation key you obtained from the customer portal in the license management UI
+
+![](assets/activation_keys_gui.png)
