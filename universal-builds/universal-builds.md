@@ -1,14 +1,13 @@
 # Universal builds (kibana plugin)
 
-Starting from ReadonlyREST 1.44.0, our Kibana plugins are released in a unified format:
-
-| No more                                                                                                                                   | Now                                           |
-|-------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
-| readonlyrest_kbn_free-1.43.0_es8.4.1.zip<br>readonlyrest_kbn_pro-1.43.0_es8.4.1.zip<br>readonlyrest_kbn_enterprise-1.43.0_es8.4.1.zip<br>readonlyrest_kbn_pro-1.43.0-20220902_es8.4.1.zip | readonlyrest_kbn_universal-1.44.0_es8.4.1.zip |
+Starting from ReadonlyREST 1.44.0, our Kibana plugins are released in a unified format.
 
 ## What is a universal build?
 
 A universal build is a single Kibana plugin deliverable that is compatible with a given Kibana version.
+
+![](assets/universal_build.png)
+
 If not activated, a universal build will behave exactly like the old "Free" edition.
 
 Some activation keys can be used to unlock PRO and Enterprise features. If a trial activation key is used, these features availability will be limited in time. 
