@@ -1718,45 +1718,79 @@ readonlyrest:
 ```
 
 By default, usernames are case-sensitive `username_case_sensitivity: case_sensitive`. By setting `username_case_sensitivity: case_sensitive` username comparison will be case-insensitive in any rule.
-### Environmental variables
+### Static variables
 
-Anywhere in `readonlyrest.yml` you can use the espression `${MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
+Anywhere in `readonlyrest.yml` you can use the expression `${env:MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
 
-For example, here we declare an environment variable, and we write `${LDAP_PASSWORD}` in our settings:
+For example, here we declare an environment variable, and we write `${env:LDAP_PASSWORD}` in our settings:
 
 ```bash
 $ export LDAP_PASSWORD=S3cr3tP4ss
 $ cat readonlyrest.yml
 ```
 
-```text
-....
+```yaml
 ldaps:
-
-    - name: ldap1
-      host: "ldap1.example.com"
-      port: 389                                                     
-      ssl_enabled: false                                            
-      ssl_trust_all_certs: true                                     
-      bind_dn: "cn=admin,dc=example,dc=com"                         
-      bind_password: "${LDAP_PASSWORD}"                                     
-      search_user_base_DN: "ou=People,dc=example,dc=com"
-....
+  - name: ldap1
+    host: "ldap1.example.com"
+    port: 389                                                     
+    ssl_enabled: false                                            
+    ssl_trust_all_certs: true                                     
+    bind_dn: "cn=admin,dc=example,dc=com"                         
+    bind_password: "${env:LDAP_PASSWORD}"                                     
+    search_user_base_DN: "ou=People,dc=example,dc=com"
 ```
 
 And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest feature in ReadonlyREST is that you can use dynamic variables inside most rules values. The variables you can currently replace into rules values are these:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana_index`, `kibana_template_index`. The variables are related to different contexts:
+* `acl` - the context of data collected in authentication and authorization rules of the current block:
+    * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be rule different from the one containing the given variable.
+    * `@{acl:current_group}` gets replaced with user's current group. Usually resolved by authorization rule defined in a block, but value can be also retrieved by means of kibana plugin. This variable doesn't specify usage requirements.
+    * `@{acl:available_groups}` gets replaced with available groups found in the authorization rule (bacause group strings will be surrounded with double quotes and joined with a comma)
+* `header` - the context of ES HTTP request headers
+    * `@{header:<header_name>}` gets replaced with the value of the HTTP header with name `<header_name>` included in the incoming request \(useful when reverse proxies handle authentication\)
+* `jwt` - the context of JWT passed in the Authorization header 
+    * `@{jwt:<json_path>}` get replaced with value (or values) found in JWT under the given JSON path
 
-* `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is authentication rule \(of course it must be rule different from the one containing given variable\).
-* `@{acl:current_group}` gets replaced with user's current group. Usually resolved by authorization rule defined in block, but value can be also retrieved by means of kibana plugin. This variable doesn't specify usage requirements.
-* `@{acl:available_groups}` gets replaced with available groups found in the authorization rule. 
-* `@{header:<header_name>}` gets replaced with the header value of the HTTP header name `<header_name>` included in the incoming request \(useful when reverse proxies handle authentication\)
-* `@{jwt:<json_path>}` get replaced with value (or values) found in JWT under the given JSON path
+#### Dynaminc variables exploding
 
-#### Indices from user name
+A value resolved from a dynamic variable is a string. Some rules, like `indices` one, have multivalue context (you can configure serveral indices names in it). 
+
+Let's assume we have a request with the header: `APPS: app1,app2,app3`. Doing something like that: 
+
+```yaml
+indices: ["logstash_@{header:apps}"]
+```
+
+We should expect it to be resolved to:
+
+```yaml
+indices: ["logstash_app1,app2,app3"]
+```
+
+for this particular request. I don't think it would be helpful.
+But there is an `explode` attribute for dynamic variables. Doing:
+
+```yaml
+indices: ["logstash_@explode{header:apps}"]
+```
+
+we should get:
+
+```yaml
+indices: ["logstash_app1", "logstash_app2", "logstash_app3"]
+```
+
+which looks more useful!
+
+So, as we seen, the `explode` attribute of a dynamic variable rule can be used to split string with comma separated values into an array. But it can only be used in a rule with multivalue context.
+
+#### Usage examples
+
+##### Indices from user name
 
 You can let users authenticate externally, i.e. via LDAP, and use their user name string inside the `indices` rule.
 
@@ -1772,9 +1806,9 @@ readonlyrest:
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-#### Indices from available groups
+##### Indices from available groups
 
-You can let users authorize externally, i.e. via LDAP, and use their group names strings inside the `indices` rule.
+You can let users authorize externally, i.e. via LDAP, and use their group  strings inside the `indices` rule.
 
 ```yaml
 readonlyrest:
@@ -1784,15 +1818,14 @@ readonlyrest:
       ldap_auth:
         name: "myLDAP"
         groups: ["dev", "ops", "qa"]
-      indices: ["@explode{acl:available_groups}_logstash-*"] #  notice that 'available_groups' is an array. `indices` rule has multi-value context (we can configure an array of index names in it). It means that we have to create several indices names from the available_groups array and the optional static part (here: _logstash-*) - it can be achieved with "explode" keyword i.e from available_groups=[dev, ops] we will get: indices: ["dev_logstash-*", "ops_logstash-*"] 
+      indices: ["@explode{acl:available_groups}_logstash-*"] # i.e when available_groups=[dev, ops] we will get indices: ["dev_logstash-*", "ops_logstash-*"] 
 
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-#### Filter from available groups
+##### Filter from available groups
 
-You can let users authorize externally, i.e. via LDAP, and use their group names strings inside the `filter` rule.
-
+You can let users authorize externally, i.e. via LDAP, and use their group strings inside the `filter` rule.
 
 ```yaml
 readonlyrest:
@@ -1802,13 +1835,13 @@ readonlyrest:
       ldap_auth:
         name: "myLDAP"
         groups: ["dev", "ops", "qa"]
-      filter: '{ "terms": { "department": [@{acl:available_groups}] }}' # here we don't use `explode` keyword, because it's a context of single value. `available_groups` array values will be surrounded by double quotes and contatenated with comma i.e. from availabe_groups=[dev, ops] we will get: filter: '{ "terms": { "department": ["dev","ops"] }}'
+      filter: '{ "terms": { "department": [@{acl:available_groups}] }}' # i.e. from availabe_groups=[dev, ops] we will get filter: '{ "terms": { "department": ["dev","ops"] }}'
       indices: ["logstash-*"]
 
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-#### Uri regex matching user's current group
+##### Uri regex matching user's current group
 
 You can let users authorize externally, i.e. via LDAP, and use their group inside the `uri_re` rule.
 
@@ -1825,7 +1858,7 @@ readonlyrest:
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-#### Kibana index from headers
+##### Kibana index from headers
 
 Imagine that we delegate authentication to a reverse proxy, so we know that only authenticated users will ever reach Elasticsearch. We can tell the reverse proxy \(i.e. Nginx\) to inject a header called `x-nginx-user` containing the username.
 
@@ -1838,7 +1871,7 @@ readonlyrest:
       kibana_index: ".kibana_@{header:x-nginx-user}"
 ```
 
-#### Dynamic variables from JWT claims
+##### Dynamic variables from JWT claims
 
 The JWT token is an authentication string passed generally as a header or a query parameter to the web browser. If you squint, you can see it's a concatenation of three base64 encoded strings. If you base64 decode the middle string, you can see the "claims object". That is the object containing the current user's metadata.
 
