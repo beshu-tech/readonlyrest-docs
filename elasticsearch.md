@@ -1747,19 +1747,19 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana_index`, `kibana_template_index`. The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
-    * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be rule different from the one containing the given variable.
-    * `@{acl:current_group}` gets replaced with user's current group. Usually resolved by authorization rule defined in a block, but value can be also retrieved by means of kibana plugin. This variable doesn't specify usage requirements.
-    * `@{acl:available_groups}` gets replaced with available groups found in the authorization rule (bacause group strings will be surrounded with double quotes and joined with a comma)
+    * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
+    * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
+    * `@{acl:available_groups}` gets replaced with available groups found in the authorization rule (bacause by default dynamic variabled are resolved to a string, the variable resolved value will contain groups surrounded with double quotes and joined with a comma)
 * `header` - the context of ES HTTP request headers
     * `@{header:<header_name>}` gets replaced with the value of the HTTP header with name `<header_name>` included in the incoming request \(useful when reverse proxies handle authentication\)
-* `jwt` - the context of JWT passed in the Authorization header 
-    * `@{jwt:<json_path>}` get replaced with value (or values) found in JWT under the given JSON path
+* `jwt` - the context of JWT header value
+    * `@{jwt:<json_path>}` get replaced with value (or values) found in the JWT claim under the given JSON path
 
-#### Dynaminc variables exploding
+#### Dynamic variables exploding
 
-A value resolved from a dynamic variable is a string. Some rules, like `indices` one, have multivalue context (you can configure serveral indices names in it). 
+A value resolved from a dynamic variable is a string. Some rules, like `indices` one, have multivalue context (you can configure several indices names in it). 
 
-Let's assume we have a request with the header: `APPS: app1,app2,app3`. Doing something like that: 
+Let's assume we have a request with the header: `APPS: app1,app2,app3`. Doing something like this: 
 
 ```yaml
 indices: ["logstash_@{header:apps}"]
@@ -1771,8 +1771,8 @@ We should expect it to be resolved to:
 indices: ["logstash_app1,app2,app3"]
 ```
 
-for this particular request. I don't think it would be helpful.
-But there is an `explode` attribute for dynamic variables. Doing:
+for this particular request. No, it wouldn't be helpful at all.
+But there is an `explode` function for dynamic variables. Doing:
 
 ```yaml
 indices: ["logstash_@explode{header:apps}"]
@@ -1786,7 +1786,7 @@ indices: ["logstash_app1", "logstash_app2", "logstash_app3"]
 
 which looks more useful!
 
-So, as we seen, the `explode` attribute of a dynamic variable rule can be used to split string with comma separated values into an array. But it can only be used in a rule with multivalue context.
+So, as we've seen, the `explode` attribute of a dynamic variable rule can be used to split a string with comma-separated values into an array of strings. But it can only be used in a rule with multi value context.
 
 #### Usage examples
 
@@ -1808,7 +1808,7 @@ readonlyrest:
 
 ##### Indices from available groups
 
-You can let users authorize externally, i.e. via LDAP, and use their group  strings inside the `indices` rule.
+You can let users authorize externally, i.e. via LDAP, and use their group strings inside the `indices` rule.
 
 ```yaml
 readonlyrest:
