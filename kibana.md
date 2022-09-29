@@ -181,11 +181,45 @@ $ bin/kibana-plugin remove readonlyrest_kbn
 To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 
 * [Unpatch Kibana](./#unpatching-kibana)
-* [Uninstall](./details/kibana-7.8.x-and-older.md#uninstall) the old plugin
-* Delete all the content of "optimize" directory (in the main Kibana installation directory) `rm -rf optimize/`
+* [Uninstall](#uninstalling) the old plugin
 * [Install](./#installation) the new one
 * [Patch Kibana](./#patching-kibana)
-* Restart Kibana.
+* Restart Kibana
+
+### Major version upgrades when using multi-tenancy
+If you use multi-tenancy (Enterprise only), you will have one or more teanancy-specific kibana indices beyond the main `.kibana` (e.g. `.kibana_tenant1`, `.kibana_tenant2`, etc.).
+
+The first time you run Kibana after a major version upgrade (e.g. upgrading from Kibana 7.17.7 to Kibana 8.0.0), Kibana will run a [saved objects migration](https://www.elastic.co/guide/en/kibana/current/saved-object-migrations.html) on the default `.kibana` index, or whatever it finds configured as `kibana.index` in `kibana.yml`.
+
+Now, because you may have multiple kibana indices containing saved objects, you should apply the "saved object migration" to those indices as well.
+
+The only known safe - yet pedantic - way to do this is the following process: 
+
+**Preparation**
+
+* download the newer Kibana version in your computer (in the example, 8.0.0)
+* edit the `kibana.yml` to point to the same Elasticsearch cluster as your production Kibana (`elasticsearch.hosts` setting)
+* add the appropriate `elasticsearch.username` and `elasticsearch.password` credentials settings, same as in production
+
+**For each tenancy index** 
+
+* configure `kibana.yml` with a `kibana.index: <tenancy kibana index>`
+* run Kibana for a few seconds, until you see something similar to these log lines:
+```
+  [savedobjects-service] Waiting until all Elasticsearch nodes are compatible with Kibana before starting saved objects migrations...
+  [savedobjects-service] Starting saved objects migrations
+  [savedobjects-service] [.kibana] INIT -> CREATE_NEW_TARGET. took: 27ms.
+  [savedobjects-service] [.kibana_task_manager] INIT -> CREATE_NEW_TARGET. took: 29ms.
+  [savedobjects-service] [.kibana_task_manager] CREATE_NEW_TARGET -> MARK_VERSION_INDEX_READY. took: 82ms.
+  [savedobjects-service] [.kibana] CREATE_NEW_TARGET -> MARK_VERSION_INDEX_READY. took: 95ms.
+  [savedobjects-service] [.kibana_task_manager] MARK_VERSION_INDEX_READY -> DONE. took: 23ms.
+  [savedobjects-service] [.kibana_task_manager] Migration completed after 135ms
+  [savedobjects-service] [.kibana] MARK_VERSION_INDEX_READY -> DONE. took: 20ms.
+  [savedobjects-service] [.kibana] Migration completed after 143ms
+```
+* now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
+
+This is ugly, but the safest way available at the moment.
 
 ### Using RoR with a reverse proxy
 
