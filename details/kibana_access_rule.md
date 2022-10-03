@@ -128,7 +128,7 @@ RO_ACTIONS = [
 ```
 </details>
   
-## Decision tree (from [KibanaAccessRule.scala](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/main/scala/tech/beshu/ror/accesscontrol/blocks/rules/KibanaAccessRule.scala))
+## Decision tree (from [KibanaAccessRule.scala](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/core/src/main/scala/tech/beshu/ror/accesscontrol/blocks/rules/KibanaAccessRule.scala))
 * If value is unrestricted: ALLOW
 * If user metadata API was requested (login attempt): ALLOW
 * If action in RO_ACTIONS: ALLOW
