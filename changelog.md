@@ -1,5 +1,18 @@
 # Changelog
 
+### (2022-10-09) What's new in **ROR 1.44.0**
+* **🚨Security Fix** (ES) [CVE-2022-25857](https://nvd.nist.gov/vuln/detail/CVE-2022-25857)
+* **🚀New** (KBN) **plugin packages are now [universal](https://docs.readonlyrest.com/universal-builds)**
+* **🚀New** (KBN) **Manage your activation keys through the [customer portal](https://readonlyrest.com/customer)**
+* **🚀New** (ES) Added support for certificates in PEM format
+* **🧐Enhancement** (KBN) SAML groups list duplication made header size exceed limits
+* **🧐Enhancement** (KBN) kibana_access: admin has now privileges to manage a Kibana cluster
+* **🧐Enhancement** (ES) added distributed and persistent Test Settings & Auth Mocks configuration for the Impersonation Feature
+* **🧐Enhancement** (ES) handling high load when LDAP rules are used
+* **🧐Enhancement** (ES) `client_authentication` settings in internode SSL configuration
+* **🧐Enhancement** (ES) `acl:available_groups` dynamic variable can be used in a single value context
+* **🐞Fix** (ES) SNI handling (internode SSL)
+
 ### (2022-08-22) What's new in **ROR 1.43.0**
 * **🚀New** (KBN) 8.4.3, 8.4.2, 8.4.1, 8.4.0, 7.17.6 support
 * **🚀New** (ES) 8.4.3, 8.4.2, 8.4.1, 8.4.0, 7.17.6 support
