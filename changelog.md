@@ -60,7 +60,7 @@
 * **🐞Fix** (KBN) include whitelisted headers while logging
 * **🐞Fix** (KBN) basepath handling fixes (too many redirects)
 * **🐞Fix** (KBN) Make ROR default space the actual default one
-* **🐞Fix** (KBN) RORDEV-641 Fix oidc connection error
+* **🐞Fix** (KBN) OIDC connection error
 
 ### (2022-03-19) What's new in **ROR 1.39.0**
 * **🚨Security Fix** (KBN) XSS sanitize path requested
