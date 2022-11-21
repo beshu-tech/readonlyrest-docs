@@ -3,7 +3,7 @@
 ### (2022-10-09) What's new in **ROR 1.44.0**
 * **🚨Security Fix** (ES) [CVE-2022-25857](https://nvd.nist.gov/vuln/detail/CVE-2022-25857)
 * **🚀New** (KBN) 8.5.0, 7.17.7 support
-* **🚀New** (ES) 8.5.0, 7.17.7 support
+* **🚀New** (ES) 8.5.1, 8.5.0, 7.17.7 support
 * **🚀New** (KBN) **plugin packages are now [universal](https://docs.readonlyrest.com/universal-builds)**
 * **🚀New** (KBN) **Manage your activation keys through the [customer portal](https://readonlyrest.com/customer)**
 * **🚀New** (ES) Added support for certificates in PEM format
