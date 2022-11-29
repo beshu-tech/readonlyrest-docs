@@ -1,5 +1,24 @@
 # Changelog
 
+### (2022-11-29) What's new in **ROR 1.45.0**
+* **🚨Security Fix** (ES) [CVE-2022-42003](https://nvd.nist.gov/vuln/detail/CVE-2022-42003), [CVE-2022-45146](https://nvd.nist.gov/vuln/detail/CVE-2022-45146)
+* **🚀New** (KBN) Activation Key API: read AK from ROR_ACTIVATION_KEY.txt
+* **🚀New** (KBN) Activation Key API: submit AK via POST /pkp/license (Basic auth)
+* **🚀New** (KBN) Inject CSS/JS files in login page
+* **🚀New** (KBN) Add user metadata to <body> for extra UI customization
+* **🚀New** (ES) Added groups_and mode to [groups_provider_authorization](https://docs.readonlyrest.com/elasticsearch#groups_provider_authorization) rule
+* **🧐Enhancement** (ES) all authorization rules support wildcards in group names 
+* **🧐Enhancement** (ES) connections in the LDAP pool should not be closed unnecessarily 
+* **🧐Enhancement** (KBN) Deterministic reporting index detection
+* **🧐Enhancement** (KBN) Move free type impersonation to the local users area
+* **🧐Enhancement** (KBN) don’t logout when initial JWT token expires
+* **🐞Fix** (KBN) Direct Kibana API requests not aware of kibana_index
+* **🐞Fix** (KBN) RO and RO_strict kibana accesses
+* **🐞Fix** (ES) [when `fls_engine: es` is configured and `fields` rule is used, aggregations should be available only for allowed fields](https://forum.readonlyrest.com/t/field-level-security-and-aggregations/2133)
+* **🐞Fix** (ES) [Data streams creation issue fix](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/829)
+* **🐞Fix** (ES) Unknown structure of index settings issue fix
+* **🐞Fix** (ES) resolving index names with wildcards should take into consideration the current index state and request indices options
+
 ### (2022-10-09) What's new in **ROR 1.44.0**
 * **🚨Security Fix** (ES) [CVE-2022-25857](https://nvd.nist.gov/vuln/detail/CVE-2022-25857)
 * **🚀New** (KBN) 8.5.2, 8.5.1, 8.5.0, 7.17.7 support
