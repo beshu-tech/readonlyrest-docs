@@ -20,7 +20,7 @@ The same way it worked before, just download it the same way you used to, from t
 Check out our new [customer portal](https://readonlyrest.com/customer). If your email is associated to a customer contract with a valid ongoing subscription, you will be able to obtain an activation key.
 Otherwise, you will be able to obtain a trial activation key.
 
-There are two ways to pass the activation key to Kibana:
+There are a few ways to pass the activation key to Kibana. Regardless of which one you use, the result will be that Kibana will save the activation key to an encrypted Elasticsearch index, so other Kibana instances will pick up the new activation key.
 
 ### Via Environmental variable
 This method is useful for Docker deployments. Just set the `ROR_ACTIVATION_KEY` environment variable to the activation key you obtained from the customer portal.
@@ -29,6 +29,18 @@ This method is useful for Docker deployments. Just set the `ROR_ACTIVATION_KEY` 
 $ export ROR_ACTIVATION_KEY=<your activation key>
 $ bin/kibana 
 ```
+
+### Via our plugin license API
+Once Kibana is up and running, you can send a HTTP request to Kibana.
+```
+POST http://<kibana-host-with-ror>:5601/pkp/license
+{
+  "token": "your activation key" 
+}
+```
+
+### Via ROR_ACTIVATION_KEY.txt file
+The universal build is a zip file, you can create a text file called `ROR_ACTIVATION_KEY.txt` containing the activation key string (no saces, no new lines) and add it inside the zip file, and then install the plugin file in Kibana. 
 
 ### Interactive activation key management
 This method is useful for manual deployments.
