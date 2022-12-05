@@ -1,5 +1,8 @@
 # Changelog
 
+### (2022-12-205 What's new in **ROR 1.45.1**
+* **🐞Fix** (KBN) ROR KBN patching script 
+
 ### (2022-11-29) What's new in **ROR 1.45.0**
 * **🚨Security Fix** (ES) [CVE-2022-42003](https://nvd.nist.gov/vuln/detail/CVE-2022-42003), [CVE-2022-45146](https://nvd.nist.gov/vuln/detail/CVE-2022-45146)
 * **🚀New** (KBN) Activation Key API: read AK from ROR_ACTIVATION_KEY.txt
