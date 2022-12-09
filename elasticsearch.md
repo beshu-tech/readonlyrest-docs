@@ -1314,7 +1314,7 @@ Used to delegate authentication to another server that supports HTTP Basic Auth.
 
 #### `groups_provider_authorization`
 
-Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#groups_provider_authorization)
+Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
 
 [Impersonation](details/impersonation.md) is not supported by this rule by default.
 
@@ -2186,7 +2186,7 @@ Cache can be defined at the service level or/and at the rule level. In the examp
 
 This external authorization connector makes it possible to resolve to what groups a users belong, using an external JSON or XML service.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -2232,6 +2232,14 @@ readonlyrest:
 ```
 
 In example above, a user is authenticated by reverse proxy and then external service is asked for groups for that user. If groups returned by the service contain any group declared in `groups` list, user is authorized and rule matches.
+
+Also in this rule, the `groups` clause can be replaced by `group_and` to require the user must belong to all the listed groups:
+
+```yaml
+  groups_provider_authorization:
+    user_groups_provider: "GroupsService"
+    groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+```
 
 To define user groups provider you should specify:
 
