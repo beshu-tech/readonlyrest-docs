@@ -1215,11 +1215,12 @@ In general it looks like this:
     <authentication_with_authorization_rule>: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
 ```
 
-
 For details see [User management](elasticsearch.md#users-and-groups).
 
-[Impersonation](details/impersonation.md) supports depends on
+[Impersonation](details/impersonation.md) support depends on
 authentication and authorization rules used in `users` section.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `groups_and`
 
@@ -1297,8 +1298,9 @@ ldap_authorization:
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
-[Impersonation](details/impersonation.md) is not supported by default
-by LDAP rules.
+[Impersonation](details/impersonation.md) is not supported by default by LDAP rules.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `jwt_auth`
 
@@ -1312,11 +1314,15 @@ Used to delegate authentication to another server that supports HTTP Basic Auth.
 
 [Impersonation](details/impersonation.md) is not supported by this rule by default.
 
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
 #### `groups_provider_authorization`
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
 
 [Impersonation](details/impersonation.md) is not supported by this rule by default.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `ror_kbn_auth`
 
@@ -1350,9 +1356,11 @@ readonlyrest:
 
 This authentication and authorization connector represents the secure channel \(based on JWT tokens\) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
 
-Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana/#saml)
+Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
 [Impersonation](details/impersonation.md) is not supported by this rule by default.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 ### Ancillary rules
 
