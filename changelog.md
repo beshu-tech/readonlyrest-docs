@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2022-12-205 What's new in **ROR 1.45.1**
+* **🚀New** (KBN) 8.5.3 support
 * **🚀New** (ES) 8.5.3 support
 * **🐞Fix** (KBN) ROR KBN patching script 
 
