@@ -1,5 +1,16 @@
 # Changelog
 
+### (2023-01-02) What's new in **ROR 1.46.0**
+* **🚨Security Fix** (ES) [CVE-2022-1471](https://nvd.nist.gov/vuln/detail/CVE-2022-1471), [CVE-2022-41915](https://nvd.nist.gov/vuln/detail/CVE-2022-41915), [CVE-2022-36944](https://nvd.nist.gov/vuln/detail/CVE-2022-36944) in [audit Scala 2.13 jar](https://mvnrepository.com/artifact/tech.beshu.ror/audit)
+* **🧐Enhancement** (KBN) Activation key management UI
+* **🧐Enhancement** (KBN) Less verbose logging in info mode
+* **🧐Enhancement** (KBN) “Stack management” kibana compatibility
+* **🐞Fix** (KBN) Test settings pop up won’t show
+* **🐞Fix** (KBN) hide apps behaviour when “Management” is hidden
+* **🐞Fix** (KBN) Data view with a “:” symbol forces logout from a kibana
+* **🐞Fix** (KBN) Session probe causes constant refresh when no `kibana_access` defined
+* **🐞Fix** (ES) large report generation using data from a remote cluster with enabled x-pack security
+
 ### (2022-12-05) What's new in **ROR 1.45.1**
 * **🚀New** (KBN) 8.5.3, 7.17.8 support
 * **🚀New** (ES) 8.5.3, 7.17.8 support
