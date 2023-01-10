@@ -17,7 +17,7 @@ an interactive guide to properly set up the clusters. Moreover, details of the s
 
 Depending on what you need now, you may be interested in either:
 
-* [Quick Start using our docker-based Playgound](playgroud.md) 
+* [Quick Start using our docker-based Playground](playgroud.md) 
 * [Detailed explanation on how to set up the solution](details.md)
 
 ## Testing

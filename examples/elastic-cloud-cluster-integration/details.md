@@ -59,13 +59,13 @@ Details about the usage of the `elasticsearch-certutil` tool you will find in [E
 We have CA as the `p12` certificate. We need to convert it to `X509`. It can be done using `openssl`:
 
 ```bash
-openssl pkcs12 -in /tmp/certs/output/ca/ca.p12 -out /tmp/certs/output/ca/ca.crt -nokeys --password pass:mycapassword 
+openssl pkcs12 -in /tmp/certs/output/ca/ca.p12 -out /tmp/certs/output/ca/ca.crt -nokeys --password pass:mypassword 
 ```
 
 Now, let's use our CA and generate certificates for the ROR cluster nodes: 
 
 ```bash
-bin/elasticsearch-certutil cert --silent --in /tmp/certs/input/instances.yml --out /tmp/certs/output/ror-cluster.zip --ca /tmp/certs/output/ca/ca.p12 --ca-pass mycapassword --pass mypassword
+bin/elasticsearch-certutil cert --silent --in /tmp/certs/input/instances.yml --out /tmp/certs/output/ror-cluster.zip --ca /tmp/certs/output/ca/ca.p12 --ca-pass mypassword --pass mypassword
 unzip /tmp/certs/output/ror-cluster.zip -d /tmp/certs/output/ror-cluster
 ```
 
@@ -102,12 +102,77 @@ a new trusted environment (see [screenshots](playgroud.md#running-interactive-sc
 environment will be the self-managed cluster. To complete the process we need to:
 1. upload the ROR cluster CA (`/tmp/certs/output/ca/ca.crt`)
 2. select trusted cluster by:
-  * ticking `Trust clusters whose Common Name follows the Elastic pattern`
-  * entering `Scope ID` (in out example, it was `ror-test`)
+   * ticking `Trust clusters whose Common Name follows the Elastic pattern`
+   * entering `Scope ID` (in out example, it was `ror-test`)
   * marking that we trust "All deployments" (or specific if you wish)
 3. give a name of the environment (pick anything you want)
 4. click `Create trust`
 
 And that's it! Now ROR cluster should trust the Elastic Cloud cluster and vice versa. 
 
-#### Configuring ROR settings
+### The minimal configuration of Elasticsearch & ReadonlyREST settings
+
+`elasticsearch.yml` should look like this:
+```yaml
+cluster.name: ror-cluster # the same value used in `instances.yml`
+node.name: ror-es01  # the same value used in `instances.yml`
+network.host: 0.0.0.0
+
+xpack.security.enabled: false
+
+transport.type: ror_ssl_internode
+readonlyrest: # we will put in in `elasticsearch.yml` because each node should have different certificate
+  ssl_internode: 
+    enable: true # we have to enable internode SSL because it's required to communicate with Elastic Cloud remote cluster
+    keystore_file: "ror-cluster/ror-es01/ror-es01.p12"
+    keystore_pass: "mypassword"
+    truststore_file: "ror-cluster/ror-es01/ror-es01.p12"
+    truststore_pass: "mypassword"
+    key_pass: "mypassword"
+    certificate_verification: true # it means that certificates will be validated
+    client_authentication: true # ES with ROR acting as a client is going to authenticate itself
+
+cluster.remote.escloud.mode: proxy # `escloud` is a remote cluster name - so to access `index1` on this remote cluster from the local cluster, we should refer it like that: `escloud:index1` (see `readonlyrest.yml` below) 
+cluster.remote.escloud.proxy_address: '${ES_CLOUD_PROXY_ADDRESS}' # taken from Elastic Cloud deployment security settings, "Remote cluster parameters" section
+cluster.remote.escloud.server_name: '${ES_CLOUD_SERVER_NAME}' # taken from Elastic Cloud deployment security settings, "Remote cluster parameters" section
+```
+
+and `readonlyrest.yml` like this:
+```yaml
+readonlyrest:
+
+  access_control_rules:
+
+    - name: "KIBANA" # for Kibana 
+      type: allow
+      auth_key: kibana:kibana
+
+    - name: "ADMIN" # admin user - can change ROR settings
+      type: allow
+      kibana_access: admin
+      auth_key: admin:admin
+      
+    - name: "User 1" # user1 can read remote Elastic Cloud cluster (escloud) indices matching pattern kibana_sample*
+      type: allow
+      kibana_access: ro
+      auth_key: "user1:test"
+      indices: [".kibana*", "escloud:kibana_sample*"]
+```
+
+Kibana configuration doesn't contain anything special.
+<details>
+  <summary>Expand it if you really need to see how it looks like</summary>
+<br>
+
+`kibana.yml`:
+```yaml
+server.name: kibana-ror
+server.host: 0.0.0.0
+elasticsearch.hosts: [ "${ES_REST_API_URL}" ]
+monitoring.ui.container.elasticsearch.enabled: true
+
+elasticsearch.username: kibana
+elasticsearch.password: kibana
+```
+</details>
+
