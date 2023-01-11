@@ -1,12 +1,12 @@
 ## Docker-based local ROR cluster and remote Elastic Cloud cluster PLAYGROUND
 
 This document is a step-by-step guide on how to bootstrap a playground with a local ROR cluster in docker (one Elasticsearch node and one Kibana node) 
-and real Elastic Cloud deployment.
+and connecting it to a real Elastic Cloud deployment using the "Trusted deployment" feature in Elastic Cloud.
 
-It requires minimal knowledge and most of the process is automated. The prepared interactive script will help you to do it quickly. As a result of the script, you will have a working local ROR cluster connected to the remote Elastic Cloud cluster. 
+This guide requires minimal knowledge because most of the process is automated. This interactive script will help you to do it quickly. As a result of the script, you will have a working local ROR cluster connected to the remote Elastic Cloud cluster. 
 
 #### Before you start
-1. Linux or Mac OS machine
+1. Linux or Mac OS machine (Windows is untested)
 2. Account in https://cloud.elastic.co/ and valid deployment (a free trial is OK)
 2. [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/) and [Git](https://git-scm.com/) installed
 
