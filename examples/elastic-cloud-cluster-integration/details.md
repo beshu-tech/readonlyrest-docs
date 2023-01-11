@@ -1,16 +1,28 @@
 ## Self-managed ROR cluster and remote Elastic Cloud cluster configuration details
 
+This is a detailed description of how to configure two Elasticsearch clusters:
+1. One in Elastic Cloud (managed Elasticsearch from Elastic) containing the bulk of the data 
+2. One self hosted with ReadonlyREST (for enterprise-level access control and authentication)
+
+The objective is to get the two connected using the transport protocol over SSL, so that we can attach a Kibana (with ROR Enterprise installed) to the cluster #2, and from there query the data in cluster #1 using the [Cross Cluster Search (CCS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cross-cluster-search.html) feature. 
+
+
 ### Two-way SSL configuration
 
 The local, self-managed ROR cluster connects with the remote Elastic Cloud cluster using the Elasticsearch transport interface.
-The transport uses two-way SSL to authorize nodes of clusters. To do that, we need to generate CA certificates of nodes of 
-the local cluster (using the CA certificates of the Elastic cloud cluster). Then we need to use them to add a trusted environment 
-in the Elastic Cloud cluster. CA certificates of the Elastic Cloud cluster nodes can be downloaded from the security settings of 
+The transport uses two-way SSL to authorize nodes of clusters.
+
+To do that, we need to 
+1. Generate CA certificates of nodes of the local cluster (using the CA certificates of the Elastic cloud cluster)
+2. Use them to add a trusted environment in Elastic Cloud console 
+3. Configure the internode SSL and remote cluster settings in `elasticsearch.yml`
+
+The CA certificates of the Elastic Cloud cluster nodes can be downloaded from the security settings of 
 the Elastic Cloud deployment (see [screenshots](playgroud.md#running-interactive-script)). 
 
 #### Generating ROR cluster CA and nodes' certificates 
 
-To generate CA certificates we will use the `elasticsearch-certutil` which can be found in the `bin` folder in your Elasticsearch 
+To generate CA certificates in the self hosted cluster, we will use the `elasticsearch-certutil` which can be found in the `bin` folder in your Elasticsearch 
 location (eg. `/usr/share/elasticsearch/bin/`). 
 
 Our working directory structure will look like that:
@@ -35,7 +47,7 @@ Let's move the downloaded Elastic Cloud CA certificates file to `/tmp/certs/inpu
 2 directories, 1 file
 ```
 
-Moreover, let's create the `instances.yml` file in the `/tmp/certs/input` directory where we will define all nodes and their properties
+Now, let's create the `instances.yml` file in the `/tmp/certs/input` directory where we will define all nodes and their properties
 (see [Elastic instruction for details](https://www.elastic.co/guide/en/elasticsearch/reference/current/certutil.html#certutil-silent)) eg.
 
 ```yaml
@@ -49,20 +61,20 @@ instances:
       - "127.0.0.1"
 ```
 
-Now, we have all data to generate CA certificates of the nodes of our local ROR cluster:
+Great, we have all the ingredients to generate the CA certificates of the nodes in our local ROR cluster:
 ```bash
 mkdir -p /tmp/certs/output/ca
 bin/elasticsearch-certutil ca --out /tmp/certs/output/ca/ca.p12 --pass mycapassword 
 ```
 
 Details about the usage of the `elasticsearch-certutil` tool you will find in [Elastic documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/certutil.html). 
-We have CA as the `p12` certificate. We need to convert it to `X509`. It can be done using `openssl`:
+We have the CA certificate in `p12` format. We need to convert it to `X509`. It can be done using `openssl`:
 
 ```bash
 openssl pkcs12 -in /tmp/certs/output/ca/ca.p12 -out /tmp/certs/output/ca/ca.crt -nokeys --password pass:mypassword 
 ```
 
-Now, let's use our CA and generate certificates for the ROR cluster nodes: 
+Let's use our CA and generate certificates for the ROR cluster nodes: 
 
 ```bash
 bin/elasticsearch-certutil cert --silent --in /tmp/certs/input/instances.yml --out /tmp/certs/output/ror-cluster.zip --ca /tmp/certs/output/ca/ca.p12 --ca-pass mypassword --pass mypassword
