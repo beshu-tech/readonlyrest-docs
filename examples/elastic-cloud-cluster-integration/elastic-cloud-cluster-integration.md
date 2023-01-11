@@ -10,9 +10,9 @@ as a remote cluster in the first one.
 
 ![Solution architecture](../../.gitbook/assets/elastic_cloud_integration_diagram.svg)
 
-Both clusters will communicate at a transport level. The communication is secured by two-way SSL. Because both clusters have to be
-configured to trust each other, the bootstrapping procedure is not straightforward. But we prepared a demo that provides 
-an interactive guide to properly set up the clusters. Moreover, details of the setup are described below. Let's start!
+The two clusters will communicate at a transport level. The communication will be secured by two-way SSL. Because both clusters have to be
+configured to trust each other, the initial configuration procedure requires attention. But we prepared a demo that provides 
+an interactive guide to properly set up the clusters automatically. Moreover, details of the setup are described below. Let's start!
 
 ## Configuration
 
@@ -24,7 +24,7 @@ Depending on what you need now, you may be interested in either:
 ## Testing
 
 You can test the setup using Kibana sample web logs. 
-Here are the steps to do:
+Let's see how to do it in a few steps:
 
 1. Open your browser and go to your Elastic Cloud deployment Kibana and add "Sample web logs".
 
@@ -36,7 +36,7 @@ Here are the steps to do:
 
     </details>
 
-2. In the new browser's tab, open Local ROR cluster Kibana (`http://localhost:15601/`) and log in as admin (`admin:admin`).
+2. In a new browser tab, open your local ROR cluster Kibana (`http://localhost:15601/`) and log in as admin (`admin:admin`).
 
 3. Pick `Stack Management` in the Kibana menu, go to `Data views`, and click `Create data view` to create the data view to explore the sample logs from the Elastic cloud cluster.
 
