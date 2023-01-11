@@ -10,40 +10,40 @@ description: User manual for ReadonlyREST Enterprise/PRO/Free
 
 ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html), and [ReadonlyREST Free](https://readonlyrest.com/free) packages. See product descriptions and a comparison chart in the official [ReadonlyREST website](https://readonlyrest.com)
 
-ReadonlyREST plugins for Kibana **always require** ReadonlyREST Free to be installed in the Elasticsearch nodes your Kibana instance(s) will connect to.
+ReadonlyREST plugins for Kibana **always require** ReadonlyREST opens source plugin to be installed in the Elasticsearch nodes your Kibana instance(s) will connect to.
 
-It's not mandatory to install ReadonlyREST Free in all Elasticsearch nodes, but only in the ones in where you need the HTTP interface to be secured.
+It's not mandatory to install ReadonlyREST in all Elasticsearch nodes, but only in the ones in where you need the HTTP interface to be secured.
 
 ### After purchasing
 
-You will receive a link to the plugin zip file in an email. Download your zip.
+If you didn't install it yet, download the latest [universal build](https://docs.readonlyrest.com/universal-builds) from our [download page](https://readonlyrest.com/download/) and install it manually.
+Alternatively, see below if you want to install it directly via the command line without downloading it from the browser.
 
-You will be able to download it also in the future as long as your subscription is active.
+Once the universal build plugin for Kibana is installed, you can activate it using an **activation key**. You can get one of these in the [ReadonlyREST customer portal](https://readonlyrest.com/customer) if you are a subscriber, otherwise, use the same portal to get a trial activation key (for PRO or Enterprise) for 30 days evaluation. 
 
 ### Version strings
 
-All our plugins include in their file name a version string. For example the file `readonlyrest-1.16.26_es6.4.0.zip` has a version string `1.16.26_es6.4.0`.
+All our plugins include in their file name a version string. For example the file `readonlyrest-1.46.0_es8.6.0.zip` has a version string `1.46.0_es8.6.0`.
 
 #### Reading version strings
 
-Given the version string `1.16.26_es6.4.0`
+Given the version string `1.46.0_es8.6.0`
 
-* ReadonlyREST plugin code version `1.16.26`
-* Works only with Elasticsearch/Kibana version `6.4.0`
+* ReadonlyREST plugin code version `1.46.0`
+* Works only with Elasticsearch/Kibana version `8.6.0`
 
 The "es" stands for "Elastic stack" which used to mean the family of products made by Elastic which get released at the same time under the same version number. This was chosen **before** Elastic renamed their X-Pack commercial offer to Elastic Stack.
 
 To be clear, there is no affiliation between ReadonlyREST and Elastic, or their commercial products.
 
-#### Trial builds version strings
+#### Universal Kibana plugin version strings
 
-Trial builds are valid for 30 days after they were built, and they will stop working soon after the time is elapsed. Trial builds have a special version string which includes a build-time timestamp.
+Our Kibana plugin file naming follows very similar rules:
 
-I.e. `readonlyrest_kbn_pro-1.16.26-20180911_es6.0.0.zip`
+I.e. `readonlyrest_kbn_universal-1.46.0_es8.6.0.zip`
 
-* ReadonlyREST PRO plugin version 1.16.26
-* Build date 11th September 2018, expiring on the 11th of October 2018.
-* Works only with Kibana version 6.0.0
+* ReadonlyREST PRO plugin version 1.46.0
+* Works only with Kibana version 8.6.0
 
 ### When an update is out
 
@@ -65,62 +65,25 @@ After Kibana 7.9.x, it's necessary to [patch](./#patching-kibana) Kibana after y
 
 This installation method is more practical if your Kibana server is connected to the internet.
 
-According to what edition of ReadonlyREST you want to install, from your Kibana installation, launch one of the commands:
-
 Please note that this will always download the latest version of Kibana plugin available for the current supported Elasticsearch version.
 
 ```bash
 # ReadonlyREST Free edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&email=<your_email_address>"
-
-# ReadonlyREST PRO (30 days trial) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&email=<your_email_address>"
-
-# ReadonlyREST Enterprise (30 days trial) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>"
+$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&email=<your_email_address>"
 ```
 
 If you want to download the latest version of plugin for a specific version of Elasticsearch, then use query parameter esVersion to specify your required Elasticsearch version.
 
 ```bash
-# ReadonlyREST Free edition for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&esVersion=7.6.1&email=<your_email_address>"
+$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=7.6.1&email=<your_email_address>"
 
-# ReadonlyREST PRO (30 days trial) edition for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&esVersion=7.6.1&email=<your_email_address>"
-
-# ReadonlyREST Enterprise (30 days trial) edition for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&esVersion=7.6.1&email=<your_email_address>"
 ```
 
 If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter `pluginVersion` along with `esVersion`.
 
 ```bash
-# ReadonlyREST Free edition - version 1.22.0 for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
-
-# ReadonlyREST PRO (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
-
-# ReadonlyREST Enterprise (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
+$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=8.6.0&pluginVersion=1.46.0&email=<your_email_address>"
 ```
-
-If you are a PRO or Enterprise subscriber, the link will include an extra parameter "token" which can only be used in association with the provided email address.
-
-You can append required plugin version and Elasticsearch version query parameters to download specific version as described above.
-
-**NB: This URL is personal, and should be handled as a secret.**
-
-```bash
-# ReadonlyREST PRO (Official) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&email=<your_email_address>&token=<your_secret_token>"
-
-# ReadonlyREST Enterprise (30 days trial) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>&token=<your_secret_token>"
-```
-
-You can obtain official links with personal secret tokens using our self service [download form](https://readonlyrest.com/download/), once your email address has been recognized as active subscriber.
 
 Now you are ready to [patch Kibana](./#patching-kibana).
 
