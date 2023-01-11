@@ -2,7 +2,7 @@
 
 This is a detailed description of how to configure two Elasticsearch clusters:
 1. One in Elastic Cloud (managed Elasticsearch from Elastic) containing the bulk of the data 
-2. One self hosted with ReadonlyREST  (for enterprise-level access control and authentication)
+2. One self hosted with ReadonlyREST (for enterprise-level access control and authentication)
 
 The objective is to get the two connected using the transport protocol over SSL, so that we can attach a Kibana (with ROR Enterprise installed) to the cluster #2, and from there query the data in cluster #1 using the [Cross Cluster Search (CCS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cross-cluster-search.html) feature. 
 
@@ -15,6 +15,7 @@ The transport uses two-way SSL to authorize nodes of clusters.
 To do that, we need to 
 1. Generate CA certificates of nodes of the local cluster (using the CA certificates of the Elastic cloud cluster)
 2. Use them to add a trusted environment in Elastic Cloud console 
+3. Configure the internode SSL and remote cluster settings in `elasticsearch.yml`
 
 The CA certificates of the Elastic Cloud cluster nodes can be downloaded from the security settings of 
 the Elastic Cloud deployment (see [screenshots](playgroud.md#running-interactive-script)). 
@@ -60,7 +61,7 @@ instances:
       - "127.0.0.1"
 ```
 
-Now, we have all the ingredients to generate the CA certificates of the nodes in our local ROR cluster:
+Great, we have all the ingredients to generate the CA certificates of the nodes in our local ROR cluster:
 ```bash
 mkdir -p /tmp/certs/output/ca
 bin/elasticsearch-certutil ca --out /tmp/certs/output/ca/ca.p12 --pass mycapassword 
@@ -73,7 +74,7 @@ We have the CA certificate in `p12` format. We need to convert it to `X509`. It 
 openssl pkcs12 -in /tmp/certs/output/ca/ca.p12 -out /tmp/certs/output/ca/ca.crt -nokeys --password pass:mypassword 
 ```
 
-Now, let's use our CA and generate certificates for the ROR cluster nodes: 
+Let's use our CA and generate certificates for the ROR cluster nodes: 
 
 ```bash
 bin/elasticsearch-certutil cert --silent --in /tmp/certs/input/instances.yml --out /tmp/certs/output/ror-cluster.zip --ca /tmp/certs/output/ca/ca.p12 --ca-pass mypassword --pass mypassword
