@@ -2,6 +2,7 @@
 
 ### (2023-01-02) What's new in **ROR 1.46.0**
 * **🚨Security Fix** (ES) [CVE-2022-1471](https://nvd.nist.gov/vuln/detail/CVE-2022-1471), [CVE-2022-41915](https://nvd.nist.gov/vuln/detail/CVE-2022-41915), [CVE-2022-36944](https://nvd.nist.gov/vuln/detail/CVE-2022-36944) in [audit Scala 2.13 jar](https://mvnrepository.com/artifact/tech.beshu.ror/audit)
+* **🚀New** (ES) 8.6.0 support
 * **🧐Enhancement** (KBN) Activation key management UI
 * **🧐Enhancement** (KBN) Less verbose logging in info mode
 * **🧐Enhancement** (KBN) “Stack management” kibana compatibility
