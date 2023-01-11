@@ -7,7 +7,8 @@ as a remote cluster in the first one.
 
 ## Solution Architecture 
 
-[todo: FIGURE]
+
+![Solution architecture](../../.gitbook/assets/elastic_cloud_integration_diagram.svg)
 
 Both clusters will communicate at a transport level. The communication is secured by two-way SSL. Because both clusters have to be
 configured to trust each other, the bootstrapping procedure is not straightforward. But we prepared a demo that provides 
