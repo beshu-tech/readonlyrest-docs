@@ -400,16 +400,41 @@ And this is how you hide only one app from the Enterprise Search menu:
 
 More generally, either of these two ways will work:
 
-```bash
+```yaml
 kibana_hide_apps: [ "<submenu-title>" ]
 kibana_hide_apps: [ "<submenu-title|app-title>" ]
 ```
 
 For example the following is a valid rule:
 
-```bash
+```yaml
 kibana_hide_apps: [ "Security", "Management|Stack Management", "Enterprise Search" ]
 ```
+
+There is also a way to use regular expression as a `kibana_hidden_apps` value
+
+for example, you can hide all submenus except for the specific app
+
+```yaml
+kibana_hide_apps: [ "/^Analytics\\|(?!(Maps)$).*$/"]
+```
+
+In this case, all analytics apps will be hidden except `Maps`
+
+**⚠️IMPORTANT** Pipe operator needs to be escaped correctly when it's declared in the regular expression `\\|`.
+The regular expression must be declared between double quote `"/<regular-expression/"`
+
+You can also hide all submenus except specified values
+
+```yaml
+kibana_hide_apps: ["/^(?!(Analytics|Management).*$).*$/"]
+```
+
+In this case everything except of `Analytics` and `Management` will submenus will be hidden
+
+**⚠️IMPORTANT** In this case `|` is treated ad logical `or` operator, that's why it shouldn't be escaped
+
+To check all regular expressions available options, check [regular expressions syntax cheatsheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet)
 
 ### Hiding ReadonlyREST menu elements
 
@@ -417,13 +442,13 @@ This feature will work in ReadonlyREST PRO and Enteprise.
 
 To hide the `Manage kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana_hide_apps`
 
-```bash
+```yaml
 kibana_hide_apps: [ "ROR Manage Kibana" ]
 ```
 
 To hide the `Edit security settings` button for the specific user you need to provide `ROR Security Settings` or `readonlyrest_kbn` value into a `kibana_hide_apps`
 
-```bash
+```yaml
 kibana_hide_apps: [ "ROR Security Settings" ]
 ```
 
