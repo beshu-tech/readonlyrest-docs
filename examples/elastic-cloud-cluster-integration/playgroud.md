@@ -1,5 +1,5 @@
 ---
-description: Docker-based playgroung
+description: Docker-based playground
 ---
 
 ## Docker-based local ROR cluster and remote Elastic Cloud cluster PLAYGROUND
