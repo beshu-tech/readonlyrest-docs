@@ -1,8 +1,12 @@
+---
+description: Detailed configuration 
+---
+
 ## Self-managed ROR cluster and remote Elastic Cloud cluster configuration details
 
 This is a detailed description of how to configure two Elasticsearch clusters:
 1. One in Elastic Cloud (managed Elasticsearch from Elastic) containing the bulk of the data 
-2. One self hosted with ReadonlyREST (for enterprise-level access control and authentication)
+2. One self-hosted with ReadonlyREST (for enterprise-level access control and authentication)
 
 The objective is to get the two connected using the transport protocol over SSL, so that we can attach a Kibana (with ROR Enterprise installed) to the cluster #2, and from there query the data in cluster #1 using the [Cross Cluster Search (CCS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cross-cluster-search.html) feature. 
 
@@ -14,7 +18,7 @@ The transport uses two-way SSL to authorize nodes of clusters.
 
 To do that, we need to 
 1. Generate CA certificates of nodes of the local cluster (using the CA certificates of the Elastic cloud cluster)
-2. Use them to add a trusted environment in Elastic Cloud console 
+2. Use them to add a trusted environment in the Elastic Cloud console 
 3. Configure the internode SSL and remote cluster settings in `elasticsearch.yml`
 
 The CA certificates of the Elastic Cloud cluster nodes can be downloaded from the security settings of 
@@ -22,7 +26,7 @@ the Elastic Cloud deployment (see [screenshots](playgroud.md#running-interactive
 
 #### Generating ROR cluster CA and nodes' certificates 
 
-To generate CA certificates in the self hosted cluster, we will use the `elasticsearch-certutil` which can be found in the `bin` folder in your Elasticsearch 
+To generate CA certificates in the self-hosted cluster, we will use the `elasticsearch-certutil` which can be found in the `bin` folder in your Elasticsearch 
 location (eg. `/usr/share/elasticsearch/bin/`). 
 
 Our working directory structure will look like that:
@@ -81,7 +85,7 @@ bin/elasticsearch-certutil cert --silent --in /tmp/certs/input/instances.yml --o
 unzip /tmp/certs/output/ror-cluster.zip -d /tmp/certs/output/ror-cluster
 ```
 
-The last thing, we need to do, is to import Elastic Cloud CA to ROR node's keystore:
+The last thing, we need to do, is to import Elastic Cloud CA to the ROR node's keystore:
 
 ```bash
 jdk/bin/keytool -importcert -noprompt -file /tmp/certs/input/elastic-cloud-ca.cer -alias 'elastic-cloud' -keystore /tmp/certs/output/ror-cluster/ror-es01/ror-es01.p12 -storepass mypassword

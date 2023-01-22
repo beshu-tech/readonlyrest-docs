@@ -1,3 +1,7 @@
+---
+description: Docker-based playgroung
+---
+
 ## Docker-based local ROR cluster and remote Elastic Cloud cluster PLAYGROUND
 
 This document is a step-by-step guide on how to bootstrap a playground with a local ROR cluster in docker (one Elasticsearch node and one Kibana node) 

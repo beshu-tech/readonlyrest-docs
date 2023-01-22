@@ -1,5 +1,8 @@
-# INTEGRATION
-# ROR-based cluster with remote X-Pack Security cluster on Elastic Cloud
+---
+description: ROR-based cluster with remote X-Pack Security cluster on Elastic Cloud integration
+---
+
+# ROR-based cluster with remote X-Pack Security cluster on Elastic Cloud Integration
 
 ReadonlyREST plugin cannot be installed on Elastic Cloud. But we can still take advantage of ROR's features with a little, 
 smart trick - [the remote cluster](https://www.elastic.co/guide/en/elasticsearch/reference/current/remote-clusters.html) Elasticsearch feature. A self-managed ROR-based cluster can access an Elastic Cloud cluster when the latter is configured
