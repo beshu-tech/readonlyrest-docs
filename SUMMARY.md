@@ -25,7 +25,7 @@
     * [Creating Test Settings](examples/impersonation/test-settings-ui.md)
     * [Defining external services mock configurations](examples/impersonation/external-services-mocks-ui.md)
     * [Impersonating users](examples/impersonation/impersonate-user-ui.md)
-  * [ROR-based cluster with remote X-Pack Security cluster on Elastic Cloud integration](examples/elastic-cloud-cluster-integration/README.md)
+  * [ROR cluster with Elastic Cloud integration](examples/elastic-cloud-cluster-integration/README.md)
     * [Docker-based playground](examples/elastic-cloud-cluster-integration/playgroud.md)
     * [Configuration details](examples/elastic-cloud-cluster-integration/details.md)
 * [Contribution License Agreement](contributing.md)
