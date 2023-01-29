@@ -661,7 +661,7 @@ A list of api keys expected in the header `X-Api-Key`
 
 `indices: ["sales", "logstash-*"]`
 
-Matches if the request involves a set of indices whose name is "sales", or starts with the string "logstash-", or a combination of both.
+Matches if the request involves a set of indices (or aliases, or data streams) whose name is "sales", or starts with the string "logstash-", or a combination of both.
 
 If a request involves a wildcard \(i.e. "logstash-\*", "\*"\), this is first expanded to the list of available indices, and then treated normally as follows:
 
@@ -789,6 +789,12 @@ Restrict what snapshots names can be saved or restored
 `repositories: ["repo_@{user}_*"]`
 
 Restrict what repositories can snapshots be saved into
+
+#### `data_streams`
+
+`data_streams: ["ds_@{user}_*"]`
+
+Restrict what data stream names can be created, deleted, or modified
 
 #### `filter`
 
@@ -1753,7 +1759,7 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana_index`, `kibana_template_index`. The variables are related to different contexts:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`,`indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana_index`, `kibana_template_index`. The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
