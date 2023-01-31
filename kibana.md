@@ -332,7 +332,7 @@ So, some request with credentials can be let through from one of the first block
 
 Take this example of troublesome ACL:
 
-```
+```yaml
     # PROBLEMATIC SETTINGS (EXAMPLE) ⚠️
 
     access_control_rules:
@@ -352,7 +352,7 @@ This means the response to the Kibana login request will contain no user identit
 
 The solution to this is to reorder the ACL blocks, so the ones that authenticate Kibana users are on the top.
 
-```
+```yaml
     # SOLUTION: KIBANA USER AUTH RELATED BLOCKS GO FIRST! ✅👍
 
     access_control_rules:
@@ -370,7 +370,7 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
 
 When a user logs in, ReadonlyREST will write an encrypted cookie in the browser. This cookie has an time to live that can be tweaked with the following configuration key in `kibana.yml`.
 
-```
+```yaml
 readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
 ```
 
@@ -378,11 +378,35 @@ readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
 
 By default, all the session data like search history, dev tool commands history, etc, will be wiped out from the browser whenever a new user is logged in, or a user changes tenancy. To override this behaviour, use this setting:
 
-```
+```yaml
 readonlyrest_kbn.clearSessionOnEvents: ["never"]
 ```
 
 Possible values: `"login", "tenancyHop", "never"`.
+
+#### No authentication rule defined
+
+The “problem with the configuration of authentication” error message is presented in ReadonlyREST Free/PRO/Enterprise when the login request is checked by the ACL and gets accepted by an ACL block with no authentication rule in it.
+
+An example of this would be:
+
+```yaml
+readonlyrest:
+   access_control_rules:
+   - name: "LDAP Auth"
+     ldap_authentication: ...
+   
+   - name: "Allow requests from localhost"
+     hosts: ["127.0.0.1"]
+```
+
+Imagine you run Elasticsearch and Kibana on the same host:
+
+* the Kibana user login request comes to Elasticsearch
+* Credentials are wrong, and the first block does not match
+* The second block is then evaluated, and the request is allowed because of its origin IP
+
+As you can see, Elasticsearch has no user related information (metadata) to return to Kibana, and the error “problem with the configuration of authentication ” is shown.
 
 ### Hiding Kibana Apps
 
