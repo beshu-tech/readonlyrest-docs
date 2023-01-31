@@ -68,22 +68,33 @@ This installation method is more practical if your Kibana server is connected to
 Please note that this will always download the latest version of Kibana plugin available for the current supported Elasticsearch version.
 
 ```bash
-# ReadonlyREST Free edition
+# ReadonlyREST Universal Kibana plugin
 $ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&email=<your_email_address>"
 ```
 
-If you want to download the latest version of plugin for a specific version of Elasticsearch, then use query parameter esVersion to specify your required Elasticsearch version.
+If you want to download the latest version of plugin for a specific version of Kibana, then use query parameter esVersion to specify your required Kibana version.
 
 ```bash
 $ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=7.6.1&email=<your_email_address>"
 
 ```
 
-If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter `pluginVersion` along with `esVersion`.
+If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter `pluginVersion` along with `esVersion`. Please note that you can only go so far back with plugin versions. [Let us know](https://readonlyrest.com/contact) if you can't download a specific one.
 
 ```bash
 $ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=8.6.0&pluginVersion=1.46.0&email=<your_email_address>"
 ```
+
+It's possible to add an extra query parameter (`checksum=true`) to any download URL to obtain a `sha1` checksum of the corresponding deliverable. For example:
+
+```bash
+$curl -vvv  "https://api.beshu.tech/download/kbn?esVersion=8.6.0&pluginVersion=1.46.0&email=your@emailaddress.com&edition=kbn_universal&checksum=true" 
+[...]
+$ curl -vvv  "https://api.beshu.tech/download/es?esVersion=8.6.0&pluginVersion=1.46.0&checksum=true" 
+[...]
+```
+
+
 
 Now you are ready to [patch Kibana](./#patching-kibana).
 
