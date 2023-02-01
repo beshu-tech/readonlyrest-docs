@@ -408,6 +408,25 @@ Imagine you run Elasticsearch and Kibana on the same host:
 
 As you can see, Elasticsearch has no user related information (metadata) to return to Kibana, and the error “problem with the configuration of authentication ” is shown.
 
+In general, we highly discourage implementing access control using origin IPs alone, users should set up SSL, Basic HTTP auth in their agents in any case, even on localhost. The hosts rule would then be an extra protection.
+
+If this is not possible for very important reasons, then we would prevent any Kibana originated request to match that rule by using the negated form of the [headers rule](../elasticsearch.md#headers). I.e.
+
+readonlyrest.yml
+
+```yaml
+- name: "Allow requests from localhost"
+  hosts: ["127.0.0.1"]
+  headers: [ "~x-from-kibana:true" ]
+```
+
+
+kibana.yml (append)
+
+```yaml
+elasticsearch.customHeaders:  {"x-from-kibana":"true"}
+```
+
 ### Hiding Kibana Apps
 
 This feature will work in ReadonlyREST PRO and Enteprise.
