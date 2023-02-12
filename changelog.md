@@ -1,5 +1,16 @@
 # Changelog
 
+### (2023-02-13) What's new in **ROR 1.47.0**
+* **🚨Security Fix** (ES) "/" endpoint was not protected for ES 8.x
+* **🚨Security Fix** (ES) "/_cat" endpoint was not protected for all ES versions
+* **🚀New** (ES) [the `data_streams` rule](https://docs.readonlyrest.com/v/develop/elasticsearch#data_streams)
+* **🧐Enhancement** (KBN) optimisation in hidden apps feature
+* **🐞Fix** (KBN) Opening index management mappings tab forces logout
+* **🐞Fix** (KBN) Fix dark mode in the ROR menu
+* **🐞Fix** (KBN) YAML editor updates and fixes
+* **🐞Fix** (ES) Data streams support in the `indices` rule
+* **🐞Fix** (ES) NPE when `_search` with aggregations (script) and the `fields` rule were used together
+
 ### (2023-01-02) What's new in **ROR 1.46.0**
 * **🚨Security Fix** (ES) [CVE-2022-1471](https://nvd.nist.gov/vuln/detail/CVE-2022-1471), [CVE-2022-41915](https://nvd.nist.gov/vuln/detail/CVE-2022-41915), [CVE-2022-36944](https://nvd.nist.gov/vuln/detail/CVE-2022-36944) in [audit Scala 2.13 jar](https://mvnrepository.com/artifact/tech.beshu.ror/audit)
 * **🚀New** (KBN) 8.6.1, 8.6.0, 7.17.9 support
