@@ -545,11 +545,11 @@ If you happen to get a `java.io.IOException: failed to decrypt safe contents ent
 ### Request handling during ES startup
 
 Each incoming request to the Elasticsearch node passes to the installed plugin. During Elasticsearch node startup, the plugin rejects incoming requests until it starts. The plugin rejects such requests with the `403` forbidden responses by default.
-To override this behavior, append to  **elasticsearch.yml**
+To overwrite this behavior, append to  **elasticsearch.yml**
 
 ```
-readonlyrest.not_started_response_code: 403
-readonlyrest.failed_to_start_response_code: 403
+readonlyrest.not_started_response_code: 503
+readonlyrest.failed_to_start_response_code: 503
 ```
 
 `readonlyrest.not_started_response_code` - HTTP code returned when the plugin does not start yet. Possible values are `403`(default) and `503`.
