@@ -542,6 +542,20 @@ If you happen to get a `java.io.IOException: failed to decrypt safe contents ent
 (Credits for the original JKS tutorial to [Maximilian Boehm](https://maximilian-boehm.com))
 
 
+### Request handling during ES startup
+
+Each incoming request to the Elasticsearch node passes to the installed plugin. During Elasticsearch node startup, the plugin rejects incoming requests until it starts. The plugin rejects such requests with the `403` forbidden responses by default.
+To overwrite this behavior, append to  **elasticsearch.yml**
+
+```
+readonlyrest.not_started_response_code: 503
+readonlyrest.failed_to_start_response_code: 503
+```
+
+`readonlyrest.not_started_response_code` - HTTP code returned when the plugin does not start yet. Possible values are `403`(default) and `503`.
+
+`readonlyrest.failed_to_start_response_code` - HTTP code returned when the plugin failed to start (e.g. by malformed ACL). Possible values are `403`(default) and `503`.
+
 ### Blocks of rules
 
 Every block **must** have at least the `name` field, and optionally a `type` field valued either "allow" or "forbid". If you omit the `type`, your block will be treated as `type: allow` by default.
