@@ -989,11 +989,21 @@ readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 
 This feature will work only with ReadonlyREST Enterprise
 
-When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana\_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.
+When a tenant logs in for the first time, ReadonlyREST Enterprise will create the kibana index associated to the tenancy as per ACL. For example, it will create and initialize the ".kibana_user1" index, where the tenant "user1" will store all the ["saved objects"](https://www.elastic.co/guide/en/kibana/current/managing-saved-objects.html), that is: visualizations, dashboards, spaces, settings, data views, etc.
 
-The issue is that "user1"'s user experience will be really raw as they will see a completely blank Kibana tenancy. Not even a default index pattern will be present. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana\_access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
+The problem is that user1, and any other new users would login for the first time in to a completely blank Kibana. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana_access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
 
-To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy.
+To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create and curate a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy. 
+The objects in the templating index will be copied every time the user logs in (or changes tenancy with the tenancy selector), and **if the objects were already present, they will be overwritten**.
+
+The object overwrite is desirable because administrators would like to improve and enrich the content of the template tenancy over time, and these enhancements need to be propagated to the tenants.
+
+If the tenants were not read-only, and created other objects of their own (e.g. another space, another dashboard), these won't be deleted.
+
+### Reset tenancy to template
+If you add `readonlyrest_kbn.resetKibanaIndexToTemplate: true` to `kibana.yml` your tenants will get their index deleted and reinitialized to the content in the kibana template index specified in `readonlyrest_kbn.kibanaIndexTemplate` every time they log in, or change tenancy using the tenancy selector.
+
+The reset tenancy to template only works if a valid kibana index template is specified.
 
 ### How to use tenancy templating
 
@@ -1035,7 +1045,7 @@ NB: If you know what you are doing, you can add a tenancy with kibana\_index: ".
 
 ### Configure the template tenancy
 
-Now login as administrator in Kibana, hop into the "Template" tenancy, and start configuring the default UX for your future tenants. Add all the index patterns, create or import all the dashboards you want.
+Now login as administrator in Kibana, hop into the "Template" tenancy, and start configuring the default saved objects for your future tenants: add all the data views, create or import all the dashboards you want.
 
 ### Configure the template tenancy index in ReadonlyREST Enterprise
 
