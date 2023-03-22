@@ -1101,3 +1101,192 @@ an admin, who has just configured access for a new user. They would like
 to know if the rule(s) are configured correctly. And here comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. 
 
 ROR plugins support impersonation and provide UI for configuring cluster before using it. Visit the [impersonation details page](./details/impersonation.md) to know more.
+
+## Custom pre-auth hook
+### Why do we need it
+Sometimes, there is a need to handle non-standard behavior in the plugin.
+We want to make it more flexible and give the option to customize the plugin behavior by the enterprise license users to adjust the product to the business needs.
+There are two options to declare the pre-auth custom hook:
+- JS file: `readonlyrest_kbn.pre_auth_custom_hook_inject_file: '/path/to/your/file.js'`
+- Inline: `readonlyrest_kbn.pre_auth_custom_hook_inject: 'function test(req, res, next) {logger.debug("pre-auth hook called"); next()}'`
+
+### Available rorRequest API
+You can access the rorRequest API via `req.rorRequest` in your custom pre-auth middleware. The available options are:
+
+| Method name                                                            | Return value type            | Description                                                                    |
+|:-----------------------------------------------------------------------|------------------------------|--------------------------------------------------------------------------------|
+| getAuthorizationHeaders()                                              | Map<string, string>          | Get headers using in the authorization                                         |
+| getCookies()                                                           | string or undefined          | Get the request cookies                                                        |
+| getMethod()                                                            | Method                       | Get the request method                                                         |
+| getPath()                                                              | string                       | Get the request path                                                           |
+| getUrl()                                                               | string                       | Get the request URL                                                            |
+| getBody()                                                              | Body or null or undefined    | Get the request body                                                           |
+| getParams()                                                            | ParamsDictionary             | Get URL parameters                                                             |
+| getQueries()                                                           | ParsedQs                     | Get query string parameters                                                    |
+| getOriginAddress()                                                     | string undefined             | Get the origin address                                                         |
+| getHeaders()                                                           | Headers                      | Get all request headers                                                        |
+| isAuthenticated()                                                      | boolean                      | Check if the session is authenticated                                          |
+| isCookiePresent(cookieName: string)                                    | boolean or undefined         | Check if the specific cookie is presented in the request                       |
+| getIdentitySession()                                                   | IdentitySession or undefined | Get the session identity (check the information below, for the exact response) |
+| setIdentitySession(identitySession: IdentitySession or undefined)      | void                         | Set the new session                                                            |
+| enrichIdentitySessionMetadata(customMetadata: Record<string, unknown>) | void                         | Enrich existing user session by the additional custom metadata                 |
+| lastSessionActivityDate                                                | Date or undefined            | Date of the last session activity.Using in the context of a session timeout    |
+| extractHiddenAppsNames                                                 | string[]                     | List of all hidden apps for specific users |
+
+```ts
+export interface IdentitySession {
+  sid: string;
+  metadata: {
+     readonly expiresAt: Date;
+     readonly lastSessionActivityDate?: Date;
+     readonly authorizationHeaders: Map<string, string>;
+     readonly username: string;
+     readonly kibanaHiddenApps: string[];
+     readonly currentGroup?: string;
+     readonly availableGroups: string[];
+     readonly kibanaAccess?: 'ro_strict' | 'ro' | 'rw' | 'admin' | 'unrestricted'
+     readonly kibanaIndex?: string;
+     readonly kibanaTemplateIndex?: string;
+     readonly origin?: string;
+     readonly impersonatedBy?: string;
+     readonly correlationId: string;
+     readonly customMetadata: Record<string, unknown>;
+     readonly allowedApiPaths: {
+        "http_method": "ANY" | Method,
+        "path_regex": string
+     }[];
+  };
+}
+```
+
+### Use cases
+#### Enriching the metadata
+The metadata is the user-specific data available after the login to the kibana. thanks to the pre-auth custom hook, you can enrich metadata and use them in the kibana custom js file.
+For example to load a custom logo to the kibana you can:
+1. Declare `readonlyrest_kbn.pre_auth_custom_hook_inject_file: 'path/to/pre_auth_custom_hook_file.js'` in the  kibana.yml and declare `pre_auth_custom_hook_file.js`
+
+```ts
+async function customMiddleware(req, res, next) {
+  const metadata =
+    req.rorRequest && req.rorRequest.getIdentitySession() && req.rorRequest.getIdentitySession().metadata;
+
+  if (metadata && metadata.username === 'admin') {
+    req.rorRequest.enrichIdentitySessionMetadata({
+      newLogo:
+        'PHN2ZyBpZD0ic3ZnIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSI0MDAiIGhlaWdodD0iMzYzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJkaXNwbGF5OiBibG9jazsiPgogICAgPGcgaWQ9InN2Z2ciPgogICAgICAgIDxwYXRoIGlkPSJwYXRoMCIKICAgICAgICAgICAgICBkPSJNMTIyLjgzNiAxMS42MTEgQyAxMTMuNTg2IDE0LjQwNCwxMDguMDAyIDkzLjQxNiwxMDkuOTgyIDE5My41MDAgQyAxMTEuNTE1IDI3MC45ODAsMTExLjI4OCAzMDAuNzQzLDEwOS4wODUgMzExLjI4MyBDIDEwNS4yNjkgMzI5LjU0NCwxMDAuNDI2IDMyNy4zNDAsOTYuMzczIDMwNS41MDAgQyA5NC44ODcgMjk3LjQ4OSw5NC42MzEgMjgxLjI3Nyw5NC4wNDMgMTU4LjAwMCBDIDkzLjM1NCAxMy40NTcsOTMuNDQzIDE2LjAwMCw4OS4wNjggMTYuMDAwIEMgNjcuMDkxIDE2LjAwMCwzMC42ODMgNDQuNjgwLDE5Ljc2MCA3MC41OTUgQyAxMS43NDggODkuNjA3LDkuMjk2IDEzMi42NTcsMTQuNzI1IDE1OS4wMDAgQyAzMC4xNjkgMjMzLjkzOCw1NC45MjIgMjg4LjYxNiw4Ny42MzYgMzIwLjA1OCBDIDEyMi4xNjAgMzUzLjIzOCwxNzAuOTYxIDM1Ny45MjAsMjMwLjAwMCAzMzMuNzE1IEMgMjQ3LjY5OSAzMjYuNDU5LDI0OC4yNjEgMzI1LjA5OCwyNDIuMjg0IDMwNC4wMDAgQyAyMjkuNzc2IDI1OS44NDYsMjE3LjE2OCAyMzkuMDE4LDE3Ni42MDQgMTk1LjUwMCBDIDE1My43NDYgMTcwLjk3OCwxNDkuMzkxIDE2NC4zMzQsMTQ1LjA4NiAxNDcuNDE5IEMgMTM3LjE3NyAxMTYuMzQ3LDE0MS4zMjcgOTIuMzg0LDE2My41MTcgNDEuMDAwIEMgMTc0LjkwNiAxNC42MjYsMTc0Ljg4OCAxNC40NjksMTYwLjM2OCAxMy4wMTUgQyAxNDguODIxIDExLjg2MCwxMjQuOTY4IDEwLjk2NywxMjIuODM2IDExLjYxMSBNMTk2LjA2MSAyMi4xNDEgQyAxOTUuNTE0IDIzLjQzOCwxOTMuMDU1IDI5LjkwMCwxOTAuNTk3IDM2LjUwMCBDIDE4OC4xNDAgNDMuMTAwLDE4My4yMTAgNTUuNTg2LDE3OS42NDQgNjQuMjQ3IEMgMTUzLjU3MiAxMjcuNTU5LDE1NC4wMjUgMTMxLjI3NCwxOTMuMDM2IDE3NC4wMDAgQyAyMjYuMjg4IDIxMC40MTksMjQ5Ljk2OSAyNTIuOTM2LDI1OC40ODEgMjkxLjUwMCBDIDI2MC44NTIgMzAyLjI0MywyNjIuNzkyIDMwOS4yMDksMjYzLjg3OCAzMTAuODc2IEMgMjY0Ljg4NiAzMTIuNDI1LDI3MC4wMzMgMzA5LjI5NCwyNzguNzI0IDMwMS44NDcgQyAyODEuMzUxIDI5OS41OTYsMjg2LjQyNSAyOTUuMjQ3LDI5MC4wMDAgMjkyLjE4MiBDIDMzMy40NTYgMjU0LjkzMCwzNzQuMTM0IDIwMS45NzMsMzgxLjkzMSAxNzIuNTAwIEMgMzkzLjczMiAxMjcuODkwLDMzNi4yMDMgNjguNTg2LDI0OS4wMDAgMzUuNDY3IEMgMjQ3LjA3NSAzNC43MzYsMjQzLjAyNSAzMy4xODMsMjQwLjAwMCAzMi4wMTUgQyAyMTMuNDEwIDIxLjc0OCwxOTcuNzE1IDE4LjIyMSwxOTYuMDYxIDIyLjE0MSAiCiAgICAgICAgICAgICAgc3Ryb2tlPSJub25lIiBmaWxsPSIjMDBiZmIyIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+Cg=='
+    });
+  }
+
+  return next();
+}
+```
+We will pass new logo custom metadata when logged in user username is 'admin'
+
+
+2. To replace the logo, we need to declare the custom kibana js file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
+
+```js
+const logoHeader = document.querySelector('.euiHeaderLogo');
+
+if (window.ROR_METADATA.newLogo) {
+  Array.from(logoHeader.childNodes).forEach(node => {
+    node.style.display = 'none';
+  });
+
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        const customLogo = document.querySelector('#customLogo');
+
+        const createCustomLogo = () => {
+          const img = document.createElement('img');
+          img.src = `data:image/svg+xml;base64,${window.ROR_METADATA.newLogo}`;
+          img.style.width = '32px';
+          img.style.height = '32px';
+          img.id = 'customLogo';
+          logoHeader.appendChild(img);
+        };
+
+        const hideAllLogoElements = () => {
+          Array.from(logoHeader.childNodes).forEach(node => {
+            node.style.display = 'none';
+          });
+        };
+
+        const handleInit = () => {
+          hideAllLogoElements();
+          createCustomLogo();
+        };
+
+        if (customLogo) {
+          const displayCustomLogo = () => {
+            customLogo.style.display = 'block';
+          };
+          const hideCustomLogo = () => {
+            customLogo.style.display = 'none';
+          };
+          if (node.role === 'progressbar') {
+            hideCustomLogo();
+          }
+
+          if (node.role === 'img') {
+            const hideDefaultLogo = () => {
+              node.style.display = 'none';
+            };
+
+            hideDefaultLogo();
+            displayCustomLogo();
+          }
+        }
+
+        if (node.dataset.type === 'logoElastic' && !customLogo) {
+          handleInit();
+        }
+      });
+    });
+  });
+
+  observer.observe(logoHeader, { childList: true });
+}
+```
+All metadata should be available via `window.ROR_METADATA`. You can use `window.ROR_METADATA.newLogo`. After login as a user with username `admin` you should see a custom logo
+
+#### Reject kibana machine2machine based on a custom metadata
+We can also reject the specific request for example based on the custom metadata
+
+1. Define ACL in your `readonlyrest.yml` file
+
+```yaml
+  - name: ADMIN_GRP
+    groups: [ administrators ]
+    kibana:
+       access: admin
+       index: '.kibana_@{acl:current_group}'
+       metadata:
+          rejectBasicAuth: true
+```
+
+2. Declare custom kibana js file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
+
+```js
+async function customMiddleware(req, res, next) {
+   const metadata =
+           req.rorRequest && req.rorRequest.getIdentitySession() && req.rorRequest.getIdentitySession().metadata;
+
+   const headerAuth = req.rorRequest && req.rorRequest.getAuthorizationHeaders && req.rorRequest.getHeaders().getAuthorizationHeaders().get('authorization');
+   const basicHeaderAuth = headerAuth && headerAuth.includes('Basic')
+   
+  if (metadata.customMetadata && metadata.customMetadata.rejectBasicAuth && basicHeaderAuth) {
+     return res.status(401).json({ message: 'Machine to machine communication is not allowed' });
+  }
+
+  return next()
+}
+```
+You can pass any custom metadata and based on it accepts or reject the specific request
+
+
+
+
+**⚠️IMPORTANT** Pre auth custom hook must return `next()` function, to not block the request 
+
