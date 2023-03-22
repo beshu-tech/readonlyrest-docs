@@ -1160,6 +1160,9 @@ export interface IdentitySession {
 ```
 
 ### Use cases
+
+**⚠️IMPORTANT** Pre auth custom hook must return `next()` function, to not block the request
+
 #### Enriching the metadata
 The metadata is the user-specific data available after the login to the kibana. thanks to the pre-auth custom hook, you can enrich metadata and use them in the kibana custom js file.
 For example to load a custom logo to the kibana you can:
@@ -1284,9 +1287,3 @@ async function customMiddleware(req, res, next) {
 }
 ```
 You can pass any custom metadata and based on it accepts or reject the specific request
-
-
-
-
-**⚠️IMPORTANT** Pre auth custom hook must return `next()` function, to not block the request 
-
