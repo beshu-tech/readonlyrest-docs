@@ -1110,59 +1110,7 @@ There are two options to declare the custom middleware:
 - JS file: `readonlyrest_kbn.custom_middleware_inject_file: '/path/to/your/file.js'`
 - Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
 
-### Available rorRequest API
-You can access the rorRequest API via `req.rorRequest` in your custom middleware. The available options are:
-
-| Method name                                                            | Return value type            | Description                                                                    |
-|:-----------------------------------------------------------------------|------------------------------|--------------------------------------------------------------------------------|
-| getAuthorizationHeaders()                                              | Map<string, string>          | Get headers using in the authorization                                         |
-| getCookies()                                                           | string or undefined          | Get the request cookies                                                        |
-| getMethod()                                                            | Method                       | Get the request method                                                         |
-| getPath()                                                              | string                       | Get the request path                                                           |
-| getUrl()                                                               | string                       | Get the request URL                                                            |
-| getBody()                                                              | Body or null or undefined    | Get the request body                                                           |
-| getParams()                                                            | ParamsDictionary             | Get URL parameters                                                             |
-| getQueries()                                                           | ParsedQs                     | Get query string parameters                                                    |
-| getOriginAddress()                                                     | string undefined             | Get the origin address                                                         |
-| getHeaders()                                                           | Headers                      | Get all request headers                                                        |
-| isAuthenticated()                                                      | boolean                      | Check if the session is authenticated                                          |
-| isCookiePresent(cookieName: string)                                    | boolean or undefined         | Check if the specific cookie is presented in the request                       |
-| getIdentitySession()                                                   | IdentitySession or undefined | Get the session identity (check the information below, for the exact response) |
-| setIdentitySession(identitySession: IdentitySession or undefined)      | void                         | Set the new session                                                            |
-| enrichIdentitySessionMetadata(customMetadata: Record<string, unknown>) | void                         | Enrich existing user session by the additional custom metadata                 |
-| lastSessionActivityDate                                                | Date or undefined            | Date of the last session activity.Using in the context of a session timeout    |
-| extractHiddenAppsNames                                                 | string[]                     | List of all hidden apps for specific users |
-
-```ts
-export interface IdentitySession {
-  sid: string;
-  metadata: {
-     readonly expiresAt: Date;
-     readonly lastSessionActivityDate?: Date;
-     readonly authorizationHeaders: Map<string, string>;
-     readonly username: string;
-     readonly kibanaHiddenApps: string[];
-     readonly currentGroup?: string;
-     readonly availableGroups: string[];
-     readonly kibanaAccess?: 'ro_strict' | 'ro' | 'rw' | 'admin' | 'unrestricted' | 'api_only'
-     readonly kibanaIndex?: string;
-     readonly kibanaTemplateIndex?: string;
-     readonly origin?: string;
-     readonly impersonatedBy?: string;
-     readonly correlationId: string;
-     readonly customMetadata: Record<string, unknown>;
-     readonly allowedApiPaths: {
-        "http_method": "ANY" | Method,
-        "path_regex": string
-     }[];
-  };
-}
-```
-
 ### Use cases
-
-**⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
-
 #### Enriching the metadata
 The metadata is the user-specific data available after the Kibana user successfully logs in. Thanks to the custom middleware, you can enrich metadata and use them in the kibana custom js file.
 For example to load a custom logo to the kibana you can:
@@ -1185,6 +1133,7 @@ async function customMiddleware(req, res, next) {
 ```
 We will pass new logo custom metadata when logged in user username is 'admin'
 
+**⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
 
 2. To replace the logo, we need to declare the custom kibana js file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
 
@@ -1287,3 +1236,52 @@ async function customMiddleware(req, res, next) {
 }
 ```
 You can pass any custom metadata and based on it accepts or reject the specific request
+
+**⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
+
+### Available rorRequest API
+You can access the rorRequest API via `req.rorRequest` in your custom middleware. The available options are:
+
+| Property name                                                          | Return value type            | Description                                                                    |
+|:-----------------------------------------------------------------------|------------------------------|--------------------------------------------------------------------------------|
+| getAuthorizationHeaders()                                              | Map<string, string>          | Get headers using in the authorization                                         |
+| getCookies()                                                           | string or undefined          | Get the request cookies                                                        |
+| getMethod()                                                            | Method                       | Get the request method                                                         |
+| getPath()                                                              | string                       | Get the request path                                                           |
+| getUrl()                                                               | string                       | Get the request URL                                                            |
+| getBody()                                                              | Body or null or undefined    | Get the request body                                                           |
+| getParams()                                                            | ParamsDictionary             | Get URL parameters                                                             |
+| getQueries()                                                           | ParsedQs                     | Get query string parameters                                                    |
+| getOriginAddress()                                                     | string undefined             | Get the origin address                                                         |
+| getHeaders()                                                           | Headers                      | Get all request headers                                                        |
+| isAuthenticated()                                                      | boolean                      | Check if the session is authenticated                                          |
+| isCookiePresent(cookieName: string)                                    | boolean or undefined         | Check if the specific cookie is presented in the request                       |
+| getIdentitySession()                                                   | IdentitySession or undefined | Get the session identity (check the information below, for the exact response) |
+| setIdentitySession(identitySession: IdentitySession or undefined)      | void                         | Set the new session                                                            |
+| enrichIdentitySessionMetadata(customMetadata: Record<string, unknown>) | void                         | Enrich existing user session by the additional custom metadata                 |
+| lastSessionActivityDate                                                | Date or undefined            | Date of the last session activity. Using in the context of a session timeout   |
+| extractHiddenAppsNames                                                 | string[]                     | List of all hidden apps for specific users                                     |
+
+### User Session identity
+
+It's the object which contains the information about the session of the successful logs in Kibana user
+
+| Property name                        | Return value type                                                      | Example value                                                                | Description                                                                          |
+|:-------------------------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| sid                                  | string                                                                 | 'a5442490-45ee-4a60-a9a1-e62989db3ab1'                                       | Unique identifier of the session                                                     |
+| metadata.expiresAt                   | Date                                                                   | 2023-03-26T19:50:37.932Z                                                     | Session expiration date                                                              |
+| metadata.lastSessionActivityDate     | Date or undefined                                                      | 2023-03-23T19:50:37.932Z                                                     | Date of the last session activity. Using in the context of a session timeout         |
+| metadata.authorizationHeaders        | Map<string, string>                                                    | Map(2) {'authorization' => 'Basic BWRtaW46ZGV2', 'cookie' => 'cookie value'} | The map of all headers use during the authorization                                  |
+| metadata.username                    | string                                                                 | 'John'                                                                       | User name defined in the ACL                                                         |
+| metadata.kibanaHiddenApps            | string[]                                                               | [ 'Enterprise Search, Overview', 'Observability' ]                           | List of the hidden Apps defined in the ACL                                           |
+| metadata.currentGroup                | string                                                                 | 'administrators'                                                             | Currently selected group by the user                                                 |
+| metadata.availableGroups             | string[]                                                               | [ 'administrators', 'infosec', 'template' ],                                 | List of the all available groups                                                     |
+| metadata.kibanaAccess                | 'ro_strict' or 'ro' or 'rw' or 'admin' or 'unrestricted' or 'api_only' | 'admin'                                                                      | User kibana access                                                                   |
+| metadata.kibanaIndex                 | string or undefined                                                    | '.kibana_administrators'                                                     | Currently selected group kibana index defined in the ACL                             |
+| metadata.kibanaTemplateIndex         | string or undefined                                                    | '.kibana_template'                                                           | Kibana template index defined in the kibana.yml readonlyrest_kbn.kibanaTemplateIndex |
+| metadata.origin                      | string or undefined                                                    |                                                                              |                                                                                      |
+| metadata.impersonatedBy              | string or undefined                                                    | 'admin'                                                                      | Name of the impersonator                                                             |
+| metadata.correlationId               | string                                                                 | 'd7df607d-4b04-454b-979c-3e962e312a7d'                                       | Current session correlationId                                                        |
+| metadata.customMetadata              | Record<string, unknown>                                                | { metadata1: value }                                                         | Custom metadata defined in the ACL                                                   |
+| metadata.allowedApiPaths.http_method | "ANY" or Method                                                        | 'GET'                                                                        | HTTP method defined as allowed in the ACL                                            |
+| metadata.allowedApiPaths.path_regex  | string                                                                 | '^\\.\\*/api/index_management/indices\\.\\*$'                                | Path regex defined as allowed in the ACL                                             |
