@@ -1144,7 +1144,7 @@ export interface IdentitySession {
      readonly kibanaHiddenApps: string[];
      readonly currentGroup?: string;
      readonly availableGroups: string[];
-     readonly kibanaAccess?: 'ro_strict' | 'ro' | 'rw' | 'admin' | 'unrestricted'
+     readonly kibanaAccess?: 'ro_strict' | 'ro' | 'rw' | 'admin' | 'unrestricted' | 'api_only'
      readonly kibanaIndex?: string;
      readonly kibanaTemplateIndex?: string;
      readonly origin?: string;
