@@ -1102,16 +1102,16 @@ to know if the rule(s) are configured correctly. And here comes the impersonatio
 
 ROR plugins support impersonation and provide UI for configuring cluster before using it. Visit the [impersonation details page](./details/impersonation.md) to know more.
 
-## Custom pre-auth hook
+## Custom middleware
 ### Why do we need it
 Sometimes, there is a need to handle non-standard behavior in the plugin.
 We want to make it more flexible and give the option to customize the plugin behavior by the enterprise license users to adjust the product to the business needs.
-There are two options to declare the pre-auth custom hook:
-- JS file: `readonlyrest_kbn.pre_auth_custom_hook_inject_file: '/path/to/your/file.js'`
-- Inline: `readonlyrest_kbn.pre_auth_custom_hook_inject: 'function test(req, res, next) {logger.debug("pre-auth hook called"); next()}'`
+There are two options to declare the custom middleware:
+- JS file: `readonlyrest_kbn.custom_middleware_inject_file: '/path/to/your/file.js'`
+- Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
 
 ### Available rorRequest API
-You can access the rorRequest API via `req.rorRequest` in your custom pre-auth middleware. The available options are:
+You can access the rorRequest API via `req.rorRequest` in your custom middleware. The available options are:
 
 | Method name                                                            | Return value type            | Description                                                                    |
 |:-----------------------------------------------------------------------|------------------------------|--------------------------------------------------------------------------------|
@@ -1161,12 +1161,12 @@ export interface IdentitySession {
 
 ### Use cases
 
-**⚠️IMPORTANT** Pre auth custom hook must return `next()` function, to not block the request
+**⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
 
 #### Enriching the metadata
-The metadata is the user-specific data available after the login to the kibana. thanks to the pre-auth custom hook, you can enrich metadata and use them in the kibana custom js file.
+The metadata is the user-specific data available after the Kibana user successfully logs in. Thanks to the custom middleware, you can enrich metadata and use them in the kibana custom js file.
 For example to load a custom logo to the kibana you can:
-1. Declare `readonlyrest_kbn.pre_auth_custom_hook_inject_file: 'path/to/pre_auth_custom_hook_file.js'` in the  kibana.yml and declare `pre_auth_custom_hook_file.js`
+1. Declare `readonlyrest_kbn.custom_middleware_inject_file: 'path/to/custom_middleware_inject_file.js'` in the kibana.yml and declare `custom_middleware_inject_file.js`
 
 ```ts
 async function customMiddleware(req, res, next) {
@@ -1254,7 +1254,7 @@ if (window.ROR_METADATA.newLogo) {
 ```
 All metadata should be available via `window.ROR_METADATA`. You can use `window.ROR_METADATA.newLogo`. After login as a user with username `admin` you should see a custom logo
 
-#### Reject kibana machine2machine based on a custom metadata
+#### Reject machine to machine traffic using custom metadata ACL rules
 We can also reject the specific request for example based on the custom metadata
 
 1. Define ACL in your `readonlyrest.yml` file
