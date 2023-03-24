@@ -1214,7 +1214,8 @@ if (window.ROR_METADATA.newLogo) {
   observer.observe(logoHeader, { childList: true });
 }
 ```
-All metadata should be available via `window.ROR_METADATA`. You can use `window.ROR_METADATA.newLogo`. After login as a user with username `admin` you should see a custom logo
+All session metadata will be available via `window.ROR_METADATA` property. To get your custom logo, just use `window.ROR_METADATA.newLogo` value. In the example above, after login in as a user with username `admin` you will see a custom logo.
+The whole example is a little complex but seems, kibana logo is also a loading indicator, we need to detect the loading state, replace the logo with a spinner, and after the loading, back the custom logo again.
 
 #### Reject machine to machine traffic using custom metadata ACL rules
 We can also reject the specific request for example based on the custom metadata
