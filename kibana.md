@@ -1131,7 +1131,20 @@ async function customMiddleware(req, res, next) {
   return next();
 }
 ```
-We will pass new logo custom metadata when logged in user username is 'admin'
+
+In this example, thanks to the enrichIdentitySessionMetadata method we can pass new logo custom metadata when the logged-in user username is 'admin'.
+It mustn't be a static value, you can ask for external service for the logo:
+
+```ts
+if (metadata && metadata.username === 'admin') {
+    const response = fetch(<EXTERNAL_SERVICE_URL>);
+    req.rorRequest.enrichIdentitySessionMetadata({
+      newLogo: await response.json().newLogo
+    });
+  }
+```
+
+Now, enriched metadata will be available in the custom kibana js script, where you can perform client based operations like logo replacement.
 
 **⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
 
