@@ -1104,10 +1104,9 @@ ROR plugins support impersonation and provide UI for configuring cluster before 
 
 ## Custom middleware
 ### Why do we need it
-Sometimes, there is a need to handle non-standard behavior in the plugin.
-We want to make it more flexible and give the option to customize the plugin behavior by the enterprise license users to adjust the product to the business needs.
+Sometimes, Enterprise users might need more flexibility and customize the plugin behavior to adjust the product to the business needs.
 There are two options to declare the custom middleware:
-- JS file: `readonlyrest_kbn.custom_middleware_inject_file: '/path/to/your/file.js'`
+- JS file: `readonlyrest_kbn.custom_middleware_inject_file: '/path/to/your/file.js'` // You can also use relative path here. It's relative to the kibana root folder 
 - Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
 
 ### Use cases
