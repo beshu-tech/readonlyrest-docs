@@ -811,7 +811,10 @@ Let's start to add to our access control list (found in $ES\_PATH\_CONF/config/r
 
 ```
 readonlyrest:
-  audit_collector: true
+  audit:
+    enabled: true
+    outputs:
+    - type: index
 
   access_control_rules:
 
@@ -859,7 +862,10 @@ Restart Kibana with the new setting. Add a new tenancy to the ACL:
 
 ```
 readonlyrest:
-  audit_collector: true
+  audit:
+    enabled: true
+    outputs:
+    - type: index
 
   access_control_rules:
 

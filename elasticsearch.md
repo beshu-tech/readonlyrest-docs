@@ -1412,7 +1412,7 @@ This is an example of a request that matched an ACL block \(allowed\) and has be
 
 The log line immediately states that this request has been allowed by an ACL block called "::PERSONAL\_GRP::". Immediately follows a summary of the requests' anatomy. The format is semi-structured, and it's intended for humans to read quickly, it's not JSON, or anything else.
 
-Similar information gets logged in JSON format into Elasticsearch documents enabling the [audit logs](elasticsearch.md#audit-logs) feature described later.
+Similar information gets logged in JSON format via [audit events](elasticsearch.md#audit) feature described later.
 
 Here is a glossary:
 
@@ -1451,9 +1451,10 @@ INDEX NOT FOUND req={  ID:501806845-1996085406#74,  TYP:GetIndexRequest,  CGR:N/
 
 The state above is only possible for read-only ES requests \(ES requests which don't change ES cluster state\) for a block containing an `indices` rule. If all other rules within the block are matched, but only the `indices` rule is mismatched, the final state of the block is forbidden due to an index not found.
 
-#### Audit logs
+### Audit
 
-ReadonlyREST can write events very similarly to Logstash into to a series of indices named by default `readonlyrest_audit-YYYY-MM-DD`. Every event contains information about a request and how the system has handled it. Here is an example of the data points contained in each audit event. We can leverage all this information to build interesting Kibana dashboards, or any other visualization.
+ReadonlyREST can write audit events containing information about a request and how the system has handled it.
+Here is an example of the data points contained in each audit event. We can leverage all this information to build interesting Kibana dashboards, or any other visualization.
 
 ```javascript
 {
@@ -1487,63 +1488,154 @@ ReadonlyREST can write events very similarly to Logstash into to a series of ind
   }
 ```
 
-Here is a configuration example, you can see the `audit.collector: true` setting, which normally defaults to false. Note how the successful requests matched by the first rule \(Kibana\) will not be written to the audit log, because the verbosity is set to error. Audit log in facts, obey the verbosity setting the same way regular text logs do.
+#### Configuration
 
-**NB** Following audit configurations are presented with the separate `audit` section, although it can be omitted as settings defined using previous approach (defined directly under `readonlyrest` section and starting with `audit_`)` are still supported (but not recommended) preserving backward compatibility.
+The audit collecting by default is disabled. To enable it, you need to add `audit.enabled: true` and configure the `audit.outputs`.
+With the `outputs` array, you manage the audit sinks configurations.
+You can configure multiple outputs for audit events, but at least one audit output must be defined when the audit is enabled.
+The supported output types are:
+* `index` - similarly to Logstash it writes audit events in the documents stored in the indices named by default `readonlyrest_audit-YYYY-MM-DD`
+* `log` - it allows you to collect audit logs in a similar way to the app logs and format them with the help of features that `log4j2` enables.
+  Uses a dedicated logger from the elasticsearch's `log4j2` config.
 
 ```text
 readonlyrest:
 
-    audit:
-      collector: true
+  audit:
+    enabled: true
+    outputs: 
+    - type: index
 
-    access_control_rules:
+  access_control_rules:
 
-    - name: Kibana
-      type: allow
-      auth_key: kibana:kibana
-      verbosity: error
+   - name: Kibana
+     type: allow
+     auth_key: kibana:kibana
+     verbosity: error
 
-    - name: "::RO::"
-      auth_key: simone:ro
-      kibana_access: ro
+   - name: "::RO::"
+     auth_key: simone:ro
+     kibana_access: ro
+```
+
+In case when you want to disable given output, add the `enabled: false` to the output config:
+```text
+readonlyrest:
+  audit:
+    enabled: true
+    outputs: 
+    - type: index
+    - type: log
+      enabled: false # by default is true
+    ...
+```
+
+#### The 'index' output specif configurations
+
+##### Custom audit indices name and time granularity
+
+It is possible to change the name of the produced audit indices by specifying a template value as `index_template`.
+
+Example: tell ROR to write on the monthly index.
+
+```text
+readonlyrest:
+  audit:
+    enabled: true
+    outputs: 
+    - type: index
+      index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
+  ...
+```
+**⚠️IMPORTANT**: notice the single quotes inside the double quoted expression. This is the same syntax used for [Java's SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+
+##### Custom audit cluster
+
+It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
+
+```text
+readonlyrest:
+  audit:
+    enabled: true
+    outputs: 
+    - type: index
+      cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
+  ...
+```
+
+Setting `audit.cluster` is optional, it accepts non empty list of audit cluster nodes URIs.
+
+#### The 'log' output specif configurations
+
+The `log` output uses a dedicated logger to write the audit events in files. The logger applies the `INFO` log level to the appended audit events.
+
+To configure audit events writing to logs, you need to add to the `readonlyrest` configuration the following settings:
+```text
+readonlyrest:
+  audit:
+    enabled: true
+    outputs: 
+    - type: log
+  ...
+```
+
+In the next step you need to configure the logger for audit events in the `$ES_PATH_CONF/config/log4j2.properties`. Here is an example config with default logger name:
+```text
+appender.readonlyrest_audit_rolling.type = RollingFile
+appender.readonlyrest_audit_rolling.name = readonlyrest_audit_rolling
+appender.readonlyrest_audit_rolling.fileName = ${sys:es.logs.base_path}${sys:file.separator}readonlyrest_audit.log
+appender.readonlyrest_audit_rolling.layout.type = PatternLayout
+appender.readonlyrest_audit_rolling.layout.pattern = [%d{ISO8601}] %m%n
+appender.readonlyrest_audit_rolling.filePattern = readonlyrest_audit-%i.log.gz
+appender.readonlyrest_audit_rolling.policies.type = Policies
+appender.readonlyrest_audit_rolling.policies.size.type = SizeBasedTriggeringPolicy
+appender.readonlyrest_audit_rolling.policies.size.size = 1GB
+appender.readonlyrest_audit_rolling.strategy.type = DefaultRolloverStrategy
+appender.readonlyrest_audit_rolling.strategy.max = 4
+
+
+logger.readonlyrest_audit.name = readonlyrest_audit   # required logger name, must be the same as the one defined in `readonlyrest.yml` 
+logger.readonlyrest_audit.appenderRef.ror_audit.ref = readonlyrest_audit_rolling    
+logger.readonlyrest_audit.additivity = false          # set to false to use only desired appenders
+```
+All settings are up to you. The only required entry is the logger name `logger.{your-logger-name}.name = {your-logger-name}`.
+The default logger name is the `readonlyrest_audit`.
+
+If you want to set a custom logger name for the `log` output, add the `logger_name` setting for the given output:
+```text
+readonlyrest:
+  audit:
+    enabled: true
+    outputs: 
+    - type: log
+      logger_name: custom-logger-name
+  ...
 ```
 
 ### Extended audit
 
-If you want to log the request content then an additional serializer is provided. This will log the entire user request within the content field of the audit event. To enable, configure the audit\_serializer parameter as below.
+If you want to log the request content then an additional serializer is provided. This will log the entire user request within the content field of the audit event. To enable, configure the `serializer` parameter as below.
 
 ```text
 readonlyrest:
   audit:
-    collector: true
-    serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
+    enabled: true
+    outputs:
+    - type: index
+      serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
+      # in case when the `log` type is used
+    - type: log
+      serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
   ...
 ```
 
-### Custom audit indices name and time granularity
+### Custom audit event serializer
 
-It is possible to change the name of the produced audit log indices by specifying a template value as `audit.index_template`.
-
-Example: tell ROR to write on monthly index.
-
-```text
-readonlyrest:
-  audit:
-    collector: true
-    index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
-  ...
-```
-
-**⚠️IMPORTANT**: notice the single quotes inside the double quoted expression. This is the same syntax used for [Java's SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
-
-### Custom audit log serializer
-
-You can write your own custom audit log serializer class, add it to the ROR plugin class path and configure it through the YAML settings.
+You can write your own custom audit events serializer class, add it to the ROR plugin class path and configure it through the YAML settings.
 
 We provided 2 project examples with custom serializers \(in Scala and Java\). You can use them as an example to write yours in one of those languages.
 
-#### Create custom audit log serializer in Scala
+#### Create custom audit event serializer in Scala
 
 1. Checkout [https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin)
 
@@ -1565,7 +1657,7 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
 
    `elasticsearch-readonlyrest-plugin/custom-audit-examples/ror-custom-scala-serializer/target/scala-2.13/ror-custom-scala-serializer-1.0.0.jar`
 
-#### Create custom audit log serializer in Java
+#### Create custom audit event serializer in Java
 
 1. Checkout [https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin)
 
@@ -1595,14 +1687,16 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
    ```text
     readonlyrest:
         audit:
-          collector: true
-          serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
+          enabled: true
+          outputs:
+          - type: index
+            serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
    ```
 
 3. Start elasticsearch \(with ROR installed\) and grep for:
 
    ```text
-    [2017-11-09T09:42:51,260][INFO ][t.b.r.r.SerializationTool] Using custom serializer: JavaCustomAuditLogSerializer
+    [2023-03-26T16:28:40,471][INFO ][t.b.r.a.f.d.AuditingSettingsDecoder$] Using custom serializer: JavaCustomAuditLogSerializer
    ```
 
 #### Troubleshooting
@@ -1653,20 +1747,6 @@ logger.access_log_rolling.filter.regex.regex = .*USR:(kibana|beat|logstash),.*
 logger.access_log_rolling.filter.regex.onMatch = DENY
 logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
 ```
-
-### Custom audit cluster
-
-It's possible to set a custom audit cluster responsible for audit logs storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
-
-```text
-readonlyrest:
-  audit:
-    collector: true
-    cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
-  ...
-```
-
-Setting `audit.cluster` is optional, it accepts non empty list of audit cluster nodes URIs.
 
 ## Users and Groups
 
