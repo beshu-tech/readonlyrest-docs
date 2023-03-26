@@ -1240,9 +1240,9 @@ async function customMiddleware(req, res, next) {
            req.rorRequest && req.rorRequest.getIdentitySession() && req.rorRequest.getIdentitySession().metadata;
 
    const headerAuth = req.rorRequest && req.rorRequest.getAuthorizationHeaders && req.rorRequest.getHeaders().getAuthorizationHeaders().get('authorization');
-   const basicHeaderAuth = headerAuth && headerAuth.includes('Basic')
+   const isBasicAuth = headerAuth && headerAuth.includes('Basic')
    
-  if (metadata.customMetadata && metadata.customMetadata.rejectBasicAuth && basicHeaderAuth) {
+  if (metadata.customMetadata && metadata.customMetadata.rejectBasicAuth && isBasicAuth) {
      return res.status(401).json({ message: 'Machine to machine communication is not allowed' });
   }
 
