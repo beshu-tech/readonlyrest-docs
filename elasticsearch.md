@@ -577,97 +577,389 @@ _Example: the simplest example of an allow block._
 
 ## Rules
 
-ReadonlyREST access control rules allow to take decisions on three levels:
+ReadonlyREST access control rules can be divided into the following categories:
 
-* Network level
-* HTTP level
-* Elasticsearch level
+* Authentication & Authorization rules
+* Elasticsearch level rules
+* Kibana-related rules
+* HTTP level rules
+* Network level rules
 
 Please refrain from using HTTP level rules to protect certain indices or limit what people can do to an index. The level of control at this level is really coarse, especially because Elasticsearch REST API does not always respect RESTful principles. This makes of HTTP a bad abstraction level to write ACLs in Elasticsearch all together.
 
 The only **clean and exhaustive** way to implement access control is to reason about requests **AFTER ElasticSearch has parsed** them. Only then, the list of affected **indices** and the **action** will be known for sure. See **Elasticsearch level** rules.
 
-### Transport level rules
+### Authentication & Authorization rules
 
-These are the most basic rules. It is possible to allow/forbid requests originating from a list of IP addresses, host names or IP networks \(in slash notation\).
+This section contains description of rules that can be used to authenticate and/or authorize users. Most of the following rules use HTTP Basic Auth, so the credentials are passed with the `Authorization` header and they can be easily decoded when the request is intercepted by a malicious third party. Please note that this authentication method is secure only if SSL is enabled.
 
-#### `hosts`
+#### `auth_key` 
 
-`hosts: ["10.0.0.0/24"]` Match a request whose **origin** IP address \(also called origin address, or `OA` in logs\) matches one of the specified IP addresses or subnets.
+`auth_key: sales:p455wd`
 
-#### `hosts_local`
+It's an authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). Configure this value _in clear text_. Clients will need to provide the header e.g. `Authorization: Basic c2FsZXM6cDQ1NXdk` where "c2FsZXM6cDQ1NXdk" is Base64 for "sales:p455wd".
 
-`hosts_local: ["127.0.0.1", "127.0.0.2"]` Match a request whose **destination** IP address \(called `DA` in logs\) matches one of the specified IP addresses or subnets. This finds application when Elasticsearch HTTP API is bound to multiple IP addresses.
+**⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
 
-### HTTP Level rules
+[Impersonation](details/impersonation.md) is supported by this rule by default.
 
-#### `accept_x-forwarded-for_header`
+#### `auth_key_sha512`
 
-`accept_x-forwarded-for_header: false`
+`auth_key_sha512: 280ac6f...94bf9`
 
-**⚠️DEPRECATED \(use `x_forwarded_for instead`\)** A modifier for `hosts` rule: if the origin IP won't match, fallback to check the `X-Forwarded-For` header
+The authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` _hashed in_ [_SHA512_](https://md5calc.com/hash/sha512). Clients will need to provide the usual Authorization header.
 
-#### `x_forwarded_for`
+There are also available other rules with less secure SHA algorithms `auth_key_sha256` and `auth_key_sha1`.
 
-`x_forwarded_for: ["192.168.1.0/24"]`
+The rules support also alternative syntax, where only password is hashed, eg:
 
-Behaves exactly like `hosts`, but gets the source IP address \(a.k.a. origin address, `OA` in logs\) inside the `X-Forwarded-For` header only \(useful replacement to `hosts`rule when requests come through a load balancer like AWS ELB\)
+`auth_key_sha512: "admin:280ac6f...94bf9"`
 
-**Load balancers**
+In the example below `admin` is the username and `280ac6f...94bf9` is the hashed secret.
 
-This is a nice tip if your Elasticsearch is behind a load balancer. If you want to match all the requests that come through the load balancer, use `x_forwarded_for: ["0.0.0.0/0"]`. This will match the requests with a valid IP address as a value of the `X-Forwarded-For` header.
+[Impersonation](details/impersonation.md) is supported by these rules by default.
 
-**DNS lookup caching**
+#### `auth_key_pbkdf2`
 
-It's worth to note that resolutions of DNS are going to be cached by JVM. By default successfully resolved IPs will be cached forever \(until Elasticsearch is restarted\) for security reasons. However, this may not always be the desired behaviour, and it can be changed by adding the following JVM options either in the jvm.options file or declaring the ES\_JAVA\_OPTS environment variable: `sun.net.inetaddr.ttl=TTL_VALUE` \(or/and `sun.net.inetaddr.negative.ttl=TTL_VALUE`\). More details about the problem can be found [here](https://www.ibm.com/support/pages/understanding-tuning-and-testing-inetaddress-class-and-cache).
+`auth_key_pbkdf2: "KhIxF5EEYkH5GPX51zTRIR4cHqhpRVALSmTaWE18mZEL2KqCkRMeMU4GR848mGq4SDtNvsybtJ/sZBuX6oFaSg=="` \# logstash:logstash
 
-#### `methods`
+`auth_key_pbkdf2: "logstash:JltDNAoXNtc7MIBs2FYlW0o1f815ucj+bel3drdAk2yOufg2PNfQ51qr0EQ6RSkojw/DzrDLFDeXONumzwKjOA=="` \# logstash:logstash
 
-`methods: [GET, DELETE]`
+The authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is hashed in the same way as it's done in `auth_key_sha512` rule, but it uses [_PBKDF2_](https://en.wikipedia.org/wiki/PBKDF2) key derivation function. At the moment there is no way to configure it, so during the hash generation, the user has to take into consideration the following PBKDF2 input parameters values:
 
-Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP stack does not make any difference between HEAD and GET, so all the HEAD request will appear as GET.
+| Input parameter | Value | Comment |
+| :--- | :--- | :--- |
+| Pseudorandom function | HmacSHA512 |  |
+| Salt | use hashed value as a salt | eg. hashed value = `logstash:logstash`, use `logstash:logstash` as the salt |
+| Iterations count | 10000 |  |
+| Derived key length | 512 | bits |
 
-#### `headers`
+The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
 
-`headers: ["h1:x*y","~h2:*xy"]`
+[Impersonation](details/impersonation.md) is supported by this rule by default.
 
-Match if **all** the HTTP headers in the request match the defined patterns in headers rule. This is useful in conjunction with [proxy\_auth](elasticsearch.md#proxy_auth-), to carry authorization information \(i.e. headers: `x-usr-group: admins`\).
+#### `auth_key_unix`
 
-The `~` sign is a pattern negation, so eg. `~h2:*xy` means: match if h2 header's value does not match the pattern \*xy, or `h2` is not present at all.
+`auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 # Hashed for "test:test"`
 
-#### `headers_and`
+**⚠️IMPORTANT** this hashing algorithm is **very CPU intensive**, so we implemented a caching mechanism around it. However, this will not protect Elasticsearch from a DoS attack with a high number of requests with random credentials.
 
-`headers_and: ["hdr1:val_*xyz","~hdr2:xyz_*"]`
+This is authentication rule that is based on `/etc/shadow` file syntax.
 
-Alias for `headers` rule
+If you configured sha512 encryption with 65535 rounds on your system the hash in /etc/shadow for the account `test:test` will be `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
 
-#### `headers_or`
+```text
+readonlyrest:
+    access_control_rules:
+    - name: Accept requests from users in group team1 on index1
+      groups: ["team1"]
+      indices: ["index1"]
 
-`headers_or: ["x-myheader:val*","~header2:*xy"]`
+    users:
+    - username: test
+      auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 #test:test
+      groups: ["team1"]
+```
 
-Match if **at least one** the specified HTTP headers `key:value` pairs is matched.
+You can generate the hash with **mkpasswd** Linux command, you need whois package `apt-get install whois` \(or equivalent\)
 
-#### `uri_re`
+`mkpasswd -m sha-512 -R 65534`
 
-`uri_re: ["^/secret-index/.*", "^/some-index/.*"]`
+Also you can generate the hash with a python script \(works on Linux\):
 
-**☠️HACKY \(try to use indices/actions rule instead\)**
+```python
+#!/usr/bin/python
+import crypt
+import random
+import sys
+import string
 
-Match if **at least one** specifed regular expression matches requested URI.
+def sha512_crypt(password, salt=None, rounds=None):
+    if salt is None:
+        rand = random.SystemRandom()
+        salt = ''.join([rand.choice(string.ascii_letters + string.digits)
+                        for _ in range(8)])
 
-#### `maxBodyLength`
+    prefix = '$6$'
+    if rounds is not None:
+        rounds = max(1000, min(999999999, rounds or 5000))
+        prefix += 'rounds={0}$'.format(rounds)
+    return crypt.crypt(password, prefix + salt)
 
-`maxBodyLength: 0`
 
-Match requests having a request body length less or equal to an integer. Use `0` to match only requests without body.
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        print sha512_crypt(sys.argv[1], rounds=65635)
+    else:
+        print "Argument is missing, <password>"
+```
 
-**NB**: Elasticsearch HTTP API breaks the specifications, nad GET requests **might** have a body length greater than zero.
+**Finally you have to put your username at the begining of the hash with ":" separator** `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
 
-#### `api_keys`
+For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
 
-`api_keys: [123456, abcdefg]`
+[Impersonation](details/impersonation.md) is supported by this rule by default.
 
-A list of api keys expected in the header `X-Api-Key`
+#### `proxy_auth: "*"`
+
+`proxy_auth: "*"`
+
+Delegated authentication. Trust that a reverse proxy has taken care of authenticating the request and has written the resolved user name into the `X-Forwarded-User` header. The value "\*" in the example, will let this rule match any username value contained in the `X-Forwarded-User` header.
+
+If you are using this technique for authentication using our **Kibana** plugins, don't forget to add this snippet to `conf/kibana.yml`:
+
+`readonlyrest_kbn.proxy_auth_passthrough: true`
+
+So that Kibana will forward the necessary headers to Elasticsearch.
+
+[Impersonation](details/impersonation.md) is supported by this rule by default.
+
+#### `groups_or` (or `groups`)
+
+`groups_or: ["group1", "group2"]`
+
+The ACL block will match when the user belongs to any of the specified groups. The information about what users belong to what groups is defined in the `users` section, typically situated after the ACL, further down in the YAML.
+
+In the `users` section, each entry tells us that:
+
+* A given user with a username matching one of patterns in the `username` array ...
+* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](details/groups-rule-mapping.md) between local group name and external groups (example 3 below).
+* when they can be authenticated and (if authorization rule is present) authorized by the present rule(s).
+
+In general it looks like this:
+
+```yaml
+  ...
+  - name: "ACL block with groups rule"
+    indices: [x, y]
+    groups_or: ["local_group1"] # this group name is defined in the "users" section
+
+  users:
+  - username: ["pattern1", "pattern2", ...]
+    groups_or: ["local_group1", "local_group2", ...]
+    <any_authentication_rule>: ...
+
+  - username: ["pattern1", "pattern2", ...]
+    groups_or: ["local_group1", "local_group2", ...]
+    <any_authentication_rule>: ...
+    <optionally_any_authorization_rule>: ...
+
+  - username: ["pattern1", "pattern2", ...]
+    groups_or:
+      - local_group1: ["external_group1", "external_group2"]
+      - local_group2: ["external_group2"]
+    <authentication_with_authorization_rule>: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
+```
+
+For details see [User management](elasticsearch.md#users-and-groups).
+
+[Impersonation](details/impersonation.md) support depends on
+authentication and authorization rules used in `users` section.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+#### `groups_and`
+
+`groups_and: ["group1", "group2"]`
+
+This rule is identical to the above defined `groups` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `groups` rule.
+
+#### `ldap_authentication`
+
+simple version:
+`ldap_authentication: ldap1`
+
+extended version:
+```yaml
+ldap_authentication:
+  name: ldap1
+  cache_ttl: 10 sec
+```
+
+It handles LDAP authentication only using the configured LDAP connector (here `ldap1`). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+
+#### `ldap_authorization`
+
+```yaml
+ldap_authorization:
+  name: "ldap1"
+  groups: ["group3"]
+  cache_ttl: 10 sec
+```
+
+It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` can be used to require users belong to all the listed groups (AND logic). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+
+#### `ldap_auth`
+
+Shorthand rule that combines `ldap_authentication` and `ldap_authorization` rules together. It handles both authentication and authorization using the configured LDAP connector (here `ldap1`).
+
+```yaml
+ldap_auth:
+  name: "ldap1"
+  groups: ["group1", "group2"]
+```
+
+The same functionality can be achieved using the two rules described below:
+
+```yaml
+ldap_authentication: ldap1
+ldap_authorization:
+  name: "ldap1"
+  groups: ["group1", "group2"] # match when user belongs to at least one group
+```
+
+In both `ldap_auth`and `ldap_authorization`, the `groups` clause can be replaced by `group_and` to require the valid LDAP user must belong to all the listed groups:
+
+```yaml
+ldap_auth:
+  name: "ldap1"
+  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+```
+
+Or equivalently:
+
+```yaml
+ldap_authentication: ldap1
+ldap_authorization:
+  name: "ldap1"
+  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+```
+
+See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
+
+[Impersonation](details/impersonation.md) is not supported by default by LDAP rules.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+#### `jwt_auth`
+
+See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
+
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
+
+#### `external_authentication`
+
+Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
+
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+#### `groups_provider_authorization`
+
+Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
+
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+#### `ror_kbn_auth`
+
+For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication. From ROR's perspective it authenticates and authorize users. 
+
+```text
+readonlyrest:
+  access_control_rules:
+
+    - name: "ReadonlyREST Enterprise instance #1"
+      ror_kbn_auth:
+        name: "kbn1"
+        groups: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to at least one of the configured groups
+
+    - name: "ReadonlyREST Enterprise instance #1 - two groups required"
+      ror_kbn_auth:
+        name: "kbn1"
+        groups_and: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
+
+    - name: "ReadonlyREST Enterprise instance #2"
+      ror_kbn_auth:
+        name: "kbn2"
+
+  ror_kbn:
+    - name: kbn1
+      signature_key: "shared_secret_kibana1" # <- use environmental variables for better security!
+
+    - name: kbn2
+      signature_key: "shared_secret_kibana2" # <- use environmental variables for better security!
+```
+
+This authentication and authorization connector represents the secure channel \(based on JWT tokens\) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
+
+Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
+
+[Impersonation](details/impersonation.md) is not supported by this rule by default.
+
+For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+#### `users`
+
+`users: ["root", "*@mydomain.com"]`
+
+It's NOT an authentication rule, but it can be used to limit access to of specific users whose username is contained or matches the patterns in the array. This rule is independent from the authentication method chosen, so it will work well in conjunction LDAP, JWT, proxy\_auth, and all others. The rule won't be matched if there won't be an authenticated user by some other authentication rule (it means that to make sense, it should always be used in conjunction with some authentication rule).
+
+For example:
+
+```yaml
+readonlyrest:
+  access_control_rules:
+    - name: "JWT auth for viewer group (role), limited to certain usernames"
+      kibana_access: ro
+      users: ["root", "*@mydomain.com"]
+      jwt_auth:
+        name: "jwt_provider_1"
+        groups: ["viewer"]
+```
+
+### Kibana-related rules
+
+#### `kibana_access`
+
+`kibana_access: ro`
+
+Enables the minimum set of actions necessary for browsers to use Kibana.
+
+This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. This rule allows a set of actions towards the designated kibana index \(see `kibana_index` rule - defaults to ".kibana"\), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
+
+The idea is that with one single rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
+
+Possible access levels:
+
+* `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices.
+* `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created.
+* `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified.
+* `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app
+* `unrestricted`: when no `kibana_access` rule is set, no action is restricted. This option is equivalent of no `kibana_access` rule used. 
+
+**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana_access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
+
+This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
+
+#### `kibana_index`
+
+`kibana_index: .kibana-user1`
+
+**Default value is `.kibana`**
+
+Specify to what index we expect Kibana to attempt to read/write its settings \(use this together with `kibana.index` setting in kibana.yml.\)
+
+This value directly affects how `kibana_access` works because at all the access levels \(yes, even admin\), `kibana_access` rule will **not** match any _write_ request in indices that are not the designated kibana index.
+
+If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
+
+#### `kibana_index_template`
+
+`kibana_index_template: .kibana_template`
+
+[TODO:]
+
+#### `kibana_hide_apps`
+
+`kibana_hide_apps: [ "Security", "Enterprise Search"]`
+
+Specify which Kibana apps and menu items should be hidden. 
+This feature will work in ReadonlyREST PRO and Enterprise.
+
+For more information on the ROR's Kibana Hide Apps feature, see [Hiding Kibana Apps](kibana.md#hiding-kibana-apps).
 
 ### Elasticsearch level rules
 
@@ -758,39 +1050,6 @@ Example actions \(see above for the full list\):
  ...
  many more...
 ```
-
-#### `kibana_access`
-
-`kibana_access: ro`
-
-Enables the minimum set of actions necessary for browsers to use Kibana.
-
-This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. This rule allows a set of actions towards the designated kibana index \(see `kibana_index` rule - defaults to ".kibana"\), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
-
-The idea is that with one single rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
-
-Possible access levels:
-
-* `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices.
-* `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created.
-* `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified.
-* `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app.
-
-**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana_access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
-
-This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
-
-#### `kibana_index`
-
-`kibana_index: .kibana-user1`
-
-**Default value is `.kibana`**
-
-Specify to what index we expect Kibana to attempt to read/write its settings \(use this together with `kibana.index` setting in kibana.yml.\)
-
-This value directly affects how `kibana_access` works because at all the access levels \(yes, even admin\), `kibana_access` rule will **not** maatch any _write_ request in indices that are not the designated kibana index.
-
-If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
 
 #### `snapshots`
 
@@ -1055,199 +1314,63 @@ response from above will look like:
 
 **NB:** Any response field can be filtered using this rule.
 
-### Authentication
+### HTTP Level rules
 
-Local ReadonlyREST users are authenticated via HTTP Basic Auth. This authentication method is secure only if SSL is enabled.
+#### `x_forwarded_for`
 
-#### `auth_key`
+`x_forwarded_for: ["192.168.1.0/24"]`
 
-`auth_key: sales:p455wd`
+Behaves exactly like `hosts`, but gets the source IP address \(a.k.a. origin address, `OA` in logs\) inside the `X-Forwarded-For` header only \(useful replacement to `hosts`rule when requests come through a load balancer like AWS ELB\)
 
-Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). Configure this value _in clear text_. Clients will need to provide the header e.g. `Authorization: Basic c2FsZXM6cDQ1NXdk` where "c2FsZXM6cDQ1NXdk" is Base64 for "sales:p455wd".
+**Load balancers**
 
-**⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
+This is a nice tip if your Elasticsearch is behind a load balancer. If you want to match all the requests that come through the load balancer, use `x_forwarded_for: ["0.0.0.0/0"]`. This will match the requests with a valid IP address as a value of the `X-Forwarded-For` header.
 
-[Impersonation](details/impersonation.md) is supported by this rule by default.
+**DNS lookup caching**
 
-#### `auth_key_sha512`
+It's worth to note that resolutions of DNS are going to be cached by JVM. By default successfully resolved IPs will be cached forever \(until Elasticsearch is restarted\) for security reasons. However, this may not always be the desired behaviour, and it can be changed by adding the following JVM options either in the jvm.options file or declaring the ES\_JAVA\_OPTS environment variable: `sun.net.inetaddr.ttl=TTL_VALUE` \(or/and `sun.net.inetaddr.negative.ttl=TTL_VALUE`\). More details about the problem can be found [here](https://www.ibm.com/support/pages/understanding-tuning-and-testing-inetaddress-class-and-cache).
 
-`auth_key_sha512: 280ac6f...94bf9`
+#### `methods`
 
-Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is a string like `username:password` _hashed in_ [_SHA512_](https://md5calc.com/hash/sha512). Clients will need to provide the usual Authorization header.
+`methods: [GET, DELETE]`
 
-There are also available other rules with less secure SHA algorithms `auth_key_sha256` and `auth_key_sha1`.
+Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP stack does not make any difference between HEAD and GET, so all the HEAD request will appear as GET.
 
-The rules support also alternative syntax, where only password is hashed, eg:
+#### `headers_and` (or `headers`)
 
-`auth_key_sha512: "admin:280ac6f...94bf9"`
+`headers: ["h1:x*y","~h2:*xy"]`
 
-In the example below `admin` is the username and `280ac6f...94bf9` is the hashed secret.
+Match if **all** the HTTP headers in the request match the defined patterns in headers rule. This is useful in conjunction with [proxy\_auth](elasticsearch.md#proxy_auth), to carry authorization information \(i.e. headers: `x-usr-group: admins`\).
 
-[Impersonation](details/impersonation.md) is supported by these rules by default.
+The `~` sign is a pattern negation, so eg. `~h2:*xy` means: match if h2 header's value does not match the pattern \*xy, or `h2` is not present at all.
 
-#### `auth_key_pbkdf2`
+#### `headers_or`
 
-`auth_key_pbkdf2: "KhIxF5EEYkH5GPX51zTRIR4cHqhpRVALSmTaWE18mZEL2KqCkRMeMU4GR848mGq4SDtNvsybtJ/sZBuX6oFaSg=="` \# logstash:logstash
+`headers_or: ["x-myheader:val*","~header2:*xy"]`
 
-`auth_key_pbkdf2: "logstash:JltDNAoXNtc7MIBs2FYlW0o1f815ucj+bel3drdAk2yOufg2PNfQ51qr0EQ6RSkojw/DzrDLFDeXONumzwKjOA=="` \# logstash:logstash
+Match if **at least one** the specified HTTP headers `key:value` pairs is matched.
 
-Accepts [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). The value is hashed in the same way as it's done in `auth_key_sha512` rule, but it uses [_PBKDF2_](https://en.wikipedia.org/wiki/PBKDF2) key derivation function. At the moment there is no way to configure it, so during the hash generation, the user has to take into consideration the following PBKDF2 input parameters values:
+#### `uri_re`
 
-| Input parameter | Value | Comment |
-| :--- | :--- | :--- |
-| Pseudorandom function | HmacSHA512 |  |
-| Salt | use hashed value as a salt | eg. hashed value = `logstash:logstash`, use `logstash:logstash` as the salt |
-| Iterations count | 10000 |  |
-| Derived key length | 512 | bits |
+`uri_re: ["^/secret-index/.*", "^/some-index/.*"]`
 
-The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
+**☠️HACKY \(try to use indices/actions rule instead\)**
 
-[Impersonation](details/impersonation.md) is supported by this rule by default.
-#### `auth_key_unix`
+Match if **at least one** specifed regular expression matches requested URI.
 
-`auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 # Hashed for "test:test"`
+#### `maxBodyLength`
 
-**⚠️IMPORTANT** this hashing algorithm is **very CPU intensive**, so we implemented a caching mechanism around it. However, this will not protect Elasticsearch from a DoS attack with a high number of requests with random credentials.
+`maxBodyLength: 0`
 
-This method is based on `/etc/shadow` file syntax.
+Match requests having a request body length less or equal to an integer. Use `0` to match only requests without body.
 
-If you configured sha512 encryption with 65535 rounds on your system the hash in /etc/shadow for the account `test:test` will be `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
+**NB**: Elasticsearch HTTP API breaks the specifications, nad GET requests **might** have a body length greater than zero.
 
-```text
-readonlyrest:
-    access_control_rules:
-    - name: Accept requests from users in group team1 on index1
-      groups: ["team1"]
-      indices: ["index1"]
+#### `api_keys`
 
-    users:
-    - username: test
-      auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 #test:test
-      groups: ["team1"]
-```
+`api_keys: [123456, abcdefg]`
 
-You can generate the hash with **mkpasswd** Linux command, you need whois package `apt-get install whois` \(or equivalent\)
-
-`mkpasswd -m sha-512 -R 65534`
-
-Also you can generate the hash with a python script \(works on Linux\):
-
-```python
-#!/usr/bin/python
-import crypt
-import random
-import sys
-import string
-
-def sha512_crypt(password, salt=None, rounds=None):
-    if salt is None:
-        rand = random.SystemRandom()
-        salt = ''.join([rand.choice(string.ascii_letters + string.digits)
-                        for _ in range(8)])
-
-    prefix = '$6$'
-    if rounds is not None:
-        rounds = max(1000, min(999999999, rounds or 5000))
-        prefix += 'rounds={0}$'.format(rounds)
-    return crypt.crypt(password, prefix + salt)
-
-
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        print sha512_crypt(sys.argv[1], rounds=65635)
-    else:
-        print "Argument is missing, <password>"
-```
-
-**Finally you have to put your username at the begining of the hash with ":" separator** `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
-
-For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
-
-[Impersonation](details/impersonation.md) is supported by this rule by default.
-
-#### `proxy_auth: "*"`
-
-`proxy_auth: "*"`
-
-Delegated authentication. Trust that a reverse proxy has taken care of authenticating the request and has written the resolved user name into the `X-Forwarded-User` header. The value "\*" in the example, will let this rule match any username value contained in the `X-Forwarded-User` header.
-
-If you are using this technique for authentication using our **Kibana** plugins, don't forget to add this snippet to `conf/kibana.yml`:
-
-`readonlyrest_kbn.proxy_auth_passthrough: true`
-
-So that Kibana will forward the necessary headers to Elasticsearch.
-
-[Impersonation](details/impersonation.md) is supported by this rule by default.
-
-#### `users`
-
-`users: ["root", "*@mydomain.com"]`
-
-Limit access to of specific users whose username is contained or matches the patterns in the array. This rule is independent from the authentication method chosen, so it will work well in conjunction LDAP, JWT, proxy\_auth, and all others.
-
-For example:
-
-```yaml
-readonlyrest:
-  access_control_rules:
-    - name: "JWT auth for viewer group (role), limited to certain usernames"
-      kibana_access: ro
-      users: ["root", "*@mydomain.com"]
-      jwt_auth:
-        name: "jwt_provider_1"
-        groups: ["viewer"]
-```
-
-#### `groups`
-
-`groups: ["group1", "group2"]`
-
-The ACL block will match when the user belongs to any of the specified groups. The information about what users belong to what groups is defined in the `users` section, typically situated after the ACL, further down in the YAML.
-
-In the `users` section, each entry tells us that:
-
-* A given user with a username matching one of patterns in the `username` array ...
-* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](details/groups-rule-mapping.md) between local group name and external groups (example 3 below).
-* when they can be authenticated and (if authorization rule is present) authorized by the present rule(s).
-
-In general it looks like this:
-
-```yaml
-  ...
-  - name: "ACL block with groups rule"
-    indices: [x, y]
-    groups: ["local_group1"] # this group name is defined in the "users" section
-
-  users:
-  - username: ["pattern1", "pattern2", ...]
-    groups: ["local_group1", "local_group2", ...]
-    <any_authentication_rule>: ...
-
-  - username: ["pattern1", "pattern2", ...]
-    groups: ["local_group1", "local_group2", ...]
-    <any_authentication_rule>: ...
-    <optionally_any_authorization_rule>: ...
-
-  - username: ["pattern1", "pattern2", ...]
-    groups:
-      - local_group1: ["external_group1", "external_group2"]
-      - local_group2: ["external_group2"]
-    <authentication_with_authorization_rule>: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
-```
-
-For details see [User management](elasticsearch.md#users-and-groups).
-
-[Impersonation](details/impersonation.md) support depends on
-authentication and authorization rules used in `users` section.
-
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
-
-#### `groups_and`
-
-`groups_and: ["group1", "group2"]`
-
-This rule is identical to the above defined `groups` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `groups` rule.
-
+A list of api keys expected in the header `X-Api-Key`
 
 #### `session_max_idle`
 
@@ -1255,134 +1378,25 @@ This rule is identical to the above defined `groups` rule, but this time ALL the
 
 **⚠️DEPRECATED** Browser session timeout \(via cookie\). Example values 1w \(one week\), 10s \(10 seconds\), 7d \(7 days\), etc. NB: not available for Elasticsearch 2.x.
 
-#### `ldap_authentication`
+### Transport level rules
 
-simple version:
-`ldap_authentication: ldap1`
+These are the most basic rules. It is possible to allow/forbid requests originating from a list of IP addresses, host names or IP networks \(in slash notation\).
 
-extended version:
-```yaml
-ldap_authentication:
-  name: ldap1
-  cache_ttl: 10 sec
-```
+#### `hosts`
 
-It handles LDAP authentication only using the configured LDAP connector (here `ldap1`). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+`hosts: ["10.0.0.0/24"]` Match a request whose **origin** IP address \(also called origin address, or `OA` in logs\) matches one of the specified IP addresses or subnets.
 
-#### `ldap_authorization`
+#### `accept_x-forwarded-for_header`
 
-```yaml
-ldap_authorization:
-  name: "ldap1"
-  groups: ["group3"]
-  cache_ttl: 10 sec
-```
+`accept_x-forwarded-for_header: false`
 
-It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` can be used to require users belong to all the listed groups (AND logic). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+**⚠️DEPRECATED \(use `x_forwarded_for instead`\)** A modifier for `hosts` rule: if the origin IP won't match, fallback to check the `X-Forwarded-For` header
 
-#### `ldap_auth`
+#### `hosts_local`
 
-Shorthand rule that combines `ldap_authentication` and `ldap_authorization` rules together. It handles both authentication and authorization using the configured LDAP connector (here `ldap1`).
+`hosts_local: ["127.0.0.1", "127.0.0.2"]` Match a request whose **destination** IP address \(called `DA` in logs\) matches one of the specified IP addresses or subnets. This finds application when Elasticsearch HTTP API is bound to multiple IP addresses.
 
-```yaml
-ldap_auth:
-  name: "ldap1"
-  groups: ["group1", "group2"]
-```
-
-The same functionality can be achieved using the two rules described below:
-
-```yaml
-ldap_authentication: ldap1
-ldap_authorization:
-  name: "ldap1"
-  groups: ["group1", "group2"] # match when user belongs to at least one group
-```
-
-In both `ldap_auth`and `ldap_authorization`, the `groups` clause can be replaced by `group_and` to require the valid LDAP user must belong to all the listed groups:
-
-```yaml
-ldap_auth:
-  name: "ldap1"
-  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
-```
-
-Or equivalently:
-
-```yaml
-ldap_authentication: ldap1
-ldap_authorization:
-  name: "ldap1"
-  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
-```
-
-See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
-
-[Impersonation](details/impersonation.md) is not supported by default by LDAP rules.
-
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
-
-#### `jwt_auth`
-
-See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth)
-
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
-
-#### `external-basic-auth`
-
-Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
-
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
-
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
-
-#### `groups_provider_authorization`
-
-Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
-
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
-
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
-
-#### `ror_kbn_auth`
-
-For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication.
-
-```text
-readonlyrest:
-  access_control_rules:
-
-    - name: "ReadonlyREST Enterprise instance #1"
-      ror_kbn_auth:
-        name: "kbn1"
-        groups: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to at least one of the configured groups
-
-    - name: "ReadonlyREST Enterprise instance #1 - two groups required"
-      ror_kbn_auth:
-        name: "kbn1"
-        groups_and: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
-
-    - name: "ReadonlyREST Enterprise instance #2"
-      ror_kbn_auth:
-        name: "kbn2"
-
-  ror_kbn:
-    - name: kbn1
-      signature_key: "shared_secret_kibana1" # <- use environmental variables for better security!
-
-    - name: kbn2
-      signature_key: "shared_secret_kibana2" # <- use environmental variables for better security!
-```
-
-This authentication and authorization connector represents the secure channel \(based on JWT tokens\) of signed messages necessary for our Enterprise Kibana plugin to securely pass back to ES the username and groups information coming from browser-driven authentication protocols like SAML
-
-Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
-
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
-
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
-
-### Ancillary rules
+### Ancillary block settings
 
 #### `verbosity`
 
