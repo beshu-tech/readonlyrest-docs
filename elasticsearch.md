@@ -1518,6 +1518,18 @@ readonlyrest:
      kibana_access: ro
 ```
 
+If you want to use the default settings of audit outputs, you can use the simple format of `audit.outputs`:
+
+```text
+readonlyrest:
+
+  audit:
+    enabled: true
+    outputs: [ index, log ]
+
+    ...
+```
+
 In case when you want to disable given output, add the `enabled: false` to the output config:
 ```text
 readonlyrest:
