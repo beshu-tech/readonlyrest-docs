@@ -1,0 +1,27 @@
+---
+description: User Session identity
+---
+
+# User Session identity
+
+It's the object which contains the information about the session of the successful logs in Kibana user
+
+| Property name                        | Return value type                                                      | Example return value                                                         | Description                                                                          |
+|:-------------------------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| sid                                  | string                                                                 | 'a5442490-45ee-4a60-a9a1-e62989db3ab1'                                       | Unique identifier of the session                                                     |
+| metadata.expiresAt                   | Date                                                                   | 2023-03-26T19:50:37.932Z                                                     | Session expiration date                                                              |
+| metadata.lastSessionActivityDate     | Date or undefined                                                      | 2023-03-23T19:50:37.932Z                                                     | Date of the last session activity. Using in the context of a session timeout         |
+| metadata.authorizationHeaders        | Map<string, string>                                                    | Map(2) {'authorization' => 'Basic BWRtaW46ZGV2', 'cookie' => 'cookie value'} | The map of all headers use during the authorization                                  |
+| metadata.username                    | string                                                                 | 'John'                                                                       | User name defined in the ACL                                                         |
+| metadata.kibanaHiddenApps            | string[]                                                               | [ 'Enterprise Search, Overview', 'Observability' ]                           | List of the hidden Apps defined in the ACL                                           |
+| metadata.currentGroup                | string                                                                 | 'administrators'                                                             | Currently selected group by the user                                                 |
+| metadata.availableGroups             | string[]                                                               | [ 'administrators', 'infosec', 'template' ],                                 | List of the all available groups                                                     |
+| metadata.kibanaAccess                | 'ro_strict' or 'ro' or 'rw' or 'admin' or 'unrestricted' or 'api_only' | 'admin'                                                                      | User kibana access                                                                   |
+| metadata.kibanaIndex                 | string or undefined                                                    | '.kibana_administrators'                                                     | Currently selected group kibana index defined in the ACL                             |
+| metadata.kibanaTemplateIndex         | string or undefined                                                    | '.kibana_template'                                                           | Kibana template index defined in the kibana.yml readonlyrest_kbn.kibanaTemplateIndex |
+| metadata.origin                      | string or undefined                                                    | 'Connector name'                                                             | The value is taken from JWT's x-ror-origin claim when ror_kbn_auth is matched        |
+| metadata.impersonatedBy              | string or undefined                                                    | 'admin'                                                                      | Name of the impersonator                                                             |
+| metadata.correlationId               | string                                                                 | 'd7df607d-4b04-454b-979c-3e962e312a7d'                                       | Current session correlationId                                                        |
+| metadata.customMetadata              | Record<string, unknown>                                                | { metadata1: value }                                                         | Custom metadata defined in the ACL                                                   |
+| metadata.allowedApiPaths.http_method | "ANY" or Method                                                        | 'GET'                                                                        | HTTP method defined as allowed in the ACL                                            |
+| metadata.allowedApiPaths.path_regex  | string                                                                 | '^\\.\\*/api/index_management/indices\\.\\*$'                                | Path regex defined as allowed in the ACL                                             |
