@@ -601,7 +601,7 @@ It's an authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.
 
 **⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
 
-[Impersonation](details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
 #### `auth_key_sha512`
 
@@ -636,7 +636,7 @@ The authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.org/
 
 The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
 
-[Impersonation](details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
 #### `auth_key_unix`
 
@@ -698,7 +698,7 @@ if __name__ == '__main__':
 
 For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
 
-[Impersonation](details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
 #### `proxy_auth: "*"`
 
@@ -712,7 +712,7 @@ If you are using this technique for authentication using our **Kibana** plugins,
 
 So that Kibana will forward the necessary headers to Elasticsearch.
 
-[Impersonation](details/impersonation.md) is supported by this rule by default.
+[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
 #### `groups_or` (or `groups`)
 
@@ -827,7 +827,7 @@ ldap_authorization:
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
-[Impersonation](details/impersonation.md) is not supported by default by LDAP rules.
+[Impersonation](details/impersonation.md) support by LDAP rules requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
@@ -835,13 +835,13 @@ For more information on the ROR's authorization rules, see [Authorization rules 
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
 
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) is not currently supported by this rule.
 
 #### `external_authentication`
 
 Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
 
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) support by this rule requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
@@ -849,7 +849,7 @@ For more information on the ROR's authorization rules, see [Authorization rules 
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
 
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) support by this rule requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
@@ -887,7 +887,7 @@ This authentication and authorization connector represents the secure channel \(
 
 Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
-[Impersonation](details/impersonation.md) is not supported by this rule by default.
+[Impersonation](details/impersonation.md) is currently not supported by this rule.
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
@@ -950,7 +950,7 @@ If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi t
 
 `kibana_index_template: .kibana_template`
 
-[TODO:]
+Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
 
 #### `kibana_hide_apps`
 
