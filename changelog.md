@@ -4,7 +4,7 @@
 * **🚨Security Fix** (ES) "/" endpoint was not protected for ES 8.x
 * **🚨Security Fix** (ES) "/_cat" endpoint was not protected for all ES versions
 * **🚀New** (KBN) 8.6.2 support
-* **🚀New** (ES) 8.6.2 support
+* **🚀New** (ES) 8.7.0, 8.6.2 support
 * **🚀New** (ES) [the `data_streams` rule](https://docs.readonlyrest.com/v/develop/elasticsearch#data_streams)
 * **🧐Enhancement** (KBN) optimisation in hidden apps feature
 * **🐞Fix** (KBN) Opening index management mappings tab forces logout
