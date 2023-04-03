@@ -912,15 +912,29 @@ readonlyrest:
 
 ### Kibana-related rules
 
-#### `kibana_access`
+#### `kibana`
 
-`kibana_access: ro`
+```yaml
+kibana:
+  access: ro # required
+  kibana_index: ".kibana_custom_index" # optional
+  kibana_template_index: ".kibana_template" # optional
+  hide_apps: [ "Security", "Enterprise Search"] # optional
+  allowed_api_paths: # optional
+    - "^/api/spaces/.*$"
+    - http_method: POST
+      path: "^/api/saved_objects/.*$"
+```
+
+The `kibana` rule gathers all ROR Kibana-related settings that it may need to provide great user experience. The rule consists of several sub-rules:
+
+##### `access`
 
 Enables the minimum set of actions necessary for browsers to use Kibana.
 
-This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. This rule allows a set of actions towards the designated kibana index \(see `kibana_index` rule - defaults to ".kibana"\), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
+This "macro" allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.kibana_index`](elasticsearch.md#kibana_index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
 
-The idea is that with one single rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
+The idea is that with one single sub-rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
 
 Possible access levels:
 
@@ -928,38 +942,72 @@ Possible access levels:
 * `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created.
 * `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified.
 * `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app
-* `unrestricted`: when no `kibana_access` rule is set, no action is restricted. This option is equivalent of no `kibana_access` rule used. 
+* `api_only`: only [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) actions are allowed
+* `unrestricted`: no action is restricted
 
 **NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana_access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
 
-This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
+This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
-#### `kibana_index`
-
-`kibana_index: .kibana-user1`
+##### `kibana_index` 
 
 **Default value is `.kibana`**
 
-Specify to what index we expect Kibana to attempt to read/write its settings \(use this together with `kibana.index` setting in kibana.yml.\)
+Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in the `kibana.yml` file)
 
-This value directly affects how `kibana_access` works because at all the access levels \(yes, even admin\), `kibana_access` rule will **not** match any _write_ request in indices that are not the designated kibana index.
+This value directly affects how `kibana.access` works because at all the access levels \(yes, even admin\), `kibana.access` sub-rule will **NOT** match any _write_ request in indices that are not the designated kibana index.
 
 If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
 
-#### `kibana_index_template`
-
-`kibana_index_template: .kibana_template`
+##### `kibana_template_index`
 
 Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
 
-#### `kibana_hide_apps`
-
-`kibana_hide_apps: [ "Security", "Enterprise Search"]`
+##### `hide_apps`
 
 Specify which Kibana apps and menu items should be hidden. 
 This feature will work in ReadonlyREST PRO and Enterprise.
 
 For more information on the ROR's Kibana Hide Apps feature, see [Hiding Kibana Apps](kibana.md#hiding-kibana-apps).
+
+##### `allowed_api_paths`
+
+Used to define which parts of [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) can be used. The sub-rule requires to define a list of [regular expressions](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) which describes the API paths. Additionally, when you would like to restrict only specific HTTP methods of the API, you can use the extended format of the sub-rule:
+
+```yaml
+kibana:
+  [...]
+  allowed_api_paths: # optional
+    - http_method: POST
+      path: "^/api/saved_objects/.*$"
+```
+
+
+
+#### `kibana_access`
+
+`kibana_access: ro`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.access`](elasticsearch.md#access). Should no longer be used.
+
+#### `kibana_index`
+
+`kibana_index: .kibana-user1`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.kibana_index`](elasticsearch.md#kibana_index). Should no longer be used.
+
+#### `kibana_template_index`
+
+`kibana_template_index: .kibana_template`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.kibana_template_index`](elasticsearch.md#kibana_template_index). Should no longer be used.
+
+#### `kibana_hide_apps`
+
+`kibana_hide_apps: [ "Security", "Enterprise Search"]`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.hide_apps`](elasticsearch.md#hide_apps). Should no longer be used.
+
 
 ### Elasticsearch level rules
 
