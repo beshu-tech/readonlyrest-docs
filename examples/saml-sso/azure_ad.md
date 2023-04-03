@@ -212,28 +212,28 @@ The object ID of the new group is "3f8ebed8-f742-42a6-94ba-2d57550fc3cf", let's 
 
 Let's head back to Elasticsearch, and open `readonlyrest.yml`. Let's now add the authorization.
 
-```
+```yaml
 readonlyrest:
     access_control_rules:
 
     - name: "::KIBANA-SRV::"
       auth_key: kibana:kibana
 
-
     - name: "Azure AD - ReadonlyREST Admins group"
-      kibana_index: ".kibana_admin_tenancy"
       indices: [".kibana_admin_tenancy", "readonlyrest-audit*"]
-      kibana_access: "admin"
+      kibana:
+        access: "admin"
+        kibana_index: ".kibana_admin_tenancy"
       ror_kbn_auth:
         roles: ["3f8ebed8-f742-42a6-94ba-2d57550fc3cf"]
         name: "kbn1"
 
-
     - name: "Azure AD - Anyone else"
       indices: [".kibana_generic_tenancy", "readonlyrest-audit*"]
-      kibana_index: ".kibana_generic_tenancy"
-      kibana_access: "rw"
-      kibana_hide_apps: ["readonlyrest_kbn"]
+      kibana:
+        access: "rw"
+        kibana_index: ".kibana_generic_tenancy"
+        hide_apps: ["readonlyrest_kbn"]
       ror_kbn_auth:
         name: "kbn1"
 

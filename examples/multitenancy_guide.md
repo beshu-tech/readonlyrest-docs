@@ -59,7 +59,7 @@ xpack.security.enabled: false
 
 Right beside your `elasticsearch.yml`, create a file called `readonlyrest.yml` and write the following settings into it.
 
-```text
+```yaml
 readonlyrest:
 
     # IMPORTANT FOR LOGIN/LOGOUT TO WORK WITH ROR PLUGIN FOR KIBANA
@@ -88,46 +88,52 @@ readonlyrest:
     ##############################
     - name: "::RO_SALES::"
       auth_key: sales_ro_usr:dev1
-      kibana_access: ro
       indices: [ ".kibana_sales", "logstash-2018*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
-      kibana_index: ".kibana_sales"
+      kibana:
+        access: ro
+        hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
+        kibana_index: ".kibana_sales"
 
     - name: "::RW_SALES::"
       auth_key: sales_rw_usr:dev2
-      kibana_access: rw
       indices: [".kibana_sales", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
-      kibana_index: ".kibana_sales"
+      kibana:
+        access: rw
+        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+        kibana_index: ".kibana_sales"
 
     - name: "::ADMIN_SALES::"
       auth_key: sales_admin_usr:dev3
-      kibana_access: admin
       indices: [".kibana_sales", "logstash-*"]
-      kibana_index: ".kibana_sales"
+      kibana:
+        access: admin
+        kibana_index: ".kibana_sales"
 
     ###########################
     # OPS Actual human users...
     ###########################
     - name: "::RO_OPS::"
       auth_key: ops_ro_usr:dev4
-      kibana_access: ro
       indices: [ ".kibana_ops", "logstash-2018*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
-      kibana_index: ".kibana_ops"
+      kibana:
+        access: ro
+        hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
+        kibana_index: ".kibana_ops"
 
     - name: "::RW_OPS::"
       auth_key: ops_rw_usr:dev5
-      kibana_access: rw
       indices: [".kibana_ops", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
-      kibana_index: ".kibana_ops"
+      kibana:
+        access: rw
+        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+        kibana_index: ".kibana_ops"
 
     - name: "::ADMIN_OPS::"
       auth_key: ops_admin_usr:dev6
-      kibana_access: admin
       indices: [".kibana_ops", "logstash-*"]
-      kibana_index: ".kibana_ops"
+      kibana:
+        access: admin
+        kibana_index: ".kibana_ops"
 ```
 
 ## Setup: the Kibana side
@@ -136,7 +142,7 @@ With ROR, we try as much as possible to keep all the settings withing the Elasti
 
 Open up `config/kibana.yml` and add/edit the following settings:
 
-```text
+```yaml
 # Kibana server use ::KIBANA-SRV:: credentials
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
@@ -146,13 +152,13 @@ elasticsearch.password: "kibana"
 
 Fire up Elasticsearch
 
-```text
+```bash
 $ bin/elasticsearch
 ```
 
 And then Kibana
 
-```text
+```bash
 $ bin/kibana
 ```
 

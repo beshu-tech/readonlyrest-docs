@@ -310,21 +310,24 @@ readonlyrest:
 
     - name: "::RO::"
       auth_key: ro:dev
-      kibana_access: ro
       indices: [ ".kibana", "logstash-*"]
-      kibana_hide_apps: [ "Security", "Enterprise Search"]
+      kibana:
+        access: ro
+        hide_apps: [ "Security", "Enterprise Search"]
 
     - name: "::RW::"
       auth_key: rw:dev
-      kibana_access: rw
       indices: [".kibana", "logstash-*"]
-      kibana_hide_apps: [ "Security", "Enterprise Search"]
+      kibana:
+        access: rw
+        hide_apps: [ "Security", "Enterprise Search"]
 
 
     - name: "::ADMIN::"
       auth_key: admin:dev
       # KIBANA ADMIN ACCESS NEEDED TO EDIT SECURITY SETTINGS IN ROR KIBANA APP!
-      kibana_access: admin
+      kibana:
+        access: admin
 
     - name: "::WEBSITE SEARCH BOX::"
       indices: ["public"]
@@ -354,7 +357,8 @@ Take this example of troublesome ACL:
 
     - name: "::ADMIN::"
       auth_key: admin:dev
-      kibana_access: admin
+      kibana:
+        access: admin
 ```
 
 The user will be able to login because the login request will be allowed by the first ACL block. But the ACL will not have resolved any metadata about the user identity (credentials checking was ignored)!
@@ -370,7 +374,8 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
 
     - name: "::ADMIN::"
       auth_key: admin:dev
-      kibana_access: admin
+      kibana:
+        access: admin
 
     - name: "::FIRST BLOCK::"
       hosts: ["127.0.0.1"]
@@ -455,22 +460,29 @@ And this is how you hide only one app from the Enterprise Search menu:
 More generally, either of these two ways will work:
 
 ```yaml
-kibana_hide_apps: [ "<submenu-title>" ]
-kibana_hide_apps: [ "<submenu-title|app-title>" ]
+kibana:
+  hide_apps: [ "<submenu-title>" ]
+```
+
+```yaml
+kibana:
+  hide_apps: [ "<submenu-title|app-title>" ]
 ```
 
 For example the following is a valid rule:
 
 ```yaml
-kibana_hide_apps: [ "Security", "Management|Stack Management", "Enterprise Search" ]
+kibana:
+  hide_apps: [ "Security", "Management|Stack Management", "Enterprise Search" ]
 ```
 
-There is also a way to use regular expression as a `kibana_hidden_apps` value
+There is also a way to use regular expression as a `kibana.hide_apps` value
 
 for example, you can hide all submenus except for the specific app
 
 ```yaml
-kibana_hide_apps: [ "/^Analytics\\|(?!(Maps)$).*$/"]
+kibana:
+  hide_apps: [ "/^Analytics\\|(?!(Maps)$).*$/"]
 ```
 
 In this case, all analytics apps will be hidden except `Maps`
@@ -481,7 +493,8 @@ The regular expression must be declared between double quote `"/<regular-express
 You can also hide all submenus except specified values
 
 ```yaml
-kibana_hide_apps: ["/^(?!(Analytics|Management).*$).*$/"]
+kibana:
+  hide_apps: ["/^(?!(Analytics|Management).*$).*$/"]
 ```
 
 In this case everything except of `Analytics` and `Management` will submenus will be hidden
@@ -494,16 +507,18 @@ To check all regular expressions available options, check [regular expressions s
 
 This feature will work in ReadonlyREST PRO and Enteprise.
 
-To hide the `Manage kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana_hide_apps`
+To hide the `Manage kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana.hide_apps`
 
 ```yaml
-kibana_hide_apps: [ "ROR Manage Kibana" ]
+kibana:
+  hide_apps: [ "ROR Manage Kibana" ]
 ```
 
-To hide the `Edit security settings` button for the specific user you need to provide `ROR Security Settings` or `readonlyrest_kbn` value into a `kibana_hide_apps`
+To hide the `Edit security settings` button for the specific user you need to provide `ROR Security Settings` or `readonlyrest_kbn` value into a `kibana.hide_apps`
 
 ```yaml
-kibana_hide_apps: [ "ROR Security Settings" ]
+kibana:
+  hide_apps: [ "ROR Security Settings" ]
 ```
 
 ![Hiding ReadonlyREST menu elements](../.gitbook/assets/hiding\_readonlyrest\_menu\_elements.png)
@@ -941,9 +956,9 @@ readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
 
 ## Kibana UI tweaking
 
-This feature will work with Readonlyrest Enterprise
+This feature will work with ReadonlyREST Enterprise
 
-It's possible to inject custom CSS and Javascript to achieve a customised user experience for your users/tenants.
+It's possible to inject custom CSS and Javascript to achieve a customized user experience for your users/tenants.
 
 ### Inject custom CSS in Kibana
 
@@ -991,7 +1006,7 @@ This feature will work only with ReadonlyREST Enterprise
 
 When a tenant logs in for the first time, ReadonlyREST Enterprise will create the kibana index associated to the tenancy as per ACL. For example, it will create and initialize the ".kibana_user1" index, where the tenant "user1" will store all the ["saved objects"](https://www.elastic.co/guide/en/kibana/current/managing-saved-objects.html), that is: visualizations, dashboards, spaces, settings, data views, etc.
 
-The problem is that user1, and any other new users would login for the first time in to a completely blank Kibana. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana_access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
+The problem is that user1, and any other new users would login for the first time in to a completely blank Kibana. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana.access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
 
 To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create and curate a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy. 
 The objects in the templating index will be copied every time the user logs in (or changes tenancy with the tenancy selector), and **if the objects were already present, they will be overwritten**.
@@ -1013,7 +1028,7 @@ An administrator will need to create the template tenancy, populate it with the 
 
 Let's start to add to our access control list (found in $ES\_PATH\_CONF/config/readonlyrest.yml, or ReadonlyREST App in Kibana) a local user "administrator" that will belong to two tenancies: the default one (stored in .kibana index), and the template one (stored in .kibana\_template index).
 
-```
+```yaml
 readonlyrest:
   audit_collector: true
 
@@ -1026,14 +1041,16 @@ readonlyrest:
   - name: "Admin Tenancy"
     groups: ["Admins"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana"
+    kibana:
+      access: admin
+      kibana_index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana_template"
+    kibana:
+      access: admin
+      kibana_index: ".kibana_template"
 
  users:
  - username: administrator
@@ -1061,7 +1078,7 @@ Now, ReadonlyREST Enterprise will look for the ".kibana\_template" index, and tr
 
 Restart Kibana with the new setting. Add a new tenancy to the ACL:
 
-```
+```yaml
 readonlyrest:
   audit_collector: true
 
@@ -1074,20 +1091,23 @@ readonlyrest:
   - name: "Admin Tenancy"
     groups: ["Admins"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana"
+    kibana:
+      access: admin
+      kibana_index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana_template"
+    kibana:
+      access: admin
+      kibana_index: ".kibana_template"
 
   # Newly added tenant!
   - name: user1
     auth_key: user1:passwd
-    kibana_access: rw
-    kibana_index: ".kibana_user1"
+    kibana:
+      access: rw
+      kibana_index: ".kibana_user1"
 
  users:
  - username: administrator

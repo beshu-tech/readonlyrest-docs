@@ -903,7 +903,8 @@ For example:
 readonlyrest:
   access_control_rules:
     - name: "JWT auth for viewer group (role), limited to certain usernames"
-      kibana_access: ro
+      kibana:
+        access: ro
       users: ["root", "*@mydomain.com"]
       jwt_auth:
         name: "jwt_provider_1"
@@ -945,7 +946,7 @@ Possible access levels:
 * `api_only`: only [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) actions are allowed
 * `unrestricted`: no action is restricted
 
-**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana_access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
+**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana.access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
 
 This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
@@ -1223,7 +1224,8 @@ For example, this ACL block would perfectly support a complete Kibana session. T
 ```yaml
     - name: "::RW_USER::"
       auth_key: rw_user:pwd
-      kibana_access: rw
+      kibana:
+        access: rw
       indices: ["r*", ".kibana"]
 ```
 
@@ -1232,7 +1234,8 @@ However, when we introduce a filter \(or fields\) rule, this block will be able 
 ```yaml
     - name: "::RW_USER::"
       auth_key: rw_user:pwd
-      kibana_access: rw  # <-- won't work because of filter present in block
+      kibana:
+        access: rw  # <-- won't work because of filter present in block
       indices: ["r*", ".kibana"]
       filter: '{"query_string":{"query":"DestCountry:FR"}}'  # <-- will reject all write requests! :(
 ```
@@ -1247,7 +1250,8 @@ The solution is to duplicate the block. The first one will intercept \(and filte
 
     - name: "::RW_USER (allow remaining requests)::"
       auth_key: rw_user:pwd
-      kibana_access: rw
+      kibana:
+        access: rw
       indices: ["r*", ".kibana"]
 ```
 
@@ -1260,10 +1264,11 @@ Before adding the `filter` rule:
 ```text
   - name: "::PERSONAL_GRP::"
     groups: ["Personal"]
-    kibana_access: rw
+    kibana:
+      access: rw
+      kibana_index: ".kibana_@{user}"
+      hide_apps: ["readonlyrest_kbn", "timelion"]
     indices: ["r*", ".kibana_@{user}"]
-    kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
-    kibana_index: ".kibana_@{user}"
 ```
 
 After adding the `filter` rule \(using the block duplication strategy\).
@@ -1276,10 +1281,11 @@ After adding the `filter` rule \(using the block duplication strategy\).
 
     - name: "::PERSONAL_GRP::"
       groups: ["Personal"]
-      kibana_access: rw
       indices: ["r*", ".kibana_@{user}"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
-      kibana_index: ".kibana_@{user}"
+      kibana:
+        access: rw
+        kibana_index: ".kibana_@{user}"
+        hide_apps: ["readonlyrest_kbn", "timelion"]
 ```
 
 #### `response_fields`
@@ -1525,7 +1531,7 @@ ReadonlyREST can write events very similarly to Logstash into to a series of ind
       "Host",
       "User-Agent"
     ],
-    "acl_history": "[[::LOGSTASH::->[auth_key->false]], [::RW::->[kibana_access->true, indices->true, kibana_hide_apps->true, auth_key->true]], [kibana->[auth_key->false]], [::RO::->[auth_key->false]]]",
+    "acl_history": "[[::LOGSTASH::->[auth_key->false]], [::RW::->[kibana->true, indices->true, auth_key->true]], [kibana->[auth_key->false]], [::RO::->[auth_key->false]]]",
     "origin": "127.0.0.1",
     "final_state": "ALLOWED",
     "task_id": 1158,
@@ -1566,7 +1572,8 @@ readonlyrest:
 
     - name: "::RO::"
       auth_key: simone:ro
-      kibana_access: ro
+      kibana:
+        access: ro
 ```
 
 ### Extended audit
@@ -1833,7 +1840,7 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`,`indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana_index`, `kibana_template_index`. The variables are related to different contexts:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`,`indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.kibana_index`, `kibana.kibana_template_index`. The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
@@ -1955,8 +1962,9 @@ readonlyrest:
     access_control_rules:
 
     - name: "Identify a personal kibana index where each user is supposed to save their dashboards"
-      kibana_access: rw
-      kibana_index: ".kibana_@{header:x-nginx-user}"
+      kibana:
+        access: rw
+        kibana_index: ".kibana_@{header:x-nginx-user}"
 ```
 
 ##### Dynamic variables from JWT claims
@@ -2347,19 +2355,22 @@ The information about the username can be extracted from the "claims" inside a J
 readonlyrest:
     access_control_rules:
     - name: Valid JWT token with a viewer group
-      kibana_access: ro
+      kibana:
+        access: ro
       jwt_auth:
         name: "jwt_provider_1"
         groups: ["viewer"]
 
     - name: Valid JWT token with a writer group
-      kibana_access: rw
+      kibana:
+        access: rw
       jwt_auth:
         name: "jwt_provider_1"
         groups: ["writer"]
 
     - name: Valid JWT token with a viewer and writer groups
-      kibana_access: rw
+      kibana:
+        access: rw
       jwt_auth:
         name: "jwt_provider_1"
         groups_and: ["writer", "viewer"]

@@ -165,12 +165,14 @@ readonlyrest:
 
     - name: "ADMIN" # admin user - can change ROR settings
       type: allow
-      kibana_access: admin
+      kibana:
+        access: admin
       auth_key: admin:admin
       
     - name: "User 1" # user1 can read remote Elastic Cloud cluster (escloud) indices matching pattern kibana_sample*
       type: allow
-      kibana_access: ro
+      kibana:
+        access: ro
       auth_key: "user1:test"
       indices: [".kibana*", "escloud:kibana_sample*"]
 ```
