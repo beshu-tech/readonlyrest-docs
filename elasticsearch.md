@@ -982,8 +982,6 @@ kibana:
       path: "^/api/saved_objects/.*$"
 ```
 
-
-
 #### `kibana_access`
 
 `kibana_access: ro`
