@@ -1556,7 +1556,7 @@ readonlyrest:
     ...
 ```
 
-The other settings, specific to the type of audit outputs, will be mentioned in the next sections.
+The other settings, specific to the type of audit outputs, are mentioned in the next sections.
 
 #### The 'index' output specific configurations
 
