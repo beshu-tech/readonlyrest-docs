@@ -18,7 +18,7 @@ In this document we are going to describe how to operate the Elasticsearch plugi
 * **Authentication**: require credentials
 * **Authorization**: declare groups of users, permissions and partial access to indices.
 * **Access control**: complex logic can be modeled using an ACL \(access control list\) written in YAML.
-* **Audit logs**: a trace of the access requests can be logged to file or index \(or both\).
+* **Audit events**: a trace of the access requests can be logged to file or index \(or both\).
 
 #### Flow of a Search Request
 
@@ -31,7 +31,7 @@ The following diagram models an instance of Elasticsearch with the ReadonlyREST 
 3. The HTTP stack in Elasticsearch parses the HTTP request
 4. The HTTP handler in Elasticsearch extracts the indices, action, request type and creates a `SearchRequest` \(internal Elasticsearch format\).
 5. The SearchRequest goes through the ACL \(access control list\), external systems like LDAP can be asynchronously queried, and an exit result is eventually produced.
-6. The exit result is used by the audit log serializer, to write a record to index and/or Elasticsearch log file
+6. The exit result is used by the audit event serializer, to write a record to index and/or Elasticsearch log file
 7. If no ACL block was matched, or if a `type: forbid` block was matched, ReadonlyREST does not forward the search request to the search engine, and creates an "unauthorized" HTTP response.
 8. In case the ACL matched an `type: allow` block, the request is forwarded to the search engine
 9. The Elasticsearch code creates a search response containing the results of the query
@@ -1453,10 +1453,9 @@ The state above is only possible for read-only ES requests \(ES requests which d
 
 ### Audit
 
-ReadonlyREST can write audit events containing information about a request and how the system has handled it.
+ReadonlyREST can collect audit events containing information about a request and how the system has handled it and send them to configured outputs.
 Here is an example of the data points contained in each audit event. We can leverage all this information to build interesting Kibana dashboards, or any other visualization.
-
-```javascript
+```json
 {
     "error_message": null,
     "headers": [
@@ -1490,21 +1489,21 @@ Here is an example of the data points contained in each audit event. We can leve
 
 #### Configuration
 
-The audit collecting by default is disabled. To enable it, you need to add `audit.enabled: true` and configure the `audit.outputs`.
-With the `outputs` array, you manage the audit sinks configurations.
-You can configure multiple outputs for audit events, but at least one audit output must be defined when the audit is enabled.
-The supported output types are:
-* `index` - similarly to Logstash it writes audit events in the documents stored in the indices named by default `readonlyrest_audit-YYYY-MM-DD`
-* `log` - it allows you to collect audit logs in a similar way to the app logs and format them with the help of features that `log4j2` enables.
-  Uses a dedicated logger from the elasticsearch's `log4j2` config.
+The audit collecting by default is disabled. To enable it, you need to add `audit.enabled: true` and optionally configure the `audit.outputs`.
+In the `outputs` array, you can define i.a. where the audit events should be sent.
+The currently supported output types are:
+* `index` - similarly to Logstash it writes audit events in the documents stored in the ReadonlyREST audit index
+* `log` - it allows you to collect audit events using the Elasticsearch logs and format them with the help of features that `log4j2` enables.
+You can configure multiple outputs for audit events. When the audit is enabled, at least one output has to to be defined.
+If you omit `outputs` definition, the default `index` output will be used.
 
-```text
+
+Here is an example of how to enable audit events collecting with all defaults: 
+```yaml
 readonlyrest:
 
   audit:
     enabled: true
-    outputs: 
-    - type: index
 
   access_control_rules:
 
@@ -1515,14 +1514,14 @@ readonlyrest:
 
    - name: "::RO::"
      auth_key: simone:ro
-     kibana_access: ro
+     kibaba:
+       access: ro
 ```
 
-If you want to use the default settings of audit outputs, you can use the simple format of `audit.outputs`:
+You can also use multiple audit outputs, e.g.
 
-```text
+```yaml
 readonlyrest:
-
   audit:
     enabled: true
     outputs: [ index, log ]
@@ -1530,8 +1529,9 @@ readonlyrest:
     ...
 ```
 
-In case when you want to disable given output, add the `enabled: false` to the output config:
-```text
+When you want to have more control over the audit outputs, the extended `outputs` format is for you.
+For example, you can disable given output by adding `enabled: false` to the output config:
+```yaml
 readonlyrest:
   audit:
     enabled: true
@@ -1542,15 +1542,18 @@ readonlyrest:
     ...
 ```
 
-#### The 'index' output specif configurations
+The other settings, specific to the type of audit outputs, will be mentioned in the next sections.
+
+#### The 'index' output specific configurations
 
 ##### Custom audit indices name and time granularity
 
-It is possible to change the name of the produced audit indices by specifying a template value as `index_template`.
+By default ReadonlyREST audit index name template is `readonlyrest_audit-YYYY-MM-DD`.
+You can customize the name template using the `index_template` settings.
 
 Example: tell ROR to write on the monthly index.
 
-```text
+```yaml
 readonlyrest:
   audit:
     enabled: true
@@ -1565,7 +1568,7 @@ readonlyrest:
 
 It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
-```text
+```yaml
 readonlyrest:
   audit:
     enabled: true
@@ -1577,21 +1580,23 @@ readonlyrest:
 
 Setting `audit.cluster` is optional, it accepts non empty list of audit cluster nodes URIs.
 
-#### The 'log' output specif configurations
+#### The 'log' output specific configurations
 
-The `log` output uses a dedicated logger to write the audit events in files. The logger applies the `INFO` log level to the appended audit events.
+The `log` output uses a dedicated logger to write the audit events to the Elasticsearch log at INFO level.
 
-To configure audit events writing to logs, you need to add to the `readonlyrest` configuration the following settings:
-```text
+To make ReadonlyREST start adding the audit events to the Elasticsearch log, all you have to do is add "log" as one of the outputs, e.g:
+```yaml
 readonlyrest:
   audit:
     enabled: true
-    outputs: 
-    - type: log
+    outputs:      # you can use also 'outputs: [ log ]'
+    - type: log  
   ...
 ```
 
-In the next step you need to configure the logger for audit events in the `$ES_PATH_CONF/config/log4j2.properties`. Here is an example config with default logger name:
+##### Custom logging settings
+If you want to control the logging process of audit events, you can do it via the `$ES_PATH_CONF/config/log4j2.properties`.
+Here is an example config with the default logger name, with a separate log file, and configured rolling:
 ```text
 appender.readonlyrest_audit_rolling.type = RollingFile
 appender.readonlyrest_audit_rolling.name = readonlyrest_audit_rolling
@@ -1614,7 +1619,7 @@ All settings are up to you. The only required entry is the logger name `logger.{
 The default logger name is the `readonlyrest_audit`.
 
 If you want to set a custom logger name for the `log` output, add the `logger_name` setting for the given output:
-```text
+```yaml
 readonlyrest:
   audit:
     enabled: true
@@ -1624,11 +1629,17 @@ readonlyrest:
   ...
 ```
 
-### Extended audit
+### Extending audit events
 
-If you want to log the request content then an additional serializer is provided. This will log the entire user request within the content field of the audit event. To enable, configure the `serializer` parameter as below.
+The audit events are JSON documents describing incoming requests and how the system has handled them. To create such events, we use a  `serializer`, which is responsible for the event's serialization and filtering.
+The example [event](#audit) is in default format and was produced by the default serializer (`tech.beshu.ror.audit.instances.DefaultAuditLogSerializer`).
+You can use any of the predefined serializers or use a custom one.
 
-```text
+For example, if you want to add the request content to the audit event then an additional serializer is provided.
+This will add the entire user request within the content field of the audit event.
+To enable, configure the `serializer` parameter as below.
+
+```yaml
 readonlyrest:
   audit:
     enabled: true
@@ -1696,7 +1707,7 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
 1. mv ror-custom-java-serializer-1.0.0.jar plugins/readonlyrest/
 2. Your config/readonlyrest.yml should start like this
 
-   ```text
+   ```yaml
     readonlyrest:
         audit:
           enabled: true
