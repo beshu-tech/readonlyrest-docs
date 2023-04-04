@@ -1,8 +1,8 @@
 ---
-description: Reject machine to machine traffic using custom metadata ACL rules
+description: Reject machine-to-machine traffic using custom metadata ACL rules
 ---
 
-# Reject machine to machine traffic using custom metadata ACL rules
+# Reject machine-to-machine traffic using custom metadata ACL rules
 
 We can also reject the specific request for example based on the custom metadata
 
@@ -13,12 +13,12 @@ We can also reject the specific request for example based on the custom metadata
     groups: [ administrators ]
     kibana:
        access: admin
-       index: '.kibana_@{acl:current_group}'
+       kibana_index: '.kibana_@{acl:current_group}'
        metadata:
           rejectBasicAuth: true
 ```
 
-2. Declare custom kibana js file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
+2. Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
 
 ```js
 async function customMiddleware(req, res, next) {

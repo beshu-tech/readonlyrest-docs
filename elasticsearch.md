@@ -962,9 +962,13 @@ This value directly affects how `kibana.access` works because at all the access 
 
 If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
 
+It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
+
 ##### `kibana_template_index`
 
 Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
+
+It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
 ##### `hide_apps`
 
@@ -987,7 +991,9 @@ kibana:
 
 ##### `metadata`
 
-User to define the ROR Kibana Metadata which can be use in [Custom middleware](./kibana.md#mi) 
+User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](./kibana.md#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
+
+It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
 #### `kibana_access`
 
