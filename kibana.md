@@ -1111,3 +1111,12 @@ an admin, who has just configured access for a new user. They would like
 to know if the rule(s) are configured correctly. And here comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. 
 
 ROR plugins support impersonation and provide UI for configuring cluster before using it. Visit the [impersonation details page](./details/impersonation.md) to know more.
+
+## Custom middleware
+Sometimes, Enterprise users might need more flexibility and customize the plugin behavior to adjust the product to the business needs.
+There are two options to declare the custom middleware:
+- JS file: `readonlyrest_kbn.custom_middleware_inject_file: '/path/to/your/file.js'` // You can also use relative path here. It's relative to the kibana root folder
+- Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
+
+Visit the [Custom middleware](./examples/custom-middleware) to know more.
+
