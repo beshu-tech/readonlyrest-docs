@@ -925,6 +925,8 @@ kibana:
     - "^/api/spaces/.*$"
     - http_method: POST
       path: "^/api/saved_objects/.*$"
+  metadata: 
+    dept: "@{jwt:tech.beshu.department}"
 ```
 
 The `kibana` rule gathers all ROR Kibana-related settings that it may need to provide great user experience. The rule consists of several sub-rules:
@@ -982,6 +984,10 @@ kibana:
     - http_method: POST
       path: "^/api/saved_objects/.*$"
 ```
+
+##### `metadata`
+
+User to define the ROR Kibana Metadata which can be use in [Custom middleware](./kibana.md#mi) 
 
 #### `kibana_access`
 
@@ -1840,7 +1846,7 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`,`indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.kibana_index`, `kibana.kibana_template_index`. The variables are related to different contexts:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `groups_or`, `groups_and`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.kibana_index`, `kibana.kibana_template_index`, `kibana.metadata`. The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
