@@ -2,6 +2,7 @@
 
 * [README](README.md)
 * [For Elasticsearch](elasticsearch.md)
+  * [Audit configuration](details/audit.md)
   * [External to local groups mapping](details/groups-rule-mapping.md)
   * [FIPS mode](details/fips.md) 
   * [FLS engine](details/fls-engine.md)
