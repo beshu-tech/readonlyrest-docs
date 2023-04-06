@@ -13,7 +13,7 @@ We can also reject the specific request for example based on the custom metadata
     groups: [ administrators ]
     kibana:
        access: admin
-       kibana_index: '.kibana_@{acl:current_group}'
+       index: '.kibana_@{acl:current_group}'
        metadata:
           rejectBasicAuth: true
 ```

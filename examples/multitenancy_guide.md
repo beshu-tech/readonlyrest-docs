@@ -92,7 +92,7 @@ readonlyrest:
       kibana:
         access: ro
         hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
-        kibana_index: ".kibana_sales"
+        index: ".kibana_sales"
 
     - name: "::RW_SALES::"
       auth_key: sales_rw_usr:dev2
@@ -100,14 +100,14 @@ readonlyrest:
       kibana:
         access: rw
         hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
-        kibana_index: ".kibana_sales"
+        index: ".kibana_sales"
 
     - name: "::ADMIN_SALES::"
       auth_key: sales_admin_usr:dev3
       indices: [".kibana_sales", "logstash-*"]
       kibana:
         access: admin
-        kibana_index: ".kibana_sales"
+        index: ".kibana_sales"
 
     ###########################
     # OPS Actual human users...
@@ -118,7 +118,7 @@ readonlyrest:
       kibana:
         access: ro
         hide_apps: ["readonlyrest_kbn", "kibana:dev_tools"]
-        kibana_index: ".kibana_ops"
+        index: ".kibana_ops"
 
     - name: "::RW_OPS::"
       auth_key: ops_rw_usr:dev5
@@ -126,14 +126,14 @@ readonlyrest:
       kibana:
         access: rw
         hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
-        kibana_index: ".kibana_ops"
+        index: ".kibana_ops"
 
     - name: "::ADMIN_OPS::"
       auth_key: ops_admin_usr:dev6
       indices: [".kibana_ops", "logstash-*"]
       kibana:
         access: admin
-        kibana_index: ".kibana_ops"
+        index: ".kibana_ops"
 ```
 
 ## Setup: the Kibana side

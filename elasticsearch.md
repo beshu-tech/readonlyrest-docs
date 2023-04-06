@@ -918,8 +918,8 @@ readonlyrest:
 ```yaml
 kibana:
   access: ro # required
-  kibana_index: ".kibana_custom_index" # optional
-  kibana_template_index: ".kibana_template" # optional
+  index: ".kibana_custom_index" # optional
+  template_index: ".kibana_template" # optional
   hide_apps: [ "Security", "Enterprise Search"] # optional
   allowed_api_paths: # optional
     - "^/api/spaces/.*$"
@@ -935,7 +935,7 @@ The `kibana` rule gathers all ROR Kibana-related settings that it may need to pr
 
 Enables the minimum set of actions necessary for browsers to use Kibana.
 
-This "macro" allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.kibana_index`](elasticsearch.md#kibana_index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
+This "macro" allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.index`](elasticsearch.md#index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
 
 The idea is that with one single sub-rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
 
@@ -952,7 +952,7 @@ Possible access levels:
 
 This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
-##### `kibana_index` 
+##### `index` 
 
 **Default value is `.kibana`**
 
@@ -964,7 +964,7 @@ If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi t
 
 It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
-##### `kibana_template_index`
+##### `template_index`
 
 Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
 
@@ -1005,13 +1005,13 @@ It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
 `kibana_index: .kibana-user1`
 
-**⚠️Deprecated**: it's equivalent of [`kibana.kibana_index`](elasticsearch.md#kibana_index). Should no longer be used.
+**⚠️Deprecated**: it's equivalent of [`kibana.index`](elasticsearch.md#index). Should no longer be used.
 
 #### `kibana_template_index`
 
 `kibana_template_index: .kibana_template`
 
-**⚠️Deprecated**: it's equivalent of [`kibana.kibana_template_index`](elasticsearch.md#kibana_template_index). Should no longer be used.
+**⚠️Deprecated**: it's equivalent of [`kibana.template_index`](elasticsearch.md#template_index). Should no longer be used.
 
 #### `kibana_hide_apps`
 
@@ -1278,7 +1278,7 @@ Before adding the `filter` rule:
     groups: ["Personal"]
     kibana:
       access: rw
-      kibana_index: ".kibana_@{user}"
+      index: ".kibana_@{user}"
       hide_apps: ["readonlyrest_kbn", "timelion"]
     indices: ["r*", ".kibana_@{user}"]
 ```
@@ -1296,7 +1296,7 @@ After adding the `filter` rule \(using the block duplication strategy\).
       indices: ["r*", ".kibana_@{user}"]
       kibana:
         access: rw
-        kibana_index: ".kibana_@{user}"
+        index: ".kibana_@{user}"
         hide_apps: ["readonlyrest_kbn", "timelion"]
 ```
 
@@ -1852,7 +1852,7 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `groups_or`, `groups_and`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.kibana_index`, `kibana.kibana_template_index`, `kibana.metadata`. The variables are related to different contexts:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `groups_or`, `groups_and`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`. The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
@@ -1976,7 +1976,7 @@ readonlyrest:
     - name: "Identify a personal kibana index where each user is supposed to save their dashboards"
       kibana:
         access: rw
-        kibana_index: ".kibana_@{header:x-nginx-user}"
+        index: ".kibana_@{header:x-nginx-user}"
 ```
 
 ##### Dynamic variables from JWT claims

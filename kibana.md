@@ -1043,14 +1043,14 @@ readonlyrest:
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana"
+      index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana_template"
+      index: ".kibana_template"
 
  users:
  - username: administrator
@@ -1093,21 +1093,21 @@ readonlyrest:
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana"
+      index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana_template"
+      index: ".kibana_template"
 
   # Newly added tenant!
   - name: user1
     auth_key: user1:passwd
     kibana:
       access: rw
-      kibana_index: ".kibana_user1"
+      index: ".kibana_user1"
 
  users:
  - username: administrator
@@ -1116,7 +1116,7 @@ readonlyrest:
 `
 ```
 
-Now try to login as user1, and ReadonlyREST Enterprise should initialise the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.
+Now try to login as user1, and ReadonlyREST Enterprise should initialize the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.
 
 ## Impersonation
 

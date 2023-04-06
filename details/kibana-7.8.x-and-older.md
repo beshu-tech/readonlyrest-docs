@@ -829,14 +829,14 @@ readonlyrest:
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana"
+      index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana_template"
+      index: ".kibana_template"
 
  users:
  - username: administrator
@@ -879,21 +879,21 @@ readonlyrest:
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana"
+      index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
     kibana:
       access: admin
-      kibana_index: ".kibana_template"
+      index: ".kibana_template"
 
   # Newly added tenant!
   - name: user1
     auth_key: user1:passwd
     kibana:
       access: rw
-      kibana_index: ".kibana_user1"
+      index: ".kibana_user1"
 
  users:
  - username: administrator
