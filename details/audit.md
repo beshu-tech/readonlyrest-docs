@@ -12,7 +12,7 @@ Here is an example of the data points contained in each audit event. We can leve
       "Host",
       "User-Agent"
     ],
-    "acl_history": "[[::LOGSTASH::->[auth_key->false]], [::RW::->[kibana_access->true, indices->true, kibana_hide_apps->true, auth_key->true]], [kibana->[auth_key->false]], [::RO::->[auth_key->false]]]",
+    "acl_history": "[[::LOGSTASH::->[auth_key->false]], [kibana->[auth_key->false]], [::RO::->[auth_key->false]], [::RW::->[kibana->true, indices->true, auth_key->true]]]",
     "origin": "127.0.0.1",
     "final_state": "ALLOWED",
     "task_id": 1158,
