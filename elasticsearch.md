@@ -924,7 +924,7 @@ kibana:
   allowed_api_paths: # optional
     - "^/api/spaces/.*$"
     - http_method: POST
-      path: "^/api/saved_objects/.*$"
+      http_path: "^/api/saved_objects/.*$"
   metadata: 
     dept: "@{jwt:tech.beshu.department}"
     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
@@ -987,7 +987,7 @@ kibana:
   [...]
   allowed_api_paths: # optional
     - http_method: POST
-      path: "^/api/saved_objects/.*$"
+      http_path: "^/api/saved_objects/.*$"
 ```
 
 ##### `metadata`
