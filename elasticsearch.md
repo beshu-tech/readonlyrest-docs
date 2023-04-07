@@ -927,6 +927,7 @@ kibana:
       path: "^/api/saved_objects/.*$"
   metadata: 
     dept: "@{jwt:tech.beshu.department}"
+    alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
 ```
 
 The `kibana` rule gathers all ROR Kibana-related settings that it may need to provide great user experience. The rule consists of several sub-rules:
