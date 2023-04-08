@@ -18,7 +18,7 @@ We can also reject the specific request for example based on the custom metadata
           rejectBasicAuth: true
 ```
 
-2. Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
+2. Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`. it's injected at the end of the HTML Body tag of the Kibana UI frontend code.
 
 ```js
 async function customMiddleware(req, res, next) {
