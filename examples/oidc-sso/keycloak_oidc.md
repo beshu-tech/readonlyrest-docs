@@ -104,7 +104,7 @@ http.type: ssl_netty4 # <-- needed for ROR SSL
 
 Write in **readonlyrest.yml**
 
-```
+```yaml
 readonlyrest:
 
     ssl:
@@ -123,7 +123,9 @@ readonlyrest:
       verbosity: error
 
     - name: "ReadonlyREST Enterprise instance #1"
-      kibana_index: ".kibana_sso"
+      kibana:
+        access: ro
+        index: ".kibana_sso"
       ror_kbn_auth:
         name: "kbn1"
 

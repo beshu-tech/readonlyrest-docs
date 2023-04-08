@@ -2,7 +2,7 @@
 description: Available rorRequest API
 ---
 
-# Available rorRequest API
+# Available `rorRequest` API
 
 You can access the rorRequest API via `req.rorRequest` in your custom middleware. The available options are:
 

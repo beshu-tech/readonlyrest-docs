@@ -255,21 +255,24 @@ readonlyrest:
 
     - name: "::RO::"
       auth_key: ro:dev
-      kibana_access: ro
       indices: [ ".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
+      kibana:
+        access: ro
+        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
 
     - name: "::RW::"
       auth_key: rw:dev
-      kibana_access: rw
       indices: [".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
+      kibana:
+        access: rw
+        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
 
 
     - name: "::ADMIN::"
       auth_key: admin:dev
       # KIBANA ADMIN ACCESS NEEDED TO EDIT SECURITY SETTINGS IN ROR KIBANA APP!
-      kibana_access: admin
+      kibana:
+        access: admin
 
     - name: "::WEBSITE SEARCH BOX::"
       indices: ["public"]
@@ -280,8 +283,8 @@ readonlyrest:
 
 Whatever your configuration ends up being, remember:
 
-* The admin user has `kibana_access: admin`
-* Remember to use `kibana_hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
+* The admin user has `kibana.access: admin`
+* Remember to use `kibana.hide_apps: ["readonlyrest_kbn"]` to hide the ReadonlyREST icon from who is not meant to use it (makes for a better UX).
 
 #### Rules ordering matters
 
@@ -293,7 +296,7 @@ So, some request with credentials can be let through from one of the first block
 
 Take this example of troublesome ACL:
 
-```
+```yaml
     # PROBLEMATIC SETTINGS (EXAMPLE) ⚠️
 
     access_control_rules:
@@ -304,7 +307,8 @@ Take this example of troublesome ACL:
 
     - name: "::ADMIN::"
       auth_key: admin:dev
-      kibana_access: admin
+      kibana:
+        access: admin
 ```
 
 The user will be able to login because the login request will be allowed by the first ACL block. But the ACL will not have resolved any metadata about the user identity (credentials checking was ignored)!
@@ -313,14 +317,15 @@ This means the response to the Kibana login request will contain no user identit
 
 The solution to this is to reorder the ACL blocks, so the ones that authenticate Kibana users are on the top.
 
-```
+```yaml
     # SOLUTION: KIBANA USER AUTH RELATED BLOCKS GO FIRST! ✅👍
 
     access_control_rules:
 
     - name: "::ADMIN::"
       auth_key: admin:dev
-      kibana_access: admin
+      kibana:
+        access: admin
 
     - name: "::FIRST BLOCK::"
       hosts: ["127.0.0.1"]
@@ -347,7 +352,7 @@ Possible values: `"login", "tenancyHop", "never"`.
 
 #### Kibana App strings
 
-Examples of valid arguments for the `kibana_hide_apps: [...]` rule (readonlyrest.yml)
+Examples of valid arguments for the `kibana.hide_apps: [...]` rule (readonlyrest.yml)
 
 | hide-app key                     | App name         | App url                                                                                                                                                                                                                         |
 | -------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -521,7 +526,7 @@ In order for the user identity information to flow securely from Kibana to Elast
 
 Edit `readonlyrest.yml`
 
-```
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -613,7 +618,7 @@ This part is identical as seen in SAML connectors. In order for the user identit
 
 Edit `readonlyrest.yml`
 
-```
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -635,7 +640,7 @@ readonlyrest:
 
 If you have configured OIDC with the `groupsParameter` ( _See below_ ), you can also restrict ACL to specific groups:
 
-```
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -761,7 +766,7 @@ readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
 
 ## Kibana UI tweaking
 
-With ReadonlyREST Enterprise, it's possible to inject custom CSS and Javascript to achieve a customised user experience for your users/tenants.
+With ReadonlyREST Enterprise, it's possible to inject custom CSS and Javascript to achieve a customized user experience for your users/tenants.
 
 ### Inject custom CSS in Kibana
 
@@ -799,7 +804,7 @@ When a tenants logs in for the first time, ReadonlyREST Enterprise will create t
 
 The issue is that "user1"'s user experience will be really raw as they will see a completely blank Kibana tenancy. Not even a default index pattern will be present. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana\_access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
 
-To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy.
+To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create a template kibana index from which all the Kibana objects will be copied over to the newly initialized tenancy.
 
 ### How to use tenancy templating
 
@@ -809,7 +814,7 @@ An administrator will need to create the template tenancy, populate it with the 
 
 Let's start to add to our access control list (found in $ES\_PATH\_CONF/config/readonlyrest.yml, or ReadonlyREST App in Kibana) a local user "administrator" that will belong to two tenancies: the default one (stored in .kibana index), and the template one (stored in .kibana\_template index).
 
-```
+```yaml
 readonlyrest:
   audit_collector: true
 
@@ -822,14 +827,16 @@ readonlyrest:
   - name: "Admin Tenancy"
     groups: ["Admins"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana"
+    kibana:
+      access: admin
+      index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana_template"
+    kibana:
+      access: admin
+      index: ".kibana_template"
 
  users:
  - username: administrator
@@ -851,13 +858,13 @@ Open kibana.yml and add the following line:
 readonlyrest_kbn.kibanaIndexTemplate: ".kibana_template"
 ```
 
-Now, ReadonlyREST Enterprise will look for the ".kibana\_template" index, and try to copy over all its documents every time a new kibana index is initialised to support a new tenancy.
+Now, ReadonlyREST Enterprise will look for the ".kibana\_template" index, and try to copy over all its documents every time a new kibana index is initialized to support a new tenancy.
 
 ### Try it out
 
 Restart Kibana with the new setting. Add a new tenancy to the ACL:
 
-```
+```yaml
 readonlyrest:
   audit_collector: true
 
@@ -870,20 +877,23 @@ readonlyrest:
   - name: "Admin Tenancy"
     groups: ["Admins"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana"
+    kibana:
+      access: admin
+      index: ".kibana"
 
   - name: "Template Tenancy"
     groups: ["Template"]
     verbosity: error
-    kibana_access: admin
-    kibana_index: ".kibana_template"
+    kibana:
+      access: admin
+      index: ".kibana_template"
 
   # Newly added tenant!
   - name: user1
     auth_key: user1:passwd
-    kibana_access: rw
-    kibana_index: ".kibana_user1"
+    kibana:
+      access: rw
+      index: ".kibana_user1"
 
  users:
  - username: administrator
@@ -892,4 +902,4 @@ readonlyrest:
 `
 ```
 
-Now try to login as user1, and ReadonlyREST Enterprise should initialise the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.
+Now try to login as user1, and ReadonlyREST Enterprise should initialize the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.

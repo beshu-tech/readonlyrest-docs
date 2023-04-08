@@ -30,7 +30,7 @@
     * [Configuration details](examples/elastic-cloud-cluster-integration/details.md)
   * [Custom middleware](examples/custom-middleware/README.md)
     * [Enriching the metadata](examples/custom-middleware/enriching-the-metadata.md)
-    * [Reject machine to machine traffic using custom metadata ACL rules](examples/custom-middleware/reject-machine-to-machine-traffic-using-custom-metadata-ACL-rules.md)
+    * [Reject machine-to-machine traffic using custom metadata ACL rules](examples/custom-middleware/reject-machine-to-machine-traffic-using-custom-metadata-ACL-rules.md)
     * [Available rorRequest API](examples/custom-middleware/available-ror-request-api.md)
     * [User Session identity](examples/custom-middleware/reject-machine-to-machine-traffic-using-custom-metadata-ACL-rules.md)
 * [Contribution License Agreement](contributing.md)

@@ -903,7 +903,8 @@ For example:
 readonlyrest:
   access_control_rules:
     - name: "JWT auth for viewer group (role), limited to certain usernames"
-      kibana_access: ro
+      kibana:
+        access: ro
       users: ["root", "*@mydomain.com"]
       jwt_auth:
         name: "jwt_provider_1"
@@ -912,15 +913,44 @@ readonlyrest:
 
 ### Kibana-related rules
 
-#### `kibana_access`
+#### `kibana`
 
-`kibana_access: ro`
+```yaml
+kibana:
+  access: ro # required
+  index: ".kibana_custom_index" # optional
+  template_index: ".kibana_template" # optional
+  hide_apps: [ "Security", "Enterprise Search"] # optional
+  allowed_api_paths: # optional
+    - "^/api/spaces/.*$"
+    - http_method: POST
+      http_path: "^/api/saved_objects/.*$"
+  metadata: 
+    dept: "@{jwt:tech.beshu.department}"
+    alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+```
+
+The `kibana` rule gathers all ROR Kibana-related settings that it may need to provide great user experience. The rule consists of several sub-rules:
+
+`alert_message` Metadata can be used on the Kibana side to display information to the user on login to the Kibana.
+
+Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`. it's injected at the end of the HTML Body tag of the Kibana UI frontend code.
+
+```js
+const alertMessage = window.ROR_METADATA.customMetadata && window.ROR_METADATA.customMetadata.alert_message;
+
+if (alertMessage) {
+  alert(alertMessage);
+}
+```
+
+##### `access`
 
 Enables the minimum set of actions necessary for browsers to use Kibana.
 
-This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. This rule allows a set of actions towards the designated kibana index \(see `kibana_index` rule - defaults to ".kibana"\), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
+This "macro" allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.index`](elasticsearch.md#index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
 
-The idea is that with one single rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
+The idea is that with one single sub-rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
 
 Possible access levels:
 
@@ -928,38 +958,80 @@ Possible access levels:
 * `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created.
 * `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified.
 * `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app
-* `unrestricted`: when no `kibana_access` rule is set, no action is restricted. This option is equivalent of no `kibana_access` rule used. 
+* `api_only`: only [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) actions are allowed
+* `unrestricted`: no action is restricted
 
-**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana_access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
+**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana.access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
 
-This rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
+This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
-#### `kibana_index`
-
-`kibana_index: .kibana-user1`
+##### `index` 
 
 **Default value is `.kibana`**
 
-Specify to what index we expect Kibana to attempt to read/write its settings \(use this together with `kibana.index` setting in kibana.yml.\)
+Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in the `kibana.yml` file)
 
-This value directly affects how `kibana_access` works because at all the access levels \(yes, even admin\), `kibana_access` rule will **not** match any _write_ request in indices that are not the designated kibana index.
+This value directly affects how `kibana.access` works because at all the access levels \(yes, even admin\), `kibana.access` sub-rule will **NOT** match any _write_ request in indices that are not the designated kibana index.
 
 If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
 
-#### `kibana_index_template`
+It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
-`kibana_index_template: .kibana_template`
+##### `template_index`
 
 Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
 
-#### `kibana_hide_apps`
+It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
-`kibana_hide_apps: [ "Security", "Enterprise Search"]`
+##### `hide_apps`
 
 Specify which Kibana apps and menu items should be hidden. 
 This feature will work in ReadonlyREST PRO and Enterprise.
 
 For more information on the ROR's Kibana Hide Apps feature, see [Hiding Kibana Apps](kibana.md#hiding-kibana-apps).
+
+##### `allowed_api_paths`
+
+Used to define which parts of [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) can be used. The sub-rule requires to define a list of [regular expressions](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) which describes the API paths. Additionally, when you would like to restrict only specific HTTP methods of the API, you can use the extended format of the sub-rule:
+
+```yaml
+kibana:
+  [...]
+  allowed_api_paths: # optional
+    - http_method: POST
+      http_path: "^/api/saved_objects/.*$"
+```
+
+##### `metadata`
+
+User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](./kibana.md#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
+
+It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
+
+#### `kibana_access`
+
+`kibana_access: ro`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.access`](elasticsearch.md#access). Should no longer be used.
+
+#### `kibana_index`
+
+`kibana_index: .kibana-user1`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.index`](elasticsearch.md#index). Should no longer be used.
+
+#### `kibana_template_index`
+
+`kibana_template_index: .kibana_template`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.template_index`](elasticsearch.md#template_index). Should no longer be used.
+
+#### `kibana_hide_apps`
+
+`kibana_hide_apps: [ "Security", "Enterprise Search"]`
+
+**⚠️Deprecated**: it's equivalent of [`kibana.hide_apps`](elasticsearch.md#hide_apps). Should no longer be used.
+
 
 ### Elasticsearch level rules
 
@@ -1177,7 +1249,8 @@ For example, this ACL block would perfectly support a complete Kibana session. T
 ```yaml
     - name: "::RW_USER::"
       auth_key: rw_user:pwd
-      kibana_access: rw
+      kibana:
+        access: rw
       indices: ["r*", ".kibana"]
 ```
 
@@ -1186,7 +1259,8 @@ However, when we introduce a filter \(or fields\) rule, this block will be able 
 ```yaml
     - name: "::RW_USER::"
       auth_key: rw_user:pwd
-      kibana_access: rw  # <-- won't work because of filter present in block
+      kibana:
+        access: rw  # <-- won't work because of filter present in block
       indices: ["r*", ".kibana"]
       filter: '{"query_string":{"query":"DestCountry:FR"}}'  # <-- will reject all write requests! :(
 ```
@@ -1201,7 +1275,8 @@ The solution is to duplicate the block. The first one will intercept \(and filte
 
     - name: "::RW_USER (allow remaining requests)::"
       auth_key: rw_user:pwd
-      kibana_access: rw
+      kibana:
+        access: rw
       indices: ["r*", ".kibana"]
 ```
 
@@ -1214,10 +1289,11 @@ Before adding the `filter` rule:
 ```text
   - name: "::PERSONAL_GRP::"
     groups: ["Personal"]
-    kibana_access: rw
+    kibana:
+      access: rw
+      index: ".kibana_@{user}"
+      hide_apps: ["readonlyrest_kbn", "timelion"]
     indices: ["r*", ".kibana_@{user}"]
-    kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
-    kibana_index: ".kibana_@{user}"
 ```
 
 After adding the `filter` rule \(using the block duplication strategy\).
@@ -1230,10 +1306,11 @@ After adding the `filter` rule \(using the block duplication strategy\).
 
     - name: "::PERSONAL_GRP::"
       groups: ["Personal"]
-      kibana_access: rw
       indices: ["r*", ".kibana_@{user}"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion"]
-      kibana_index: ".kibana_@{user}"
+      kibana:
+        access: rw
+        index: ".kibana_@{user}"
+        hide_apps: ["readonlyrest_kbn", "timelion"]
 ```
 
 #### `response_fields`
@@ -1479,7 +1556,7 @@ ReadonlyREST can write events very similarly to Logstash into to a series of ind
       "Host",
       "User-Agent"
     ],
-    "acl_history": "[[::LOGSTASH::->[auth_key->false]], [::RW::->[kibana_access->true, indices->true, kibana_hide_apps->true, auth_key->true]], [kibana->[auth_key->false]], [::RO::->[auth_key->false]]]",
+    "acl_history": "[[::LOGSTASH::->[auth_key->false]], [::RW::->[kibana->true, indices->true, auth_key->true]], [kibana->[auth_key->false]], [::RO::->[auth_key->false]]]",
     "origin": "127.0.0.1",
     "final_state": "ALLOWED",
     "task_id": 1158,
@@ -1520,7 +1597,8 @@ readonlyrest:
 
     - name: "::RO::"
       auth_key: simone:ro
-      kibana_access: ro
+      kibana:
+        access: ro
 ```
 
 ### Extended audit
@@ -1787,7 +1865,7 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`,`indices`, `users`, `groups`, `groups_and`, `fields`, `filter`,  `repositories`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana_index`, `kibana_template_index`. The variables are related to different contexts:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `groups_or`, `groups_and`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`. The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
@@ -1909,8 +1987,9 @@ readonlyrest:
     access_control_rules:
 
     - name: "Identify a personal kibana index where each user is supposed to save their dashboards"
-      kibana_access: rw
-      kibana_index: ".kibana_@{header:x-nginx-user}"
+      kibana:
+        access: rw
+        index: ".kibana_@{header:x-nginx-user}"
 ```
 
 ##### Dynamic variables from JWT claims
@@ -2301,19 +2380,22 @@ The information about the username can be extracted from the "claims" inside a J
 readonlyrest:
     access_control_rules:
     - name: Valid JWT token with a viewer group
-      kibana_access: ro
+      kibana:
+        access: ro
       jwt_auth:
         name: "jwt_provider_1"
         groups: ["viewer"]
 
     - name: Valid JWT token with a writer group
-      kibana_access: rw
+      kibana:
+        access: rw
       jwt_auth:
         name: "jwt_provider_1"
         groups: ["writer"]
 
     - name: Valid JWT token with a viewer and writer groups
-      kibana_access: rw
+      kibana:
+        access: rw
       jwt_auth:
         name: "jwt_provider_1"
         groups_and: ["writer", "viewer"]
