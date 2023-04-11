@@ -4,8 +4,8 @@ description: Enriching the metadata
 
 # Enriching the metadata
 
-The metadata is the user-specific data available after the Kibana user successfully logs in. Thanks to the custom middleware, you can enrich metadata and use them in the kibana custom js file.
-For example to load a custom logo to the kibana you can:
+The metadata is the user-specific data available after the Kibana user successfully logs in. Thanks to the custom middleware, you can enrich metadata and use them in the Kibana custom js file.
+For example to load a custom logo to the Kibana you can:
 1. Declare `readonlyrest_kbn.custom_middleware_inject_file: 'path/to/custom_middleware_inject_file.js'` in the kibana.yml and declare `custom_middleware_inject_file.js`
 
 ```ts
@@ -36,11 +36,11 @@ if (metadata && metadata.username === 'admin') {
   }
 ```
 
-Now, enriched metadata will be available in the custom kibana js script, where you can perform client based operations like logo replacement.
+Now, enriched metadata will be available in the custom kibana js script, where you can perform client-based operations like logo replacement.
 
 **⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
 
-2. To replace the logo, we need to declare the custom kibana js file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
+2. To replace the logo, we need to declare the custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`
 
 ```js
 const logoHeader = document.querySelector('.euiHeaderLogo');
@@ -107,4 +107,4 @@ if (window.ROR_METADATA.newLogo) {
 }
 ```
 All session metadata will be available via `window.ROR_METADATA` property. To get your custom logo, just use `window.ROR_METADATA.newLogo` value. In the example above, after login in as a user with username `admin` you will see a custom logo.
-The whole example is a little complex but seems, kibana logo is also a loading indicator, we need to detect the loading state, replace the logo with a spinner, and after the loading, back the custom logo again.
+The whole example is a little complex but seems, Kibana logo is also a loading indicator, we need to detect the loading state, replace the logo with a spinner, and after the loading, back the custom logo again.

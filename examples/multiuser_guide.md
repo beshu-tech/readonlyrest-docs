@@ -34,7 +34,7 @@ If you don't have the ROR [PRO](https://readonlyrest.com/pro.html) \(or [Enterpr
 
 On the same directory with your `elasticsearch.yml` \(default: `config/`, create a file called `readonlyrest.yml` and write the following settings into it.
 
-```text
+```yaml
 readonlyrest:
 
     # IMPORTANT FOR LOGIN/LOGOUT TO WORK WITH ROR PLUGIN FOR KIBANA
@@ -62,20 +62,23 @@ readonlyrest:
     #######################
     - name: "::RO::"
       auth_key: ro_usr:dev
-      kibana_access: ro
       indices: [ ".kibana", "logstash-2019*"] # <--- can see only data from 2019
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+      kibana:
+        access: ro
+        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
     - name: "::RW::"
       auth_key: rw_usr:dev
-      kibana_access: rw
       indices: [".kibana", "logstash-*"]
-      kibana_hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+      kibana:
+        access: rw
+        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
     - name: "::ADMIN::"
       auth_key: admin_usr:dev
-      kibana_access: admin
       indices: [".kibana", "logstash-*"]
+      kibana:
+        access: admin
 ```
 
 ## Setup: the Kibana side
@@ -84,7 +87,7 @@ With ROR, we try as much as possible to keep all the settings withing the Elasti
 
 Open up `config/kibana.yml` and add/edit the following settings:
 
-```text
+```yaml
 # Kibana server use ::KIBANA-SRV:: credentials
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
@@ -94,13 +97,13 @@ elasticsearch.password: "kibana"
 
 Fire up Elasticsearch
 
-```text
+```bash
 $ bin/elasticsearch
 ```
 
 And then Kibana
 
-```text
+```bash
 $ bin/kibana
 ```
 

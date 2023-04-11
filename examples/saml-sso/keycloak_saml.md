@@ -4,22 +4,22 @@ description: SAML SSO Integration with Keycloak as an identity provider.
 
 # Keycloak
 
-This document will guide you through the task of setting up an excellent, open source identity provider ([KeyCloak](https://www.keycloak.org)) to work as an external authenticator and authorizer system for your ELK stack. The scenario is the usual:
+This document will guide you through the task of setting up an excellent, open-source identity provider ([KeyCloak](https://www.keycloak.org)) to work as an external authenticator and authorizer system for your ELK stack. The scenario is the usual:
 
-* A centralised, large Elasticsearch cluster
+* A centralized, large Elasticsearch cluster
 * A Kibana installation
-* We want one, centralised multi tenant Elasticsearch + Kibana
+* We want one, centralized multi-tenant Elasticsearch + Kibana
 
 But with some more enterprise requirements:
 
 * Users need to be able to change their passwords independently
 * Users need to verify their emails
 * Group managers need to be able to add, remove, block (only) their users.
-* [Multi factor authentication (MFA)](https://www.keycloak.org/docs/latest/server\_admin/#one-time-password-otp-policies) is a requirement.
+* [Multi-factor authentication (MFA)](https://www.keycloak.org/docs/latest/server\_admin/#one-time-password-otp-policies) is a requirement.
 
 ## What is Keycloak
 
-Keycloak is an advanced authentication server that lets user administer their credentials, and speaks many authentication protocols, Including SAML2.0 SSO.
+Keycloak is an advanced authentication server that lets user administer their credentials and speaks many authentication protocols, Including SAML2.0 SSO.
 
 ### Setup KeyCloak
 
@@ -35,7 +35,7 @@ If you imported the JSON file, you should have a "ror" realm, and a SAML client 
 
 ### Configure Keycloak to work with ROR
 
-First we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
+First, we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
 ![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2) (5).png>)
 
@@ -53,11 +53,11 @@ Now that the client is saved, let's observe the "configure" tab, here we will ex
 
 ### Install ReadonlyREST Enterprise for Kibana
 
-Please refer to our [documentation](../../kibana.md) on how to obtain and install ReadonlyREST Enterprise for Kibana. Also remember that it relies on the Elasticsearch plugin to be configured as well.
+Please refer to our [documentation](../../kibana.md) on how to obtain and install ReadonlyREST Enterprise for Kibana. Also, remember that it relies on the Elasticsearch plugin to be configured as well.
 
 ### Setup the SAML connector
 
-Provided that you have ReadonlyREST Enterprise installed configured, you can add the following configuration:
+Provided that you have ReadonlyREST Enterprise installed and configured, you can add the following configuration:
 
 **kibana.yml**
 
@@ -96,15 +96,15 @@ readonlyrest_kbn:
       cert: /etc/ror/integration/certs/dag.crt # from KC realm keys tab <-- It can be also provided a string value 
 ```
 
-You can find a public PEM-encoded X.509 signing certificate as a string value by selecting the "keys" tab in your newly created realm. After clicking on a cert button, you can copy the value into `kibana.yml` saml config `cert` parameter.
+You can find a public PEM-encoded X.509 signing certificate as a string value by selecting the "keys" tab in your newly created realm. After clicking on a cert button, you can copy the value into `kibana.yml` SAML config `cert` parameter.
 
 ![keycloak\_screenshot](../../.gitbook/assets/kc\_saml\_keys\_tab.png)
 
-Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` (on the elasticsearch side). Security settings can also be changed via the ReadonlyREST Kibana app.
+Don't forget setting up SAML requires some changes to security settings in `readonlyrest.yml` (on the Elasticsearch side). Security settings can also be changed via the ReadonlyREST Kibana app.
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our Elasticsearch needs to be available on https (more detailed info in our [documentation](../../elasticsearch.md#encryption)), so we modify the elasticsearch.yml
+Our Elasticsearch needs to be available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)), so we modify the elasticsearch.yml
 
 **append to elasticsearch.yml**
 
@@ -115,7 +115,7 @@ http.type: ssl_netty4 # <-- needed for ROR SSL
 
 Write in **readonlyrest.yml**
 
-```
+```yaml
 readonlyrest:
 
     ssl:
@@ -137,7 +137,9 @@ readonlyrest:
       verbosity: error
 
     - name: "ReadonlyREST Enterprise instance #1"
-      kibana_index: ".kibana_sso"
+      kibana:
+        access: ro
+        index: ".kibana_sso"
       ror_kbn_auth:
         name: "kbn1"
 
