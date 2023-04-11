@@ -115,7 +115,10 @@ readonlyrest:
 
     prompt_for_basic_auth: false
 
-    audit_collector: true
+    audit:
+      enabled: true
+      outputs: 
+      - type: index
 
     access_control_rules:
     - name: "::KIBANA-SRV::"
