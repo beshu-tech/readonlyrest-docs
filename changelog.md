@@ -1,5 +1,27 @@
 # Changelog
 
+### (2023-04-15) What's new in **ROR 1.48.0**
+* **🚨Security Fix** (ES) [CVE-2022-45688](https://nvd.nist.gov/vuln/detail/CVE-2022-45688)
+* **🚀New** (KBN/ES) Introducing "Custom Middleware" functionality
+* **🚀New** (KBN/ES) `allowed_api_paths` support in the `kibana` ACL rule
+* **🚀New** (KBN) Add CSRF protection in the login form
+* **🚀New** (KBN) Restore deprecated “kibana.index” support for Kibana > 8.x
+* **🚀New** (ES) the new `kibana` rule (instead of `kibana_access`, `kibana_index`, `kibana_hide_apps` & `kibana_template_index` rules)
+* **🚀New** (ES) all Kibana-related rules are gathered in one, new `kibana` ACL rule
+* **🚀New** (ES) audit supports a new output type: `log`
+* **🧐Enhancement** (KBN) Provide a way to disable multi-tenancy in ROR Enterprise
+* **🧐Enhancement** (KBN) Realign index templates behaviour to the old platform
+* **🧐Enhancement** (KBN) Error logs when SAML obtains an unusable username from the assertion
+* **🧐Enhancement** (KBN) Test configuration warnings improvement
+* **🧐Enhancement** (ES) [Added support to override default response code for not started ROR](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/794)
+* **🐞Fix** (KBN) Security card not hidden by default
+* **🐞Fix** (KBN) Hidden apps regex with two “or” operators don’t hide all kibana apps
+* **🐞Fix** (KBN) Fix Alerting Rules resulting in logout issue
+* **🐞Fix** (KBN) Fix audit dashboard
+* **🐞Fix** (KBN) Stop handling 500 error from `api/lens/existing_fields`
+* **🐞Fix** (KBN) Fix lens app
+* **🐞Fix** (KBN < 7.9.x) using a custom kibana index in cooperation with ROR Free
+
 ### (2023-02-13) What's new in **ROR 1.47.0**
 * **🚨Security Fix** (ES) "/" endpoint was not protected for ES 8.x
 * **🚨Security Fix** (ES) "/_cat" endpoint was not protected for all ES versions
