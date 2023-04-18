@@ -2,13 +2,12 @@
 
 ### (2023-04-15) What's new in **ROR 1.48.0**
 * **🚨Security Fix** (ES) [CVE-2022-45688](https://nvd.nist.gov/vuln/detail/CVE-2022-45688)
-* **🚀New** (KBN/ES) Introducing "Custom Middleware" functionality
-* **🚀New** (KBN/ES) `allowed_api_paths` support in the `kibana` ACL rule
+* **🚀New** (KBN/ES) [Introducing "Custom Middleware" functionality](https://docs.readonlyrest.com/kibana#custom-middleware)
+* **🚀New** (KBN/ES) [`allowed_api_paths` support in the `kibana` ACL rule](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules)
 * **🚀New** (KBN) Add CSRF protection in the login form
 * **🚀New** (KBN) Restore deprecated “kibana.index” support for Kibana > 8.x
-* **🚀New** (ES) the new `kibana` rule (instead of `kibana_access`, `kibana_index`, `kibana_hide_apps` & `kibana_template_index` rules)
-* **🚀New** (ES) all Kibana-related rules are gathered in one, new `kibana` ACL rule
-* **🚀New** (ES) audit supports a new output type: `log`
+* **🚀New** (ES) [all Kibana-related rules are gathered in one, new `kibana` ACL rule](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules)
+* **🚀New** (ES) [audit supports a new output type: `log`](https://docs.readonlyrest.com/elasticsearch/audit)
 * **🧐Enhancement** (KBN) Provide a way to disable multi-tenancy in ROR Enterprise
 * **🧐Enhancement** (KBN) Realign index templates behaviour to the old platform
 * **🧐Enhancement** (KBN) Error logs when SAML obtains an unusable username from the assertion
