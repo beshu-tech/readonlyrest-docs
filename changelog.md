@@ -2,6 +2,7 @@
 
 ### (2023-04-15) What's new in **ROR 1.48.0**
 * **🚨Security Fix** (ES) [CVE-2022-45688](https://nvd.nist.gov/vuln/detail/CVE-2022-45688)
+* **🚀New** (KBN) 8.7.1, 7.17.10 support
 * **🚀New** (ES) 8.7.1, 7.17.10 support
 * **🚀New** (KBN/ES) [Introducing "Custom Middleware" functionality](https://docs.readonlyrest.com/kibana#custom-middleware)
 * **🚀New** (KBN/ES) [`allowed_api_paths` support in the `kibana` ACL rule](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules)
