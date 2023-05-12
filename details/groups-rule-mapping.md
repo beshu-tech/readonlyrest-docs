@@ -45,16 +45,16 @@ readonlyrest:
   
   # DETAILED GROUP MAPPING EXAMPLE
   # LDAP authenticated user + authorization via LDAP + groups detailed mapping (any LDAP user is valid; groups from `ldap1` are mapped to local groups) 
-  # Users belonging to LDAP `ldap_role_devops` OR `ldap_role_ops` are mapped to "devops" local group 
+  # Users belonging to LDAP role `ldap_role_ops`, or any other LDAP role that matched `ldap_*_devops` pattern, will be mapped to "devops" local group 
   # AND 
   # Users belonging to LDAP `ldap_role_dev` are mapped to "developers" local group
   - username: "*"
     groups: 
-      - devops: ["ldap_role_devops", "ldap_role_ops"]
+      - devops: ["ldap_role_ops", "ldap_*_devops"]
       - developers: ["ldap_role_dev"]
     ldap_auth:
       name: "ldap1"
-      groups: ["ldap_role_devops", "ldap_role_ops", "ldap_role_dev"]
+      groups: ["ldap_*_devops", "ldap_role_ops", "ldap_role_dev"]
 
   external_authentication_service_configs:
   - name: "ext1"
@@ -105,14 +105,14 @@ We have just "mapped" the external groups `external_group1`, `external_group2` r
 ```yml
   - username: "*"
     groups: 
-      - devops: ["ldap_role_devops", "ldap_role_ops"]
+      - devops: ["ldap_*_devops", "ldap_role_ops"]
       - developers: ["ldap_role_dev"]
     ldap_auth:
       name: "ldap1"
       groups: ["ldap_role_devops", "ldap_role_ops", "ldap_role_dev"]
 ```
 The third element of `users` array (in the example above) is similar, but we use one rule which is authentication and authorization rule at the same time (it can authenticate a user and then authorize him). And that's how we defined the following mappings: 
-* LDAP roles `ldap_role_devops`, `ldap_role_ops` are mapped to `devops` ROR's local group
+* `ldap_role_ops` LDAP role, and any other LDAP role matching `ldap_*_devops` pattern, are mapped to `devops` ROR's local group
 * LDAP role `ldap_role_dev` is mapped to `developers` ROR's local group
 
 The "detailed" mapping offers a bit more structured approach to group mapping, and although less intuitive at first sight, it's more powerful and concise.
