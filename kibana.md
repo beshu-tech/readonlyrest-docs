@@ -503,6 +503,48 @@ In this case everything except of `Analytics` and `Management` will submenus wil
 
 To check all regular expressions available options, check [regular expressions syntax cheatsheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet)
 
+#### Hiding kibana management apps
+
+There is an option to hide specific management apps. You can declare hide_apps value like:
+
+```yaml
+hide_apps: [ "<submenu-title|app-title|management-submenu-title|management-app-title>" ]
+
+```
+
+* To hide a single management application, you can use:
+
+```yaml
+kibana_hide_apps: [ "Management|Stack Management|Kibana|Tags" ]
+```
+
+In this case, only the Stack Management Tags application will be hidden
+
+* To hide all management Kibana section applications, you can use:
+
+```yaml
+kibana_hide_apps: [ "/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/" ]:
+```
+
+In this case, all Stack Management Kibana sections will be hidden
+
+* To hide all management Kibana section applications except selected, you can use
+
+```yaml
+kibana_hide_apps: ["/^Management\\|Stack Management\\|Kibana\\|(?!(Data Views|Tags)$).*$/"]
+```
+
+In this case, all Stack Management Kibana section apps except Data Views and Tags will be hidden
+
+* To hide all management applications except selected, you can use
+
+```yaml
+kibana_hide_apps: ["/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/", "/^Management\\|Stack Management\\|Kibana\\|(?!(Data Views|Tags)$).*$/"]
+```
+
+In this case, all Stack Management  apps except Data Views and Tags will be hidden
+
+
 ### Hiding ReadonlyREST menu elements
 
 This feature will work in ReadonlyREST PRO and Enteprise.
