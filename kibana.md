@@ -167,9 +167,9 @@ The first time you run Kibana after a major version upgrade (e.g. upgrading from
 
 Now, because you may have multiple kibana indices containing saved objects, you should apply the "saved object migration" to those indices as well.
 
-All tenancy kibana index are migrated automatically.
+ReadonlyREST Enterprise will automatically make sure a tenancy index is migrated to satisfy the current Kibana version **right before every time it's being used.**
 
-* After opening a specific tenancy kibana index for example after the tenancy switch or login to the kibana there will be these logs visible:
+For example, after a tenant logs in, before the Kibana session is started, or when a user changes tenancy with the tenancy switcher, the tenancy index gets created if absent, checked and migrated if necessary. These logs mean that migration started correctly:
 ```
   [savedobjects-service] Waiting until all Elasticsearch nodes are compatible with Kibana before starting saved objects migrations...
   [savedobjects-service] Starting saved objects migrations
@@ -182,7 +182,8 @@ All tenancy kibana index are migrated automatically.
   [savedobjects-service] [.kibana] MARK_VERSION_INDEX_READY -> DONE. took: 20ms.
   [savedobjects-service] [.kibana] Migration completed after 143ms
 ```
-* now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
+
+Now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
 
 
 ### Using RoR with a reverse proxy
