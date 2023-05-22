@@ -167,18 +167,9 @@ The first time you run Kibana after a major version upgrade (e.g. upgrading from
 
 Now, because you may have multiple kibana indices containing saved objects, you should apply the "saved object migration" to those indices as well.
 
-The only known safe - yet pedantic - way to do this is the following process: 
+All tenancy kibana index are migrated automatically.
 
-**Preparation**
-
-* download the newer Kibana version in your computer (in the example, 8.0.0)
-* edit the `kibana.yml` to point to the same Elasticsearch cluster as your production Kibana (`elasticsearch.hosts` setting)
-* add the appropriate `elasticsearch.username` and `elasticsearch.password` credentials settings, same as in production
-
-**For each tenancy index** 
-
-* configure `kibana.yml` with a `kibana.index: <tenancy kibana index>`
-* run Kibana for a few seconds, until you see something similar to these log lines:
+* After opening a specific tenancy kibana index for example after the tenancy switch or login to the kibana there will be these logs visible:
 ```
   [savedobjects-service] Waiting until all Elasticsearch nodes are compatible with Kibana before starting saved objects migrations...
   [savedobjects-service] Starting saved objects migrations
@@ -193,7 +184,6 @@ The only known safe - yet pedantic - way to do this is the following process:
 ```
 * now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
 
-This is ugly, but the safest way available at the moment.
 
 ### Using RoR with a reverse proxy
 
