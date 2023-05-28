@@ -1,5 +1,16 @@
 # Changelog
 
+### (2023-05-28) What's new in **ROR 1.49.0**
+* **🧐Enhancement** (KBN) Handle `elasticsearch.serviceAccountSupport` configuration property
+* **🧐Enhancement** (KBN) Provide a way to Hidden apps Stack management items hiding
+* **🧐Enhancement** (KBN) Provide an automated migration of tenancy indices on major Kibana version upgrade
+* **🧐Enhancement** (ES) external group name patterns support in the external to local groups mapping
+* **🐞Fix** (KBN) the issue with the replica number being set to 0 on tenant index creation
+* **🐞Fix** (KBN) users won’t log out from Kibana on the 500 status error
+* **🐞Fix** (KBN) the issue with Kibana keystore not being read by the Kibana plugin
+* **🐞Fix** (KBN < 7.9.0) logging issue when two Kibanas are handled by one browser at the same time
+* **🐞Fix** (ES) resolving ENVs to YAML number in ROR settings
+
 ### (2023-04-15) What's new in **ROR 1.48.0**
 * **🚨Security Fix** (ES) [CVE-2022-45688](https://nvd.nist.gov/vuln/detail/CVE-2022-45688)
 * **🚀New** (KBN) 8.7.1, 7.17.10 support
