@@ -167,18 +167,9 @@ The first time you run Kibana after a major version upgrade (e.g. upgrading from
 
 Now, because you may have multiple kibana indices containing saved objects, you should apply the "saved object migration" to those indices as well.
 
-The only known safe - yet pedantic - way to do this is the following process: 
+ReadonlyREST Enterprise will automatically make sure a tenancy index is migrated to satisfy the current Kibana version **right before every time it's being used.**
 
-**Preparation**
-
-* download the newer Kibana version in your computer (in the example, 8.0.0)
-* edit the `kibana.yml` to point to the same Elasticsearch cluster as your production Kibana (`elasticsearch.hosts` setting)
-* add the appropriate `elasticsearch.username` and `elasticsearch.password` credentials settings, same as in production
-
-**For each tenancy index** 
-
-* configure `kibana.yml` with a `kibana.index: <tenancy kibana index>`
-* run Kibana for a few seconds, until you see something similar to these log lines:
+For example, after a tenant logs in, before the Kibana session is started, or when a user changes tenancy with the tenancy switcher, the tenancy index gets created if absent, checked and migrated if necessary. These logs mean that migration started correctly:
 ```
   [savedobjects-service] Waiting until all Elasticsearch nodes are compatible with Kibana before starting saved objects migrations...
   [savedobjects-service] Starting saved objects migrations
@@ -191,9 +182,9 @@ The only known safe - yet pedantic - way to do this is the following process:
   [savedobjects-service] [.kibana] MARK_VERSION_INDEX_READY -> DONE. took: 20ms.
   [savedobjects-service] [.kibana] Migration completed after 143ms
 ```
-* now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
 
-This is ugly, but the safest way available at the moment.
+Now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
+
 
 ### Using RoR with a reverse proxy
 
