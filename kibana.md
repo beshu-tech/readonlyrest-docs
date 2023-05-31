@@ -381,6 +381,7 @@ In the vanilla Kibana, all the configuration objects are stored under an Elastic
 Kibana into reading and writing to other indices entirely, for example `.kibana_tenancy1`. So when "tenancy1" is selected from the UI, Kibana hard reloads and all settings, dashboards, and visualizations are (potentially) different. 
 
 A user can be associated to multiple tenancies, and if so, will be presented with a tenancy switcher in the UI. 
+![image](https://github.com/beshu-tech/readonlyrest-docs/assets/1327189/b07d27d3-310c-4754-a5c5-21b0fe3f3d45)
 
 Using this tool, they can hop between tenancies. Keep in mind that the ACL evaluation is slightly different when multi tenancy is activated: if a tenancy is selected, only blocks without `kibana_index` rule, or with the `kibana_index` rule matching to the current teancy name will be evaluated.
 
