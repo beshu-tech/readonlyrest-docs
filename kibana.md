@@ -373,6 +373,27 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
       actions: [...]
 ```
 
+### Multi-tenancy Kibana
+ReadonlyREST Enterprise is capable of going beyond multi-user. Users or groups can be isolated into tenancies, so their dashboards and configurations won't mix. Behind each tenancy, there is a kibana index. 
+
+#### What is a kibana index? 
+In the vanilla Kibana, all the configuration objects are stored under an Elasticsearch index called `.kibana`, but with ReadonlyREST Enterprise installed, you can dynamically route 
+Kibana into reading and writing to other indices entirely, for example `.kibana_tenancy1`. So when "tenancy1" is selected from the UI, Kibana hard reloads and all settings, dashboards, and visualizations are (potentially) different. 
+
+A user can be associated to multiple tenancies, and if so, will be presented with a tenancy switcher in the UI. 
+![image](https://github.com/beshu-tech/readonlyrest-docs/assets/1327189/b07d27d3-310c-4754-a5c5-21b0fe3f3d45)
+
+Using this tool, they can hop between tenancies. Keep in mind that the ACL evaluation is slightly different when multi tenancy is activated: if a tenancy is selected, only blocks without `kibana.index` rule, or with the `kibana.index` [rule](https://docs.readonlyrest.com/elasticsearch#kibana) matching to the current teancy name will be evaluated.
+
+In ReadonlyREST Enterprise, multi-tenancy is activated by default. But if you want it to behave as in PRO/Free editions, you can disable it by writing into `kibana.yml`:
+
+```yml
+readonlyrest_kbn.multiTenancyEnabled: false
+```
+
+### Configuring Multi-tenancy
+You can configure an ACL in multi tenancy mode by adding a few ACL blocks containing the `kibana.index` [rule](https://docs.readonlyrest.com/elasticsearch#kibana). See examples and further explanation under our [multi-tenancy guide](examples/multitenancy_guide.md).
+
 #### Session cookie expiration
 
 When a user logs in, ReadonlyREST will write an encrypted cookie in the browser. This cookie has an time to live that can be tweaked with the following configuration key in `kibana.yml`.
