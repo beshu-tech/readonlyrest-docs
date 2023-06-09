@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2023-05-28) What's new in **ROR 1.49.0**
+* **🚀New** (ES) 8.8.1 support
 * **🧐Enhancement** (KBN) Handle `elasticsearch.serviceAccountSupport` configuration property
 * **🧐Enhancement** (KBN) Provide a way to Hidden apps Stack management items hiding
 * **🧐Enhancement** (KBN) Provide an automated migration of tenancy indices on major Kibana version upgrade
