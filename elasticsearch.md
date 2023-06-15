@@ -1334,6 +1334,46 @@ The above will return the usual response object, but deprived \(if found\) of th
 * are equal to `excluded_field`
 * are equal to `another_excluded_field.nested_field`
 
+**Wildcard across nested fields**
+It's possible to use the `*` character to intercept nested fields. Imagine having this document:
+```json
+{
+   "_index":"kafka-both",
+   "_type":"_doc",
+   "_id":"460D9",
+   "_score":8.649008,
+   "_source":{
+      "session_id":64124.0,
+      "country":"something",
+      "resp":{
+         "credit_card_confidential": "378282246310005"
+         "proc_time":0.02,
+         "type":"spelling",
+         "raw_text":{
+            "proc_time":0.02,
+            "system_entities":{
+               "phone_number_confidential":[
+                  {
+                     "unit":"Number",
+                     "string":"666",
+                     "value":666
+                  }
+               ]
+            }
+         }
+      }
+   }
+}
+```
+You can write this `fields` rule containing a pattern that uses the `*` right after the `~`:
+
+```yml
+fields: ["~*_confidential"]
+```
+
+Now the search response will omit the string field `credit_card_confidential`, and the whole object `resp.raw_text.phone_number_confidential`, or any other field whose name ends in "_confidential", regardless of their type or if and how deeply it's nested. 
+
+
 **Whitelist mode**
 
 In this mode rule is configured to filter out each field that isn't defined in the rule.
