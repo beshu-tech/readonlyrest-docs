@@ -1948,7 +1948,7 @@ Usually, we would like to configure three main things for defining the way LDAP 
    * `user_id_attribute` (string, optional, default: `uid`) - should refer to a unique ID for the user within the base DN
 
 3. a way to **search user groups** (NOT used by [`ldap_authentication`](#ldap_authentication) rule). In ROR, depending on LDAP schema, a relation between users and groups can be defined in:
-   1. Group entry - it has an attribute that refers to User entries:
+   1. Group entry - it has an attribute that refers to User entries (this is the default):
       * `search_groups_base_DN` (required) - should refer to the base Distinguished Name of the groups to which these users may belong
       * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
       * `unique_member_attribute` (string, optional, default: `uniqueMember`) - is the LDAP group object attribute that contains the names of the ROR groups
@@ -1956,10 +1956,14 @@ Usually, we would like to configure three main things for defining the way LDAP 
       * `group_attribute_is_dn` (boolean, optional, default: `true`) -
         * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))`
         * then `false` the search filer will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_ID_ATTRIBUTE_VALUE}))`
-   2. User entry - it has an attribute that refers to Group entries:
+      * `nested_groups_depth` (positive int, optional, no default) - it defines how deep ROR should ask LDAP to extract the nested LDAP groups. See [nested groups support section](#nested-ldap-groups-support) for details.
+   2. User entry - it has an attribute that refers to Group entries (`groups_from_user: true` has to be set to use this strategy):
       * `search_groups_base_DN` (string, required) - should refer to the base Distinguished Name of the groups to which these users may belong
       * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
       * `groups_from_user_attribute` (string, optional, default: `memberOf`) -  is the LDAP user object attribute that contains the names of the ROR groups
+      * `group_search_filter` (string, optional, default: `(objectClass=*)`) is the LDAP search filter (or filters) to limit the user groups returned by LDAP
+      * `nested_groups_depth` (positive int, optional, no default) - it defines how deep ROR should ask LDAP to extract the nested LDAP groups. When this setting is configured, ROR needs to know what group's attribute holds the parent group name - it can be set using `unique_member_attribute` (the default is `uniqueMember`). See [nested groups support section](#nested-ldap-groups-support) for details.
+
 
 Examples:
 
@@ -2014,6 +2018,32 @@ Example:
       search_user_base_DN: "ou=People,dc=example2,dc=com"
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
+
+#### Nested LDAP groups support
+
+Let's imagine we have the following groups in LDAP:
+* `employees`
+* `it`
+* `developers`
+* `sales`
+* `managers`
+
+And there is `John Dev` who is assigned to `developers` groups and `Alize Man` whos group is `managers`. 
+
+Moreover, we know that:
+* to `it` group belongs all users who are `developers`
+* to `sales` group belongs all users who are `managers`
+* to `employees` groups belongs all users who are from `it` or `sales`
+
+The groups configuration like the above, in ROR, we call nested LDAP groups. 
+
+By default, when ROR searches for eg. `John Dev`'s groups, it is going to get the `developers` group only. But taking into consideration the nested groups configuration, we know that `John Dev` belongs to the following groups: `developers`, `it` & `employees`. Sometimes it'd be nice to have them all available in ROR's LDAP authorization rule. 
+
+ROR extracts nested groups by making additional search queries to LDAP. It asks LDAP: *tell me which groups `developers` belongs to?*. LDAP should return: `it`. Then ROR asks again: *so, tell me which groups `it` belongs to?*. LDAP answers: `employees`. And again, ROR asks: *Tell me which groups `empoyees` belongs to?*. LDAP should say: *no groups found*. And this is the point where ROR stops. ROR did additional 3 queries to LDAP to establish that `John Dev` belongs additionally to `it` and `employees` group.
+
+As you probably noticed, enabling nested groups extraction can be costly. ROR obviously tries to do its best to reduce the cost eg. by caching (if cache is enabled) or extracting each unique group always only once during the groups call handling. To reduce the cost more, you can define the depth of the extraction by providing `nested_groups_depth` (the presence of the setting enables the feature, so you have to configure it to enable the nested groups extraction). 
+
+Let's say we configured it like that: `nested_groups_depth: 1`. In the example above ROR asks only once: *tell me which groups `developers` belongs to?*. After the LDAP's response: `it` there won't be any more queries. That's because of the depth equaled 1.
 
 #### ROR with LDAP - examples
 In this example, users' credentials are validated via LDAP. The groups associated with each validated user, are resolved using the same LDAP server.
