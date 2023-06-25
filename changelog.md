@@ -1,5 +1,13 @@
 # Changelog
 
+### (2023-06-26) What's new in **ROR 1.49.1**
+* **🚨Security Fix** (ES) [CVE-2023-2976](https://nvd.nist.gov/vuln/detail/CVE-2023-2976)
+* **🚨Security Fix** (ES) [CVE-2023-34462](https://github.com/advisories/GHSA-6mjq-h674-j845)
+* **🚀New** (KBN) 8.8.1, 8.8.0 support
+* **🚀New** (ES) [LDAP nested groups support](https://docs.readonlyrest.com/elasticsearch#ldap-connector)
+* **🐞Fix** (ES) Fix for ES warnings in logs about custom action names (ROR internal actions)
+* **🐞Fix** (ES) kibana access `rw` and `admin` should allow to manage component templates
+
 ### (2023-05-28) What's new in **ROR 1.49.0**
 * **🚀New** (ES) 8.8.1 support
 * **🧐Enhancement** (KBN) Handle `elasticsearch.serviceAccountSupport` configuration property
