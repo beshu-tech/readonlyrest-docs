@@ -1,6 +1,6 @@
 # Changelog
 
-### (2023-06-26) What's new in **ROR 1.49.1**
+### (2023-06-27) What's new in **ROR 1.49.1**
 * **🚨Security Fix** (ES) [CVE-2023-2976](https://nvd.nist.gov/vuln/detail/CVE-2023-2976)
 * **🚨Security Fix** (ES) [CVE-2023-34462](https://github.com/advisories/GHSA-6mjq-h674-j845)
 * **🚀New** (KBN) 8.8.1, 8.8.0 support
