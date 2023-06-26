@@ -5,6 +5,7 @@
 * **🚨Security Fix** (ES) [CVE-2023-34462](https://github.com/advisories/GHSA-6mjq-h674-j845)
 * **🚀New** (KBN) 8.8.1, 8.8.0 support
 * **🚀New** (ES) [LDAP nested groups support](https://docs.readonlyrest.com/elasticsearch#ldap-connector)
+* **🧐Enhancement** (KBN) Provide a way to set the default tenant during the login to the Kibana and change the order of tenants in the ROR menu by the “Custom Middleware”
 * **🐞Fix** (ES) Fix for ES warnings in logs about custom action names (ROR internal actions)
 * **🐞Fix** (ES) kibana access `rw` and `admin` should allow to manage component templates
 
