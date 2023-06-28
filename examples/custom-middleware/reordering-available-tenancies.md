@@ -1,10 +1,10 @@
 ---
-description: Tenant group manipulation
+description: Reordering available tenancies
 ---
 
-# Tenant group manipulation
+# Reordering available tenancies
 
-We can change a default tenant and order of the tenants in the ROR menu by providing `defaultGroup` query string parameter before the login, and chenge the order of `availableGroups`
+We can change the default tenancy, and the display ordering of the tenancies in the ROR menu by providing the `defaultGroup` query parameter in the HTTP request submitted by the login form, and change the order of `availableGroups`
 thanks to the `enrichIdentitySessionMetadata` method.
 
 1. Declare `readonlyrest_kbn.custom_middleware_inject_file: 'path/to/custom_middleware_inject_file.js'` in the kibana.yml and declare `custom_middleware_inject_file.js`
@@ -41,6 +41,6 @@ async function customMiddleware(req, res, next) {
 ```
 
 In this example, before the login to the Kibana, when the username is equal 'admin', we add default tenant `rorRequest.setQuery('defaultGroup', defaultGroup);` which means,
-that it will be the first tenant opened after the login. After the login, we will change the order of tenants displayed in the ROR menu and our default tenant will be the first on the list.
+that it will be the first tenant opened after the login. During the active Kibana session, we will also change the order of tenants displayed in the ROR menu and our default tenant will be the first on the list.
 
 **⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
