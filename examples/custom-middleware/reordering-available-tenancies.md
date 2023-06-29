@@ -17,8 +17,19 @@ async function customMiddleware(req, res, next) {
     const defaultGroup = 'infosec';
 
     if (rorRequest.getPath() === '/login' && rorRequest.getMethod() === 'post') {
+        // For the login form
         if (rorRequest.getBody().username === 'admin') {
             rorRequest.setQuery('defaultGroup', defaultGroup);
+        }
+
+        // For the SAML/OIDC login
+        const token = rorRequest.getBody().conn_svc_transient_jwt;
+        if (token) {
+            const parsedJWT = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
+            if (parsedJWT.user === 'admin') {
+                rorRequest.setQuery('defaultGroup', defaultGroup);
+            }
         }
     }
 
@@ -44,3 +55,5 @@ In this example, before the login to the Kibana, when the username is equal 'adm
 that it will be the first tenant opened after the login. During the active Kibana session, we will also change the order of tenants displayed in the ROR menu and our default tenant will be the first on the list.
 
 **⚠️IMPORTANT** Custom middleware must return `next()` function, to not block the request
+
+**⚠️IMPORTANT** There is no way to use this reordering available tenancies feature in the case of [proxy auth](https://docs.readonlyrest.com/kibana#proxy-auth). The support will be provided soon.
