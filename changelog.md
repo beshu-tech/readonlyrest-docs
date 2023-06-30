@@ -4,6 +4,7 @@
 * **🚨Security Fix** (ES) [CVE-2023-2976](https://nvd.nist.gov/vuln/detail/CVE-2023-2976)
 * **🚨Security Fix** (ES) [CVE-2023-34462](https://github.com/advisories/GHSA-6mjq-h674-j845)
 * **🚀New** (KBN) 8.8.1, 8.8.0 support
+* **🚀New** (ES) 8.8.2, 7.17.11 support
 * **🚀New** (ES) [LDAP nested groups support](https://docs.readonlyrest.com/elasticsearch#ldap-connector)
 * **🧐Enhancement** (KBN) [Allow setting default tenancy via `/login?defaultGroup` query param. To be used with “Custom Middleware” feature for reordering available tenancies in the ROR menu](https://docs.readonlyrest.com/examples/custom-middleware/reordering-available-tenancies) 
 * **🐞Fix** (ES) [Fix for ES warnings in logs about custom action names (ROR internal actions)](https://forum.readonlyrest.com/t/invalid-action-name-cluster-ror-audit-event-put/2186)
