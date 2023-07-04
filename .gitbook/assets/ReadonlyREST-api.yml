@@ -65,44 +65,15 @@ components:
     ForbiddenRorResponse:
       type: object
       required:
-        - error
+        - message
         - status
       properties:
-        error:
-          type: object
-          required:
-            - type
-            - reason
-            - due_to
-          properties:
-            type:
-              type: string
-              enum:
-                - forbidden_response
-            reason:
-              type: string
-              enum:
-                - forbidden
-            due_to:
-              type: array
-              description: |
-                It's an array of causes why ReadonlyREST's ACL forbade the request. 
-                WARNING: Please notice, that one element array ES used to print as a string!!!
-              items:
-                type: string
-                enum:
-                  - OPERATION_NOT_ALLOWED
-                  - FORBIDDEN_BY_BLOCK
-                  - TEST_SETTINGS_NOT_CONFIGURED
-                  - IMPERSONATION_NOT_SUPPORTED
-                  - IMPERSONATION_NOT_ALLOWED
-                  - READONLYREST_NOT_READY_YET
-                  - READONLYREST_NOT_ENABLED
-                  - READONLYREST_FAILED_TO_START
-                  - cannotSaveClusterWideSettingsOnFreeLicense
         status:
           type: number
           example: 403
+        message:
+          type: string
+          example: 'No ACL block was matched'
 
     XRorCorrelationId:
       type: string
