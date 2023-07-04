@@ -101,8 +101,9 @@ components:
           type: string
           description: Update Main Settings status
           enum:
-            - ok
-            - ko
+            - SUCCESS
+            - FAILURE
+            - FORBIDDEN
         message:
           type: string
           description: Human readable message
@@ -120,61 +121,62 @@ components:
     NoAclBlockWasMatchedForbiddenResponseExample:
       summary: No ACL block was matched
       value:
-        status: forbidden
+        status: FORBIDDEN
         message: 'No ACL block was matched'
 
     ForbidBlockMatchedResponseExample:
-      summary: Request was forbidden by matching a block with "forbid" type
+      summary: Request was FORBIDDEN by matching a block with "forbid" type
       value:
-        status: forbidden
-        message: 'Request was forbidden by matching a block with "forbid" type'
+        status: FORBIDDEN
+        message: 'Request was FORBIDDEN by matching a block with "forbid" type'
 
     TestSettingsNotConfiguredForbiddenResponseExample:
-      summary: Request was forbidden because impersonation feature is disabled when Test Settings are not configured
+      summary: Request was FORBIDDEN because impersonation feature is disabled when Test Settings are not configured
       value:
-        status: forbidden
+        status: FORBIDDEN
         message: "Request was forbidden because impersonation feature is disabled when Test Settings are not configured"
 
     ImpersonationNotSupportedResponseExample:
       summary: No block was matched and at least one block has rule which doesn't support impersonation
       value:
-        status: forbidden
+        status: FORBIDDEN
         message: "No block was matched and at least one block has rule which doesn't support impersonation"
 
     ImpersonationNotAllowedResponseExample:
       summary: User has no impersonation permissions
       value:
-        status: forbidden
+        status: FORBIDDEN
         message: "User has no impersonation permissions"
 
     RorIsNotStartedYetResponseExample:
       summary: ReadonlyREST was not started yet
       value:
-        status: forbidden
+        status: FORBIDDEN
         message: "ReadonlyREST was not started yet"
 
     RorFailedToStartResponseExample:
       summary: ReadonlyREST failed to start
       value:
-        status: forbidden
+        status: FORBIDDEN
         message: "ReadonlyREST failed to start"
 
     CannotSaveClusterWideSettingsOnFreeLicense:
       summary: Cannot save cluster-wide settings on Free license
       value:
-        status: forbidden
+        status: FORBIDDEN
         message: "Cannot save cluster-wide settings on Free license"
 
     UpdateMainSettingsSuccessResponse:
       summary: Main settings updated with success
       value:
-        status: ok
+        status: SUCCESS
         message: "updated settings"
 
     UpdateMainSettingsFailedResponse:
       summary: Main settings update failed
       value:
-        status: ko
+        status: FAILURE
         message: "Cannot save new settings"
 security:
   - http: []
+  - https: []
