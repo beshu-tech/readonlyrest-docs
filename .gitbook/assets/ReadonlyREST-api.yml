@@ -88,7 +88,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/badRequest'
+                $ref: '#/components/schemas/badRequestResponse'
               examples:
                 YamlFileExtensionRequiredResponseExample:
                   $ref: "#/components/examples/YamlFileExtensionRequiredResponseExample"
@@ -109,6 +109,15 @@ paths:
                   $ref: "#/components/examples/RorFailedToStartResponseExample"
                 CannotSaveClusterWideSettingsOnFreeLicenseExample:
                   $ref: "#/components/examples/CannotSaveClusterWideSettingsOnFreeLicenseExample"
+        413:
+          description: Request Entity Too Large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileSizeExceedsResponse'
+              examples:
+                FileSizeExceeds:
+                  $ref: "#/components/examples/FileSizeExceedsResponseExample"
         415:
           description: Unsupported Media Type
           content:
@@ -155,6 +164,20 @@ components:
         message:
           type: string
           example: 'We are unable to process your request because the provided media type is not supported. Please ensure you are using a compatible content type.'
+
+    FileSizeExceedsResponse:
+      type: object
+      required:
+        - message
+        - status
+      properties:
+        status:
+          type: number
+          example: 413
+        message:
+          type: string
+          example: 'The file size exceeds the maximum 10MB allowed limit. Please upload a smaller file.'
+
 
     ForbiddenRorResponse:
       type: object
@@ -277,6 +300,12 @@ components:
       value:
         status: WRONG_FILE_EXTENSION
         message: "The file extension is not supported. Please upload a file with the correct yml or yaml extension."
+
+    FileSizeExceedsResponseExample:
+      summary: File size exceeds
+      value:
+        status: FILE_SIZE_EXCEEDS
+        message: "The file size exceeds the maximum 10MB allowed limit. Please upload a smaller file."
 
 security:
   - http: []
