@@ -16,7 +16,7 @@ paths:
       requestBody:
         required: true
         content:
-          text/yaml:
+          application/yaml:
             schema:
               $ref: '#/components/schemas/UpdateMainSettingsRequest'
       responses:
