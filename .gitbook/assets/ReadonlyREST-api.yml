@@ -48,6 +48,15 @@ paths:
                   $ref: "#/components/examples/RorFailedToStartResponseExample"
                 CannotSaveClusterWideSettingsOnFreeLicense:
                   $ref: "#/components/examples/CannotSaveClusterWideSettingsOnFreeLicense"
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRorResponse'
+              examples:
+                UnsupportedMediaType:
+                  $ref: "#/components/examples/UnsupportedMediaType"
 
 components:
   securitySchemes:
@@ -157,6 +166,12 @@ components:
       value:
         status: FAILURE
         message: "Cannot save new settings"
+
+    UnsupportedMediaType:
+      summary: Unsupported Media Type
+      value:
+        status: UNSUPPORTED_MEDIA_TYPE
+        message: "We are unable to process your request because the provided media type is not supported. Please ensure you are using a compatible content type."
 security:
   - http: []
   - https: []
