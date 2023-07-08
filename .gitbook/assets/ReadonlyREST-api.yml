@@ -53,10 +53,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenRorResponse'
+                $ref: '#/components/schemas/UnsupportedMediaTypeResponse'
               examples:
-                UnsupportedMediaType:
-                  $ref: "#/components/examples/UnsupportedMediaType"
+                UnsupportedMediaTypeResponseExample:
+                  $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
   /api/ror/settings/upload:
     post:
       summary: Configuring in-index Main Settings via config file upload.
@@ -114,10 +114,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnsupportedMediaType'
+                $ref: '#/components/schemas/UnsupportedMediaTypeResponse'
               examples:
                 UnsupportedMediaType:
-                  $ref: "#/components/examples/UnsupportedMediaType"
+                  $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
 
 components:
   securitySchemes:
@@ -267,7 +267,7 @@ components:
         status: FAILURE
         message: "Cannot save new settings"
 
-    UnsupportedMediaType:
+    UnsupportedMediaTypeResponseExample:
       summary: Unsupported Media Type
       value:
         status: UNSUPPORTED_MEDIA_TYPE
