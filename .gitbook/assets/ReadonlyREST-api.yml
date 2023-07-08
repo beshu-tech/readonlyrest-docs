@@ -46,14 +46,75 @@ paths:
                   $ref: "#/components/examples/RorIsNotStartedYetResponseExample"
                 RorFailedToStartResponseExample:
                   $ref: "#/components/examples/RorFailedToStartResponseExample"
-                CannotSaveClusterWideSettingsOnFreeLicense:
-                  $ref: "#/components/examples/CannotSaveClusterWideSettingsOnFreeLicense"
+                CannotSaveClusterWideSettingsOnFreeLicenseExample:
+                  $ref: "#/components/examples/CannotSaveClusterWideSettingsOnFreeLicenseExample"
         415:
           description: Unsupported Media Type
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenRorResponse'
+              examples:
+                UnsupportedMediaType:
+                  $ref: "#/components/examples/UnsupportedMediaType"
+  /api/ror/settings/upload:
+    post:
+      summary: Configuring in-index Main Settings via config file upload.
+      description: The endpoint can be used to configure Main Settings via config file upload.
+      tags:
+        - Main Settings
+      parameters:
+        - $ref: '#/components/parameters/XRorCorrelationIdHeader'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadMainSettingsRequest'
+      responses:
+        200:
+          description: Returns a status of updating Main Settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateMainSettingsResponse'
+              examples:
+                UpdateMainSettingsSuccessResponse:
+                  $ref: "#/components/examples/UpdateMainSettingsSuccessResponse"
+                UpdateMainSettingsFailedResponse:
+                  $ref: "#/components/examples/UpdateMainSettingsFailedResponse"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/badRequest'
+              examples:
+                YamlFileExtensionRequiredResponseExample:
+                  $ref: "#/components/examples/YamlFileExtensionRequiredResponseExample"
+        403:
+          description: The request was forbidden by ReadonlyREST's ACL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRorResponse'
+              examples:
+                NoAclBlockWasMatchedForbiddenResponseExample:
+                  $ref: "#/components/examples/NoAclBlockWasMatchedForbiddenResponseExample"
+                ForbidBlockMatchedResponseExample:
+                  $ref: "#/components/examples/ForbidBlockMatchedResponseExample"
+                RorIsNotStartedYetResponseExample:
+                  $ref: "#/components/examples/RorIsNotStartedYetResponseExample"
+                RorFailedToStartResponseExample:
+                  $ref: "#/components/examples/RorFailedToStartResponseExample"
+                CannotSaveClusterWideSettingsOnFreeLicenseExample:
+                  $ref: "#/components/examples/CannotSaveClusterWideSettingsOnFreeLicenseExample"
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnsupportedMediaType'
               examples:
                 UnsupportedMediaType:
                   $ref: "#/components/examples/UnsupportedMediaType"
@@ -68,6 +129,33 @@ components:
       scheme: basic
 
   schemas:
+    badRequestResponse:
+      type: object
+      required:
+        - message
+        - status
+      properties:
+        status:
+          type: number
+          example: 400
+        message:
+          type: string
+          example: 'The file extension is not supported. Please upload a file with the correct yml or yaml extension.'
+
+
+    UnsupportedMediaTypeResponse:
+      type: object
+      required:
+        - message
+        - status
+      properties:
+        status:
+          type: number
+          example: 415
+        message:
+          type: string
+          example: 'We are unable to process your request because the provided media type is not supported. Please ensure you are using a compatible content type.'
+
     ForbiddenRorResponse:
       type: object
       required:
@@ -100,6 +188,7 @@ components:
 
     UploadMainSettingsRequest:
       type: string
+      format: binary
       description: "ReadonlyREST main settings YAML"
       example: |
         readonlyrest:    
@@ -160,7 +249,7 @@ components:
         status: FORBIDDEN
         message: "ReadonlyREST failed to start"
 
-    CannotSaveClusterWideSettingsOnFreeLicense:
+    CannotSaveClusterWideSettingsOnFreeLicenseExample:
       summary: Cannot save cluster-wide settings on Free license
       value:
         status: FORBIDDEN
@@ -183,6 +272,12 @@ components:
       value:
         status: UNSUPPORTED_MEDIA_TYPE
         message: "We are unable to process your request because the provided media type is not supported. Please ensure you are using a compatible content type."
+    YamlFileExtensionRequiredResponseExample:
+      summary: Not supported file extension
+      value:
+        status: WRONG_FILE_EXTENSION
+        message: "The file extension is not supported. Please upload a file with the correct yml or yaml extension."
+
 security:
   - http: []
   - https: []
