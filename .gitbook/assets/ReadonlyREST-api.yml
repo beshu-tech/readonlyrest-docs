@@ -57,6 +57,7 @@ paths:
               examples:
                 UnsupportedMediaTypeResponseExample:
                   $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
+
   /api/ror/settings/upload:
     post:
       summary: Configuring in-index Main Settings via config file upload.
@@ -151,7 +152,6 @@ components:
           type: string
           example: 'The file extension is not supported. Please upload a file with the correct yml or yaml extension.'
 
-
     UnsupportedMediaTypeResponse:
       type: object
       required:
@@ -177,7 +177,6 @@ components:
         message:
           type: string
           example: 'The file size exceeds the maximum 10MB allowed limit. Please upload a smaller file.'
-
 
     ForbiddenRorResponse:
       type: object
@@ -288,13 +287,14 @@ components:
       summary: Main settings update failed
       value:
         status: FAILURE
-        message: "Cannot save new settings"
+        message: "Cannot reload new settings"
 
     UnsupportedMediaTypeResponseExample:
       summary: Unsupported Media Type
       value:
         status: UNSUPPORTED_MEDIA_TYPE
         message: "We are unable to process your request because the provided media type is not supported. Please ensure you are using a compatible content type."
+
     YamlFileExtensionRequiredResponseExample:
       summary: Not supported file extension
       value:
