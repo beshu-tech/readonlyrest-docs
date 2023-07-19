@@ -11,6 +11,7 @@
 * [For Kibana](kibana.md)
   * [Impersonation](details/impersonation.md)
   * [Kibana 7.8.x and older](details/kibana-7.8.x-and-older.md)
+  * [ReadonlyREST API](details/ReadonlyREST-api.md)
 * [Universal Builds](universal-builds/universal-builds.md)
 * [Examples](examples/README.md)
   * [Multi-tenancy Elastic Stack](examples/multitenancy_guide.md)
