@@ -47,8 +47,8 @@ paths:
                   $ref: "#/components/examples/RorIsNotStartedYetResponseExample"
                 RorFailedToStartResponseExample:
                   $ref: "#/components/examples/RorFailedToStartResponseExample"
-                updateSettingsViaApiEnterpriseOnly:
-                  $ref: "#/components/examples/updateSettingsViaApiEnterpriseOnly"
+                UpdateSettingsViaApiEnterpriseOnly:
+                  $ref: "#/components/examples/UpdateSettingsViaApiEnterpriseOnly"
         415:
           description: Unsupported Media Type
           content:
@@ -110,8 +110,8 @@ paths:
                   $ref: "#/components/examples/RorIsNotStartedYetResponseExample"
                 RorFailedToStartResponseExample:
                   $ref: "#/components/examples/RorFailedToStartResponseExample"
-                updateSettingsViaApiEnterpriseOnly:
-                  $ref: "#/components/examples/updateSettingsViaApiEnterpriseOnly"
+                UpdateSettingsViaApiEnterpriseOnly:
+                  $ref: "#/components/examples/UpdateSettingsViaApiEnterpriseOnly"
         413:
           description: Request Entity Too Large
           content:
@@ -273,7 +273,7 @@ components:
         status: FORBIDDEN
         message: "ReadonlyREST failed to start"
 
-    updateSettingsViaApiEnterpriseOnly:
+    UpdateSettingsViaApiEnterpriseOnly:
       summary: You need a ReadonlyREST Enterprise license to save cluster-wide settings via ReadonlyREST API
       value:
         status: FORBIDDEN
