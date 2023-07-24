@@ -1,5 +1,12 @@
 # Changelog
 
+### (2023-07-24) What's new in **ROR 1.50.0**
+* **🚀New** New (KBN/ES) ECK support
+* **🚀New** New (KBN) Introduce the new ReadonlyREST API
+* **🧐Enhancement** (KBN) Remove application item info from URL on the tenant switch to avoid a 404 not found message
+* **🧐Enhancement** (KBN) Provide Reordering available tenancies for proxy auth authentication
+* **🧐Enhancement** (KBN) Provide information about granted/rejected log-in users to debug logs
+
 ### (2023-06-27) What's new in **ROR 1.49.1**
 * **🚨Security Fix** (ES) [CVE-2023-2976](https://nvd.nist.gov/vuln/detail/CVE-2023-2976)
 * **🚨Security Fix** (ES) [CVE-2023-34462](https://github.com/advisories/GHSA-6mjq-h674-j845)
