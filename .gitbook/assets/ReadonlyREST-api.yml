@@ -10,6 +10,7 @@ paths:
       summary: Configuring in-index Main Settings
       description: The endpoint can be used to configure Main Settings.
       tags:
+        - ReadonlyREST Enterprise license endpoints
         - Main Settings
       parameters:
         - $ref: '#/components/parameters/XRorCorrelationIdHeader'
@@ -46,8 +47,8 @@ paths:
                   $ref: "#/components/examples/RorIsNotStartedYetResponseExample"
                 RorFailedToStartResponseExample:
                   $ref: "#/components/examples/RorFailedToStartResponseExample"
-                CannotSaveClusterWideSettingsOnFreeLicenseExample:
-                  $ref: "#/components/examples/CannotSaveClusterWideSettingsOnFreeLicenseExample"
+                UpdateSettingsViaApiEnterpriseOnly:
+                  $ref: "#/components/examples/UpdateSettingsViaApiEnterpriseOnly"
         415:
           description: Unsupported Media Type
           content:
@@ -63,6 +64,7 @@ paths:
       summary: Configuring in-index Main Settings via config file upload.
       description: The endpoint can be used to configure Main Settings via config file upload.
       tags:
+        - ReadonlyREST Enterprise license endpoints
         - Main Settings
       parameters:
         - $ref: '#/components/parameters/XRorCorrelationIdHeader'
@@ -108,8 +110,8 @@ paths:
                   $ref: "#/components/examples/RorIsNotStartedYetResponseExample"
                 RorFailedToStartResponseExample:
                   $ref: "#/components/examples/RorFailedToStartResponseExample"
-                CannotSaveClusterWideSettingsOnFreeLicenseExample:
-                  $ref: "#/components/examples/CannotSaveClusterWideSettingsOnFreeLicenseExample"
+                UpdateSettingsViaApiEnterpriseOnly:
+                  $ref: "#/components/examples/UpdateSettingsViaApiEnterpriseOnly"
         413:
           description: Request Entity Too Large
           content:
@@ -271,11 +273,11 @@ components:
         status: FORBIDDEN
         message: "ReadonlyREST failed to start"
 
-    CannotSaveClusterWideSettingsOnFreeLicenseExample:
-      summary: Cannot save cluster-wide settings on Free license
+    UpdateSettingsViaApiEnterpriseOnly:
+      summary: You need a ReadonlyREST Enterprise license to save cluster-wide settings via ReadonlyREST API
       value:
         status: FORBIDDEN
-        message: "Cannot save cluster-wide settings on Free license"
+        message: "You need a ReadonlyREST Enterprise license to save cluster-wide settings via ReadonlyREST API"
 
     UpdateMainSettingsSuccessResponse:
       summary: Main settings updated with success
