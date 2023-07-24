@@ -10,7 +10,7 @@ paths:
       summary: Configuring in-index Main Settings
       description: The endpoint can be used to configure Main Settings.
       tags:
-        - Enterprise license endpoints
+        - ReadonlyREST Enterprise license endpoints
         - Main Settings
       parameters:
         - $ref: '#/components/parameters/XRorCorrelationIdHeader'
@@ -64,7 +64,7 @@ paths:
       summary: Configuring in-index Main Settings via config file upload.
       description: The endpoint can be used to configure Main Settings via config file upload.
       tags:
-        - Enterprise license endpoints
+        - ReadonlyREST Enterprise license endpoints
         - Main Settings
       parameters:
         - $ref: '#/components/parameters/XRorCorrelationIdHeader'
