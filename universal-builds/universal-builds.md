@@ -33,7 +33,7 @@ $ bin/kibana
 ### Via our plugin license API
 Once Kibana is up and running, you can send a HTTP request to Kibana.
 ```
-POST http://<kibana-host-with-ror>:5601/pkp/license
+POST http://<kibana-host-with-ror>:5601/pkp/api/license?overwrite=true
 {
   "token": "your activation key" 
 }
