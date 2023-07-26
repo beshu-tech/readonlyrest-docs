@@ -1,6 +1,6 @@
 # Impersonation
 
-After describing what [the impersonation is](../kibana.md#impersonate), it's high time to see how ROR supports it and who and when could be interested in using this feature. Let's start with the latter.
+After describing what [the impersonation is](../kibana.md#impersonation), it's high time to see how ROR supports it and who and when could be interested in using this feature. Let's start with the latter.
 
 ## Use cases
 
