@@ -8,7 +8,7 @@ paths:
   /api/ror/settings:
     post:
       summary: Configuring in-index Main Settings
-      description: The endpoint can be used to configure Main Settings.
+      description: The endpoint can be used to configure the main security settings. The new settings are validated before saving.
       tags:
         - ReadonlyREST Enterprise license endpoints
         - Main Settings
@@ -62,7 +62,7 @@ paths:
   /api/ror/settings/upload:
     post:
       summary: Configuring in-index Main Settings via config file upload.
-      description: The endpoint can be used to configure Main Settings via config file upload.
+      description: The endpoint can be used to configure the main security settings via file upload. The new settings are validated before saving.
       tags:
         - ReadonlyREST Enterprise license endpoints
         - Main Settings
