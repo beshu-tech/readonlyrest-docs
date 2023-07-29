@@ -213,15 +213,8 @@ components:
     UploadMainSettingsRequest:
       type: string
       format: binary
-      description: "ReadonlyREST main settings YAML"
-      example: |
-        readonlyrest:    
-          access_control_rules:
-          - name: "Require HTTP Basic | Auth"     
-          type: allow 
-          indices: ["test"]    
-          - name: "other"      
-          auth_key: "admin:test"
+      description: "ReadonlyREST main settings file upload"
+      example: "LINK TO THE CONFIG FILE, FOR EXAMPLE: config/readonlyrest.yml"
 
     UpdateMainSettingsResponse:
       type: object
