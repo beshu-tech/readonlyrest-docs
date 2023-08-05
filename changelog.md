@@ -2,6 +2,7 @@
 
 ### (2023-07-25) What's new in **ROR 1.50.0**
 * **🚀New** New (KBN/ES) ECK support
+* **🚀New** (ES) 8.9.0, 7.17.12 support
 * **🚀New** New (KBN) Introduce the new ReadonlyREST API
 * **🧐Enhancement** (KBN) Remove application item info from URL on the tenant switch to avoid a 404 not found message
 * **🧐Enhancement** (KBN) Provide Reordering available tenancies for proxy auth authentication
