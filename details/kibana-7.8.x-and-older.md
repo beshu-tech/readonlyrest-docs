@@ -181,7 +181,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1) (1).png>)
+![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1) (1) (2).png>)
 
 #### Malformed in-index settings
 
@@ -498,7 +498,7 @@ The audit log feature is widely described in [📖docs for Elasticsearch plugin]
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](<../.gitbook/assets/audit\_tab (1) (1).png>)
+![audit log tab](<../.gitbook/assets/audit\_tab (1) (1) (1).png>)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
