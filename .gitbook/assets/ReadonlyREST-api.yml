@@ -211,10 +211,15 @@ components:
             auth_key: "admin:test"
 
     UploadMainSettingsRequest:
-      type: string
-      format: binary
-      description: "ReadonlyREST main settings file upload"
-      example: "LINK TO THE CONFIG FILE, FOR EXAMPLE: config/readonlyrest.yml"
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          type: string
+          format: binary
+          description: "ReadonlyREST main settings file upload"
+          example: "LINK TO THE CONFIG FILE, FOR EXAMPLE: config/readonlyrest.yml"
 
     UpdateMainSettingsResponse:
       type: object
