@@ -46,7 +46,7 @@ POST http://<kibana-host-with-ror>:5601/pkp/api/license?overwrite=true
 
 The universal build is a zip archive. You can add a small text file with your activation key to this archive before installing it, so it will be picked up automatically at the first boot.
 - The text file should be called `ROR_ACTIVATION_KEY.txt`
-- It should contain your secret activation key string (no saces, no new lines)
+- It should contain your secret activation key string (no spaces, no new lines)
 - It should be added to the **root directory** of the plugin zip archive
 
 Now install the plugin file, start Kibana, and the activation key should be loaded.
