@@ -1914,18 +1914,19 @@ A value resolved from a variable may not be valid in some contexts.
 Sometimes, the value from the variable needs some preprocessing before usage.
 For example, a HTTP header value containing the uppercase characters is a wrong candidate for the index name because it has to be a lowercase string.
 We introduced variable functions to overcome these limitations.
-They allow modification of the variable values during the variable resolution ([static](elasticsearch.md#static-variables) and [dynamic](elasticsearch.md#dynamic-variables) variables are supported).
+They allow modification of the variable values during the variable resolution (both, [static](elasticsearch.md#static-variables) and [dynamic](elasticsearch.md#dynamic-variables) variables are supported).
 
-With their help, you can use the HTTP header `x-app: KIBANA` containing uppercase characters in the `indices` rule:
+With their help, you can use the HTTP header `X-Forwarded-User: James` containing uppercase characters in the `indices` rule:
 
 ```yaml
-indices: [ 'index_@{header:x-app}#{to_lowercase}' ]
+indices: [ 'index_@{header:x-forwarded-user}#{to_lowercase}' ]
+# @{header:x-forwarded-user} is replaced by HTTP header value 'James', and then the given function chain (function `to_lowercase` converting all characters to lowercase) is applied to the header value
 ```
 
 which resolves to:
 
 ```yaml
-indices: [ 'index_kibana' ]
+indices: [ 'index_james' ]
 ```
 
 #### Syntax
@@ -1935,7 +1936,7 @@ In general, functions syntax is as follows:
 ```function_name("arg1","arg2")```
 * `function_name` - a function that you want to apply
 * `(...)` - function call parentheses (they may be omitted when the function has no args)
-* `arg1`, `arg2` - arguments passed to function. They should be surrounded by `"`. If your argument contains a `"` you can escape it with a `\`.
+* `arg1`, `arg2` - arguments passed to function. They should be surrounded by `"`. If your argument contains a special character (`"` or `}`), you can escape it with a `\`, e.g. (`function_a("\}")`)
 
 You can chain functions with the `.` operator (functions are applied in order from left to right):
 
@@ -1943,7 +1944,7 @@ You can chain functions with the `.` operator (functions are applied in order fr
 
 To apply functions to the variable, you need to use the `#` operator and enter your code in `{ }` braces:
 ```text
-@{--variable-definition--}#{--functions-code--}
+@{--variable-definition--}#{--functions-chain--}
 ```
 ```yaml
 # Using JWT claims as dynamic variables with variable function
@@ -1954,7 +1955,7 @@ indices: [ ".kibana_@{jwt:department}#{to_lowercase}", "otherIdx" ]
 
 #### Supported functions
 
-The list of functions is limited. These are the supported functions:
+Currently, we support functions like this:
 
 * `replace_all(regex,replacement)` - Replaces each substring of the variable string that matches the given regular
   expression with the given replacement.
@@ -1990,7 +1991,12 @@ The list of functions is limited. These are the supported functions:
    ```yaml
    groups: [ 'x1', '@{header:group}#{to_uppercase}' ]
    ```
-  
+
+**💡 Didn't find the function you are looking for?**
+
+We can easily extend the function list. If you need any new function/mechanism that cannot be obtained using the supported functions,
+let us know about it in our [forum](https://forum.readonlyrest.com/). We will consider adding the proper implementation.
+
 #### Variable function aliases
 
 Sometimes, the function chain may be very complex or occur multiple times in ACL.
