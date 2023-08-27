@@ -441,7 +441,7 @@ readonlyrest:
 #### Certificate verification
 
 By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.
-It is useful on local/test environment, where security is not the most important concern. On production environment it is adviced to enable this option. It can be done by means of:
+It is useful on local/test environment, where security is not the most important concern. On production environment it is advised to enable this option. It can be done by means of:
 
 ```text
 certificate_verification: true
@@ -493,7 +493,7 @@ truststore_file: "truststore.jks"
 truststore_pass: truststorepass
 ```
 
-under `ssl` or `ssl_internode` section. This option is applicable for both ssl modes - external ssl and internode ssl. The truststore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml` \(like keystore\). When not specifed, ReadonlyREST uses default truststore.
+under `ssl` or `ssl_internode` section. This option is applicable for both ssl modes - external ssl and internode ssl. The truststore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml` \(like keystore\). When not specified, ReadonlyREST uses default truststore.
 
 
 #### PEM files instead of a keystore and/or truststore
@@ -560,7 +560,7 @@ readonlyrest.failed_to_start_response_code: 503
 
 Every block **must** have at least the `name` field, and optionally a `type` field valued either "allow" or "forbid". If you omit the `type`, your block will be treated as `type: allow` by default.
 
-Keep in mind that ReadonlyREST ACL is a white list, so by default all request are blocked, unless you specify a block of rules that allowes all or some requests.
+Keep in mind that ReadonlyREST ACL is a white list, so by default all request are blocked, unless you specify a block of rules that allows all or some requests.
 
 * `name` will appear in logs, so keep it short and distinctive.
 * `type` can be either `allow` or `forbid`. Can be omitted, default is `allow`.
@@ -694,7 +694,7 @@ if __name__ == '__main__':
         print "Argument is missing, <password>"
 ```
 
-**Finally you have to put your username at the begining of the hash with ":" separator** `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
+**Finally you have to put your username at the beginning of the hash with ":" separator** `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
 
 For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
 
@@ -1473,7 +1473,7 @@ Match if **at least one** the specified HTTP headers `key:value` pairs is matche
 
 **☠️HACKY \(try to use indices/actions rule instead\)**
 
-Match if **at least one** specifed regular expression matches requested URI.
+Match if **at least one** specified regular expression matches requested URI.
 
 #### `maxBodyLength`
 
@@ -1556,7 +1556,7 @@ Here is a glossary:
 * `OA`: IP Address, originating address \(source address\) of the TCP connection underlying the http session.
 * `IDX`: Strings array: the list of indices affected by this request.
 * `MET`: String, HTTP Method
-* `CNT`: String, HTTP body content. Comes as a summary of its lenght, full body of the request is available in debug mode.
+* `CNT`: String, HTTP body content. Comes as a summary of its length, full body of the request is available in debug mode.
 * `HDR`: String array, list of HTTP headers, headers' content is available in debug mode.
 * `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated, This is super useful for knowing what ACL block/rule is forbidding/allowing this request.
 
@@ -1746,7 +1746,7 @@ One of the neatest features in ReadonlyREST is that you can use dynamic variable
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
-    * `@{acl:available_groups}` gets replaced with available groups found in the authorization rule (bacause by default dynamic variabled are resolved to a string, the variable resolved value will contain groups surrounded with double quotes and joined with a comma)
+    * `@{acl:available_groups}` gets replaced with available groups found in the authorization rule (because by default dynamic variables are resolved to a string, the variable resolved value will contain groups surrounded with double quotes and joined with a comma)
 * `header` - the context of ES HTTP request headers
     * `@{header:<header_name>}` gets replaced with the value of the HTTP header with name `<header_name>` included in the incoming request \(useful when reverse proxies handle authentication\)
 * `jwt` - the context of JWT header value
@@ -1832,7 +1832,7 @@ readonlyrest:
       ldap_auth:
         name: "myLDAP"
         groups: ["dev", "ops", "qa"]
-      filter: '{ "terms": { "department": [@{acl:available_groups}] }}' # i.e. from availabe_groups=[dev, ops] we will get filter: '{ "terms": { "department": ["dev","ops"] }}'
+      filter: '{ "terms": { "department": [@{acl:available_groups}] }}' # i.e. from available_groups=[dev, ops] we will get filter: '{ "terms": { "department": ["dev","ops"] }}'
       indices: ["logstash-*"]
 
     # LDAP connector settings omitted, see LDAP section below..
@@ -1908,8 +1908,130 @@ indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
 # -> indices: ["logstash_a*", "logstash_b*", "otherIdx"]
 ```
 
+### Variables functions
+
+A value resolved from a variable may not be valid in some contexts.
+Sometimes, the value from the variable needs some preprocessing before usage.
+For example, a HTTP header value containing the uppercase characters is a wrong candidate for the index name because it has to be a lowercase string.
+We introduced variable functions to overcome these limitations.
+They allow modification of the variable values during the variable resolution ([static](elasticsearch.md#static-variables) and [dynamic](elasticsearch.md#dynamic-variables) variables are supported).
+
+With their help, you can use the HTTP header `x-app: KIBANA` containing uppercase characters in the `indices` rule:
+
+```yaml
+indices: [ 'index_@{header:x-app}#{to_lowercase}' ]
+```
+
+which resolves to:
+
+```yaml
+indices: [ 'index_kibana' ]
+```
+
+#### Syntax
+
+In general, functions syntax is as follows:
+
+```function_name("arg1","arg2")```
+* `function_name` - a function that you want to apply
+* `(...)` - function call parentheses (they may be omitted when the function has no args)
+* `arg1`, `arg2` - arguments passed to function. They should be surrounded by `"`. If your argument contains a `"` you can escape it with a `\`.
+
+You can chain functions with the `.` operator (functions are applied in order from left to right):
+
+```function_a("arg1").function_b.function_c("arg1")```
+
+To apply functions to the variable, you need to use the `#` operator and enter your code in `{ }` braces:
+```text
+@{--variable-definition--}#{--functions-code--}
+```
+```yaml
+# Using JWT claims as dynamic variables with variable function
+indices: [ ".kibana_@{jwt:department}#{to_lowercase}", "otherIdx" ]
+# claims = { "user": "u1", "department": "Infosec"}
+# -> indices: [".kibana_infosec", "otherIdx"]
+```
+
+#### Supported functions
+
+The list of functions is limited. These are the supported functions:
+
+* `replace_all(regex,replacement)` - Replaces each substring of the variable string that matches the given regular
+  expression with the given replacement.
+
+  Params:
+   * `regex` - the [regular expression](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) to which the variable string is to be matched
+   * `replacement` - the string to be substituted for each match
+
+  Usage:
+   ```yaml
+   indices: [ 'index_@{header:app}#{replace_all("team","group")}' ]
+   ```
+
+* `replace_first(regex,replacement)` - Replaces the first substring of the variable string that matches the given regular expression with
+  the given replacement.
+
+  Params:
+   * `regex` - the [regular expression](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) to which the variable string is to be matched
+   * `replacement` - the string to be substituted for each match
+
+  Usage example:
+   ```yaml
+   indices: [ 'index_@{header:app}#{replace_first("^team","group")}' ]
+   ```
+* `to_lowercase` - Converts all characters in the variable string to lower case
+
+  Usage example:
+   ```yaml
+   indices: [ 'index_@{header:app}#{to_lowercase}' ]
+   ```
+* `to_uppercase` - Converts all characters in the variable string to upper case
+  Usage example:
+   ```yaml
+   groups: [ 'x1', '@{header:group}#{to_uppercase}' ]
+   ```
+  
+#### Variable function aliases
+
+Sometimes, the function chain may be very complex or occur multiple times in ACL.
+In this case, you can use a `function aliases` to simplify configuration management.
+The function alias allows you to export your function chain outside the ACL.
+Then you can substitute your function via alias `func(alias_name)`.
+
+Let's assume that we have the following configuration, and we want to introduce some function aliases:
+
+```yaml
+readonlyrest:
+   access_control_rules:
+      - name: Alice
+        indices: ['index_@{header:group}#{to_lowercase.replace_all("\\d","x")}']
+        auth_key: alice:p455phrase
+
+      - name: Bob
+        indices: ['index_@{header:group}#{to_lowercase.replace_all("\\d","x").replace_first("^team","")}']
+        auth_key: bob:s3cr37
+```
+
+You can define function aliases in the `readonlyrest.variables_function_aliases` section and substitute functions code with `func(alias)`:
+
+```yaml
+readonlyrest:
+   variables_function_aliases:
+      - custom_replace: 'to_lowercase.replace_all("\\d","x")' # convert to lower case and replace digits with x
+      - skip_team_prefix: 'replace_first("^team","")'
+
+   access_control_rules:
+      - name: Alice
+        indices: ['index_@{header:group}#{func(custom_replace)}']
+        auth_key: alice:p455phrase
+
+      - name: Bob
+        indices: ['index_@{header:group}#{func(custom_replace).func(skip_team_prefix)}']
+        auth_key: bob:s3cr37
+```
+
 ### LDAP connector
-The auhentication and authorization rules for LDAP (`ldap_auth`, `ldap_authentication`, `ldap_authorization`) defined  in the rules section, always need to contain a reference by name to one LDAP connector. One or more LDAP connectors need to be defined in the section "ldaps" of the ACL.
+The authentication and authorization rules for LDAP (`ldap_auth`, `ldap_authentication`, `ldap_authorization`) defined  in the rules section, always need to contain a reference by name to one LDAP connector. One or more LDAP connectors need to be defined in the section "ldaps" of the ACL.
 
 #### Configuration notes
 If you would like to experiment with LDAP and need a development server, you can stand up an OpenLDAP server configuring it using our schema file, which can be found in [our tests](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/test/resources/test_example.ldif)).
@@ -1974,7 +2096,7 @@ group_search_filter: "(cn=*)" # basically no group filtering
 ```
 
 #### Caching
-Too many calls made by ROR to our LDAP service can sometimes be problematic (eg. when one LDAP connector is used in many rules). The problem can be simply solved by using caching functionality. Caching can be configured per LDAP connector or per LDAP rule (see [`ldap_auth`](#ldap_auth), [`ldap_authentication`](#ldap_authentication), [`ldap_authorization`](#ldap_authorization) rules). By default cache is diabled. We can enabled it by set `cache_ttl` > `0 sec`. In the cache will be stored only results of successful requests - info about authentication result and/or returned LDAP groups for the given credentials. When LDAP connector level cache is used any rule that use the connector can take advantage of cached results. When we configure `cache_ttl` at LDAP rule level, the results of LDAP calls made by the rule will be stored in cache. Other LDAP rules won't have access to this cache.
+Too many calls made by ROR to our LDAP service can sometimes be problematic (eg. when one LDAP connector is used in many rules). The problem can be simply solved by using caching functionality. Caching can be configured per LDAP connector or per LDAP rule (see [`ldap_auth`](#ldap_auth), [`ldap_authentication`](#ldap_authentication), [`ldap_authorization`](#ldap_authorization) rules). By default cache is disabled. We can enabled it by set `cache_ttl` > `0 sec`. In the cache will be stored only results of successful requests - info about authentication result and/or returned LDAP groups for the given credentials. When LDAP connector level cache is used any rule that use the connector can take advantage of cached results. When we configure `cache_ttl` at LDAP rule level, the results of LDAP calls made by the rule will be stored in cache. Other LDAP rules won't have access to this cache.
 
 #### Circuit Breaker
 The LDAP connector is equipped by default with a circuit breaker functionality. The circuit breaker can disable the connector from sending new requests to the server when it doesn't respond properly. After receiving a configurable number of failed responses in a row, the circuit breaker feature disables sending any new requests by terminating them immediately with an exception. After a configurable amount of time, the circuit breaker feature allows one request to pass again. If it succeeds, the connector goes back to normal operation. If not, a test request is sent again after a configurable amount of time. A general description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
@@ -2498,7 +2620,7 @@ The `ssl_certificate_verification` bit is necessary for accepting self-signed SS
 
 ### Secure Metricbeats
 
-Very similarly to Logstaash, here's a snippet of configuration for [Metricbeats](https://www.elastic.co/downloads/beats/metricbeat) logging agent configuration of metricbeat - elasticsearch section
+Very similarly to Logstash, here's a snippet of configuration for [Metricbeats](https://www.elastic.co/downloads/beats/metricbeat) logging agent configuration of metricbeat - elasticsearch section
 
 #### On the Metricbeats side
 
