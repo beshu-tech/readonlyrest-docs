@@ -1714,7 +1714,7 @@ readonlyrest:
   username_case_sensitivity: case_sensitive
 ```
 
-By default, usernames are case-sensitive `username_case_sensitivity: case_sensitive`. By setting `username_case_sensitivity: case_sensitive` username comparison will be case-insensitive in any rule.
+By default, usernames are case-sensitive `username_case_sensitivity: case_sensitive`. By setting `username_case_sensitivity: case_insensitive` username comparison will be case-insensitive in any rule.
 ### Static variables
 
 Anywhere in `readonlyrest.yml` you can use the expression `${env:MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
