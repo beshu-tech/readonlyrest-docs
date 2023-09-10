@@ -349,7 +349,7 @@ Though we have not yet configured claims for Kibana, the metadata for the SAML c
 
 ![](../../.gitbook/assets/90.png)
 
-The important section to note concerns the claims issuance policy. We need to return a **NameID** format in the form of an **emailAddress** by entering the following code**:**
+The important section to note concerns the claims issuance policy. We need to return a **NameID** format in the form of an **emailAddress** by entering the following code\*\*:\*\*
 
 \<NameIDFormat>\
 urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress\
@@ -435,14 +435,14 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 ### Installing the Elasticsearch Plugin
 
 1. Navigate to the [ReadonlyREST Plugin download page](https://readonlyrest.com/download/) to enter your details. You will receive the download link in your email. Make sure to choose the **Free Elasticsearch Plugin** that matches your Elasticstack version.
-2. ![](../../.gitbook/assets/108.png)
+2. <img src="../../.gitbook/assets/108.png" alt="" data-size="original">
 3. Download the plugin, open an Administrative command prompt, and navigate to the Elasticsearch program directory. Run the plugin installation by entering the following:
 4.  cd "C:\Program Files\Elastic\ElasticSearch\7.6.2\bin"
 
     elasticsearch-plugin.bat install file:///C:/Users/lc-admin.AD/Downloads/readonlyrest-1.19.4\_es7.6.2.zip
-5. ![](../../.gitbook/assets/109.png)
+5. <img src="../../.gitbook/assets/109.png" alt="" data-size="original">
 6. Navigate to the C:\ProgramData\Elastic\ElasticSearch\config directory, and create the file readonlyrest.yml.
-7. ![](../../.gitbook/assets/110.png)
+7. <img src="../../.gitbook/assets/110.png" alt="" data-size="original">
 8. Open the readonlyrest.yml file in Notepad to run this very basic configuration that configures the following two different access control rules: 1. **“**::KIBANA-SRV::**”**—this rule allows the Kibana server to authenticate to Elasticsearch using digest authentication with the username “kibana” and password “kibana.” 2. “ADFS Users”—this rule uses the ror\_kbn\_auth method which allows SAML authenticates to succeed.
 9. Create a random 256-character signature\_key. This key will be shared between Kibana and Elasticsearch.
 10. Please note that the kbn1 identifier must match in the ror\_kbn\_auth and ror\_kbn sections; however, any names can be used for them.
@@ -483,30 +483,30 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 It is necessary to make Kibana operate under SSL for AD FS to perform SAML authentication.
 
 1. The easiest way to generate a self-signed certificate using the required format is to use **OpenSSL**. A Windows version of this tool available for download is located [here](https://slproweb.com/products/Win32OpenSSL.html).
-2. ![](../../.gitbook/assets/115.png)
+2. <img src="../../.gitbook/assets/115.png" alt="" data-size="original">
 3. If **Microsoft Visual C++ 2017 Redistributables (64-bit)** is not already installed, click **Yes** to download the installation and run the installer first.
 4. Accept the license agreement, and click on **Install.**
 5. Back on the OpenSSL installation, click on **I accept the agreement**, then click on **Next.**
-6. ![](../../.gitbook/assets/120.png)
+6. <img src="../../.gitbook/assets/120.png" alt="" data-size="original">
 7. Click **Next** on the **Destination Location** screen.
-8. ![](../../.gitbook/assets/121.png)
+8. <img src="../../.gitbook/assets/121.png" alt="" data-size="original">
 9. Click **Next** on the **Select Start Menu Folder** screen.
-10. ![](../../.gitbook/assets/122.png)
+10. <img src="../../.gitbook/assets/122.png" alt="" data-size="original">
 11. Select **The** **Windows system directory** on the **Additional Tasks** screen, and click **Next.**
-12. ![](../../.gitbook/assets/123.png)
+12. <img src="../../.gitbook/assets/123.png" alt="" data-size="original">
 13. Click on **Install.**
-14. ![](../../.gitbook/assets/124.png)
+14. <img src="../../.gitbook/assets/124.png" alt="" data-size="original">
 15. Click on **Finish.**
-16. ![](../../.gitbook/assets/125.png)
+16. <img src="../../.gitbook/assets/125.png" alt="" data-size="original">
 17. Open an administrative command prompt, and run the following command to create the certificates in the specific X509 PEM format that Kibana requires:
 18. "C:\Program Files\OpenSSL-Win64\bin\openssl.exe"
 
     req -x509 -sha256 -nodes -days 730 -newkey rsa:2048 -keyout localhost-key.pem -out localhost.pem -subj "/C=US/ST=IL/L=Bloomington/O=lc-test/CN=10.0.0.6"
 19. Change the subj to one that is more indicative of your installation. Make sure the CN={IP Address} matches the accessible IP of your Elasticsearch/Kibana server.
-20. ![](../../.gitbook/assets/126.png)
+20. <img src="../../.gitbook/assets/126.png" alt="" data-size="original">
 21. Locate the newly created pem certificates and copy them to C:\kibana\ssl\_cert.
 22. The ssl\_cert directory will need to be created first. For our purposes here, it has been arbitrarily named.
-23. ![](../../.gitbook/assets/127.png)
+23. <img src="../../.gitbook/assets/127.png" alt="" data-size="original">
 24. Restart Kibana by entering **Ctrl-C** in the running command prompt window and then re-running kibana.bat.
 
 ### Installing the ReadonlyREST Enterprise Plugin

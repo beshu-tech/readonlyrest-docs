@@ -1,5 +1,16 @@
 # Changelog
 
+### (2023-09-10) What's new in **ROR 1.51.0**
+* **🚨Security Fix** (KBN) the issue with [api_only](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules) access level user and accessing via Kibana UI
+* **🚀New** (ES) [Dynamic variables transformation support](https://docs.readonlyrest.com/elasticsearch#variables-functions)
+* **🧐Enhancement** (KBN) Expose interactive Swagger as a new Security settings tab
+* **🧐Enhancement** (KBN) Provide detailed information about the invalid activation key
+* **🐞Fix** (KBN) the issue with the persistence of an activation key provided via UI when `readonlyrest_kbn.cookiePass` was not provided.
+* **🐞Fix** (KBN) issues for Kibana versions between 7.9.0 and 7.10.2, related to the activation key, Spaces, and readonlyREST menu crash
+* **🐞Fix** (KBN) The issue with a logout from Kibana when the link to the Kibana is open from a third-party application like `Gmail`
+* **🐞Fix** (ES) [getting data streams when not full names of backing indices are declared in the `indices` rule](https://forum.readonlyrest.com/t/forbidden-for-creating-component-templates/2372/7)
+* **🐞Fix** (ES) stack-management screen fix in case of `xpack.security.enabled: true`
+
 ### (2023-07-25) What's new in **ROR 1.50.0**
 * **🚀New** (KBN/ES) ECK support
 * **🚀New** (KBN) 8.9.1, 8.9.0, 7.17.12 support

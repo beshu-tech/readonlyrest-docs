@@ -16,10 +16,9 @@ It's not mandatory to install ReadonlyREST in all Elasticsearch nodes, but only 
 
 ### After purchasing
 
-If you didn't install it yet, download the latest [universal build](https://docs.readonlyrest.com/universal-builds) from our [download page](https://readonlyrest.com/download/) and install it manually.
-Alternatively, see below if you want to install it directly via the command line without downloading it from the browser.
+If you didn't install it yet, download the latest [universal build](https://docs.readonlyrest.com/universal-builds) from our [download page](https://readonlyrest.com/download/) and install it manually. Alternatively, see below if you want to install it directly via the command line without downloading it from the browser.
 
-Once the universal build plugin for Kibana is installed, you can activate it using an **activation key**. You can get one of these in the [ReadonlyREST customer portal](https://readonlyrest.com/customer) if you are a subscriber, otherwise, use the same portal to get a trial activation key (for PRO or Enterprise) for 30 days evaluation. 
+Once the universal build plugin for Kibana is installed, you can activate it using an **activation key**. You can get one of these in the [ReadonlyREST customer portal](https://readonlyrest.com/customer) if you are a subscriber, otherwise, use the same portal to get a trial activation key (for PRO or Enterprise) for 30 days evaluation.
 
 ### Version strings
 
@@ -94,8 +93,6 @@ $ curl -vvv  "https://api.beshu.tech/download/es?esVersion=8.6.0&pluginVersion=1
 [...]
 ```
 
-
-
 Now you are ready to [patch Kibana](./#patching-kibana).
 
 ### Installing from zip file
@@ -155,12 +152,13 @@ $ bin/kibana-plugin remove readonlyrest_kbn
 To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 
 * [Unpatch Kibana](./#unpatching-kibana)
-* [Uninstall](#uninstalling) the old plugin
+* [Uninstall](kibana.md#uninstalling) the old plugin
 * [Install](./#installation) the new one
 * [Patch Kibana](./#patching-kibana)
 * Restart Kibana
 
 ### Major version upgrades when using multi-tenancy
+
 If you use multi-tenancy (Enterprise only), you will have one or more teanancy-specific kibana indices beyond the main `.kibana` (e.g. `.kibana_tenant1`, `.kibana_tenant2`, etc.).
 
 The first time you run Kibana after a major version upgrade (e.g. upgrading from Kibana 7.17.7 to Kibana 8.0.0), Kibana will run a [saved objects migration](https://www.elastic.co/guide/en/kibana/current/saved-object-migrations.html) on the default `.kibana` index, or whatever it finds configured as `kibana.index` in `kibana.yml`.
@@ -170,6 +168,7 @@ Now, because you may have multiple kibana indices containing saved objects, you 
 ReadonlyREST Enterprise will automatically make sure a tenancy index is migrated to satisfy the current Kibana version **right before every time it's being used.**
 
 For example, after a tenant logs in, before the Kibana session is started, or when a user changes tenancy with the tenancy switcher, the tenancy index gets created if absent, checked and migrated if necessary. These logs mean that migration started correctly:
+
 ```
   [savedobjects-service] Waiting until all Elasticsearch nodes are compatible with Kibana before starting saved objects migrations...
   [savedobjects-service] Starting saved objects migrations
@@ -184,7 +183,6 @@ For example, after a tenant logs in, before the Kibana session is started, or wh
 ```
 
 Now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
-
 
 ### Using RoR with a reverse proxy
 
@@ -225,7 +223,7 @@ As you read, there are two possible places where the settings can be read from:
 
 When the ES plugin boots up, it follows some logic to evaluate where to read the YAML settings from. The following diagram shows how that works.
 
-![config loading diagram](<../.gitbook/assets/ror\_config\_loading\_diagram (1) (1).png>)
+![config loading diagram](<.gitbook/assets/ror\_config\_loading\_diagram (1) (1) (1).png>)
 
 #### Malformed in-index settings
 
@@ -374,14 +372,14 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
 ```
 
 ### Multi-tenancy Kibana
-ReadonlyREST Enterprise is capable of going beyond multi-user. Users or groups can be isolated into tenancies, so their dashboards and configurations won't mix. Behind each tenancy, there is a kibana index. 
 
-#### What is a kibana index? 
-In the vanilla Kibana, all the configuration objects are stored under an Elasticsearch index called `.kibana`, but with ReadonlyREST Enterprise installed, you can dynamically route 
-Kibana into reading and writing to other indices entirely, for example `.kibana_tenancy1`. So when "tenancy1" is selected from the UI, Kibana hard reloads and all settings, dashboards, and visualizations are (potentially) different. 
+ReadonlyREST Enterprise is capable of going beyond multi-user. Users or groups can be isolated into tenancies, so their dashboards and configurations won't mix. Behind each tenancy, there is a kibana index.
 
-A user can be associated to multiple tenancies, and if so, will be presented with a tenancy switcher in the UI. 
-![image](https://github.com/beshu-tech/readonlyrest-docs/assets/1327189/b07d27d3-310c-4754-a5c5-21b0fe3f3d45)
+#### What is a kibana index?
+
+In the vanilla Kibana, all the configuration objects are stored under an Elasticsearch index called `.kibana`, but with ReadonlyREST Enterprise installed, you can dynamically route Kibana into reading and writing to other indices entirely, for example `.kibana_tenancy1`. So when "tenancy1" is selected from the UI, Kibana hard reloads and all settings, dashboards, and visualizations are (potentially) different.
+
+A user can be associated to multiple tenancies, and if so, will be presented with a tenancy switcher in the UI. ![image](https://github.com/beshu-tech/readonlyrest-docs/assets/1327189/b07d27d3-310c-4754-a5c5-21b0fe3f3d45)
 
 Using this tool, they can hop between tenancies. Keep in mind that the ACL evaluation is slightly different when multi tenancy is activated: if a tenancy is selected, only blocks without `kibana.index` rule, or with the `kibana.index` [rule](https://docs.readonlyrest.com/elasticsearch#kibana) matching to the current teancy name will be evaluated.
 
@@ -392,7 +390,8 @@ readonlyrest_kbn.multiTenancyEnabled: false
 ```
 
 ### Configuring Multi-tenancy
-You can configure an ACL in multi tenancy mode by adding a few ACL blocks containing the `kibana.index` [rule](https://docs.readonlyrest.com/elasticsearch#kibana). See examples and further explanation under our [multi-tenancy guide](examples/multitenancy_guide.md).
+
+You can configure an ACL in multi tenancy mode by adding a few ACL blocks containing the `kibana.index` [rule](https://docs.readonlyrest.com/elasticsearch#kibana). See examples and further explanation under our [multi-tenancy guide](examples/multitenancy\_guide.md).
 
 #### Session cookie expiration
 
@@ -438,7 +437,7 @@ As you can see, Elasticsearch has no user related information (metadata) to retu
 
 In general, we highly discourage implementing access control using origin IPs alone, users should set up SSL, Basic HTTP auth in their agents in any case, even on localhost. The hosts rule would then be an extra protection.
 
-If this is not possible for very important reasons, then we would prevent any Kibana originated request to match that rule by using the negated form of the [headers rule](../elasticsearch.md#headers). I.e.
+If this is not possible for very important reasons, then we would prevent any Kibana originated request to match that rule by using the negated form of the [headers rule](elasticsearch.md#headers). I.e.
 
 readonlyrest.yml
 
@@ -447,7 +446,6 @@ readonlyrest.yml
   hosts: ["127.0.0.1"]
   headers: [ "~x-from-kibana:true" ]
 ```
-
 
 kibana.yml (append)
 
@@ -463,11 +461,11 @@ Previously we needed to keep track and document all Kibana apps IDs, and you had
 
 For example, this is how you hide the whole Enterprise Search submenu.
 
-![kibana\_hide\_apps: \["Enterprise Search"\]](<../.gitbook/assets/image (2).png>)
+![kibana\_hide\_apps: \["Enterprise Search"\]](<.gitbook/assets/image (2).png>)
 
 And this is how you hide only one app from the Enterprise Search menu:
 
-![kibana\_hide\_apps: \["Enterprise Search|Workplace Search"\]](<../.gitbook/assets/image (3).png>)
+![kibana\_hide\_apps: \["Enterprise Search|Workplace Search"\]](<.gitbook/assets/image (3).png>)
 
 More generally, either of these two ways will work:
 
@@ -499,8 +497,7 @@ kibana:
 
 In this case, all analytics apps will be hidden except `Maps`
 
-**⚠️IMPORTANT** Pipe operator needs to be escaped correctly when it's declared in the regular expression `\\|`.
-The regular expression must be declared between double quote `"/<regular-expression/"`
+**⚠️IMPORTANT** Pipe operator needs to be escaped correctly when it's declared in the regular expression `\\|`. The regular expression must be declared between double quote `"/<regular-expression/"`
 
 You can also hide all submenus except specified values
 
@@ -513,11 +510,11 @@ In this case everything except of `Analytics` and `Management` will submenus wil
 
 **⚠️IMPORTANT** In this case `|` is treated ad logical `or` operator, that's why it shouldn't be escaped
 
-To check all regular expressions available options, check [regular expressions syntax cheatsheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet)
+To check all regular expressions available options, check [regular expressions syntax cheatsheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular\_Expressions/Cheatsheet)
 
 #### Hiding kibana management apps
 
-There is an option to hide specific management apps. You can declare hide_apps value like:
+There is an option to hide specific management apps. You can declare hide\_apps value like:
 
 ```yaml
 hide_apps: [ "<submenu-title|app-title|management-submenu-title|management-app-title>" ]
@@ -554,8 +551,7 @@ In this case, all Stack Management Kibana section apps except Data Views and Tag
 kibana_hide_apps: ["/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/", "/^Management\\|Stack Management\\|Kibana\\|(?!(Data Views|Tags)$).*$/"]
 ```
 
-In this case, all Stack Management  apps except Data Views and Tags will be hidden
-
+In this case, all Stack Management apps except Data Views and Tags will be hidden
 
 ### Hiding ReadonlyREST menu elements
 
@@ -575,7 +571,7 @@ kibana:
   hide_apps: [ "ROR Security Settings" ]
 ```
 
-![Hiding ReadonlyREST menu elements](../.gitbook/assets/hiding\_readonlyrest\_menu\_elements.png)
+![Hiding ReadonlyREST menu elements](.gitbook/assets/hiding\_readonlyrest\_menu\_elements.png)
 
 ### Kibana configuration
 
@@ -606,7 +602,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.
 
-1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](../elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
+1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry a `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
@@ -653,7 +649,7 @@ Alternatively to typing in credentials in the standard login form, it is possibl
 
 To enable this feature in ReadonlyREST, you need to:
 
-* Have JWT authentication configured in ReadonlyREST (modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin). [See how](../elasticsearch.md#json-web-token-jwt-auth).
+* Have JWT authentication configured in ReadonlyREST (modifying `readonlyrest.yml` or the cluster wide settings UI in the Kibana plugin). [See how](elasticsearch.md#json-web-token-jwt-auth).
 * Specify the query parameter name in `kibana.yml` by adding the line `readonlyrest_kbn.jwt_query_param: "jwt"` as a string, in our case "jwt".
 
 #### In Action
@@ -729,17 +725,17 @@ xpack.security.secureCookies: true
 
 This feature will work in all ReadonlyREST editions.
 
-The audit log feature is widely described in [📖docs for Elasticsearch plugin](../elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
+The audit log feature is widely described in [📖docs for Elasticsearch plugin](elasticsearch.md#audit-logs). Kibana plugin has predefined dashboard representing collected audit data.
 
 ### Loading visualization
 
 In the _Audit_ tab of the ReadonlyREST Kibana app, there is a button that automatically creates a dashboard with some audit log specific visualizations.
 
-![audit log tab](<../.gitbook/assets/audit\_tab (1) (1).png>)
+![audit log tab](<.gitbook/assets/audit\_tab (1) (1).png>)
 
 Click the _Load_ button to load the dashboard and visualizations. An _Override_ checkbox allows to reload the default dashboard and visualizations. It will override any previously loaded audit log dashboard.
 
-![loading visualization](<../.gitbook/assets/load\_audit\_dashboard (1) (1) (1) (1) (4) (6) (7) (10) (15).png>)
+![loading visualization](<.gitbook/assets/load\_audit\_dashboard (1) (1) (1) (1) (4) (6) (7) (10) (15).png>)
 
 In detail, this feature creates three Kibana "saved objects":
 
@@ -903,7 +899,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](<../elasticsearch.md#Dynamic variables from JWT claims>)for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](<elasticsearch.md#Dynamic variables from JWT claims>)for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
@@ -1058,18 +1054,18 @@ readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 
 This feature will work only with ReadonlyREST Enterprise
 
-When a tenant logs in for the first time, ReadonlyREST Enterprise will create the kibana index associated to the tenancy as per ACL. For example, it will create and initialize the ".kibana_user1" index, where the tenant "user1" will store all the ["saved objects"](https://www.elastic.co/guide/en/kibana/current/managing-saved-objects.html), that is: visualizations, dashboards, spaces, settings, data views, etc.
+When a tenant logs in for the first time, ReadonlyREST Enterprise will create the kibana index associated to the tenancy as per ACL. For example, it will create and initialize the ".kibana\_user1" index, where the tenant "user1" will store all the ["saved objects"](https://www.elastic.co/guide/en/kibana/current/managing-saved-objects.html), that is: visualizations, dashboards, spaces, settings, data views, etc.
 
 The problem is that user1, and any other new users would login for the first time in to a completely blank Kibana. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana.access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
 
-To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create and curate a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy. 
-The objects in the templating index will be copied every time the user logs in (or changes tenancy with the tenancy selector), and **if the objects were already present, they will be overwritten**.
+To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create and curate a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy. The objects in the templating index will be copied every time the user logs in (or changes tenancy with the tenancy selector), and **if the objects were already present, they will be overwritten**.
 
 The object overwrite is desirable because administrators would like to improve and enrich the content of the template tenancy over time, and these enhancements need to be propagated to the tenants.
 
 If the tenants were not read-only, and created other objects of their own (e.g. another space, another dashboard), these won't be deleted.
 
 ### Reset tenancy to template
+
 If you add `readonlyrest_kbn.resetKibanaIndexToTemplate: true` to `kibana.yml` your tenants will get their index deleted and reinitialized to the content in the kibana template index specified in `readonlyrest_kbn.kibanaIndexTemplate` every time they log in, or change tenancy using the tenancy selector.
 
 The reset tenancy to template only works if a valid kibana index template is specified.
@@ -1184,19 +1180,15 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/Impersonator):
 
 > An impersonator is someone who imitates or copies the behavior or actions of another.
 
-So, an impersonation can be understood as imitating behaviors or actions.
-In the context of ReadonlyREST: one user could imitate an action 
-of another user. Why would we want it? Let's suppose the first user is 
-an admin, who has just configured access for a new user. They would like 
-to know if the rule(s) are configured correctly. And here comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves. 
+So, an impersonation can be understood as imitating behaviors or actions. In the context of ReadonlyREST: one user could imitate an action of another user. Why would we want it? Let's suppose the first user is an admin, who has just configured access for a new user. They would like to know if the rule(s) are configured correctly. And here comes the impersonation feature. The admin can impersonate given user in Kibana and see what the user would see if they logged in themselves.
 
-ROR plugins support impersonation and provide UI for configuring cluster before using it. Visit the [impersonation details page](./details/impersonation.md) to know more.
+ROR plugins support impersonation and provide UI for configuring cluster before using it. Visit the [impersonation details page](details/impersonation.md) to know more.
 
 ## Custom middleware
-Sometimes, Enterprise users might need more flexibility and customize the plugin behavior to adjust the product to the business needs.
-There are two options to declare the custom middleware:
-- JS file: `readonlyrest_kbn.custom_middleware_inject_file: '/path/to/your/file.js'` // You can also use relative path here. It's relative to the kibana root folder
-- Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
 
-Visit the [Custom middleware](./examples/custom-middleware) to know more.
+Sometimes, Enterprise users might need more flexibility and customize the plugin behavior to adjust the product to the business needs. There are two options to declare the custom middleware:
 
+* JS file: `readonlyrest_kbn.custom_middleware_inject_file: '/path/to/your/file.js'` // You can also use relative path here. It's relative to the kibana root folder
+* Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
+
+Visit the [Custom middleware](examples/custom-middleware/) to know more.

@@ -36,7 +36,7 @@ If you imported the JSON file, you should have a "ror" realm, and an OpenID Conn
 
 First, we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2) (5).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2) (2) (7).png>)
 
 Then, let's create an OpenId Connect client for this realm:
 

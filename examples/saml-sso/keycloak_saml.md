@@ -37,19 +37,19 @@ If you imported the JSON file, you should have a "ror" realm, and a SAML client 
 
 First, we want to create a new dedicated "ror" realm, so we don't interfere with any other use of this Keycloak installation.
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2) (5).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_conf\_realm (1) (1) (1) (1) (1) (1) (1) (2) (2) (7).png>)
 
 Then, let's create a SAML client for this realm:
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_create\_saml\_client (1) (1).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_create\_saml\_client (1) (1) (1).png>)
 
 Then, configure the SAML client according to your Kibana URL, in this example, Kibana responds to "[https://localhost:5601/k](https://localhost:5601/k)"
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_configure\_saml\_client (1) (1).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_configure\_saml\_client (1) (1) (1).png>)
 
 Now that the client is saved, let's observe the "configure" tab, here we will extract the two logout and login endpoints that we will use for configuring our SAML connector in "kibana.yml".
 
-![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_extract\_config\_from\_client (1) (1).png>)
+![keycloak\_screenshot](<../../.gitbook/assets/kc\_saml\_extract\_config\_from\_client (1) (1) (2).png>)
 
 ### Install ReadonlyREST Enterprise for Kibana
 

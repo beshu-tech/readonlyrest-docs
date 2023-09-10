@@ -131,19 +131,19 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. Login in your Microsoft Azure dashboard, and head to Enterprise Applications.
 
-![Azure Dashboard](<../../.gitbook/assets/azure\_dashboard (1) (1) (1) (3) (6) (7) (2) (14).png>)
+![Azure Dashboard](<../../.gitbook/assets/azure\_dashboard (1) (1) (1) (3) (6) (7) (2) (10) (10).png>)
 
 1. Click on "Non-gallery application".
 
-![Azure Enterprise apps](<../../.gitbook/assets/azure\_enterprise\_apps (1) (1).png>)
+![Azure Enterprise apps](<../../.gitbook/assets/azure\_enterprise\_apps (1) (1) (1).png>)
 
 1. Create a new app called "Readonlyrest Enterprise".
 
-![Azure App Name](<../../.gitbook/assets/azure\_app\_name (3) (3) (3) (4) (2) (11).png>)
+![Azure App Name](<../../.gitbook/assets/azure\_app\_name (3) (3) (3) (4) (2) (10) (7).png>)
 
 1. Click "Single Sign On" to configure the app for SAML.
 
-![Azure ror app](<../../.gitbook/assets/azure\_ror\_app (1) (1).png>)
+![Azure ror app](<../../.gitbook/assets/azure\_ror\_app (1) (1) (1).png>)
 
 1. Insert URLs and data about our Kibana server as shown in the picture. And press SAVE.
 
@@ -155,7 +155,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 7 Make sure this app has at least a test user assigned, and press SAVE. Otherwise the single sign-on will fail.
 
-![Azure ror app users](<../../.gitbook/assets/azure\_ror\_app\_users (1) (1).png>)
+![Azure ror app users](<../../.gitbook/assets/azure\_ror\_app\_users (1) (1) (1).png>)
 
 ## Testing if this all works.
 
@@ -163,7 +163,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
     You should now see a new blue button that says "Azure AD SAML SSO".
 
-![ROR login](<../../.gitbook/assets/ror\_ent\_login (1) (1) (1) (3) (5) (8) (9) (10) (16).png>)
+![ROR login](<../../.gitbook/assets/ror\_ent\_login (1) (1) (1) (3) (5) (8) (9) (10) (10) (4).png>)
 
 1. Press it, and you should see the Azure AD login page. Place your credentials here, or pick an already authenticated identity to enter Kibana.
 
@@ -171,7 +171,7 @@ An example of SAML assertion object coming from Azure AD after successful authen
 
 1. You will now be redirected to Kibana, logged in as your Azure AD identity.
 
-![Azure Login](<../../.gitbook/assets/kibana\_welcome (1) (1).png>)
+![Azure Login](<../../.gitbook/assets/kibana\_welcome (1) (1) (2).png>)
 
 1. You can now logout from the "ReadonlyREST SAML SSO" Azure AD Enterprise app by pressing the exit button right beside the username in the bottom right corner.
 
@@ -204,7 +204,7 @@ From ReadonlyREST settings, we will refer to the newly created group using its a
 
 `Dashboard > Enterprise applications - All applications > ReadonlyREST Enterprise - Users and groups > [your user] - Groups`
 
-![Azure Show Groups](<../../.gitbook/assets/azure\_groups\_list (1) (1).png>)
+![Azure Show Groups](<../../.gitbook/assets/azure\_groups\_list (1) (1) (2).png>)
 
 The object ID of the new group is "3f8ebed8-f742-42a6-94ba-2d57550fc3cf", let's take note of this. We will use it in our ACL.
 

@@ -1,35 +1,34 @@
 ---
-description: Detailed configuration 
+description: Detailed configuration
 ---
 
-## Self-managed ROR cluster and remote Elastic Cloud cluster configuration details
+# Configuration details
 
 This is a detailed description of how to configure two Elasticsearch clusters:
-1. One in Elastic Cloud (managed Elasticsearch from Elastic) containing the bulk of the data 
+
+1. One in Elastic Cloud (managed Elasticsearch from Elastic) containing the bulk of the data
 2. One self-hosted with ReadonlyREST (for enterprise-level access control and authentication)
 
-The objective is to get the two connected using the transport protocol over SSL, so that we can attach a Kibana (with ROR Enterprise installed) to the cluster #2, and from there query the data in cluster #1 using the [Cross Cluster Search (CCS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cross-cluster-search.html) feature. 
+The objective is to get the two connected using the transport protocol over SSL, so that we can attach a Kibana (with ROR Enterprise installed) to the cluster #2, and from there query the data in cluster #1 using the [Cross Cluster Search (CCS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cross-cluster-search.html) feature.
 
+## Two-way SSL configuration
 
-### Two-way SSL configuration
+The local, self-managed ROR cluster connects with the remote Elastic Cloud cluster using the Elasticsearch transport interface. The transport uses two-way SSL to authorize nodes of clusters.
 
-The local, self-managed ROR cluster connects with the remote Elastic Cloud cluster using the Elasticsearch transport interface.
-The transport uses two-way SSL to authorize nodes of clusters.
+To do that, we need to
 
-To do that, we need to 
 1. Generate CA certificates of nodes of the local cluster (using the CA certificates of the Elastic cloud cluster)
-2. Use them to add a trusted environment in the Elastic Cloud console 
+2. Use them to add a trusted environment in the Elastic Cloud console
 3. Configure the internode SSL and remote cluster settings in `elasticsearch.yml`
 
-The CA certificates of the Elastic Cloud cluster nodes can be downloaded from the security settings of 
-the Elastic Cloud deployment (see [screenshots](playgroud.md#running-interactive-script)). 
+The CA certificates of the Elastic Cloud cluster nodes can be downloaded from the security settings of the Elastic Cloud deployment (see [screenshots](playgroud.md#running-interactive-script)).
 
-#### Generating ROR cluster CA and nodes' certificates 
+### Generating ROR cluster CA and nodes' certificates
 
-To generate CA certificates in the self-hosted cluster, we will use the `elasticsearch-certutil` which can be found in the `bin` folder in your Elasticsearch 
-location (eg. `/usr/share/elasticsearch/bin/`). 
+To generate CA certificates in the self-hosted cluster, we will use the `elasticsearch-certutil` which can be found in the `bin` folder in your Elasticsearch location (eg. `/usr/share/elasticsearch/bin/`).
 
 Our working directory structure will look like that:
+
 ```bash
 /tmp/certs# tree
 .
@@ -51,8 +50,7 @@ Let's move the downloaded Elastic Cloud CA certificates file to `/tmp/certs/inpu
 2 directories, 1 file
 ```
 
-Now, let's create the `instances.yml` file in the `/tmp/certs/input` directory where we will define all nodes and their properties
-(see [Elastic instruction for details](https://www.elastic.co/guide/en/elasticsearch/reference/current/certutil.html#certutil-silent)) eg.
+Now, let's create the `instances.yml` file in the `/tmp/certs/input` directory where we will define all nodes and their properties (see [Elastic instruction for details](https://www.elastic.co/guide/en/elasticsearch/reference/current/certutil.html#certutil-silent)) eg.
 
 ```yaml
 instances:
@@ -66,19 +64,19 @@ instances:
 ```
 
 Great, we have all the ingredients to generate the CA certificates of the nodes in our local ROR cluster:
+
 ```bash
 mkdir -p /tmp/certs/output/ca
 bin/elasticsearch-certutil ca --out /tmp/certs/output/ca/ca.p12 --pass mycapassword 
 ```
 
-Details about the usage of the `elasticsearch-certutil` tool you will find in [Elastic documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/certutil.html). 
-We have the CA certificate in `p12` format. We need to convert it to `X509`. It can be done using `openssl`:
+Details about the usage of the `elasticsearch-certutil` tool you will find in [Elastic documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/certutil.html). We have the CA certificate in `p12` format. We need to convert it to `X509`. It can be done using `openssl`:
 
 ```bash
 openssl pkcs12 -in /tmp/certs/output/ca/ca.p12 -out /tmp/certs/output/ca/ca.crt -nokeys --password pass:mypassword 
 ```
 
-Let's use our CA and generate certificates for the ROR cluster nodes: 
+Let's use our CA and generate certificates for the ROR cluster nodes:
 
 ```bash
 bin/elasticsearch-certutil cert --silent --in /tmp/certs/input/instances.yml --out /tmp/certs/output/ror-cluster.zip --ca /tmp/certs/output/ca/ca.p12 --ca-pass mypassword --pass mypassword
@@ -111,24 +109,26 @@ This is it. The structure of the `certs` folder should look like this:
 5 directories, 6 files
 ```
 
-#### Adding a new trusted environment in the Elastic Cloud deployment
+### Adding a new trusted environment in the Elastic Cloud deployment
 
-In Elastic Cloud deployment security settings, there is a Remote Connections section, where you can add
-a new trusted environment (see [screenshots](playgroud.md#running-interactive-script)). The new trusted
-environment will be the self-managed cluster. To complete the process we need to:
+In Elastic Cloud deployment security settings, there is a Remote Connections section, where you can add a new trusted environment (see [screenshots](playgroud.md#running-interactive-script)). The new trusted environment will be the self-managed cluster. To complete the process we need to:
+
 1. upload the ROR cluster CA (`/tmp/certs/output/ca/ca.crt`)
 2. select trusted cluster by:
    * ticking `Trust clusters whose Common Name follows the Elastic pattern`
    * entering `Scope ID` (in out example, it was `ror-test`)
-  * marking that we trust "All deployments" (or specific if you wish)
+
+* marking that we trust "All deployments" (or specific if you wish)
+
 3. give a name of the environment (pick anything you want)
 4. click `Create trust`
 
-And that's it! Now ROR cluster should trust the Elastic Cloud cluster and vice versa. 
+And that's it! Now ROR cluster should trust the Elastic Cloud cluster and vice versa.
 
-### The minimal configuration of Elasticsearch & ReadonlyREST settings
+## The minimal configuration of Elasticsearch & ReadonlyREST settings
 
 `elasticsearch.yml` should look like this:
+
 ```yaml
 cluster.name: ror-cluster # the same value used in `instances.yml`
 node.name: ror-es01  # the same value used in `instances.yml`
@@ -154,6 +154,7 @@ cluster.remote.escloud.server_name: '${ES_CLOUD_SERVER_NAME}' # taken from Elast
 ```
 
 and `readonlyrest.yml` like this:
+
 ```yaml
 readonlyrest:
 
@@ -178,11 +179,16 @@ readonlyrest:
 ```
 
 Kibana configuration doesn't contain anything special.
+
 <details>
-  <summary>Expand it if you really need to see how it looks like</summary>
-<br>
+
+<summary>Expand it if you really need to see how it looks like</summary>
+
+\
+
 
 `kibana.yml`:
+
 ```yaml
 server.name: kibana-ror
 server.host: 0.0.0.0
@@ -192,5 +198,5 @@ monitoring.ui.container.elasticsearch.enabled: true
 elasticsearch.username: kibana
 elasticsearch.password: kibana
 ```
-</details>
 
+</details>
