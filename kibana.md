@@ -965,6 +965,11 @@ Each Kibana node stores user sessions in-memory. This will cause problems when u
    * `readonlyrest_kbn.sessions_probe_interval_seconds: 120` (default 60s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them.
 
+
+{% hint style="warning" %}
+From readonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter.
+{% endhint %}
+
 ## Login screen tweaking
 
 These features will work with ReadonlyREST PRO and Enterprise.
