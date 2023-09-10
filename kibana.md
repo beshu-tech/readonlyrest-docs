@@ -121,6 +121,10 @@ If you are using Kibana 7.9.x or newer, you need **an extra pre-uninstallation s
 $ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
 ```
 
+### Configuring Kibana
+
+For the activation key persistence after upgrading the license to PRO or Enterprise edition, From readonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter. It needs to be configured also in case of a free license.
+
 ### Uninstalling
 
 {% hint style="info" %}
@@ -967,7 +971,7 @@ Each Kibana node stores user sessions in-memory. This will cause problems when u
 
 
 {% hint style="warning" %}
-From readonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter.
+From ReadonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter.
 {% endhint %}
 
 ## Login screen tweaking
