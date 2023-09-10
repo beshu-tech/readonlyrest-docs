@@ -594,6 +594,9 @@ xpack.watcher.enabled: false
 # Kibana server use ::KIBANA-SRV:: credentials
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
+
+# ReadonlyREST required properties
+readonlyrest_kbn.cookiePass: '12312313123213123213123abcdefghijklm'
 ```
 
 And of course also make sure `elasticsearch.url` points to the designated Elasticsearch instance (check also the http or https)
