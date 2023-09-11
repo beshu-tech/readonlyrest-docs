@@ -10,10 +10,4 @@ As an Enterprise user, you can benefit from automating the security configuratio
 
 Every request is **validated against ROR syntax first**, and rejected if syntactically or semantically incorrect. This adds to the safety of each change operation.
 
-{% swagger src="https://raw.githubusercontent.com/beshu-tech/readonlyrest-docs/develop/.gitbook/assets/ReadonlyREST-api.yml" path="/api/ror/settings" method="post" %}
-[https://raw.githubusercontent.com/beshu-tech/readonlyrest-docs/develop/.gitbook/assets/ReadonlyREST-api.yml](https://raw.githubusercontent.com/beshu-tech/readonlyrest-docs/develop/.gitbook/assets/ReadonlyREST-api.yml)
-{% endswagger %}
-
-{% swagger src="https://raw.githubusercontent.com/beshu-tech/readonlyrest-docs/develop/.gitbook/assets/ReadonlyREST-api.yml" path="/api/ror/settings/upload" method="post" %}
-[https://raw.githubusercontent.com/beshu-tech/readonlyrest-docs/develop/.gitbook/assets/ReadonlyREST-api.yml](https://raw.githubusercontent.com/beshu-tech/readonlyrest-docs/develop/.gitbook/assets/ReadonlyREST-api.yml)
-{% endswagger %}
+[Link to the API documentation](https://api.beshu.tech/docs/swagger/master)
