@@ -91,6 +91,9 @@ Open up `config/kibana.yml` and add/edit the following settings:
 # Kibana server use ::KIBANA-SRV:: credentials
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
+
+# ReadonlyREST required properties
+readonlyrest_kbn.cookiePass: '12312313123213123213123abcdefghijklm'
 ```
 
 ## Running

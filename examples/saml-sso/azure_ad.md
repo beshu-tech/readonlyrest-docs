@@ -69,7 +69,7 @@ server.ssl.certificate: '/etc/kibana/ssl_cert/localhost.pem'
 server.ssl.key: '/etc/kibana/ssl_cert/localhost-key.pem'
 
 readonlyrest_kbn:
-
+  cookiePass: '12312313123213123213123abcdefghijklm'
   logLevel: debug
   clearSessionOnEvents: ["login"]
 

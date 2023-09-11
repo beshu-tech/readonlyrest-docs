@@ -197,6 +197,9 @@ monitoring.ui.container.elasticsearch.enabled: true
 
 elasticsearch.username: kibana
 elasticsearch.password: kibana
+
+# ReadonlyREST required properties
+readonlyrest_kbn.cookiePass: '12312313123213123213123abcdefghijklm'
 ```
 
 </details>

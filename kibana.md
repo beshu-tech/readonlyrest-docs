@@ -121,6 +121,10 @@ If you are using Kibana 7.9.x or newer, you need **an extra pre-uninstallation s
 $ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
 ```
 
+### Configuring Kibana
+
+For the activation key persistence after upgrading the license to PRO or Enterprise edition, From readonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter. It needs to be configured also in case of a free license.
+
 ### Uninstalling
 
 {% hint style="info" %}
@@ -590,6 +594,9 @@ xpack.watcher.enabled: false
 # Kibana server use ::KIBANA-SRV:: credentials
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
+
+# ReadonlyREST required properties
+readonlyrest_kbn.cookiePass: '12312313123213123213123abcdefghijklm'
 ```
 
 And of course also make sure `elasticsearch.url` points to the designated Elasticsearch instance (check also the http or https)
@@ -964,6 +971,11 @@ Each Kibana node stores user sessions in-memory. This will cause problems when u
    * `readonlyrest_kbn.sessions_refresh_after: 5000` (time in milliseconds, describes how often sessions should be fetched from ES and refreshed for each node - optional, by default 2 seconds)
    * `readonlyrest_kbn.sessions_probe_interval_seconds: 120` (default 60s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them.
+
+
+{% hint style="warning" %}
+From ReadonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter.
+{% endhint %}
 
 ## Login screen tweaking
 
