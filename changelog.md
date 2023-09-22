@@ -3,7 +3,7 @@
 ### (2023-09-10) What's new in **ROR 1.51.0**
 * **🚨Security Fix** (KBN) the issue with [api_only](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules) access level user and accessing via Kibana UI
 * **🚀New** (KBN) 8.9.2, 7.17.13 support
-* **🚀New** (ES) 8.10.1, 8.10.0, 8.9.2, 7.17.13 support
+* **🚀New** (ES) 8.10.2, 8.10.1, 8.10.0, 8.9.2, 7.17.13 support
 * **🚀New** (ES) [Dynamic variables transformation support](https://docs.readonlyrest.com/elasticsearch#variables-functions)
 * **🧐Enhancement** (KBN) Expose interactive Swagger as a new Security settings tab
 * **🧐Enhancement** (KBN) Provide detailed information about the invalid activation key
