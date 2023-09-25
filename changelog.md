@@ -2,9 +2,12 @@
 
 ### (2023-09-10) What's new in **ROR 1.51.0**
 * **🚨Security Fix** (KBN) the issue with [api_only](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules) access level user and accessing via Kibana UI
+* **🚀New** (KBN) 8.10.2, 8.10.1, 8.9.2, 7.17.13 support
+* **🚀New** (ES) 8.10.2, 8.10.1, 8.10.0, 8.9.2, 7.17.13 support
 * **🚀New** (ES) [Dynamic variables transformation support](https://docs.readonlyrest.com/elasticsearch#variables-functions)
 * **🧐Enhancement** (KBN) Expose interactive Swagger as a new Security settings tab
 * **🧐Enhancement** (KBN) Provide detailed information about the invalid activation key
+* **🧐Enhancement** (ES) additional `hide_apps` validation in the `kibana` rule
 * **🐞Fix** (KBN) the issue with the persistence of an activation key provided via UI when `readonlyrest_kbn.cookiePass` was not provided. The [readonlyrest_kbn.cookiePass](https://docs.readonlyrest.com/kibana#configuring-kibana) is required `kibana.yml` property
 * **🐞Fix** (KBN) issues for Kibana versions between 7.9.0 and 7.10.2, related to the activation key, Spaces, and readonlyREST menu crash
 * **🐞Fix** (KBN) The issue with a logout from Kibana when the link to the Kibana is open from a third-party application like `Gmail`
