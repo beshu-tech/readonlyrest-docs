@@ -1,5 +1,13 @@
 # Changelog
 
+### (2023-09-25) What's new in **ROR 1.51.1**
+* **🚨Security Fix** (ES) [`fields` rule didn't work well in the case of ES 7.10.0 and later and more than 10 documents in the response](https://forum.readonlyrest.com/t/field-rule-not-working-when-exceeding-a-certain-no-of-docs/2415)
+* **🐞Fix** (KBN) issue with Observability Overview-based applications hiding
+* **🐞Fix** (KBN) Correct `kibana.index` handling for KBN >= 7.9.0 when multi-tenancy is disabled or unavailable
+* **🐞Fix** (KBN) Unrestricted Kibana Access on the tenancy switch when a selected tenant is not available anymore
+* **🐞Fix** (KBN) Unhandled error during login when `multiTenancyEnabled: false`
+* **🐞Fix** (ES) LDAP connectivity improvements
+
 ### (2023-09-10) What's new in **ROR 1.51.0**
 * **🚨Security Fix** (KBN) the issue with [api_only](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules) access level user and accessing via Kibana UI
 * **🚀New** (KBN) 8.10.2, 8.10.1, 8.9.2, 7.17.13 support
