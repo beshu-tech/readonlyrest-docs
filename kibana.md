@@ -301,6 +301,13 @@ readonlyrest:
     - name: "::KIBANA-SRV::"
       auth_key: kibana:kibana
 
+   #  use the following block instead of the `::KIBANA-SRV::` block if you use service account tokens in kibana.yml (see https://www.elastic.co/guide/en/elasticsearch/reference/current/service-accounts.html)
+   #
+   #- name: "::KIBANA-SRV-TOKEN::"  
+   #  token_authentication:
+   #    token: "Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2VuXzE6MVhQUXRubWhRd3FxUmlzNmhFVVZQdw" # generated token for Kibana
+   #    username: kibana
+
     - name: "::RO::"
       auth_key: ro:dev
       indices: [ ".kibana", "logstash-*"]
@@ -579,8 +586,9 @@ kibana:
 
 ### Kibana configuration
 
-Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using a pair of credentials we just defined in `readonlyrest.yml` (see above, the ::KIBANA-SRV:: block).
-
+Activate authentication for the Kibana server: let the Kibana daemon connect to Elasticsearch using one of the following methods:
+ * a pair of credentials defined in `readonlyrest.yml` (see above, the ::KIBANA-SRV:: block).
+ * [a service account token](https://www.elastic.co/guide/en/elasticsearch/reference/current/service-accounts.html#service-accounts-tokens) generated for kibana, defined in `readonlyrest.yml` (see above, the ::KIBANA-SRV-TOKEN:: block).
 Open up `conf/kibana.yml` and add the following:
 
 ```yaml
@@ -591,9 +599,13 @@ xpack.monitoring.enabled: true
 xpack.security.enabled: false # this is fundamental!
 xpack.watcher.enabled: false
 
-# Kibana server use ::KIBANA-SRV:: credentials
+# Kibana server use ::KIBANA-SRV:: credentials (auth_key)
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
+
+# Kibana server use ::KIBANA-SRV-TOKEN:: credentials (token_authentication)
+# use the following setting instead of the 'elasticsearch.username' and the 'elasticsearch.password'
+# elasticsearch.serviceAccountToken: AAEAAWVsYXN0aWMva2liYW5hL3Rva2VuXzE6MVhQUXRubWhRd3FxUmlzNmhFVVZQdw
 
 # ReadonlyREST required properties
 readonlyrest_kbn.cookiePass: '12312313123213123213123abcdefghijklm'
@@ -663,7 +675,7 @@ To enable this feature in ReadonlyREST, you need to:
 
 Once Kibana is restarted, you will be able to navigate to a link like this:
 
-```
+```text
 http://kibana:5601/login?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
 
@@ -680,7 +692,7 @@ Because the identity is embedded in the link, and ReadonlyREST is able to authen
 
 **Anatomy of a JWT deep link**
 
-```
+```text
 http://kibana:5601/login?jwt=<the-token>&nextUrl=urlEncode(<kibana-path>)
 ```
 
@@ -699,7 +711,7 @@ console.log("Final JWT deep link: " + url)
 
 The result may look something like this:
 
-```
+```text
 http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
 
@@ -707,7 +719,7 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 You can configure Kibana with ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example, in `kibana.yml`:
 
-```
+```yaml
 server.ssl.enabled: true
 server.ssl.keystore.path: "/usr/share/kibana/config/certificates/kibana-server.p12"
 server.ssl.keystore.password: ""
@@ -724,7 +736,7 @@ However, a common situation is when SSL is configured in a reverse proxy (SSL te
 \
 In this case, you can force ReadonlyREST to create "secure"-flagged cookies by adding this line in `kibana.yml`:
 
-```
+```yaml
 xpack.security.secureCookies: true 
 ```
 
@@ -768,14 +780,14 @@ In order for the user identity information to flow securely from Kibana to Elast
 
 Edit `readonlyrest.yml`
 
-```
+```yaml
 readonlyrest:
     access_control_rules:
 
     - name: "::KIBANA-SRV::"
       auth_key: kibana:kibana
 
-    ... all usual blocks of rules...
+    # ... all usual blocks of rules...
 
     - name: "ReadonlyREST Enterprise instance #1"
       ror_kbn_auth:
@@ -860,14 +872,14 @@ This part is identical as seen in SAML connectors. In order for the user identit
 
 Edit `readonlyrest.yml`
 
-```
+```yaml
 readonlyrest:
     access_control_rules:
 
     - name: "::KIBANA-SRV::"
       auth_key: kibana:kibana
 
-    ... all usual blocks of rules...
+    # ... all usual blocks of rules...
 
     - name: "ReadonlyREST Enterprise instance #1"
       ror_kbn_auth:
@@ -882,14 +894,14 @@ readonlyrest:
 
 If you have configured OIDC with the `groupsParameter` ( _See below_ ), you can also restrict ACL to specific groups:
 
-```
+```yaml
 readonlyrest:
     access_control_rules:
 
     - name: "::KIBANA-SRV::"
       auth_key: kibana:kibana
 
-    ... all usual blocks of rules...
+    # ... all usual blocks of rules...
 
     - name: "ReadonlyREST Enterprise instance #1 for group 1"
       ror_kbn_auth:
@@ -989,7 +1001,7 @@ By default,the login form appears in a single column view. ![one column](blob:ht
 
 But once title and subtitle are configured, it will switch to two columns for making room to the new text.
 
-```
+```yaml
 readonlyrest_kbn.login_title: "Some Title"
 readonlyrest_kbn.login_subtitle: "Longer text <b>any HTML is supported<b/> including ifrmaes"
 ```
@@ -1002,7 +1014,7 @@ It's recommended to use a transparent PNG, negative logo. Ideally a white foregr
 
 Open `config/kibana.yml` and append the following:
 
-```
+```yaml
 readonlyrest_kbn.login_custom_logo: 'https://.../logo.png'
 ```
 
@@ -1012,7 +1024,7 @@ You have the opportunity to inject HTML code right before the closing head tag (
 
 Open `config/kibana.yml` and append the following:
 
-```
+```yaml
 readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
 ```
 
@@ -1026,13 +1038,13 @@ It's possible to inject custom CSS and Javascript to achieve a customized user e
 
 Open `config/kibana.yml` and append the following:
 
-```
+```yaml
 readonlyrest_kbn.kibana_custom_css_inject: '.global-nav, kbnGlobalNav { background-color: green }'
 ```
 
 Alternatively, it's possible to load the CSS from a file in the filesystem:
 
-```
+```yaml
 readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 ```
 
@@ -1040,13 +1052,13 @@ readonlyrest_kbn.kibana_custom_css_inject_file: '/tmp/custom.css'
 
 ### Inject custom JS in Kibana
 
-```
+```yaml
 readonlyrest_kbn.kibana_custom_js_inject: '$(".global-nav__logo").hide(); alert("hello!")'
 ```
 
 Alternatively, it's possible to load the JS from a file in the filesystem:
 
-```
+```yaml
 readonlyrest_kbn.kibana_custom_js_inject_file: '/tmp/custom.js'
 ```
 
@@ -1056,7 +1068,7 @@ readonlyrest_kbn.kibana_custom_js_inject_file: '/tmp/custom.js'
 
 You can provide a function, mapping group names to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
 
-```
+```yaml
 readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 ```
 
@@ -1117,10 +1129,10 @@ readonlyrest:
       access: admin
       index: ".kibana_template"
 
- users:
- - username: administrator
-   auth_key: administrator:dev
-   groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
+  users:
+  - username: administrator
+    auth_key: administrator:dev
+    groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
 ```
 
 NB: If you know what you are doing, you can add a tenancy with kibana\_index: ".kibana\_template" adding a LDAP/SAML group to your administrative user.
@@ -1133,7 +1145,7 @@ Now login as administrator in Kibana, hop into the "Template" tenancy, and start
 
 Open kibana.yml and add the following line:
 
-```
+```yaml
 readonlyrest_kbn.kibanaIndexTemplate: ".kibana_template"
 ```
 
@@ -1177,11 +1189,11 @@ readonlyrest:
       access: rw
       index: ".kibana_user1"
 
- users:
- - username: administrator
-   auth_key: administrator:dev
-   groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
-`
+  users:
+  - username: administrator
+    auth_key: administrator:dev
+    groups: ["Admins", "Template"] # can hop between two tenancies with top-left drop-down menu
+
 ```
 
 Now try to login as user1, and ReadonlyREST Enterprise should initialize the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.
