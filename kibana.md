@@ -301,7 +301,7 @@ readonlyrest:
     - name: "::KIBANA-SRV::"
       auth_key: kibana:kibana
 
-   #  use the following block instead of the `::KIBANA-SRV::` block if you use service account tokens in kibana.yml (see https://www.elastic.co/guide/en/elasticsearch/reference/current/service-accounts.html)
+   #  use the following block instead of the `::KIBANA-SRV::` block if you use service account tokens (see https://www.elastic.co/guide/en/elasticsearch/reference/current/service-accounts.html)
    #
    #- name: "::KIBANA-SRV-TOKEN::"  
    #  token_authentication:
