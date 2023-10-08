@@ -1,5 +1,16 @@
 # Changelog
 
+### (2023-10-09) What's new in **ROR 1.52.0**
+* **🚨Security Fix** (ES) [CVE-2023-4586](https://access.redhat.com/security/cve/cve-2023-4586)
+* **🚀New** (ES) [New `token_authentication` rule](https://docs.readonlyrest.com/elasticsearch#token_authentication)
+* **🧐Enhancement** (KBN) Permanently hide Kibana|ES features that are impossible to support
+* **🧐Enhancement** (KBN) [License expiration reminder](https://forum.readonlyrest.com/t/license-expiration-reminder/2417)
+* **🧐Enhancement** (KBN) Make `kibana.index` setting from kibana.yml an invalid property for an Enterprise user
+* **🐞Fix** (KBN) Issue with not adding `elasticsearch.customHeaders` setting from kibana.yml to ROR requests
+* **🐞Fix** (KBN) Logout after opening Stack management Upgrading assistant
+* **🐞Fix** (KBN) Problem with logging in of two users in two tabs when two Kibana instances are used
+* **🐞Fix** (KBN) Problem with logging in when multi-tenancy is enabled and the `indices` rule is defined in the ROR settings
+
 ### (2023-09-25) What's new in **ROR 1.51.1**
 * **🚨Security Fix** (ES) [`fields` rule didn't work well in the case of ES 7.10.0 and later and more than 10 documents in the response](https://forum.readonlyrest.com/t/field-rule-not-working-when-exceeding-a-certain-no-of-docs/2415)
 * **🐞Fix** (KBN) issue with Observability Overview-based applications hiding
