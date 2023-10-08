@@ -107,7 +107,7 @@ Create and edit the `readonlyrest.yml` settings file in the **same directory whe
 
 Now write some basic settings, just to get started. In this example we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -130,13 +130,13 @@ Edit `elasticsearch.yml` and append `xpack.security.enabled: false`.
 
 #### 6. Start Elasticsearch
 
-```text
+```bash
 bin/elasticsearch
 ```
 
 or:
 
-```text
+```bash
 service start elasticsearch
 ```
 
@@ -170,7 +170,7 @@ To upgrade ReadonlyREST for Elasticsearch:
 
 Either kill the process manually, or use:
 
-```text
+```bash
 service stop elasticsearch
 ```
 
@@ -199,19 +199,19 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 
 #### 3. Uninstall ReadonlyREST
 
-```text
+```bash
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
 #### 4. Install the new version of ReadonlyREST into Elasticsearch.
 
-```text
+```bash
 bin/elasticsearch-plugin install file://<download_dir>/readonlyrest-<ROR_VERSION>_es<ES_VERSION>.zip
 ```
 
 e.g.
 
-```text
+```bash
 bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
 ```
 
@@ -240,11 +240,11 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 
 #### 6. Restart Elasticsearch.
 
-```text
+```bash
 bin/elasticsearch
 ```
 or:
-```text
+```bash
 service start elasticsearch
 ```
 
@@ -262,7 +262,7 @@ Now you should be able to see the logs and ReadonlyREST related lines like the o
 
 Either kill the process manually, or use:
 
-```text
+```bash
 service stop elasticsearch
 ```
 
@@ -291,19 +291,19 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 
 #### 3. Uninstall ReadonlyREST from Elasticsearch:
 
-```text
+```bash
 bin/elasticsearch-plugin remove readonlyrest
 ```
 
 #### 4. Start Elasticsearch.
 
-```text
+```bash
 bin/elasticsearch
 ```
 
 or:
 
-```text
+```bash
 service start elasticsearch
 ```
 
@@ -345,7 +345,7 @@ The core of this plugin is an ACL \(access control list\). A logic structure ver
 
 **⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -380,13 +380,13 @@ ReadonlyREST can be configured to encrypt network traffic on two independent lev
 It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.
 **⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and append this one line:
 
-```text
+```yaml
 http.type: ssl_netty4
 ```
 
 Now in `readonlyrest.yml` add the following settings:
 
-```text
+```yaml
 readonlyrest:
     ssl:
       keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
@@ -402,13 +402,13 @@ This option encrypts communication between nodes forming Elasticsearch cluster.
 
 **⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and append this one line:
 
-```text
+```yaml
 transport.type: ror_ssl_internode
 ```
 
 In `readonlyrest.yml` following settings must be added \(it's just example configuration presenting most important properties\):
 
-```text
+```yaml
 readonlyrest:
     ssl_internode:
       keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
@@ -425,7 +425,7 @@ It is possible to set up internode SSL between ROR and XPack nodes. It works onl
 To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates.
 
 Generated `elastic-certificates.p12` could be then used in ROR node with such configuration
-```text
+```yaml
 readonlyrest:
   ssl_internode:
     enable: true
@@ -443,7 +443,7 @@ readonlyrest:
 By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.
 It is useful on local/test environment, where security is not the most important concern. On production environment it is advised to enable this option. It can be done by means of:
 
-```text
+```yaml
 certificate_verification: true
 ```
 
@@ -453,7 +453,7 @@ under `ssl_internode` section. This option is applicable only for internode SSL.
 
 By default the client authentication is disabled. When enabled, the server asks the client about its certificate, so ES is able to verify the client's identity. It can be enabled by means of:
 
-```text
+```yaml
 client_authentication: true
 ```
 
@@ -463,7 +463,7 @@ under `ssl` section. This option is applicable for REST API external SSL and int
 
 Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
 
-```text
+```yaml
 readonlyrest:
     ssl:
       # put the keystore in the same dir with elasticsearch.yml
@@ -488,7 +488,7 @@ ReadonlyREST will log a list of available ciphers and protocols supported by the
 
 ReadonlyREST allows using custom truststore, replacing \(provided by JRE\) default one. Custom truststore can be set with:
 
-```text
+```yaml
 truststore_file: "truststore.jks"
 truststore_pass: truststorepass
 ```
@@ -501,13 +501,13 @@ under `ssl` or `ssl_internode` section. This option is applicable for both ssl m
 If you are using ReadonlyREST 1.44.0 or newer then you are able to use PEM files directly without the need of placing them inside a keystore or truststore.  
 
 To use PEM files instead of keystore file, use such configuration instead of `keystore_file`, `keystore_pass`, `key_pass` fields: 
-```text
+```yaml
 server_certificate_key_file: private_key.pem
 server_certificate_file: cert_chain.pem
 ```
 
 To use PEM file instead of truststore file, use such configuration instead of `truststore_file`, `truststore_pass` fields: 
-```text
+```yaml
 client_trusted_certificate_file: trusted_certs.pem
 ```
 
@@ -520,20 +520,20 @@ We are  going to show how to first add all the certificates and private key into
 This tutorial can be a useful example on how to use certificates from other providers. 
 
 ##### 1. Create keys
-```
+```bash
 ./letsencrypt-auto certonly --standalone -d DOMAIN.TLD -d DOMAIN_2.TLD --email EMAIL@EMAIL.TLD
 ```
 Now change to the directory (probably /etc/letsencrypt/live/DOMAIN.tld) where the certificates were created.
 
 ##### 2. Create a PKCS12 keystore with the full chain and private key
-```
+```bash
 openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out pkcs.p12 -name NAME
 ```
 
 ##### 3. Convert PKCS12 to JKS Keystore (Optional)
 The STORE_PASS is the password which was entered in step 2) as a password for the pkcs12 file.
 
-```
+```bash
 keytool -importkeystore -deststorepass PASSWORD_STORE -destkeypass PASSWORD_KEYPASS -destkeystore keystore.jks -srckeystore pkcs.p12 -srcstoretype PKCS12 -srcstorepass STORE_PASS -alias NAME
 ```
 
@@ -547,7 +547,7 @@ If you happen to get a `java.io.IOException: failed to decrypt safe contents ent
 Each incoming request to the Elasticsearch node passes to the installed plugin. During Elasticsearch node startup, the plugin rejects incoming requests until it starts. The plugin rejects such requests with the `403` forbidden responses by default.
 To overwrite this behavior, append to  **elasticsearch.yml**
 
-```
+```yaml
 readonlyrest.not_started_response_code: 503
 readonlyrest.failed_to_start_response_code: 503
 ```
@@ -565,7 +565,7 @@ Keep in mind that ReadonlyREST ACL is a white list, so by default all request ar
 * `name` will appear in logs, so keep it short and distinctive.
 * `type` can be either `allow` or `forbid`. Can be omitted, default is `allow`.
 
-```text
+```yaml
     - name: "Block 1 - Allowing anything from localhost"
       type: allow
       # In real life now you should increase the specificity by adding rules here (otherwise this block will allow all requests!)
@@ -648,7 +648,7 @@ This is authentication rule that is based on `/etc/shadow` file syntax.
 
 If you configured sha512 encryption with 65535 rounds on your system the hash in /etc/shadow for the account `test:test` will be `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
     - name: Accept requests from users in group team1 on index1
@@ -697,6 +697,21 @@ if __name__ == '__main__':
 **Finally you have to put your username at the beginning of the hash with ":" separator** `test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0`
 
 For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
+
+[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
+
+#### `token_authentication`
+
+```yaml
+token_authentication:
+   token: "Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu" # required, expected HTTP header content containing the token
+   username: admin                # required, the username used after successful authentication
+   header: x-custom-authorization # optional, defaults to 'Authorization`
+```
+
+The authentication rule that accepts token sent in the HTTP header (the `Authorization` header is the default if no custom header name is configured in the `token_authentication.header` field).
+
+For the HTTP header in the format `Authorization: Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu`, the `Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu` is the token value set in the `token` field.
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
@@ -857,7 +872,7 @@ For more information on the ROR's authorization rules, see [Authorization rules 
 
 For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication. From ROR's perspective it authenticates and authorize users. 
 
-```text
+```yaml
 readonlyrest:
   access_control_rules:
 
@@ -1052,7 +1067,7 @@ The rejection message and HTTP status code returned to the requester are chosen 
 
 The rule has also an extended version:
 
-```text
+```yaml
 indices:
   patterns: ["sales", "logstash-*"]`
   must_involve_indices: false
@@ -1153,7 +1168,7 @@ This rule lets you filter the results of a read request using a boolean query. Y
 
 In the index "test-dls", each user can only search documents whose field "user" matches their user name. I.e. A user with username "paul" requesting all documents in "test-dls" index, won't see returned a document containing a field `"user": "jeff"` .
 
-```text
+```yaml
 - name: "::PER-USER INDEX SEGMENTATION::"
   proxy_auth: "*"
   indices: ["test-dls"]
@@ -1164,7 +1179,7 @@ In the index "test-dls", each user can only search documents whose field "user" 
 
 In this example, we want to avoid that users belonging to group "press" can see any document that has a field "access\_level" with the value "CLASSIFIED". And this policy is applied to all indices \(no indices rule is specified\).
 
-```text
+```yaml
 - name: "::Press::"
   groups: ["press"]
   filter: '{"bool": { "must_not": { "match": { "access_level": "CLASSIFIED" }}}}'
@@ -1226,7 +1241,7 @@ Return documents deprived of all the fields, except the ones that:
 
 Example: hide prices from catalogue indices
 
-```text
+```yaml
 - name: "External users - hide prices"
   fields: ["~price"]
   indices: ["catalogue_*"]
@@ -1286,7 +1301,7 @@ Here is another example, a bit more complex. Look at how we can duplicate the "P
 
 Before adding the `filter` rule:
 
-```text
+```yaml
   - name: "::PERSONAL_GRP::"
     groups: ["Personal"]
     kibana:
@@ -1392,7 +1407,7 @@ _Example_: allow only `cluster_name` and `status` field in cluster health respon
 
 Without any filtering response from `/_cluster/health` looks more or less like:
 
-```text
+```json
 {
     "cluster_name": "ROR_SINGLE",
     "status": "yellow",
@@ -1414,7 +1429,7 @@ Without any filtering response from `/_cluster/health` looks more or less like:
 
 but after configuring such rule:
 
-```text
+```yaml
 - name: "Filter cluster health response"
   uri_re: "^/_cluster/health"
   response_fields: ["cluster_name", "status"]
@@ -1422,7 +1437,7 @@ but after configuring such rule:
 
 response from above will look like:
 
-```text
+```json
 {
     "cluster_name": "ROR_SINGLE",
     "status": "yellow"
@@ -1602,7 +1617,7 @@ Logs are good for auditing the activity on the REST API. You can configure them 
 
 For example, you can **enable the debug log** globally by setting the `rootLogger`to `debug`.
 
-```text
+```properties
 rootLogger.level = debug
 ```
 
@@ -1612,7 +1627,7 @@ This is really useful especially to debug the activity of LDAP and other externa
 
 Here is a `log4j2.properties` snippet for ES 5.x that logs all the received requests as a new line in a separate file:
 
-```text
+```properties
 #Plugin readonly rest separate access logging file definition
 appender.access_log_rolling.type = RollingFile
 appender.access_log_rolling.name = access_log_rolling
@@ -1709,7 +1724,7 @@ Sometimes we'd like to take advantage of groups (roles) existing in external sys
 
 ReadonlyREST can cooperate with services, that operates in case-insensitive way. For this case ROR has toggleable username case sensitivity option `username_case_sensitivity`.
 
-```text
+```yaml
 readonlyrest:
   username_case_sensitivity: case_sensitive
 ```
@@ -2118,7 +2133,7 @@ The LDAP connector can get all LDAP hostnames from DNS server rather than from t
 
 The simplest configuration example of an LDAP connector instance using server discovery is:
 
-```text
+```yaml
     - name: ldap
       server_discovery: true
       search_user_base_DN: "ou=People,dc=example2,dc=com"
@@ -2136,7 +2151,7 @@ The server discovery mechanism can be optionally configured further, by adding a
 
 Example:
 
-```text
+```yaml
     - name: ldap
       server_discovery:
         record_name: "_ldap._tcp.example.com"
@@ -2178,7 +2193,7 @@ In this example, users' credentials are validated via LDAP. The groups associate
 
 **Simpler: authentication and authorization in one rule**
 
-```text
+```yaml
 readonlyrest:
 
     access_control_rules:
@@ -2239,7 +2254,7 @@ readonlyrest:
 
 **Advanced: authentication and authorization in separate rules**
 
-```text
+```yaml
 readonlyrest:
     enable: true
     response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
@@ -2295,7 +2310,7 @@ readonlyrest:
 
 ReadonlyREST will forward the received `Authorization` header to a website of choice and evaluate the returned HTTP status code to verify the provided credentials. This is useful if you already have a web server with all the credentials configured and the credentials are passed over the `Authorization` header.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
 
@@ -2411,7 +2426,7 @@ As usual, the cache behaviour can be defined at service level or/and at rule lev
 
 The information about the username can be extracted from the "claims" inside a JSON Web Token. Here is an example.
 
-```text
+```yaml
 readonlyrest:
     access_control_rules:
     - name: Valid JWT token with a viewer group
@@ -2573,7 +2588,7 @@ cp keystore.jks /elasticsearch/config/
 
 **IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
 
-```text
+```yaml
 http.type: ssl_netty4
 ```
 
@@ -2651,7 +2666,7 @@ Of course, if you do not use ssl, disable it.
 
 #### On the Elasticsearch side
 
-```text
+```yaml
  readonlyrest:
      ssl:
        enable: true
