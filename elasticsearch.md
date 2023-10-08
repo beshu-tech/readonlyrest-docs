@@ -704,12 +704,14 @@ For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoE
 
 ```yaml
 token_authentication:
-   token: "Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu"
-   username: admin                # username used after successful authentication
+   token: "Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu" # required, expected HTTP header content containing the token
+   username: admin                # required, the username used after successful authentication
    header: x-custom-authorization # optional, defaults to 'Authorization`
 ```
 
-The authentication rule that accepts tokens sent in the HTTP header (`Authorization` header by default). Clients will need to provide the header e.g. `Authorization: Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu` where "Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu" is token value set in the `token` field.
+The authentication rule that accepts token sent in the HTTP header (the `Authorization` header is the default if no custom header name is configured in the `token_authentication.header` field).
+
+For the HTTP header in the format `Authorization: Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu`, the `Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu` is the token value set in the `token` field.
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 

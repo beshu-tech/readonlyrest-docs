@@ -599,11 +599,11 @@ xpack.monitoring.enabled: true
 xpack.security.enabled: false # this is fundamental!
 xpack.watcher.enabled: false
 
-# Kibana server use ::KIBANA-SRV:: credentials (auth_key)
+# Kibana server use the ::KIBANA-SRV:: basic auth credentials
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
 
-# Kibana server use ::KIBANA-SRV-TOKEN:: credentials (token_authentication)
+# Kibana server use the ::KIBANA-SRV-TOKEN:: token value (without the bearer scheme)
 # use the following setting instead of the 'elasticsearch.username' and the 'elasticsearch.password'
 # elasticsearch.serviceAccountToken: AAEAAWVsYXN0aWMva2liYW5hL3Rva2VuXzE6MVhQUXRubWhRd3FxUmlzNmhFVVZQdw
 
