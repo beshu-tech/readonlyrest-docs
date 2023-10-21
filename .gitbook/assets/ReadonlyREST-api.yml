@@ -162,7 +162,23 @@ paths:
                   $ref: "#/components/examples/UpdateLicenseKeySuccessResponse"
                 UpdateLicenseKeyNotModifiedResponse:
                   $ref: "#/components/examples/UpdateLicenseKeyUnmodifiedResponse"
-
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/badRequestResponse'
+              examples:
+                JwtTokenExpired:
+                  $ref: '#/components/examples/UpdateLicenseKeyExpiredResponse'
+                JwtTokenMalformed:
+                  $ref: '#/components/examples/UpdateLicenseKeyMalformedResponse'
+                JwtTokenInvalid:
+                  $ref: "#/components/examples/UpdateLicenseKeyInvalidResponse"
+                JwtInvalidSignature:
+                  $ref: "#/components/examples/UpdateLicenseKeyInvalidSignatureResponse"
+                NoLicenseKeyProvided:
+                  $ref: "#/components/examples/UpdateLicenseKeyNoLicenseKeyResponse"
 components:
   securitySchemes:
     http:
@@ -361,6 +377,32 @@ components:
       value:
         status: UNMODIFIED
         message: "License token already exists is not modified. If you want to overwrite your license key use overwrite=true query string parameter."
+    UpdateLicenseKeyExpiredResponse:
+      summary: License key expired
+      value:
+        status: JWT_EXPIRED
+        message: "The JWT token provided has expired."
+    UpdateLicenseKeyMalformedResponse:
+      summary: License key malformed
+      value:
+        status: JWT_MALFORMED
+        message: "JWT malformed. The token does not have three components (delimited by a .)."
+    UpdateLicenseKeyInvalidResponse:
+      summary: License key invalid
+      value:
+        status: JWT_INVALID
+        message: "Invalid JWT. The header or payload could not be parsed."
+    UpdateLicenseKeyInvalidSignatureResponse:
+      summary: License key invalid signature
+      value:
+        status: INVALID_JWT_SIGNATURE
+        message: "The provided JWT token has an incorrect or tampered signature, indicating a potential unauthorized modification of the token contents."
+    UpdateLicenseKeyNoLicenseKeyResponse:
+      summary: License key not provided
+      value:
+        status: NO_LICENSE_KEY_PROVIDED
+        message: "There is no activation key provided."
+
 security:
   - http: []
   - https: []
