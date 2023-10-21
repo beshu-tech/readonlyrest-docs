@@ -144,6 +144,7 @@ paths:
           description: You can set value as true to overwrite existing license key
           schema:
             type: boolean
+            example: true
       requestBody:
         required: true
         content:
@@ -179,6 +180,15 @@ paths:
                   $ref: "#/components/examples/UpdateLicenseKeyInvalidSignatureResponse"
                 NoLicenseKeyProvided:
                   $ref: "#/components/examples/UpdateLicenseKeyNoLicenseKeyResponse"
+        403:
+          description: The request was forbidden by ReadonlyREST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRorResponse'
+              examples:
+                notSufficientPermissions:
+                  $ref: "#/components/examples/InSufficientPermissionsResponse"
 components:
   securitySchemes:
     http:
@@ -402,7 +412,11 @@ components:
       value:
         status: NO_LICENSE_KEY_PROVIDED
         message: "There is no activation key provided."
-
+    InSufficientPermissionsResponse:
+      summary: Insufficient permissions
+      value:
+        status: FORBIDDEN
+        message: "You don't have sufficient permissions to perform this operation."
 security:
   - http: []
   - https: []
