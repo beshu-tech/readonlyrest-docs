@@ -992,6 +992,18 @@ If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi t
 
 It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
+**⚠️IMPORTANT** When you use the `kibana` rule together with the `indices` rule in the same block, you don't have to explicitly allow
+the Kibana-related indices in the list of allowed indices of the `indices` rule. ROR will do it for you automatically. 
+
+Example:
+```yaml
+- name: "::RW_USER::"
+  auth_key: rw_user:pwd
+  kibana:
+    access: rw
+  indices: ["r*"] # .kibana, .kibana_8.10.4, .kibana_task_manager, etc are allowed here, because there is the `kibana` rule in the same
+```
+
 ##### `template_index`
 
 Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
@@ -1903,24 +1915,24 @@ Here follow some examples of how to use JWT claims as dynamic variables in Reado
 
 ```yaml
 # Using JWT claims as dynamic variables
-indices: [ ".kibana_@{jwt:department}", "otherIdx" ]
+indices: [ "idx_@{jwt:department}", "idx_other" ]
 # claims = { "user": "u1", "department": "infosec"}
-# -> indices: [".kibana_infosec", "otherIdx"]
+# -> indices: ["idx_infosec", "idx_other"]
 
 # Using nested values in JWT using JSONPATH as dynamic variables
-indices: [ ".kibana_@{jwt:jsonpath.to.department}", "otherIdx"]
+indices: [ "idx_@{jwt:jsonpath.to.department}", "idx_other"]
 # claims = { "jsonpath": {"to": { "department": "infosec" }}}
-# -> indices: [".kibana_infosec", "otherIdx"]
+# -> indices: ["idx_infosec", "idx_other"]
 
 # Referencing array-typed values from JWT claims will expand in a list of strings
-indices: [ ".kibana_@explode{jwt:allowedIndices}", "otherIdx"]
+indices: [ "idx_@explode{jwt:allowedIndices}", "idx_other"]
 # claims = {"username": "u1", "allowedIndices":  ["x", "y"] }
-# -> indices: [".kibana_x", ".kibana_y", "otherIdx"]
+# -> indices: ["idx_x", "idx_y", "idx_other"]
 
 # Explode operator will generate an array of strings from a comma-separated string
-indices: ["logstash_@explode{x-indices_csv_string}*", "otherIdx"]
+indices: ["logstash_@explode{x-indices_csv_string}*", "idx_other"]
 # HTTP Headers: [{ "x-indices_csv_string": "a,b"}]
-# -> indices: ["logstash_a*", "logstash_b*", "otherIdx"]
+# -> indices: ["logstash_a*", "logstash_b*", "idx_other"]
 ```
 
 ### Variables functions
@@ -1963,9 +1975,9 @@ To apply functions to the variable, you need to use the `#` operator and enter y
 ```
 ```yaml
 # Using JWT claims as dynamic variables with variable function
-indices: [ ".kibana_@{jwt:department}#{to_lowercase}", "otherIdx" ]
+indices: [ "idx_@{jwt:department}#{to_lowercase}", "idx_other" ]
 # claims = { "user": "u1", "department": "Infosec"}
-# -> indices: [".kibana_infosec", "otherIdx"]
+# -> indices: ["idx_infosec", "idx_other"]
 ```
 
 #### Supported functions

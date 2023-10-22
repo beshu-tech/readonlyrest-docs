@@ -71,7 +71,7 @@ Please note that this will always download the latest version of Kibana plugin a
 $ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&email=<your_email_address>"
 ```
 
-If you want to download the latest version of plugin for a specific version of Kibana, then use query parameter esVersion to specify your required Kibana version.
+If you want to download the latest version of plugin for a specific version of Kibana, then use the query parameter `esVersion` to specify your required Kibana version.
 
 ```bash
 $ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=7.6.1&email=<your_email_address>"
@@ -95,7 +95,7 @@ $ curl -vvv  "https://api.beshu.tech/download/es?esVersion=8.6.0&pluginVersion=1
 
 Now you are ready to [patch Kibana](./#patching-kibana).
 
-### Installing from zip file
+### Installing from a zip file
 
 ```bash
 $ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
@@ -128,11 +128,11 @@ For the activation key persistence after upgrading the license to PRO or Enterpr
 ### Uninstalling
 
 {% hint style="info" %}
-To uninstall, you should unpatch Kibana first, then uninstall ReadonlyREST plugin. However **the Kibana plugin system uninstallation process is highly unreliable**.
+To uninstall, you should unpatch Kibana first, then uninstall the ReadonlyREST plugin. However, **the Kibana plugin system uninstallation process is highly unreliable**.
 
-So we highly recomend to throw away the entire Kibana directory, and start from scratch. Ideally, use ephemeral docker containers.
+So we highly recommend throwing away the entire Kibana directory and starting from scratch. Ideally, use ephemeral docker containers.
 
-Need inspiration? Try [ROR Docker demo](https://github.com/sscarduzio/ror-docker-demo)!
+Need inspiration? Try the [ROR Docker demo](https://github.com/sscarduzio/ror-docker-demo)!
 {% endhint %}
 
 To bring Kibana to its pre-patching original state, it's possible to unpatch.
@@ -153,7 +153,7 @@ $ bin/kibana-plugin remove readonlyrest_kbn
 
 ### Upgrading
 
-To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
+To upgrade to a new version of ReadonlyREST plugin for Kibana, you should:
 
 * [Unpatch Kibana](./#unpatching-kibana)
 * [Uninstall](kibana.md#uninstalling) the old plugin
@@ -163,11 +163,11 @@ To upgrade to a new version of a ReadonlyREST plugins for Kibana, you should:
 
 ### Major version upgrades when using multi-tenancy
 
-If you use multi-tenancy (Enterprise only), you will have one or more teanancy-specific kibana indices beyond the main `.kibana` (e.g. `.kibana_tenant1`, `.kibana_tenant2`, etc.).
+If you use multi-tenancy (Enterprise only), you will have one or more tenancy-specific Kibana indices beyond the main `.kibana` (e.g. `.kibana_tenant1`, `.kibana_tenant2`, etc.).
 
 The first time you run Kibana after a major version upgrade (e.g. upgrading from Kibana 7.17.7 to Kibana 8.0.0), Kibana will run a [saved objects migration](https://www.elastic.co/guide/en/kibana/current/saved-object-migrations.html) on the default `.kibana` index, or whatever it finds configured as `kibana.index` in `kibana.yml`.
 
-Now, because you may have multiple kibana indices containing saved objects, you should apply the "saved object migration" to those indices as well.
+Now, because you may have multiple Kibana indices containing saved objects, you should apply the "saved object migration" to those indices as well.
 
 ReadonlyREST Enterprise will automatically make sure a tenancy index is migrated to satisfy the current Kibana version **right before every time it's being used.**
 
@@ -193,25 +193,25 @@ Now Kibana will have migrated the tenancy index, like it did with the main `.kib
 RoR - just like Kibana itself - is meant to be used either with a proxy or without one.
 
 * If you decide to set the `server.basePath` property in `kibana.yml` and set `server.rewriteBasePath` into a `true`, RoR will be accessed directly and via a reverse proxy,
-* If you decided to rewrite the base path manually by your reverse proxy and set the `server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access RoR via a proxy, as it will not work properly when accessed directly.
+* If you decide to rewrite the base path manually by your reverse proxy and set the `server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access RoR via a proxy, as it will not work properly when accessed directly.
 
 ## Configuration
 
-ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
+ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before, it will be also very familiar.
 
 > In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring to the configuration files **in the Elasticsearch plugin** (our Kibana plugins do not need a "readonlyrest.yml").
 
 In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.
 
-### Clusterwide Settings VS readonlyrest.yml
+### Cluster-wide Settings VS readonlyrest.yml
 
 This feature is available in Free and PRO editions
 
 Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
 
-When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. You can customize a name of the index by setting `readonlyrest.settings_index: .my_custom_readonlyrest` in `elasticsearch.yml` file (remember to set the same value for all your ES nodes).
+When you change the security settings from the Kibana app, they will be saved in a special index called ".readonlyrest", so all the Elasticsearch nodes will pick them up. You can customize the name of the index by setting `readonlyrest.settings_index: .my_custom_readonlyrest` in the `elasticsearch.yml` file (remember to set the same value for all your ES nodes).
 
-When an Elasticsearch node restarts, the order of settings evaluation is the following: 1. Attempt to find valid settings in readonlyrest.yml 2. If none is found, look inside elasticsearch.yml 3. Once successfully bootstrapped using file-based settings, attempt to read ".readonlyrest" index 4. If the index exists and contains valid settings, override file based settings with the ones from the index. 5. Pressing "save" in the cluster wide settings app, will **not overwrite the readonlyrest.yml** file.
+When an Elasticsearch node restarts, the order of settings evaluation is the following: 1. Attempt to find valid settings in readonlyrest.yml 2. If none is found, look inside elasticsearch.yml 3. Once successfully bootstrapped using file-based settings, attempt to read ".readonlyrest" index 4. If the index exists and contains valid settings, override file-based settings with the ones from the index. 5. Pressing "save" in the cluster-wide settings app, will **not overwrite the readonlyrest.yml** file.
 
 Best practices:
 
@@ -231,7 +231,7 @@ When the ES plugin boots up, it follows some logic to evaluate where to read the
 
 #### Malformed in-index settings
 
-If for some reason the in-index settings get corrupted and ROR can't parse them, then neither settings from file or in-index settings can be loaded, so ES can't start. In this case ES would print message like:
+If for some reason the in-index settings get corrupted and ROR can't parse them, then neither settings from file or in-index settings can be loaded, so ES can't start. In this case, ES would print a message like:
 
 ```
 Loading ReadonlyREST settings from index failed: Settings config content is malformed. Details: while scanning a quoted scalar
@@ -263,13 +263,13 @@ readonlyrest:
     indices: ["*"]
 ```
 
-Then remove in-index settings index manually.
+Then remove the in-index settings index manually.
 
 ```bash
 curl -X DELETE "admin:dev@es1:9200/.readonlyrest?pretty"
 ```
 
-Now you can restore your settings to `readonlyrest.yml`, remove `readonlyrest.force_load_from_file: true` `from elasticsearch.yml` and restart node.
+Now you can restore your settings to `readonlyrest.yml`, remove `readonlyrest.force_load_from_file: true` `from elasticsearch.yml` and restart the node.
 
 ### Example: multiuser ELK
 
@@ -286,7 +286,7 @@ xpack.watcher.enabled: false
 xpack.telemetry.enabled: false
 ```
 
-This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
+This is a typical example of a configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
 
 ```yaml
 readonlyrest:
@@ -310,14 +310,14 @@ readonlyrest:
 
     - name: "::RO::"
       auth_key: ro:dev
-      indices: [ ".kibana", "logstash-*"]
+      indices: ["logstash-*"]
       kibana:
         access: ro
         hide_apps: [ "Security", "Enterprise Search"]
 
     - name: "::RW::"
       auth_key: rw:dev
-      indices: [".kibana", "logstash-*"]
+      indices: ["logstash-*"]
       kibana:
         access: rw
         hide_apps: [ "Security", "Enterprise Search"]
@@ -342,9 +342,9 @@ readonlyrest:
 
 One of the most common mistakes is forgetting that the ACL blocks are evaluated in order from the first to the last.
 
-So, some request with credentials can be let through from one of the first blocks and come back to Kibana with no user identity metadata associated.
+So, some requests with credentials can be let through from one of the first blocks and come back to Kibana with no user identity metadata associated.
 
-Take this example of troublesome ACL:
+Take this example of a troublesome ACL:
 
 ```yaml
     # PROBLEMATIC SETTINGS (EXAMPLE) ⚠️
@@ -717,7 +717,7 @@ http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dc
 
 ## SSL/TLS server
 
-You can configure Kibana with ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example, in `kibana.yml`:
+You can configure Kibana with the ReadonlyREST plugin to accept SSL connection the same way you would with vanilla Kibana configuration. For example, in `kibana.yml`:
 
 ```yaml
 server.ssl.enabled: true
@@ -730,7 +730,7 @@ server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
 
 ReadonlyREST will set the "secure" flag to its Kibana session cookie ("ror-cookie") automatically when SSL is enabled in Kibana.\
 \
-This is because modern browsers like Chrome won't accept "secure"-flagged cookies if the website is not HTTPS).
+This is because modern browsers like Chrome won't accept "secure"-flagged cookies if the website is not HTTPS.
 
 However, a common situation is when SSL is configured in a reverse proxy (SSL termination): so the browser will interact with Kibana using HTTPS. But because ROR doesn't know it, it will still serve session cookies without the "secure" flag.\
 \
@@ -770,7 +770,7 @@ The audit log dashboard, by default, has only a few basic visualizations. They c
 
 This feature will work in ReadonlyREST Enterprise.
 
-ReadonlyREST Enterprise supports service provider initiated via SAML. This connector supports both SSO (single sign on) and SLO (single log out). Here is how to configure it.
+ReadonlyREST Enterprise supports service provider-initiated via SAML. This connector supports both SSO (single sign-on) and SLO (single log out). Here is how to configure it.
 
 ### Configure `ror_kbn_auth` bridge
 
@@ -798,7 +798,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-**⚠️IMPORTANT** the Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
+**⚠️IMPORTANT** Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
 
 ### Kibana side
 
