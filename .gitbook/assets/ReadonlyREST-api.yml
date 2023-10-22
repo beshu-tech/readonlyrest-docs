@@ -189,6 +189,15 @@ paths:
               examples:
                 notSufficientPermissions:
                   $ref: "#/components/examples/InSufficientPermissionsResponse"
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnsupportedMediaTypeResponse'
+              examples:
+                UnsupportedMediaTypeResponseExample:
+                  $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
 components:
   securitySchemes:
     http:
