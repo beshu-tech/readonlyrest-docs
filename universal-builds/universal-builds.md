@@ -36,7 +36,7 @@ $ bin/kibana
 Once Kibana is up and running, you can send a HTTP request to Kibana.
 
 ```
-POST http://<kibana-host-with-ror>:5601/pkp/api/license?overwrite=true
+POST http://<kibana-host-with-ror>:5601/api/ror/license?overwrite=true
 {
   "token": "your activation key" 
 }
