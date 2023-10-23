@@ -945,8 +945,6 @@ kibana:
     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
 ```
 
-The `kibana` rule gathers all ROR Kibana-related settings that it may need to provide great user experience. The rule consists of several sub-rules:
-
 `alert_message` Metadata can be used on the Kibana side to display information to the user on login to the Kibana.
 
 Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`. it's injected at the end of the HTML Body tag of the Kibana UI frontend code.
@@ -958,6 +956,8 @@ if (alertMessage) {
   alert(alertMessage);
 }
 ```
+
+The `kibana` rule gathers all ROR Kibana-related settings that it may need to provide great user experience. The rule consists of several sub-rules:
 
 ##### `access`
 
