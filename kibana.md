@@ -997,7 +997,7 @@ It is possible to customize the look of the login screen.
 
 ### Two column layout
 
-By default,the login form appears in a single column view. ![one column](blob:https://imgur.com/f7514ca2-7f8f-4f96-aecd-09e7ea636b62)
+By default, the login form appears in a single-column view. ![one column](blob:https://imgur.com/f7514ca2-7f8f-4f96-aecd-09e7ea636b62)
 
 But once title and subtitle are configured, it will switch to two columns for making room to the new text.
 
