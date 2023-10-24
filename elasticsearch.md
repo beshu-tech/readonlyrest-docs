@@ -929,7 +929,8 @@ readonlyrest:
 ### Kibana-related rules
 
 #### `kibana`
-The `kibana` rule underpins all ROR Kibana-related settings that may be needed to provide great user experience. The rule consists of several sub-rules.
+
+The `kibana` rule underpins all ROR Kibana-related settings that may be needed to provide great user experience.
 
 ```yaml
 kibana:
@@ -944,21 +945,9 @@ kibana:
   metadata: 
     dept: "@{jwt:tech.beshu.department}"
     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
-
 ```
-The metadata dictionary is composed of custom keys and values, in our example example `alert_message` can be used by Kibana to display alert information to the user when they log into Kibana.
 
-To visualize it as an alert in the browser, create and add this custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'` to `kibana.yml`. 
-
-```js
-const alertMessage = window.ROR_METADATA.customMetadata && window.ROR_METADATA.customMetadata.alert_message;
-
-if (alertMessage) {
-  alert(alertMessage);
-}
-```
-The file content will be injected as a snippet at the end of the HTML Body tag of the Kibana UI frontend code.
-
+The rule consists of several sub-rules:
 
 ##### `access`
 
