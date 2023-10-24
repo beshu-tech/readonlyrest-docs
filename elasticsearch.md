@@ -929,6 +929,7 @@ readonlyrest:
 ### Kibana-related rules
 
 #### `kibana`
+The `kibana` rule underpins all ROR Kibana-related settings that may be needed to provide great user experience. The rule consists of several sub-rules.
 
 ```yaml
 kibana:
@@ -943,11 +944,11 @@ kibana:
   metadata: 
     dept: "@{jwt:tech.beshu.department}"
     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+
 ```
+The metadata dictionary is composed of custom keys and values, in our example example `alert_message` can be used by Kibana to display alert information to the user when they log into Kibana.
 
-`alert_message` Metadata can be used on the Kibana side to display information to the user on login to the Kibana.
-
-Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`. it's injected at the end of the HTML Body tag of the Kibana UI frontend code.
+To visualize it as an alert in the browser, create and add this custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'` to `kibana.yml`. 
 
 ```js
 const alertMessage = window.ROR_METADATA.customMetadata && window.ROR_METADATA.customMetadata.alert_message;
@@ -956,14 +957,14 @@ if (alertMessage) {
   alert(alertMessage);
 }
 ```
+The file content will be injected as a snippet at the end of the HTML Body tag of the Kibana UI frontend code.
 
-The `kibana` rule gathers all ROR Kibana-related settings that may be needed to provide an optimal user experience. The rule consists of several sub-rules:
 
 ##### `access`
 
-Enables the minimum set of actions necessary for browsers to use Kibana.
+Enables the minimum set of Elasticsearch `actions` necessary for browsers to sustain a Kibana session, and rejects any other unrelated actions.
 
-This "macro" allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.index`](elasticsearch.md#index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
+This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.index`](elasticsearch.md#index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
 
 The idea is that with one single sub-rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
 
@@ -1022,6 +1023,27 @@ kibana:
 User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](./kibana.md#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
 
 It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
+
+Sample usage:
+
+```yaml
+kibana:
+  [...]
+  metadata:
+     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+```
+
+`alert_message` Metadata can be used on the Kibana side to display information to the user on login to the Kibana.
+
+Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`. it's injected at the end of the HTML Body tag of the Kibana UI frontend code.
+
+```js
+const alertMessage = window.ROR_METADATA.customMetadata && window.ROR_METADATA.customMetadata.alert_message;
+
+if (alertMessage) {
+  alert(alertMessage);
+}
+```
 
 #### `kibana_access`
 
