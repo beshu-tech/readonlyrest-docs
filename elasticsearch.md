@@ -929,6 +929,7 @@ readonlyrest:
 ### Kibana-related rules
 
 #### `kibana`
+The `kibana` rule underpins all ROR Kibana-related settings that may be needed to provide great user experience. The rule consists of several sub-rules.
 
 ```yaml
 kibana:
@@ -943,13 +944,11 @@ kibana:
   metadata: 
     dept: "@{jwt:tech.beshu.department}"
     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+
 ```
+The metadata dictionary is composed of custom keys and values, in our example example `alert_message` can be used by Kibana to display alert information to the user when they log into Kibana.
 
-The `kibana` rule gathers all ROR Kibana-related settings that it may need to provide great user experience. The rule consists of several sub-rules:
-
-`alert_message` Metadata can be used on the Kibana side to display information to the user on login to the Kibana.
-
-Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`. it's injected at the end of the HTML Body tag of the Kibana UI frontend code.
+To visualize it as an alert in the browser, create and add this custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'` to `kibana.yml`. 
 
 ```js
 const alertMessage = window.ROR_METADATA.customMetadata && window.ROR_METADATA.customMetadata.alert_message;
@@ -958,25 +957,27 @@ if (alertMessage) {
   alert(alertMessage);
 }
 ```
+The file content will be injected as a snippet at the end of the HTML Body tag of the Kibana UI frontend code.
+
 
 ##### `access`
 
-Enables the minimum set of actions necessary for browsers to use Kibana.
+Enables the minimum set of Elasticsearch `actions` necessary for browsers to sustain a Kibana session, and rejects any other unrelated actions.
 
-This "macro" allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.index`](elasticsearch.md#index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
+This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.index`](elasticsearch.md#index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
 
 The idea is that with one single sub-rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
 
 Possible access levels:
 
 * `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices.
-* `ro`: some write requests can go through to the `.kibana` index so that UI state in discover can be saved and short urls can be created.
-* `rw`: some more actions will be allowed towards the `.kibana` index only, so Kibana dashboards and settings can be modified.
-* `admin`: like above, but has additional permissions to use the ReadonlyREST PRO/Enterprise Kibana app
-* `api_only`: only [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) actions are allowed
-* `unrestricted`: no action is restricted
+* `ro`: some write requests can go through to the `kibana_index` index so that the UI state in "Discover" can be saved and new short urls can be created.
+* `rw`: some more requests will be allowed towards the `kibana_index` index only, so Kibana dashboards and settings can be modified.
+* `admin`: like `rw`, but has additional permissions to save security settings in the ReadonlyREST PRO/Enterprise app
+* `api_only`: only [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) actions are allowed, login via browser is always denied.
+* `unrestricted`: no action is restricted.
 
-**NB:** The "admin" access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you want really unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana.access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
+**NB:** The `admin` access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you truly require unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana.access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
 
 This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
@@ -1023,6 +1024,27 @@ User to define the Custom ROR Kibana Metadata which can be used in [Custom middl
 
 It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
+Sample usage:
+
+```yaml
+kibana:
+  [...]
+  metadata:
+     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+```
+
+`alert_message` Metadata can be used on the Kibana side to display information to the user on login to the Kibana.
+
+Declare custom Kibana JS file `readonlyrest_kbn.kibana_custom_js_inject_file: '/path/to/custom_kibana.js'`. it's injected at the end of the HTML Body tag of the Kibana UI frontend code.
+
+```js
+const alertMessage = window.ROR_METADATA.customMetadata && window.ROR_METADATA.customMetadata.alert_message;
+
+if (alertMessage) {
+  alert(alertMessage);
+}
+```
+
 #### `kibana_access`
 
 `kibana_access: ro`
@@ -1060,10 +1082,10 @@ If a request involves a wildcard \(i.e. "logstash-\*", "\*"\), this is first exp
 
 * Requests that do not involve any indices \(cluster admin, etc\) result in a "match".
 * Requests that involve only allowed indices result in a "match".
-* Requests that involve a mix of allowed and prohibited indices, are rewritten to only involve allowed indices, and result in a "match".
-* Requests that involve only prohibited indices result in a "no match". And the ACL evaluation moves on to the next block.
+* Requests that involve a mix of allowed and not-allowed indices, are rewritten to only involve allowed indices, and result in a "match".
+* Requests that involve only not-allowed indices result in a "no match". And the ACL evaluation moves on to the next block.
 
-The rejection message and HTTP status code returned to the requester are chosen carefully with the main intent to make ES behave like the prohibited indices do not exist at all.
+The rejection message and HTTP status code returned to the requester are chosen carefully with the main intent to simulate not-allowed indices do not exist at all.
 
 The rule has also an extended version:
 
@@ -1082,12 +1104,12 @@ In ReadonlyREST we roughly classify requests as:
 * "read": the request will not change the data or the configuration of the cluster
 * "write": when allowed, the request changes the internal state of the cluster or the data.
 
-If a **read request** asks for a some indices they have permissions for and some indices that they do NOT have permission for, the request is **rewritten** to involve only the subset of indices they have permission for. This is behaviour is very useful in Kibana: **different** users can see the **same** dashboards with data from only their own indices.
+If a **read request** involves some indices they have permissions for and some indices that they do NOT have permission for, the request is **rewritten** to involve only the subset of indices they have permission for. This is behaviour is very useful in Kibana: **different** users can see the **same** dashboards, but they are filled with a different, overlapping, or identical data set (according to the indices permissions).
 
 When the subset of indices is empty, it means that user are not allowed to access requested indices. In multitenancy environment we should consider two options:
 
 * requested indices don't exist
-* requested indices exist but logged user is not authorized to access them
+* requested indices exist but the current user is not authorized to access them
 
 For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled \(for nonexistent index\). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. See [detailed example](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/index-not-found-examples.md).
 
