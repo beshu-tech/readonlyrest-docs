@@ -170,14 +170,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
               examples:
-                JwtTokenExpired:
+                LicenseKeyExpired:
                   $ref: '#/components/examples/UpdateLicenseKeyExpiredResponse'
-                JwtTokenMalformed:
+                licenseKeyMalformed:
                   $ref: '#/components/examples/UpdateLicenseKeyMalformedResponse'
-                JwtTokenInvalid:
-                  $ref: "#/components/examples/UpdateLicenseKeyInvalidResponse"
-                JwtInvalidSignature:
-                  $ref: "#/components/examples/UpdateLicenseKeyInvalidSignatureResponse"
                 NoLicenseKeyProvided:
                   $ref: "#/components/examples/UpdateLicenseKeyNoLicenseKeyResponse"
         403:
@@ -312,9 +308,8 @@ components:
       properties:
         license:
           type: string
-          description: JWT token
+          description: License key
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
 
   parameters:
     XRorCorrelationIdHeader:
@@ -399,23 +394,13 @@ components:
     UpdateLicenseKeyExpiredResponse:
       summary: License key expired
       value:
-        status: JWT_EXPIRED
-        message: "The JWT token provided has expired."
+        status: LICENSE_KEY_EXPIRED
+        message: "The license key provided has expired."
     UpdateLicenseKeyMalformedResponse:
       summary: License key malformed
       value:
-        status: JWT_MALFORMED
-        message: "JWT malformed. The token does not have three components (delimited by a .)."
-    UpdateLicenseKeyInvalidResponse:
-      summary: License key invalid
-      value:
-        status: JWT_INVALID
-        message: "Invalid JWT. The header or payload could not be parsed."
-    UpdateLicenseKeyInvalidSignatureResponse:
-      summary: License key invalid signature
-      value:
-        status: INVALID_JWT_SIGNATURE
-        message: "The provided JWT token has an incorrect or tampered signature, indicating a potential unauthorized modification of the token contents."
+        status: LICENSE_KEY_MALFORMED
+        message: "License key malformed. The token does not have three components (delimited by a .)."
     UpdateLicenseKeyNoLicenseKeyResponse:
       summary: License key not provided
       value:
