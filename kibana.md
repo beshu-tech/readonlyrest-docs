@@ -197,7 +197,14 @@ RoR - just like Kibana itself - is meant to be used either with a proxy or witho
 
 ## Configuration
 
-ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
+ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
+
+### ROR Settings in kibana.yml
+
+* `readonlyrest_kbn.logLevel: <trace|debug|info>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
+* [session configuration](#session-management-with-multiple-kibana-instances)
+* [UI customisation](#login-screen-tweaking)
+* [custom middleware](#custom-middleware)
 
 > In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring to the configuration files **in the Elasticsearch plugin** (our Kibana plugins do not need a "readonlyrest.yml").
 
