@@ -91,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/badRequestResponse'
+                $ref: '#/components/schemas/BadRequestResponse'
               examples:
                 YamlFileExtensionRequiredResponseExample:
                   $ref: "#/components/examples/YamlFileExtensionRequiredResponseExample"
@@ -141,7 +141,7 @@ paths:
         - $ref: '#/components/parameters/XRorCorrelationIdHeader'
         - in: query
           name: overwrite
-          description: You can set value as true to overwrite existing license key
+          description: You can set value as true to overwrite existing license key. Default value is false.
           schema:
             type: boolean
             example: true
@@ -150,14 +150,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateLicenseKey'
+              $ref: '#/components/schemas/UpdateLicenseKey'
       responses:
         200:
           description: Returns a status of updating License key
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/updateLicenseKey'
+                $ref: '#/components/schemas/UpdateLicenseKey'
               examples:
                 UpdateLicenseKeySuccessResponse:
                   $ref: "#/components/examples/UpdateLicenseKeySuccessResponse"
@@ -168,7 +168,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/badRequestResponse'
+                $ref: '#/components/schemas/BadRequestResponse'
               examples:
                 JwtTokenExpired:
                   $ref: '#/components/examples/UpdateLicenseKeyExpiredResponse'
@@ -208,7 +208,7 @@ components:
       scheme: basic
 
   schemas:
-    badRequestResponse:
+    BadRequestResponse:
       type: object
       required:
         - message
@@ -304,7 +304,7 @@ components:
           type: string
           description: Human readable message
 
-    updateLicenseKey:
+    UpdateLicenseKey:
       type: object
       description: License key to update
       required:
