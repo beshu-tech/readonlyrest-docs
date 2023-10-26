@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ReadonlyREST API
   description: The API is designed for ReadonlyREST Kibana plugin users.
-  version: 1.0.0
+  version: 1.1.0
 
 paths:
   /api/ror/settings:
@@ -91,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/badRequestResponse'
+                $ref: '#/components/schemas/BadRequestResponse'
               examples:
                 YamlFileExtensionRequiredResponseExample:
                   $ref: "#/components/examples/YamlFileExtensionRequiredResponseExample"
@@ -131,6 +131,69 @@ paths:
                 UnsupportedMediaType:
                   $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
 
+  /api/ror/license:
+    post:
+      summary: Upgrading the license to PRO or Enterprise edition
+      description: The endpoint can be use to Upgrading the license to PRO or Enterprise edition.
+      tags:
+        - License
+      parameters:
+        - $ref: '#/components/parameters/XRorCorrelationIdHeader'
+        - in: query
+          name: overwrite
+          description: You can set value as true to overwrite existing license key. Default value is false.
+          schema:
+            type: boolean
+            example: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLicenseKey'
+      responses:
+        200:
+          description: Returns a status of updating License key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateLicenseKey'
+              examples:
+                UpdateLicenseKeySuccessResponse:
+                  $ref: "#/components/examples/UpdateLicenseKeySuccessResponse"
+                UpdateLicenseKeyNotModifiedResponse:
+                  $ref: "#/components/examples/UpdateLicenseKeyUnmodifiedResponse"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+              examples:
+                LicenseKeyExpired:
+                  $ref: '#/components/examples/UpdateLicenseKeyExpiredResponse'
+                licenseKeyMalformed:
+                  $ref: '#/components/examples/UpdateLicenseKeyMalformedResponse'
+                NoLicenseKeyProvided:
+                  $ref: "#/components/examples/UpdateLicenseKeyNoLicenseKeyResponse"
+        403:
+          description: The request was forbidden by ReadonlyREST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRorResponse'
+              examples:
+                InSufficientPermissions:
+                  $ref: "#/components/examples/InSufficientPermissionsResponse"
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnsupportedMediaTypeResponse'
+              examples:
+                UnsupportedMediaTypeResponseExample:
+                  $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
 components:
   securitySchemes:
     http:
@@ -141,7 +204,7 @@ components:
       scheme: basic
 
   schemas:
-    badRequestResponse:
+    BadRequestResponse:
       type: object
       required:
         - message
@@ -237,6 +300,17 @@ components:
           type: string
           description: Human readable message
 
+    UpdateLicenseKey:
+      type: object
+      description: License key to update
+      required:
+        - license
+      properties:
+        license:
+          type: string
+          description: License key
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
   parameters:
     XRorCorrelationIdHeader:
       name: X-ROR-Correlation-ID
@@ -281,7 +355,7 @@ components:
       summary: Main settings updated with success
       value:
         status: SUCCESS
-        message: "updated settings"
+        message: "ok"
 
     UpdateMainSettingsFailedResponse:
       summary: Main settings update failed
@@ -307,6 +381,36 @@ components:
         status: FILE_SIZE_EXCEEDS
         message: "The file size exceeds the maximum 10MB allowed limit. Please upload a smaller file."
 
+    UpdateLicenseKeySuccessResponse:
+      summary: License key updated with success
+      value:
+        status: SUCCESS
+        message: "ok"
+    UpdateLicenseKeyUnmodifiedResponse:
+      summary: License key not modified
+      value:
+        status: UNMODIFIED
+        message: "License token already exists is not modified. If you want to overwrite your license key use overwrite=true query string parameter."
+    UpdateLicenseKeyExpiredResponse:
+      summary: License key expired
+      value:
+        status: LICENSE_KEY_EXPIRED
+        message: "The license key provided has expired."
+    UpdateLicenseKeyMalformedResponse:
+      summary: License key malformed
+      value:
+        status: LICENSE_KEY_MALFORMED
+        message: "License key malformed. The token does not have three components (delimited by a .)."
+    UpdateLicenseKeyNoLicenseKeyResponse:
+      summary: License key not provided
+      value:
+        status: NO_LICENSE_KEY_PROVIDED
+        message: "There is no activation key provided."
+    InSufficientPermissionsResponse:
+      summary: Insufficient permissions
+      value:
+        status: FORBIDDEN
+        message: "You don't have sufficient permissions to perform this operation."
 security:
   - http: []
   - https: []

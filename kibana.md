@@ -197,7 +197,14 @@ RoR - just like Kibana itself - is meant to be used either with a proxy or witho
 
 ## Configuration
 
-ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before, it will be also very familiar.
+ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before , it will be also very familiar.
+
+### ROR Settings in kibana.yml
+
+* `readonlyrest_kbn.logLevel: <trace|debug|info>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
+* [session configuration](#session-management-with-multiple-kibana-instances)
+* [UI customisation](#login-screen-tweaking)
+* [custom middleware](#custom-middleware)
 
 > In this document, every time you will encounter references to "readonlyrest.yml" or "elasticsearch.yml", we will be referring to the configuration files **in the Elasticsearch plugin** (our Kibana plugins do not need a "readonlyrest.yml").
 
@@ -951,7 +958,7 @@ readonlyrest_kbn.auth:
 1. Enter the settings interface of your identity provider, and create a new OpenID app .
 2. The redirect URL should be configured as `http://localhost:5601/*` assuming kibana is listening on localhost and on the default port.
 3. Create some users and some groups in the identity provider if not present.
-4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set readonlyrest\_kbn.logLevel: debug\` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).
+4. Check the user profile parameter names that the identity provider uses during the assertion callback ( **TIP**: set `readonlyrest_kbn.logLevel: debug` in kibana.yml, so you will see the user profile how it's received from the identity provider right in the logs).
 5. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
 6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter` must be present in the `userinfo` token of your OIDC provider.)
 7. If kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equals to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when kibana is bound to 0.0.0.0, for example, if using docker.)
