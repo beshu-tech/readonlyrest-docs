@@ -220,7 +220,7 @@ readonlyrest:
       auth_key: kibana:kibana
 
     - name: "Azure AD - ReadonlyREST Admins group"
-      indices: [".kibana_admin_tenancy", "readonlyrest-audit*"]
+      indices: ["readonlyrest-audit*"]
       kibana:
         access: "admin"
         index: ".kibana_admin_tenancy"
@@ -229,7 +229,7 @@ readonlyrest:
         name: "kbn1"
 
     - name: "Azure AD - Anyone else"
-      indices: [".kibana_generic_tenancy", "readonlyrest-audit*"]
+      indices: ["readonlyrest-audit*"]
       kibana:
         access: "rw"
         index: ".kibana_generic_tenancy"

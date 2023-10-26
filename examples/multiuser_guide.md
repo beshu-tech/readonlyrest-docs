@@ -62,21 +62,21 @@ readonlyrest:
     #######################
     - name: "::RO::"
       auth_key: ro_usr:dev
-      indices: [ ".kibana", "logstash-2019*"] # <--- can see only data from 2019
+      indices: ["logstash-2019*"] # <--- can see only data from 2019
       kibana:
         access: ro
         hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
     - name: "::RW::"
       auth_key: rw_usr:dev
-      indices: [".kibana", "logstash-*"]
+      indices: ["logstash-*"]
       kibana:
         access: rw
         hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
 
     - name: "::ADMIN::"
       auth_key: admin_usr:dev
-      indices: [".kibana", "logstash-*"]
+      indices: ["logstash-*"]
       kibana:
         access: admin
 ```

@@ -1289,7 +1289,7 @@ For example, this ACL block would perfectly support a complete Kibana session. T
       auth_key: rw_user:pwd
       kibana:
         access: rw
-      indices: ["r*", ".kibana"]
+      indices: ["r*"]
 ```
 
 However, when we introduce a filter \(or fields\) rule, this block will be able to match only some of the actions \(only the "read" ones\).
@@ -1298,8 +1298,8 @@ However, when we introduce a filter \(or fields\) rule, this block will be able 
     - name: "::RW_USER::"
       auth_key: rw_user:pwd
       kibana:
-        access: rw  # <-- won't work because of filter present in block
-      indices: ["r*", ".kibana"]
+        access: rw  # <-- won't work because of `filter` rule present in block (it mismatches RW requests)
+      indices: ["r*"]
       filter: '{"query_string":{"query":"DestCountry:FR"}}'  # <-- will reject all write requests! :(
 ```
 
@@ -1308,14 +1308,14 @@ The solution is to duplicate the block. The first one will intercept \(and filte
 ```yaml
     - name: "::RW_USER (filter read requests)::"
       auth_key: rw_user:pwd
-      indices: ["r*"]  # <-- DO NOT FILTER THE .kibana INDEX!
+      indices: ["r*"] # <-- KIBANA-RELATED INDICES WON"T BE FILTERED HERE!
       filter: '{"query_string":{"query":"DestCountry:FR"}}'
 
     - name: "::RW_USER (allow remaining requests)::"
       auth_key: rw_user:pwd
       kibana:
         access: rw
-      indices: ["r*", ".kibana"]
+      indices: ["r*"] # <-- KIBANA-RELATED INDICES ARE IMPLICITLY ALLOWED! (because of the presence of the `kibana` rule in the same block)
 ```
 
 **NB:** Look at how we **make sure that the requests to ".kibana" won't get filtered** by specifying an `indices` rule in the first block.
@@ -1331,7 +1331,7 @@ Before adding the `filter` rule:
       access: rw
       index: ".kibana_@{user}"
       hide_apps: ["readonlyrest_kbn", "timelion"]
-    indices: ["r*", ".kibana_@{user}"]
+    indices: ["r*"]
 ```
 
 After adding the `filter` rule \(using the block duplication strategy\).
@@ -1344,7 +1344,7 @@ After adding the `filter` rule \(using the block duplication strategy\).
 
     - name: "::PERSONAL_GRP::"
       groups: ["Personal"]
-      indices: ["r*", ".kibana_@{user}"]
+      indices: ["r*"]
       kibana:
         access: rw
         index: ".kibana_@{user}"
