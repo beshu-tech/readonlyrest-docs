@@ -991,7 +991,7 @@ Example:
   auth_key: rw_user:pwd
   kibana:
     access: rw
-  indices: ["r*"] # .kibana, .kibana_8.10.4, .kibana_task_manager, etc are allowed here, because there is the `kibana` rule in the same
+  indices: ["r*"] # .kibana, .kibana_8.10.4, .kibana_task_manager, etc are allowed here, because there is the `kibana` rule present in the same block
 ```
 
 ##### `template_index`

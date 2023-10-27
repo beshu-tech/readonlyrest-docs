@@ -12,7 +12,7 @@ ReadonlyREST plugin for Kibana is not open source, and it's offered as part of t
 
 ReadonlyREST plugins for Kibana **always require** the ReadonlyREST open-source plugin to be installed in the Elasticsearch nodes your Kibana instance(s) will connect to.
 
-It's not mandatory to install ReadonlyREST in all Elasticsearch nodes, but only in the ones, where you need the HTTP interface to be secured.
+Installation of ReadonlyREST is not required on all Elasticsearch nodes. It's mandatory to be installed only on the nodes where you intend to secure the HTTP interface.
 
 ### After purchasing
 
@@ -453,7 +453,7 @@ Imagine you run Elasticsearch and Kibana on the same host:
 
 As you can see, Elasticsearch has no user-related information (metadata) to return to Kibana, and the error “problem with the configuration of authentication ” is shown.
 
-In general, we highly discourage implementing access control using origin IPs alone, users should set up SSL, Basic HTTP auth in their agents in any case, even on localhost. The `hosts`` rule would then be an extra protection.
+In general, we highly discourage implementing access control using origin IPs alone, users should set up SSL, Basic HTTP auth in their agents in any case, even on localhost. The `hosts` rule would then be an extra protection.
 
 If this is not possible for very important reasons, then we would prevent any Kibana-originated request to match that rule by using the negated form of the [headers rule](elasticsearch.md#headers). I.e.
 
