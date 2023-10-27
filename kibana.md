@@ -669,7 +669,7 @@ Enabling proxy auth passthrough will relax the requirement to provide a password
 
 This feature will work in all ReadonlyREST editions.
 
-Alternatively, to typing in credentials in the standard login form, it is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.
+As an alternative to typing in credentials in the standard login form, it is possible to create an authenticated Kibana session by passing a JWT token as a query parameter in a URL.
 
 #### Configuration
 
