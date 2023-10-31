@@ -238,7 +238,7 @@ xpack.watcher.enabled: false
 xpack.telemetry.enabled: false
 ```
 
-This is a typical example of configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
+This is a typical example of a configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
 
 ```yaml
 readonlyrest:
@@ -255,14 +255,14 @@ readonlyrest:
 
     - name: "::RO::"
       auth_key: ro:dev
-      indices: [ ".kibana", "logstash-*"]
+      indices: ["logstash-*"]
       kibana:
         access: ro
         hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]
 
     - name: "::RW::"
       auth_key: rw:dev
-      indices: [".kibana", "logstash-*"]
+      indices: ["logstash-*"]
       kibana:
         access: rw
         hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:stack_management"]

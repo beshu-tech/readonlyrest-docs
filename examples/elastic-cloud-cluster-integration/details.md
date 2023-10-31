@@ -153,7 +153,7 @@ cluster.remote.escloud.proxy_address: '${ES_CLOUD_PROXY_ADDRESS}' # taken from E
 cluster.remote.escloud.server_name: '${ES_CLOUD_SERVER_NAME}' # taken from Elastic Cloud deployment security settings, "Remote cluster parameters" section
 ```
 
-and `readonlyrest.yml` like this:
+and the `readonlyrest.yml` like this:
 
 ```yaml
 readonlyrest:
@@ -175,7 +175,7 @@ readonlyrest:
       kibana:
         access: ro
       auth_key: "user1:test"
-      indices: [".kibana*", "escloud:kibana_sample*"]
+      indices: ["escloud:kibana_sample*"]
 ```
 
 Kibana configuration doesn't contain anything special.
