@@ -86,7 +86,7 @@ readonlyrest_kbn:
       entryPoint: 'https://login.microsoftonline.com/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2'
       kibanaExternalHost: 'localhost:5601'
       usernameParameter: 'http://schemas.microsoft.com/identity/claims/displayname'
-      groupsParameter: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/groups',
+      groupsParameter: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/groups'
       logoutUrl: 'https://login.microsoftonline.com/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2'
 ```
 
