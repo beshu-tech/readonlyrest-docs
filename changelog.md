@@ -3,7 +3,7 @@
 ### (2023-10-09) What's new in **ROR 1.52.0**
 * **🚨Security Fix** (ES) [CVE-2023-4586](https://access.redhat.com/security/cve/cve-2023-4586)
 * **🚀New** (KBN) 8.10.4, 8.10.3, 7.17.14 support
-* **🚀New** (ES) 8.10.4, 8.10.3, 7.17.14 support
+* **🚀New** (ES) 8.10.4, 8.10.3, 7.17.15, 7.17.14 support
 * **🚀New** (ES) [New `token_authentication` rule](https://docs.readonlyrest.com/elasticsearch#token_authentication)
 * **🧐Enhancement** (KBN) Permanently hide Kibana|ES features that are impossible to support
 * **🧐Enhancement** (KBN) [License expiration reminder](https://forum.readonlyrest.com/t/license-expiration-reminder/2417)
