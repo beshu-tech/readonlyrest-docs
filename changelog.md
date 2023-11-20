@@ -1,5 +1,18 @@
 # Changelog
 
+### (2023-11-20) What's new in **ROR 1.53.0**
+* **🚨Security Fix** (ES) [CVE-2023-4586](https://nvd.nist.gov/vuln/detail/CVE-2023-4586), [CVE-2023-5072](https://nvd.nist.gov/vuln/detail/CVE-2023-5072)
+* **🚀New** (KBN) 8.11.1, 8.11.0 support
+* **🚀New** (ES) 8.11.1, 8.11.0 support
+* **🧐Enhancement** (KBN) Provide Activate license endpoint to the ReadonlyREST API
+* **🧐Enhancement** (ES) [when the `kibana` rule and the `indices` rule are defined in the same block](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#index), there is no need to explicitly allow kibana-related indices
+* **🐞Fix** (KBN) problem with reports generation when `kibana.index` in kibana.yml is used
+* **🐞Fix** (KBN) crash loop during license service initialization
+* **🐞Fix** (KBN) problem with logging in in KBN 7.17.13 (and above) and 8.10.4 (and above) when deployed using ECK
+* **🐞Fix** (KBN) problem with multi-tenancy and ECK
+* **🐞Fix** (KBN) problem with forbidden `/_create/config` response on Login to the Kibana
+* **🐞Fix** (ES) [patching fix, when a non-default ES path is used (e.g. on K8s)](https://forum.readonlyrest.com/t/getting-java-lang-illegalargumentexception-when-initializing-ror-in-es-8-10-4/2441)
+
 ### (2023-10-09) What's new in **ROR 1.52.0**
 * **🚨Security Fix** (ES) [CVE-2023-4586](https://access.redhat.com/security/cve/cve-2023-4586)
 * **🚀New** (KBN) 8.10.4, 8.10.3, 7.17.15, 7.17.14 support
