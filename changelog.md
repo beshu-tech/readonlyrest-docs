@@ -9,7 +9,7 @@
 * **🐞Fix** (KBN) problem with reports generation when `kibana.index` in kibana.yml is used
 * **🐞Fix** (KBN) crash loop during license service initialization
 * **🐞Fix** (KBN) problem with logging in in KBN 7.17.13 (and above) and 8.10.4 (and above) when deployed using ECK
-* **🐞Fix** (KBN) problem with multi-tenancy and ECK
+* **🐞Fix** (KBN) [problem with multi-tenancy and ECK](https://forum.readonlyrest.com/t/multi-tanancy-issue/2427)
 * **🐞Fix** (KBN) problem with forbidden `/_create/config` response on Login to the Kibana
 * **🐞Fix** (ES) [patching fix, when a non-default ES path is used (e.g. on K8s)](https://forum.readonlyrest.com/t/getting-java-lang-illegalargumentexception-when-initializing-ror-in-es-8-10-4/2441)
 
