@@ -421,9 +421,20 @@ readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
 
 #### Automatic Session cleanup
 All expired Index or In-memory sessions, determined by an `expiresAt` date that falls prior to the current time and date, will be systematically cleaned. The parameters for this automated session cleanup procedure can be adjusted within the `kibana.yml` configuration file.
+
 ```yaml
-readonlyrest_kbn.sessions_cleanup_interval: '1h' # Default to 1d. You can  defines interval as seconds(s), minutes(m), hours(h), days(d) 
+readonlyrest_kbn.sessions_cleanup_interval: '1h' # Default to 1d 
 ```
+##### Automatic Session cleanup options
+
+You can  defines interval as: 
+
+| Value | Description | Example |
+|-------|-------------|---------|
+| s     | seconds     | "1s"    |
+| m     | minutes     | "1m"    |
+| h     | hours       | "1h"    |
+| d     | days        | "1d"    |
 
 #### Clearing Session History
 
