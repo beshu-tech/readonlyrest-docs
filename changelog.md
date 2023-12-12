@@ -2,7 +2,7 @@
 
 ### (2023-11-20) What's new in **ROR 1.53.0**
 * **🚨Security Fix** (ES) [CVE-2023-4586](https://nvd.nist.gov/vuln/detail/CVE-2023-4586), [CVE-2023-5072](https://nvd.nist.gov/vuln/detail/CVE-2023-5072)
-* **🚀New** (KBN) 8.11.1, 8.11.0 support
+* **🚀New** (KBN) 8.11.2, 8.11.1, 8.11.0 support
 * **🚀New** (ES) 8.11.2, 8.11.1, 8.11.0 support
 * **🧐Enhancement** (KBN) Provide Activate license endpoint to the ReadonlyREST API
 * **🧐Enhancement** (ES) [when the `kibana` rule and the `indices` rule are defined in the same block](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#index), there is no need to explicitly allow kibana-related indices
