@@ -1,5 +1,13 @@
 # Changelog
 
+### (2023-12-17) What's new in **ROR 1.54.0**
+* **🚨Security Fix** (ES) Scroll API: protected data could leak when the `fields` rule was used with `fls_engine` set to `es` or `es_with_lucene` 
+* **🧐Enhancement** (KBN) Provide automatic [cleaning of stale sessions](https://docs.readonlyrest.com/kibana#automatic-session-cleanup)
+* **🧐Enhancement** (KBN) Provide automatic cleaning of stale CSRF cookies
+* **🐞Fix** (KBN) Adjust the ROR API POST license endpoint body to the contract to respect the `license` body parameter instead of a `token`
+* **🐞Fix** (KBN) `CorelationId`` is changed on every session refresh
+* **🐞Fix** (ES) ["missing authorization info" problem in some situations when `xpack.security.enabled` was configured to be `true`](https://forum.readonlyrest.com/t/diana-eck/2298/75)
+
 ### (2023-11-20) What's new in **ROR 1.53.0**
 * **🚨Security Fix** (ES) [CVE-2023-4586](https://nvd.nist.gov/vuln/detail/CVE-2023-4586), [CVE-2023-5072](https://nvd.nist.gov/vuln/detail/CVE-2023-5072)
 * **🚀New** (KBN) 8.11.3, 8.11.2, 8.11.1, 8.11.0, 7.17.16 support
