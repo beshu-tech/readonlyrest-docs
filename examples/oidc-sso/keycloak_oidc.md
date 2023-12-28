@@ -70,17 +70,18 @@ readonlyrest_kbn:
       type: "oidc"
       protocol: "http"
       issuer: 'http://localhost:8080/auth/realms/ror' <-- Get it from OpenID Endpoint Configuration
-      authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth' <-- Value from from OpenID Endpoint Configuration
-      tokenURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/token' <-- Value from from OpenID Endpoint Configuration
-      userInfoURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/userinfo' <-- Value from from OpenID Endpoint Configuration
+      authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth' <-- Valuecfrom OpenID Endpoint Configuration
+      tokenURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/token' <-- Value from OpenID Endpoint Configuration
+      userInfoURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/userinfo' <-- Value from OpenID Endpoint Configuration
       clientID: 'ror_oidc' <-- Declared in a realm Client Scopes
       clientSecret: '35d0c1db-a2b7-42d9-9a43-bea88c6535e6'  <-- Declared in a realm ror_oidc (our created client) Credentials tab
       scope: 'openid profile roles role_list email' <-- Declared in a realm Client Scopes
       usernameParameter: 'preferred_username'
       groupsParameter: 'groups'
       kibanaExternalHost: 'localhost:5601'
-      logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout' <-- Value from from OpenID Endpoint Configuration
-      jwksURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/certs' <-- Value from from OpenID Endpoint Configuration
+      logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout' <-- Value from OpenID Endpoint Configuration
+      jwksURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/certs' <-- Value from OpenID Endpoint Configuration
+      # proxyURL: 'https://localhost:6200' <-- Optional value. Your proxy server URL
 ```
 
 To verify all OpenID Endpoint Configuration-based, you can open OpenID Endpoint Configuration page in the kibana realm
