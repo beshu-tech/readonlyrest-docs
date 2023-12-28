@@ -70,7 +70,7 @@ readonlyrest_kbn:
       type: "oidc"
       protocol: "http"
       issuer: 'http://localhost:8080/auth/realms/ror' <-- Get it from OpenID Endpoint Configuration
-      authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth' <-- Valuecfrom OpenID Endpoint Configuration
+      authorizationURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/auth' <-- Value from OpenID Endpoint Configuration
       tokenURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/token' <-- Value from OpenID Endpoint Configuration
       userInfoURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/userinfo' <-- Value from OpenID Endpoint Configuration
       clientID: 'ror_oidc' <-- Declared in a realm Client Scopes
