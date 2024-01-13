@@ -2,6 +2,7 @@
 
 ### (2023-12-17) What's new in **ROR 1.54.0**
 * **🚨Security Fix** (ES) [Scroll API: protected data could leak when the `fields` rule was used with `fls_engine` set to `es` or `es_with_lucene`](https://forum.readonlyrest.com/t/field-rule-not-working-when-exceeding-a-certain-no-of-docs/2415/7)
+* **🚀New** (KBN) 8.11.4 support
 * **🚀New** (ES) 8.11.4 support
 * **🧐Enhancement** (KBN) Provide automatic [cleaning of stale sessions](https://docs.readonlyrest.com/kibana#automatic-session-cleanup)
 * **🧐Enhancement** (KBN) Provide automatic cleaning of stale CSRF cookies
