@@ -1,5 +1,14 @@
 # Changelog
 
+### (2024-01-29) What's new in **ROR 1.55.0**
+* **🚨Security Fix** (ES) [CVE-2023-51074](https://nvd.nist.gov/vuln/detail/CVE-2023-51074)
+* **🚀New** (ES) [Elasticsearch images with preinstalled ReadonlyREST plugin in Docker Hub](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest)
+* **🧐Enhancement** (KBN) Optional `readonlyrest_kbn.auth.oidc_kc.proxyURL` kibana.yml configuration for the OIDC connection which allows declaring your proxy URL
+* **🧐Enhancement** (KBN) Upon successful activation and edition changes all sessions are cleared and users are logged out
+* **🐞Fix** (KBN) Saved objects are not visible for the users on Kibana >= 8.8.0
+* **🐞Fix** (ES) [LDAP nested group names are properly escaped](https://forum.readonlyrest.com/t/support-kbn-ent-ldap-and-parentheses/2466)
+* **🐞Fix** (ES) Logout when a user with restricted `kibana.access` tried to see a restoration status of snapshots in Kibana
+
 ### (2023-12-17) What's new in **ROR 1.54.0**
 * **🚨Security Fix** (ES) [Scroll API: protected data could leak when the `fields` rule was used with `fls_engine` set to `es` or `es_with_lucene`](https://forum.readonlyrest.com/t/field-rule-not-working-when-exceeding-a-certain-no-of-docs/2415/7)
 * **🚀New** (KBN) 8.12.0, 8.11.4 support
