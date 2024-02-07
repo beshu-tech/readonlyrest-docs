@@ -3,6 +3,7 @@
 ### (2024-01-29) What's new in **ROR 1.55.0**
 * **🚨Security Fix** (ES) [CVE-2023-51074](https://nvd.nist.gov/vuln/detail/CVE-2023-51074)
 * **🚀New** (KBN) 7.17.17 support
+* **🚀New** (ES) 8.12.1, 7.17.18 support
 * **🚀New** (ES) [Elasticsearch images with preinstalled ReadonlyREST plugin in Docker Hub](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest)
 * **🧐Enhancement** (KBN) Optional `readonlyrest_kbn.auth.oidc_kc.proxyURL` kibana.yml configuration for the OIDC connection which allows declaring your proxy URL
 * **🧐Enhancement** (KBN) Upon successful activation and edition changes all sessions are cleared and users are logged out
