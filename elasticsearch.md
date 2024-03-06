@@ -452,7 +452,7 @@ under `ssl_internode` section. This option is applicable only for internode SSL.
 
 #### Hostname verification
 
-By default the hostname verification is disabled. It means that hostname or IP address is not checked to match the names within the certificate. To enable hostname verification add the following lines in the `ssl_internode` section:
+By default the hostname verification is disabled. This means that hostname or IP address is not verified to match the names in the certificate. To enable hostname verification add the following lines in the `ssl_internode` section:
 
 ```yaml
 hostname_verification: true
