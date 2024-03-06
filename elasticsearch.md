@@ -435,12 +435,13 @@ readonlyrest:
     truststore_file: "elastic-certificates.p12"
     truststore_pass: [ password for generated certificate ]
     client_authentication: true # default: false
-    certificate_verification: true # certificate verification is enabled by default on XPack nodes
+    certificate_verification: true # certificate verification is enabled by default on XPack nodes 
+    hostname_verification: false # hostname verification is disabled by default
 ```
 
 #### Certificate verification
 
-By default certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.
+By default the certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.
 It is useful on local/test environment, where security is not the most important concern. On production environment it is advised to enable this option. It can be done by means of:
 
 ```yaml
@@ -448,6 +449,14 @@ certificate_verification: true
 ```
 
 under `ssl_internode` section. This option is applicable only for internode SSL.
+
+#### Hostname verification
+
+By default the hostname verification is disabled. It means that hostname or IP address is not checked to match the names within the certificate. To enable hostname verification add the following lines in the `ssl_internode` section:
+
+```yaml
+hostname_verification: true
+```
 
 #### Client authentication
 
