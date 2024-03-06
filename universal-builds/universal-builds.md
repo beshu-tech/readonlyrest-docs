@@ -72,7 +72,27 @@ This method is useful for manual deployments.
 In the kibana.yml configuration file, you have the option to specify the mode for retrieving activation keys. 
 Setting this parameter effectively means that all other activation key retrieval methods will be disregarded.
 
-#### For environment variable option, you can add to `kibana.yml`:
+#### Default behaviour
+
+If there is no `kibana.yml` license config provided or 
+
+```yaml
+readonlyrest_kbn:
+    license:
+        activationKeyRetrievalMode: "all" # "file" | "env" | "all" | "none"
+```
+
+defined, the order of AK checking the most recent AK is:
+
+1. Retrieve from index
+2. ENV variable
+3. File
+4. Default Activation key (which means free license)
+If AK is found in any of the aforementioned locations, the verification process will be halted.
+
+#### From environment variable retrieval option 
+
+you can add to `kibana.yml`:
 
 ```yaml
 readonlyrest_kbn:
@@ -80,7 +100,9 @@ readonlyrest_kbn:
         activationKeyRetrievalMode: "env" # "file" | "env" | "all" | "none"
 ```
 
-#### For a file option, you can add to `kibana.yml`:
+#### From a file retrieval option 
+
+you can add to `kibana.yml`:
 
 ```yaml
 readonlyrest_kbn:
