@@ -74,7 +74,7 @@ Setting this parameter effectively means that all other activation key retrieval
 
 #### Default behaviour
 
-If there is no `kibana.yml` license config provided or 
+If there is no `kibana.yml` license config provided or `activationKeyRetrievalMode: "all"` defined:
 
 ```yaml
 readonlyrest_kbn:
@@ -82,7 +82,7 @@ readonlyrest_kbn:
         activationKeyRetrievalMode: "all" # "file" | "env" | "all" | "none"
 ```
 
-defined, the order of AK checking the most recent AK is:
+Then the order of activation key validation is:
 
 1. Retrieve from index
 2. ENV variable
