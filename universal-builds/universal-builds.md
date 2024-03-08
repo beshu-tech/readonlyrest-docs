@@ -66,3 +66,47 @@ This method is useful for manual deployments.
 1. Enter the activation key you obtained from the customer portal in the license management UI
 
 ![](assets/activation\_keys\_gui.png)
+
+### Change Activation key retrieval mode via kibana.yml
+
+In the kibana.yml configuration file, you have the option to specify the mode for retrieving activation keys. 
+Setting this parameter effectively means that all other activation key retrieval methods will be disregarded.
+
+#### Default behaviour
+
+If there is no `kibana.yml` license config provided or `activationKeyRetrievalMode: "all"` defined:
+
+```yaml
+readonlyrest_kbn:
+    license:
+        activationKeyRetrievalMode: "all" # "file" | "env" | "all" | "none"
+```
+
+Then the order of activation key validation is:
+
+1. Retrieve from index
+2. ENV variable
+3. File
+4. Default Activation key (which means free license)
+If AK is found in any of the aforementioned locations, the verification process will be halted.
+
+#### From environment variable retrieval option 
+
+you can add to `kibana.yml`:
+
+```yaml
+readonlyrest_kbn:
+    license:
+        activationKeyRetrievalMode: "env" # "file" | "env" | "all" | "none"
+```
+
+#### From a file retrieval option 
+
+you can add to `kibana.yml`:
+
+```yaml
+readonlyrest_kbn:
+    license:
+        activationKeyRetrievalMode: "file" # "file" | "env" | "all" | "none"
+        activationKeyFilePath: /tmp/activation.key
+```
