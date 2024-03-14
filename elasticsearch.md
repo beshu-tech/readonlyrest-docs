@@ -4,7 +4,7 @@
 
 ReadonlyREST is a light weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API. The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall. There are a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
 
-The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv3 license, or alternatively, a commercial license \(see [ReadonlyREST Embedded](https://readonlyrest.com/embedded)\) and lays the technological foundations for the companion Kibana plugin which is released in two versions: [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise).
+The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv3 license, or alternatively a commercial license \(see [ReadonlyREST Embedded](https://readonlyrest.com/embedded)\) and lays the technological foundations for the companion Kibana plugin which is released in two versions: [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise).
 
 Unlike the Elasticsearch plugin, the Kibana plugins are commercial only. But rely on the Elasticsearch plugin in order to work.
 
@@ -66,7 +66,7 @@ When prompted about additional permissions, answer **y**.
 
 #### 3. Patch Elasticsearch
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
+If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 # Patch ES
@@ -178,7 +178,7 @@ depending on your environment.
 
 #### 2. Unpatch Elasticsearch
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
+If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 # Unpatch ES
@@ -212,12 +212,12 @@ bin/elasticsearch-plugin install file://<download_dir>/readonlyrest-<ROR_VERSION
 e.g.
 
 ```bash
-bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.16.15_es6.1.1.zip
+bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.56.0_es8.12.2.zip
 ```
 
 #### 5. Patch Elasticsearch
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/ror-tools/src/main/scala/tech/beshu/ror/tools/patches/Es8xxPatch.scala), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
+If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 # Patch ES
@@ -226,7 +226,7 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
-You can verify if Elasticsearch was correctly patched using command `verify`:
+You can verify if Elasticsearch was correctly patched using the command `verify`:
 
 ```bash
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
@@ -253,7 +253,7 @@ Depending on your environment.
 Now you should be able to see the logs and ReadonlyREST related lines like the one below:
 
 ```text
-[2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
+[2024-03-14T20:21:49,589][INFO ][t.b.r.b.RorInstance      ] [ROR_SINGLE_1] ReadonlyREST was loaded ...
 ```
 
 ### Removing the plugin
@@ -270,14 +270,14 @@ depending on your environment.
 
 #### 2. Unpatch Elasticsearch
 
-If you are using Elasticsearch 8.0.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
+If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 # Unpatch ES
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
 ```
 
-You can verify if Elasticsearch was correctly unpatched using command `verify`:
+You can verify if Elasticsearch was correctly unpatched using the command `verify`:
 
 ```bash
 $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
@@ -311,7 +311,7 @@ Depending on your environment.
 
 ### Deploying ReadonlyREST in a stable production cluster
 
-Unless some advanced features are being used \(see below\),this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** \(port 9200\).
+Unless some advanced features are being used \(see below\), this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** \(port 9200\).
 
 Installing ReadonlyREST in a dedicated node has numerous advantages:
 
@@ -331,7 +331,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** By default when `fields` [rule](elasticsearch.md#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
+**⚠️IMPORTANT** By default when the `fields` [rule](elasticsearch.md#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
 
 ### ACL basics
 
