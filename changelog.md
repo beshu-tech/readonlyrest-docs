@@ -1,5 +1,19 @@
 # Changelog
 
+### (2024-03-15) What's new in **ROR 1.56.0**
+* **🚀New** Provide a way to switch light/dark mode per user
+* **🧐Enhancement** (KBN) The activation key will be revalidated in the interval 
+* **🧐Enhancement** (KBN) Provide a way to define Activation key [retrieval mode](https://docs.readonlyrest.com/v/develop/universal-builds#change-activation-key-retrieval-mode-via-kibana.yml)
+* **🐞Fix** (KBN) Sometimes reports are not generated correctly for Kibana >= 8.0.0 and "Max attempt reached" error  appears 
+* **🐞Fix** (KBN) The OIDC scope configuration property was not applied and the default configuration was used instead.
+* **🐞Fix** (KBN) The OIDC proxy parameter was not handled properly in case of HTTPs connection over HTTP proxy server
+* **🐞Fix** (KBN) Missing information when Kibana is not patched
+* **🐞Fix** (ES) [Repositories and Snapshots handling by ES coordinating nodes](https://forum.readonlyrest.com/t/snapshot-status-cannot-modify-incoming-request/2471)
+* **🐞Fix** (ES) [Internode SSL `certificate_verification: true` was causing problems with nodes discovery](https://forum.readonlyrest.com/t/upgrade-elasticsearch-8-2-to-8-x-leads-to-ssl-problems/2480)
+* **🐞Fix** (ES) Missing `x-elastic-product` header in the response when `fields` and `filter` rules were used
+* **🐞Fix** (ES) Proper `forbid` policy handling during processing ROR login request
+* **🐞Fix** (ES) `application/nd-json` media type handling (in case of ES `7.x` versions)
+
 ### (2024-01-29) What's new in **ROR 1.55.0**
 * **🚨Security Fix** (ES) [CVE-2023-51074](https://nvd.nist.gov/vuln/detail/CVE-2023-51074)
 * **🚀New** (KBN) 8.12.2 ,8.12.1, 7.17.18, 7.17.17 support
