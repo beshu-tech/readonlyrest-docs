@@ -1042,6 +1042,12 @@ Open `config/kibana.yml` and append the following:
 readonlyrest_kbn.login_custom_logo: 'https://.../logo.png'
 ```
 
+To load your custom logo directly from the file, place the logo into the `<YOUR_ROOT_DIRECTORY>/kibana/plugins/readonlyrestkbn/public/assets` folder and append the following
+
+```yaml
+readonlyrest_kbn.login_custom_logo: '/pkp/legacy/web/assets/<YOUR_LOGO>'
+```
+
 ### Add custom CSS/JS
 
 You have the opportunity to inject HTML code right before the closing head tag (`</head>`).
