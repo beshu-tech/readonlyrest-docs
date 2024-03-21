@@ -1042,11 +1042,13 @@ Open `config/kibana.yml` and append the following:
 readonlyrest_kbn.login_custom_logo: 'https://.../logo.png'
 ```
 
-To load your custom logo directly from the file, place the logo into the `<YOUR_ROOT_DIRECTORY>/kibana/plugins/readonlyrestkbn/public/assets` folder and append the following
+To incorporate your personalized logo into the login page, place your image file within the `<YOUR_ROOT_DIRECTORY>/kibana/plugins/readonlyrestkbn/public/assets directory`. Then, proceed by appending the following code snippet to `kibana.yml`:
 
 ```yaml
 readonlyrest_kbn.login_custom_logo: '/pkp/legacy/web/assets/<YOUR_LOGO>'
 ```
+
+Your personalized logo can be in any format [supported by web browsers](https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types). The maximum file size varies depending on the browser you're using. We recommend keeping them smaller, with a maximum size of 500KB, to maintain optimal page load speed.
 
 ### Add custom CSS/JS
 
