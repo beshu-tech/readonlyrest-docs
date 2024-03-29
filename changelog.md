@@ -1,7 +1,8 @@
 # Changelog
 
 ### (2024-03-15) What's new in **ROR 1.56.0**
-* **🚀New** Provide a way to switch light/dark mode per user
+* **🚀New** (KBN) Provide a way to switch light/dark mode per user
+* **🚀New** (ES) 8.13.0, 7.17.19 support
 * **🧐Enhancement** (KBN) The activation key will be revalidated in the interval 
 * **🧐Enhancement** (KBN) Provide a way to define Activation key [retrieval mode](https://docs.readonlyrest.com/v/develop/universal-builds#change-activation-key-retrieval-mode-via-kibana.yml)
 * **🐞Fix** (KBN) Sometimes reports are not generated correctly for Kibana >= 8.0.0 and "Max attempt reached" error  appears 
