@@ -2,6 +2,7 @@
 
 ### (2024-03-15) What's new in **ROR 1.56.0**
 * **🚀New** (KBN) Provide a way to switch light/dark mode per user
+* **🚀New** (KBN) 8.13.0, 7.17.19 support
 * **🚀New** (ES) 8.13.0, 7.17.19 support
 * **🧐Enhancement** (KBN) The activation key will be revalidated in the interval 
 * **🧐Enhancement** (KBN) Provide a way to define Activation key [retrieval mode](https://docs.readonlyrest.com/v/develop/universal-builds#change-activation-key-retrieval-mode-via-kibana.yml)
