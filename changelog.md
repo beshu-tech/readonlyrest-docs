@@ -1,5 +1,24 @@
 # Changelog
 
+### (2024-03-28) What's new in **ROR 1.57.0**
+* **🚨Security Fix** (ES) [CVE-2024-29025](https://nvd.nist.gov/vuln/detail/CVE-2024-29025)
+* **🚀New** (ES) [LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: groups server-side filtering
+* **🚀New** (ES) [LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: skip user search option when user attribute is `cn`
+* **⚠️Warning** (KBN|ES) Internal API incompatibilities (to take advantage of rolling update capabilities, upgrade ROR KBN first)
+* **⚠️Warning** (ES) Support for ES < 6.8.0 was dropped
+* **🧐Enhancement** (KBN) User settings available for all access type users
+* **🧐Enhancement** (KBN) Add option to change the Default Route and Time zone in User settings
+* **🧐Enhancement** (KBN) Provide correlation ID to Kibana logs
+* **🧐Enhancement** (ES) Rich, context-based debug logging in the LDAP connector and LDAP-related rules
+* **🧐Enhancement** (ES) Additional [validations](https://docs.readonlyrest.com/elasticsearch#configuring-an-acl-with-filter-fields-rules-when-using-kibana): `kibana` rule should not be used with some other rules in the same block
+* **🐞Fix** (KBN) Sometimes reports are not generated correctly for Kibana < 8.0.0 and the “Max attempt reached” error appears
+* **🐞Fix** (KBN) Adjust interactive API swagger dark mode colors
+* **🐞Fix** (KBN) CSRF problem when multiple ECK Kibana instances
+* **🐞Fix** (KBN) Plugin doesn’t run for a version Kibana < 7.11.0 when the OIDC proxy is enabled
+* **🐞Fix** (KBN) Session probe should log out the user when empty metadata was returned from ES ROR
+* **🐞Fix** (ES) Misc issues when `xpack.security.enabled: true` is set
+* **🐞Fix** (ES) Patched files permission issue
+
 ### (2024-03-15) What's new in **ROR 1.56.0**
 * **🚀New** (KBN) Provide a way to switch light/dark mode per user
 * **🚀New** (KBN) 8.13.2, 8.13.1, 8.13.0, 7.17.20, 7.17.19 support
