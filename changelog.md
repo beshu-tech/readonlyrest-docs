@@ -2,8 +2,9 @@
 
 ### (2024-03-15) What's new in **ROR 1.56.0**
 * **🚀New** (KBN) Provide a way to switch light/dark mode per user
-* **🚀New** (KBN) 8.13.0, 7.17.19 support
-* **🚀New** (ES) 8.13.0, 7.17.19 support
+* **🚀New** (KBN) 8.13.2, 8.13.1, 8.13.0, 7.17.20, 7.17.19 support
+* **🚀New** (ES) 8.13.2, 8.13.1, 8.13.0, 7.17.20, 7.17.19 support
+* **⚠️Warning** (ES) [for ES > 6.5 patching is required since this version of ROR](https://docs.readonlyrest.com/elasticsearch#id-5.-patch-elasticsearch)
 * **🧐Enhancement** (KBN) The activation key will be revalidated in the interval 
 * **🧐Enhancement** (KBN) Provide a way to define Activation key [retrieval mode](https://docs.readonlyrest.com/v/develop/universal-builds#change-activation-key-retrieval-mode-via-kibana.yml)
 * **🐞Fix** (KBN) Sometimes reports are not generated correctly for Kibana >= 8.0.0 and "Max attempt reached" error  appears 
