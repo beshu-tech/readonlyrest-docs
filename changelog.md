@@ -1,9 +1,12 @@
 # Changelog
 
-### (2024-03-29) What's new in **ROR 1.57.1**
+### (2024-05-05) What's new in **ROR 1.57.2**
+* **🐞Fix** (ES) Patching issue for Elasticsearch OSS versions
+
+### (2024-04-29) What's new in **ROR 1.57.1**
 * **🐞Fix** (ES) configuration parsing regression: one group definition can be a string
 
-### (2024-03-28) What's new in **ROR 1.57.0**
+### (2024-04-28) What's new in **ROR 1.57.0**
 * **🚨Security Fix** (ES) [CVE-2024-29025](https://nvd.nist.gov/vuln/detail/CVE-2024-29025)
 * **🚀New** (ES) [LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: groups server-side filtering
 * **🚀New** (ES) [LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: skip user search option when user attribute is `cn`

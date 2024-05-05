@@ -181,7 +181,11 @@ Let's call `GET /my_index/_search` and see what happens. We see 3 calls to LDAP.
 
 Oh yes. It should be obvious now. We don't get all user groups, just a subset of all existing groups. We do cache the information, but each block can't find the information it's looking for in the cache. So we call LDAP in each block. 
 
-Is it bad or not? It depends. On the business case, of course. In some cases it's better to enable server-side rendering (e.g. when the LDAP groups are a really long list), but in other cases it's better to reduce LDAP calls (so more data can be sent over the network). In ROR, server-side group filtering is disabled by default. You should consider whether it should be enabled in your case. But be aware of the caching implications described above.
+Is it bad or not? It depends. On the business case, of course. 
+
+#### When to enable server-side group filtering?
+
+In some cases, it's better to enable server-side filtering (e.g. when the LDAP groups are a really long list), but in other cases, it's better to reduce LDAP calls (so more data can be sent over the network). In ROR, server-side group filtering is disabled by default. You should consider whether it should be enabled in your case. But be aware of the caching implications described above.
 
 _\* Currently, only the LDAP connector supports server-side group filtering. Interested in this feature in other services? Let us know!_
 
