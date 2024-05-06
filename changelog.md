@@ -6,7 +6,7 @@
 * **🐞Fix** (KBN) Kibana <= 7.2.1 doesn’t run
 * **🐞Fix** (KBN) Provides a way to migrate an existing session index to the new session
 * **🐞Fix** (ES) Patching issue for Elasticsearch OSS versions
-* 
+
 ### (2024-04-29) What's new in **ROR 1.57.1**
 * **🐞Fix** (ES) configuration parsing regression: one group definition can be a string
 
