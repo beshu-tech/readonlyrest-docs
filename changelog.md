@@ -6,8 +6,8 @@
 * **🐞Fix** (KBN) Automatic migration issue for Kibana >= 8.8.0 that caused the “mapping set to strict, dynamic introduction of...” error
 
 ### (2024-05-05) What's new in **ROR 1.57.2**
-* **🚀New** (KBN) 8.13.3, 7.17.21 support
-* **🚀New** (ES) 8.13.3, 7.17.21 support
+* **🚀New** (KBN) 8.13.4, 8.13.3, 7.17.21 support
+* **🚀New** (ES) 8.13.4, 8.13.3, 7.17.21 support
 * **🐞Fix** (KBN) Kibana <= 7.2.1 doesn’t run
 * **🐞Fix** (KBN) Provides a way to migrate an existing session index to the new session
 * **🐞Fix** (ES) Patching issue for Elasticsearch OSS versions
