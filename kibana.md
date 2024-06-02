@@ -712,7 +712,7 @@ The following will happen:
 
 **Deep linking with JWT**
 
-Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the call on the fly, the JWT authentication can be used in conjunction with the `nextUrl` query parameter for sharing deep links inside Kibana apps, or embedding visualizations and dashboards inside I-Frames.
+Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the call on the fly, the JWT authentication can be used in conjunction with the `nextUrl` query parameter for sharing deep links inside Kibana apps.
 
 **Anatomy of a JWT deep link**
 
@@ -738,6 +738,30 @@ The result may look something like this:
 ```text
 http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
+
+## Embedding Kibana Dashboard or Visualization with an iframe and JWT Authentication
+
+You have the option to embed visualizations and dashboards inside iframes. For more information, refer to the [official Elastic documentation](https://www.elastic.co/guide/en/kibana/current/reporting-getting-started.html#embed-code).
+
+To add JWT authentication, modify the iframe `src` attribute as follows:
+
+Original iframe `src`:
+
+```html
+<iframe src="https://localhost:5601/s/default/app/dashboards#/view/722b74f0-b882-11e8-a6d9-e546fe2bba5f?embed=true&_g=()&_a=()" height="600" width="800"></iframe>
+```
+
+Modified iframe `src` with JWT:
+
+```html
+<iframe src="https://localhost:5601/s/default/app/dashboards?jwt=<the-token>#/view/722b74f0-b882-11e8-a6d9-e546fe2bba5f?embed=true&_g=()&_a=()" height="600" width="800"></iframe>
+```
+
+Replace <the-token> with your actual JWT token to enable authentication.
+
+{% hint style="info" %}
+For a cross-domain iframe, you need to set the cookie sameSite: none and secure: true. You can do this via the kibana.yml configuration file by setting `readonlyrest_kbn.cookies.secure: true` and `readonlyrest_kbn.cookies.sameSite: 'none'`.
+{% endhint %}
 
 ## SSL/TLS server
 
@@ -1052,12 +1076,32 @@ Your personalized logo can be in any format [supported by web browsers](https://
 
 ### Add custom CSS/JS
 
+#### Inject via HTML code
+
 You have the opportunity to inject HTML code right before the closing head tag (`</head>`).
 
 Open `config/kibana.yml` and append the following:
 
 ```yaml
 readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
+```
+
+#### Inject via JS file
+
+There is an option to inject JavaScript file before the login screen is rendered.
+
+Open `config/kibana.yml` and append the following:
+
+```yaml
+readonlyrest_kbn.login_html_head_inject: '<ABSOLUTE_PATH_TO_CUSTOM_JS_FILE>'
+```
+
+#### Inject via CSS file
+
+There is an option to inject CSS file before the login screen is rendered.
+
+```yaml
+readonlyrest_kbn.login_custom_css_inject_file: '<ABSOLUTE_PATH_TO_CUSTOM_CSS_FILE>'
 ```
 
 ## Kibana UI tweaking
@@ -1229,6 +1273,18 @@ readonlyrest:
 ```
 
 Now try to login as user1, and ReadonlyREST Enterprise should initialize the index ".kibana\_user1" with all the index patterns and dashboards contained in the template tenancy.
+
+## Tenant index configuration
+
+You can configure the `number_of_shards` and `number_of_replicas` for the tenant index via the `kibana.yml` file, allowing you to override the default index settings. This can be particularly useful in a single-node environment.
+```yaml
+readonlyrest.tenantIndex.number_of_shards: 1
+readonlyrest.tenantIndex.number_of_replicas: 0
+```
+
+{% hint style="warning" %}
+These settings will overwrite the index template settings.
+{% endhint %}
 
 ## Impersonation
 
