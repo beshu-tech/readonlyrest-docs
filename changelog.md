@@ -2,7 +2,7 @@
 
 ### (2024-05-18) What's new in **ROR 1.57.3**
 * **🚨Security Fix** (ES) [CVE-2024-34447](https://nvd.nist.gov/vuln/detail/CVE-2024-34447)
-* **🚀New** (KBN) 8.14.1, 8.14.0 support
+* **🚀New** (KBN) 8.14.1, 8.14.0, 7.17.22 support
 * **🚀New** (ES) 8.14.1, 8.14.0, 7.17.22 support
 * **🐞Fix** (KBN) The CSRF cookie name issue that caused the “Wrong credentials” error during login
 * **🐞Fix** (KBN) Automatic migration issue for Kibana >= 8.8.0 that caused the “mapping set to strict, dynamic introduction of...” error
