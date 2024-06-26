@@ -797,6 +797,7 @@ extended version:
 ```yaml
 ldap_authentication:
   name: ldap1
+  cache_ttl: 10 sec
 ```
 
 It handles LDAP authentication only using the configured LDAP connector (here `ldap1`). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
@@ -807,6 +808,7 @@ It handles LDAP authentication only using the configured LDAP connector (here `l
 ldap_authorization:
   name: "ldap1"
   groups: ["group3"]
+  cache_ttl: 10 sec
 ```
 
 It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` can be used to require users belong to all the listed groups (AND logic). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
