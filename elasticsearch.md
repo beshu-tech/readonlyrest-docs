@@ -2475,7 +2475,7 @@ To define user groups provider you should specify:
 * `auth_token_name` - user identifier will be passed with this name
 * `auth_token_passed_as` - user identifier can be send using HEADER or QUERY\_PARAM
 * `response_group_ids_json_path`,`response_groups_json_path` - response can be unrestricted, but you have to specify [JSON Path](https://github.com/json-path/JsonPath) for group ID list
-* `response_group_names_json_path` (optional, default: `response_group_ids_json_path`)- [JSON Path](https://github.com/json-path/JsonPath) for [groups name](details/structured-groups.md) list
+* `response_group_names_json_path` (optional, default: `response_group_ids_json_path`)- [JSON Path](https://github.com/json-path/JsonPath) for [groups name](details/structured-groups.md) list (both arrays, available at `response_group_ids_json_path` and `response_group_names_json_path`, have to have the same length and have the same order)
 
 As usual, the cache behaviour can be defined at service level or/and at rule level.
 
