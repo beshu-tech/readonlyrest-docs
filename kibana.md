@@ -1142,13 +1142,13 @@ readonlyrest_kbn.kibana_custom_js_inject_file: '/tmp/custom.js'
 
 ### Map groups to aliases
 
-You can provide a function, mapping group names to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
+You can provide a function, mapping group IDs to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
 
 ```yaml
 readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 ```
 
-**⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group name will be used as fallback. Also, if the mapping function is not specified, the original group name value will be used.
+**⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group ID will be used as fallback. Also, if the mapping function is not specified, the original group ID value will be used.
 
 ## Tenancy index templating
 

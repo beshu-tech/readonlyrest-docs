@@ -22,9 +22,9 @@ Each authorization rule has a different method of obtaining the users' groups:
    
 ### Checking groups logic
 
-In each authorization rule, we need to define what groups are eligible. You can use full group names (eg. `management_depA`) or group names with wildcards (eg. `management_*`). In the same place, you are defining the checking logic. At the moment ROR supports two of them:
-* any of group names (or/and group name patterns) should match (boolean OR logic - defined as `groups` or `groups_or`)
-* all of group names (or/and group name patterns) should match (boolean AND logic - defined as `groups_and`)
+In each authorization rule, we need to define what groups are eligible. You can use full group IDs (eg. `management_depA`) or group IDs with wildcards (eg. `management_*`). In the same place, you are defining the checking logic. At the moment ROR supports two of them:
+* any of group IDs (or/and group ID patterns) should match (boolean OR logic - defined as `groups` or `groups_or`)
+* all of group IDs (or/and group ID patterns) should match (boolean AND logic - defined as `groups_and`)
 
 Example: 
 
