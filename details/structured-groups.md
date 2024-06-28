@@ -1,12 +1,14 @@
 # Structured groups
 
+**TIP** Structured groups are a useful concept in the context of ReadonlyREST Enterprise Kibana plugin. You can skip this configuration if you have a Pro or Free plugin version.
+
 Group ID represents a group/roles concept in the ROR ACL. You can define a neat, human-readable ID of the group when you introduce groups on the configuration level.
 However, when group IDs come from external integrations, the group IDs may have an unfriendly format.
 That's why we introduced a structured group concept, which consists of:
-* Group ID - a group identifier, used in the `groups`, `groups_or`, and `groups_and` ACL rules
-* Group Name - a human-readable name of the group. If not defined, it's equal to the group ID.
+* Group ID - a group identifier, used in the `groups`, `groups_or`, and `groups_and` ACL rules. Group IDs are the only values that ROR operates on (if you use variables in the `groups` rule, like `acl:current_group` and `acl:available_groups`, only group IDs will be involved)
+* Group Name - a human-readable name of the group. If not defined, it's equal to the group ID. You can use group names in the Kibana Enterprise Plugin and map group IDs to friendly names for the end users in the Tenancy Selector.
 
-Thanks to the structured groups, you can configure neat group names and hide external integrations internals from end users(ReadonlyREST Enterprise Kibana plugin uses group names in the Tenancy Selector)
+Thanks to the structured groups, you can configure neat group names and hide the internals of external integrations from end users.
 
 ### Configuration examples
 

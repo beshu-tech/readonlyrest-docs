@@ -1709,7 +1709,10 @@ More examples are shown below together with a sample configuration.
 
 ### Local users and groups
 
-The `groups` rule accepts a list of group IDs. This rule will match if the resolved username \(i.e. via `auth_key`\) is associated to the given groups. In this example, the usernames are statically associated to group IDs.
+The `groups` rule accepts a list of group IDs. This rule will match if the resolved username \(i.e. via `auth_key`\) is associated with the given groups.
+
+In this example, usernames `alice` and `claire` are statically associated with group IDs.  
+The username `bob` is statically associated with [structered groups](details/structured-groups.md)(a special syntax for defining groups, which may be helpful in the case of the Enterprise Kibana plugin)
 
 ```yaml
  access_control_rules:
@@ -1727,6 +1730,10 @@ The `groups` rule accepts a list of group IDs. This rule will match if the resol
       groups: ["team1", "team2"]
       indices: ["index3"]
 
+    - name: Accept requests from users in groups team4 OR team5 on index3
+      groups_or: ["team4", "team5"]
+      indices: ["index3"]
+
     - name: Accept requests from users in groups team1 AND team2 on index3
       groups_and: ["team1", "team2"]
       indices: ["index3"]
@@ -1734,19 +1741,20 @@ The `groups` rule accepts a list of group IDs. This rule will match if the resol
     users:
 
     - username: "alice"
-      groups: ["team1"]
+      groups: ["team1"] # group id - a value that ROR operates in `groups`, `groups_or`, and `groups_and` rules
       auth_key: alice:p455phrase
 
     - username: "bob"
+      # structured group syntax, useful in case of tenancy selector in Kibana Enterprise plugin
       groups: 
-      - id: "team2"
-        name: "Team 2"       
-      - id: "team4"   
-        name: "Team 4"
+      - id: "team2"     # group id
+        name: "Team 2"  # group name - `Team 2` will be visible in the tenancy selector for the 'team2' group 
+      - id: "team4"     # group id
+        name: "Team 4"  # group name - `Team 4` will be visible in the tenancy selector for the 'team4' group 
       auth_key: bob:s3cr37
 
     - username: "claire"
-      groups: ["team1", "team5"]
+      groups: ["team1", "team5"] # group ids
       auth_key_sha256: e0bba5fda92dbb0570fd2e729a3c8ed6b1d52b380581f32427a38e396ba28ec6 #claire:p455key
 ```
 
@@ -1798,7 +1806,7 @@ One of the neatest features in ReadonlyREST is that you can use dynamic variable
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group ID explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
-    * `@{acl:available_groups}` gets replaced with available groups found in the authorization rule (because by default dynamic variables are resolved to a string, the variable resolved value will contain groups surrounded with double quotes and joined with a comma)
+    * `@{acl:available_groups}` gets replaced with available group IDs found in the authorization rule (because by default dynamic variables are resolved to a string, the variable resolved value will contain groups surrounded with double quotes and joined with a comma)
 * `header` - the context of ES HTTP request headers
     * `@{header:<header_name>}` gets replaced with the value of the HTTP header with name `<header_name>` included in the incoming request \(useful when reverse proxies handle authentication\)
 * `jwt` - the context of JWT header value
@@ -2451,7 +2459,7 @@ readonlyrest:
       auth_token_name: "token"
       auth_token_passed_as: QUERY_PARAM                              # HEADER OR QUERY_PARAM
       response_groups_ids_json_path: "$..groups[?(@.id)].id"         # JSON-path style, see https://github.com/json-path/JsonPath
-      response_groups_names_json_path: "$..groups[?(@.name)].name"   # JSON-path style, see https://github.com/json-path/JsonPath
+      response_groups_names_json_path: "$..groups[?(@.name)].name"   # optional, JSON-path style, see https://github.com/json-path/JsonPath
       cache_ttl_in_sec: 60
       http_connection_settings:
         connection_timeout_in_sec: 1                           # default 2
@@ -2472,12 +2480,13 @@ Also in this rule, the `groups` clause can be replaced by `group_and` to require
 
 To define user groups provider you should specify:
 
-* `name` for service \(then this name is used as id in `user_groups_provider` attribute of `groups_provider_authorization` rule\)
-* `groups_endpoint` - service with groups endpoint \(GET request\)
-* `auth_token_name` - user identifier will be passed with this name
-* `auth_token_passed_as` - user identifier can be send using HEADER or QUERY\_PARAM
-* `response_group_ids_json_path`,`response_groups_json_path` - response can be unrestricted, but you have to specify [JSON Path](https://github.com/json-path/JsonPath) for group ID list
-* `response_group_names_json_path` (optional, default: `response_group_ids_json_path`)- [JSON Path](https://github.com/json-path/JsonPath) for [groups name](details/structured-groups.md) list (both arrays, available at `response_group_ids_json_path` and `response_group_names_json_path`, have to have the same length and have the same order)
+* `name` - (string, required) - identifier of the service which needs to be passed in the `groups_provider_authorization` rule (`user_groups_provider` attribute)
+* `groups_endpoint` - (string, required) - service with groups endpoint
+* `auth_token_name` - (string, required) - user identifier will be passed with this name
+* `auth_token_passed_as` - (string, required, can be one of `HEADER` or `QUERY_PARAM`) - the way how user identifier is passed to the service
+* `http_method` - (string, optional, can be one of `GET` (default), `POST`) - HTTP method used to send request
+* `response_group_ids_json_path`,`response_groups_json_path` (string, required) - response can be unrestricted, but you have to specify [JSON Path](https://github.com/json-path/JsonPath) for group ID list
+* `response_group_names_json_path` (string, optional, default: `response_group_ids_json_path`)- [JSON Path](https://github.com/json-path/JsonPath) for [groups name](details/structured-groups.md) list (both arrays, available at `response_group_ids_json_path` and `response_group_names_json_path`, have to have the same length and have the same order)
 
 As usual, the cache behaviour can be defined at service level or/and at rule level.
 
@@ -2515,22 +2524,25 @@ readonlyrest:
       signature_key: "your_signature_min_256_chars"
       user_claim: email
       group_ids_claim: resource_access.client_app.group_ids # JSON-path style, see https://github.com/json-path/JsonPath
-      group_names_claim: resource_access.client_app.group_names # JSON-path style, see https://github.com/json-path/JsonPath
+      group_names_claim: resource_access.client_app.group_names # optional, JSON-path style, see https://github.com/json-path/JsonPath
       header_name: Authorization
 ```
 You can verify groups assigned to the user with the `groups` field. The rule matches when the user belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` matches when the user belongs to all given groups (AND logic).
 
-The `user_claim` indicates which field in the JSON will be interpreted as the username.
+To define JWT provider, you need to provide:
+* `name` - (string, required) - identifier of the JWT provider, which needs to be passed in the `jwt_auth` rule
 
-The `group_ids_claim` indicates which field in the JSON will be interpreted as the group ID.
+* `user_claim` - (string, optional) - indicates which field in the JSON will be interpreted as the username. To define the claim path, use [JSON-path](https://github.com/json-path/JsonPath) syntax.
 
-The `group_names_claim` indicates which field in the JSON will be interpreted as the [group name](details/structured-groups.md)
+* `group_ids_claim` (string, optional) - indicates which field in the JSON will be interpreted as the group ID. To define the claim path, use [JSON-path](https://github.com/json-path/JsonPath) syntax.
 
-The `signature_key` is used shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
+* `group_names_claim` (string, optional, defaults to `group_ids_claim`) - indicates which field in the JSON will be interpreted as the [group name](details/structured-groups.md). To define the claim path, use [JSON-path](https://github.com/json-path/JsonPath) syntax.
 
-The `header_name` is used if we expect the JWT Token in a custom header \(i.e. [Google Cloud IAP signed headers](https://cloud.google.com/iap/docs/signed-headers-howto)\)
+* `header_name` (string, optional, defaults to `Authorization`) - HTTP header name carrying the JWT Token, can be used if we expect the JWT Token in a custom header \(i.e. [Google Cloud IAP signed headers](https://cloud.google.com/iap/docs/signed-headers-howto)\).
 
-The `signature_algo` indicates the family of cryptographic algorithms used to validate the JWT.
+* `signature_key` (string, required) - shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
+
+* `signature_algo` (string, optional, can be one of `NONE`, `RSA`, `HMAC` (default), and `EC`) - indicates the family of cryptographic algorithms used to validate the JWT.
 
 **Accepted signature\_algo values**
 
