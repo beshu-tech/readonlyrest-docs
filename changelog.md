@@ -1,5 +1,16 @@
 # Changelog
 
+### (2024-06-30) What's new in **ROR 1.58.0**
+* **🚨Security Fix**(KBN) [CVE-2022-39353](https://www.cve.org/CVERecord?id=CVE-2022-39353), [CVE-2020-7753](https://www.cve.org/CVERecord?id=CVE-2020-7753), [CVE-2022-37616](https://www.cve.org/CVERecord?id=CVE-2022-37616), [CVE-2024-29041](https://www.cve.org/CVERecord?id=CVE-2024-29041), [CVE-2022-0691](https://www.cve.org/CVERecord?id=CVE-2022-0691), [CVE-2021-3801](https://www.cve.org/CVERecord?id=CVE-2021-3801), [CVE-2022-25883](https://www.cve.org/CVERecord?id=CVE-2022-25883), [CVE-2022-0512](https://www.cve.org/CVERecord?id=CVE-2022-0512), [CVE-2022-0686](https://www.cve.org/CVERecord?id=CVE-2022-0686), [CVE-2022-0639](https://www.cve.org/CVERecord?id=CVE-2022-0639), [CVE-2022-25881](https://www.cve.org/CVERecord?id=CVE-2022-25881), [CVE-2023-0842](https://www.cve.org/CVERecord?id=CVE-2023-0842), [CVE-2017-16137](https://www.cve.org/CVERecord?id=CVE-2017-16137), [CVE-2022-33987](https://www.cve.org/CVERecord?id=CVE-2022-33987), [CVE-2022-23647](https://www.cve.org/CVERecord?id=CVE-2022-23647), [CVE-2022-36083](https://www.cve.org/CVERecord?id=CVE-2022-36083), [CVE-2024-28176](https://www.cve.org/CVERecord?id=CVE-2024-28176)
+* **🚀New** (KBN) [Kibana images with preinstalled ReadonlyREST plugin in Docker Hub](https://hub.docker.com/r/beshultd/kibana-readonlyrest)
+* **🚀New** (ES) "structured groups" feature (authorization rules group names and group IDs can be defined separately) 
+* **🧐Enhancement** (KBN) New `readonlyrest_kbn.cookies.secure` and `readonlyrest_kbn.cookies.sameSite` cookie settings via kibana.yml
+* **🧐Enhancement** (ES) improved error logging on the creation of LDAP connectors
+* **🧐Enhancement** (ES) Patcher - invalid state after patching detection improvements
+* **🐞Fix** (KBN) Impersonation and session probe logout issue
+* **🐞Fix** (KBN) [Problem with the number of replicas and index template, where the number of replicas was always set to 1. Now, the default value will be the same, as in the case of the Kibana index](https://forum.readonlyrest.com/t/non-standard-index-pattern-kibana/2528)
+* **🐞Fix** (KBN) Fix problem with multi-tenancy features when xpack.security.enabled: true
+
 ### (2024-05-18) What's new in **ROR 1.57.3**
 * **🚨Security Fix** (ES) [CVE-2024-34447](https://nvd.nist.gov/vuln/detail/CVE-2024-34447)
 * **🚀New** (KBN) 8.14.1, 8.14.0, 7.17.22 support
@@ -12,6 +23,7 @@
 * **🚀New** (ES) 8.13.4, 8.13.3, 7.17.21 support
 * **🐞Fix** (KBN) Kibana <= 7.2.1 doesn’t run
 * **🐞Fix** (KBN) Provides a way to migrate an existing session index to the new session
+* **🐞Fix** (ES) [Patching issue for Elasticsearch installed from packages](https://forum.readonlyrest.com/t/bootstrap-error-es/2574)
 * **🐞Fix** (ES) Patching issue for Elasticsearch OSS versions
 
 ### (2024-04-29) What's new in **ROR 1.57.1**
