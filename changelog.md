@@ -8,7 +8,7 @@
 * **🧐Enhancement** (ES) improved error logging on the creation of LDAP connectors
 * **🧐Enhancement** (ES) Patcher - invalid state after patching detection improvements
 * **🐞Fix** (KBN) Impersonation and session probe logout issue
-* **🐞Fix** (KBN) [Problem with the number of replicas and index template, where the number of replicas was always set to 1. Now, the default value will be the same, as in the case of the Kibana index](https://forum.readonlyrest.com/t/non-standard-index-pattern-kibana/2528)
+* **🐞Fix** (KBN) [Problem with the number of replicas and index template, where the number of replicas was always set to 1. Now, the default value will be the same, as in the case of the Kibana index](https://forum.readonlyrest.com/t/0-replicas-for-single-node-clusters/2530)
 * **🐞Fix** (KBN) Fix problem with multi-tenancy features when xpack.security.enabled: true
 
 ### (2024-05-18) What's new in **ROR 1.57.3**
