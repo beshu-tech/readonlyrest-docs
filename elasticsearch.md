@@ -747,7 +747,7 @@ The ACL block will match when the user belongs to any of the specified groups. T
 In the `users` section, each entry tells us that:
 
 * A given user with a username matching one of patterns in the `username` array ...
-* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](details/groups-rule-mapping.md) between local group name and external groups (example 3 below).
+* belongs to the local groups listed in the `groups` array (example 1 & 2 below) OR belongs to local groups that are result of ["detailed group mapping"](details/groups-rule-mapping.md) between local group ID and external groups (example 3 below).
 * when they can be authenticated and (if authorization rule is present) authorized by the present rule(s).
 
 In general it looks like this:
@@ -756,7 +756,7 @@ In general it looks like this:
   ...
   - name: "ACL block with groups rule"
     indices: [x, y]
-    groups_or: ["local_group1"] # this group name is defined in the "users" section
+    groups_or: ["local_group1"] # this group ID is defined in the "users" section
 
   users:
   - username: ["pattern1", "pattern2", ...]
@@ -1709,7 +1709,10 @@ More examples are shown below together with a sample configuration.
 
 ### Local users and groups
 
-The `groups` rule accepts a list of group names. This rule will match if the resolved username \(i.e. via `auth_key`\) is associated to the given groups. In this example, the usernames are statically associated to group names.
+The `groups` rule accepts a list of group IDs. This rule will match if the resolved username \(i.e. via `auth_key`\) is associated with the given groups.
+
+In this example, usernames `alice` and `claire` are statically associated with group IDs.  
+The username `bob` is statically associated with [structered groups](details/structured-groups.md)(a special syntax for defining groups, which may be helpful in the case of the Enterprise Kibana plugin)
 
 ```yaml
  access_control_rules:
@@ -1727,6 +1730,10 @@ The `groups` rule accepts a list of group names. This rule will match if the res
       groups: ["team1", "team2"]
       indices: ["index3"]
 
+    - name: Accept requests from users in groups team4 OR team5 on index3
+      groups_or: ["team4", "team5"]
+      indices: ["index3"]
+
     - name: Accept requests from users in groups team1 AND team2 on index3
       groups_and: ["team1", "team2"]
       indices: ["index3"]
@@ -1734,15 +1741,20 @@ The `groups` rule accepts a list of group names. This rule will match if the res
     users:
 
     - username: "alice"
-      groups: ["team1"]
+      groups: ["team1"] # group id - a value that ROR operates in `groups`, `groups_or`, and `groups_and` rules
       auth_key: alice:p455phrase
 
     - username: "bob"
-      groups: ["team2", "team4"]
+      # structured group syntax, useful in case of tenancy selector in Kibana Enterprise plugin
+      groups: 
+      - id: "team2"     # group id
+        name: "Team 2"  # group name - `Team 2` will be visible in the tenancy selector for the 'team2' group 
+      - id: "team4"     # group id
+        name: "Team 4"  # group name - `Team 4` will be visible in the tenancy selector for the 'team4' group 
       auth_key: bob:s3cr37
 
     - username: "claire"
-      groups: ["team1", "team5"]
+      groups: ["team1", "team5"] # group ids
       auth_key_sha256: e0bba5fda92dbb0570fd2e729a3c8ed6b1d52b380581f32427a38e396ba28ec6 #claire:p455key
 ```
 
@@ -1781,8 +1793,9 @@ ldaps:
     ssl_enabled: false                                            
     ssl_trust_all_certs: true                                     
     bind_dn: "cn=admin,dc=example,dc=com"                         
-    bind_password: "${env:LDAP_PASSWORD}"                                     
-    search_user_base_DN: "ou=People,dc=example,dc=com"
+    bind_password: "${env:LDAP_PASSWORD}"
+    users:
+      search_user_base_DN: "ou=People,dc=example,dc=com"
 ```
 
 And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
@@ -1792,8 +1805,8 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `groups_or`, `groups_and`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`. The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
-    * `@{acl:current_group}` is the group name explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
-    * `@{acl:available_groups}` gets replaced with available groups found in the authorization rule (because by default dynamic variables are resolved to a string, the variable resolved value will contain groups surrounded with double quotes and joined with a comma)
+    * `@{acl:current_group}` is the group ID explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
+    * `@{acl:available_groups}` gets replaced with available group IDs found in the authorization rule (because by default dynamic variables are resolved to a string, the variable resolved value will contain groups surrounded with double quotes and joined with a comma)
 * `header` - the context of ES HTTP request headers
     * `@{header:<header_name>}` gets replaced with the value of the HTTP header with name `<header_name>` included in the incoming request \(useful when reverse proxies handle authentication\)
 * `jwt` - the context of JWT header value
@@ -2118,28 +2131,31 @@ Usually, we would like to configure three main things for defining the way LDAP 
     * `bind_dn` (string, optional, default: [not present]) - a username used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
     * `bind_password` (string, optional, default: [not present]) - a password used to connect to the LDAP service. We can skip this setting when our LDAP service allows for anonymous binding
 
-2. a way to **search users**. In ROR it can be done using the following YAML keys (used by all LDAP rules):
+2. a way to **search users**. In ROR it can be done using the following YAML keys (under the `users` section) (used by all LDAP rules):
    * `search_user_base_DN` (string, required) - should refer to the base Distinguished Name of the users to be authenticated
    * `user_id_attribute` (string, optional, default: `uid`) - should refer to a unique ID for the user within the base DN
    * `skip_user_search` (boolean, optional, default: `false`) - when you set `user_id_attribute: "cn"` you may want to skip the user search. This optimizes the authentication, which is done in two steps (searching for a user DN and authenticating the user with a given DN). If you configure it to be `true`, the user's DN will be `cn={user_login},{search_user_base_DN}`.
 
-3. a way to **search user groups** (NOT used by [`ldap_authentication`](#ldap_authentication) rule). In ROR, depending on LDAP schema, a relation between users and groups can be defined in:
-   1. Group entry - it has an attribute that refers to User entries (this is the default):
-      * `search_groups_base_DN` (required) - should refer to the base Distinguished Name of the groups to which these users may belong
-      * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
-      * `unique_member_attribute` (string, optional, default: `uniqueMember`) - is the LDAP group object attribute that contains the names of the ROR groups
+3. a way to **search user groups** (NOT used by [`ldap_authentication`](#ldap_authentication) rule). You can configure all properties under the `groups` section in LDAP connector configuration.
+   
+   In ROR, depending on LDAP schema, a relation between users and groups can be defined in:
+   1. Group entry - it has an attribute that refers to User entries (`mode: search_groups_in_group_entries`this is the default):
+      * `search_groups_base_DN` (required) - should refer to the base Distinguished ID of the groups to which these users may belong
+      * `group_id_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the IDs of the ROR groups
+      * `group_name_attribute` (string, optional, default: group_id_attribute) - is the LDAP group object attribute that contains the [name](details/structured-groups.md) of the ROR groups
+      * `unique_member_attribute` (string, optional, default: `uniqueMember`) - is the LDAP group object attribute that contains the IDs of the ROR groups
       * `group_search_filter` (string, optional, default: `(cn=*)`) - is the LDAP search filter (or filters) to limit the user groups returned by LDAP. By default, this filter will be joined (with `&`) with `unique_member_attribute=user_dn` filter resulting in this LDAP search filter: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute=user_dn))`.
       * `group_attribute_is_dn` (boolean, optional, default: `true`) -
         * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))`
         * then `false` the search filer will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_ID_ATTRIBUTE_VALUE}))`
       * `server_side_groups_filtering` (boolean, optional, default: `false`) - by default ROR's LDAP connector asks for all groups of the given user. The group filtering is done on ROR's side. It allows ROR to cache them efficiently. But in some cases (e.g. when the user has hundreds of groups), it's better to filter them on the LDAP server side. If this setting is `true`, LDAP will only be queried for a certain subset of the user groups (defined by the `groups_or`/`groups_and` subrule of the `ldap_authorization`/`ldap_auth` rule). Note, however, that ONLY the returned subset of the user's groups is cached. See [groups caching details](/details/caching.md#group-caching) for a deep explanation.
       * `nested_groups_depth` (positive int, optional, no default) - it defines how deep ROR should ask LDAP to extract the nested LDAP groups. See the [nested groups support section](#nested-ldap-groups-support) for details.
-   2. User entry - it has an attribute that refers to Group entries (`groups_from_user: true` has to be set to use this strategy):
-      * `search_groups_base_DN` (string, required) - should refer to the base Distinguished Name of the groups to which these users may belong
-      * `group_name_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the names of the ROR groups
+   2. User entry - it has an attribute that refers to Group entries (`mode: search_groups_in_user_entries` has to be set to use this strategy):
+      * `search_groups_base_DN` (string, required) - should refer to the base Distinguished ID of the groups to which these users may belong
+      * `group_id_attribute` (string, optional, default: `cn`) - is the LDAP group object attribute that contains the IDs of the ROR groups
       * `groups_from_user_attribute` (string, optional, default: `memberOf`) -  is the LDAP user object attribute that contains the names of the ROR groups
       * `group_search_filter` (string, optional, default: `(objectClass=*)`) is the LDAP search filter (or filters) to limit the user groups returned by LDAP
-      * `nested_groups_depth` (positive int, optional, no default) - it defines how deep ROR should ask LDAP to extract the nested LDAP groups. When this setting is configured, ROR needs to know what group's attribute holds the parent group name - it can be set using `unique_member_attribute` (the default is the `uniqueMember` value). See the [nested groups support section](#nested-ldap-groups-support) for details.
+      * `nested_groups_depth` (positive int, optional, no default) - it defines how deep ROR should ask LDAP to extract the nested LDAP groups. When this setting is configured, ROR needs to know what group's attribute holds the parent group ID - it can be set using `unique_member_attribute` (the default is the `uniqueMember` value). See the [nested groups support section](#nested-ldap-groups-support) for details.
 
 
 Examples:
@@ -2170,8 +2186,10 @@ The simplest configuration example of an LDAP connector instance using server di
 ```yaml
     - name: ldap
       server_discovery: true
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+      users:
+        search_user_base_DN: "ou=People,dc=example2,dc=com"
+      groups:
+        search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
 This configuration is using the system DNS to fetch all the `_ldap._tcp` SRV records which are expected to contain the hostname and port of all the LDAP servers we should connect to. Each SRV record also has priority and weight assigned to it which determine the order in which they should be contacted. Records with a lower priority value will be used before those with a higher priority value. The weight will be used if there are multiple service records with the same priority, and it controls how likely each record is to be chosen. A record with a weight of 2 is twice as likely to be chosen as a record with the same priority and a weight of 1.
@@ -2192,8 +2210,10 @@ Example:
         dns_url: "dns://192.168.1.100"
         ttl: "3 hours"
         use_ssl: true
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+      users:
+        search_user_base_DN: "ou=People,dc=example2,dc=com"
+      groups:
+        search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
 #### Nested LDAP groups support
@@ -2256,16 +2276,19 @@ readonlyrest:
       ignore_ldap_connectivity_problems: true
       bind_dn: "cn=admin,dc=example,dc=com"
       bind_password: "password"
-      search_user_base_DN: "ou=People,dc=example,dc=com"
-      user_id_attribute: "uid"
-      search_groups_base_DN: "ou=Groups,dc=example,dc=com"
-      unique_member_attribute: "uniqueMember"                   
-      connection_pool_size: 20                                  
-      connection_timeout: 1s                                   
-      request_timeout: 2s                                      
+      users:
+        search_user_base_DN: "ou=People,dc=example,dc=com"
+        user_id_attribute: "uid"
+      groups:
+        mode: 'search_groups_in_group_entries'                # available options: 'search_groups_in_group_entries' (default), 'search_groups_in_user_entries' 
+        search_groups_base_DN: "ou=Groups,dc=example,dc=com"
+        unique_member_attribute: "uniqueMember"                   
+        group_search_filter: "(objectClass=group)(cn=application*)"
+        group_id_attribute: "cn"
+      connection_pool_size: 20
+      connection_timeout: 1s
+      request_timeout: 2s
       cache_ttl: 60s                                            
-      group_search_filter: "(objectClass=group)(cn=application*)"
-      group_name_attribute: "cn"                                 
       circuit_breaker:                                        
         max_retries: 2                                           
         reset_duration: 5s                                       
@@ -2276,14 +2299,18 @@ readonlyrest:
       - "ldaps://ssl-ldap2.foo.com:636"
       - "ldaps://ssl-ldap3.foo.com:636"
       ha: "ROUND_ROBIN"
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+      users:
+        search_user_base_DN: "ou=People,dc=example2,dc=com"
+      groups:
+        search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 
     # Server discovery variant
     - name: ldap3
       server_discovery: true
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+      users:
+        search_user_base_DN: "ou=People,dc=example2,dc=com"
+      groups:  
+        search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
 **Advanced: authentication and authorization in separate rules**
@@ -2322,10 +2349,12 @@ readonlyrest:
       ignore_ldap_connectivity_problems: true
       bind_dn: "cn=admin,dc=example,dc=com"
       bind_password: "password"
-      search_user_base_DN: "ou=People,dc=example,dc=com"
-      user_id_attribute: "uid"
-      search_groups_base_DN: "ou=Groups,dc=example,dc=com"
-      unique_member_attribute: "uniqueMember"                   
+      users:
+        search_user_base_DN: "ou=People,dc=example,dc=com"
+        user_id_attribute: "uid"
+      groups:
+        search_groups_base_DN: "ou=Groups,dc=example,dc=com"
+        unique_member_attribute: "uniqueMember"                   
       connection_pool_size: 20                                  
       connection_timeout: 1s                                   
       request_timeout: 2s                                      
@@ -2337,8 +2366,10 @@ readonlyrest:
       - "ldaps://ssl-ldap2.foo.com:636"
       - "ldaps://ssl-ldap3.foo.com:636"
       ha: "ROUND_ROBIN"
-      search_user_base_DN: "ou=People,dc=example2,dc=com"
-      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+      users: 
+        search_user_base_DN: "ou=People,dc=example2,dc=com"
+      groups:
+        search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 ### External Basic Auth
 
@@ -2426,8 +2457,9 @@ readonlyrest:
     - name: GroupsService
       groups_endpoint: "http://localhost:8080/groups"
       auth_token_name: "token"
-      auth_token_passed_as: QUERY_PARAM                        # HEADER OR QUERY_PARAM
-      response_groups_json_path: "$..groups[?(@.name)].name"   # see: https://github.com/json-path/JsonPath
+      auth_token_passed_as: QUERY_PARAM                              # HEADER OR QUERY_PARAM
+      response_groups_ids_json_path: "$..groups[?(@.id)].id"         # JSON-path style, see https://github.com/json-path/JsonPath
+      response_groups_names_json_path: "$..groups[?(@.name)].name"   # optional, JSON-path style, see https://github.com/json-path/JsonPath
       cache_ttl_in_sec: 60
       http_connection_settings:
         connection_timeout_in_sec: 1                           # default 2
@@ -2448,11 +2480,13 @@ Also in this rule, the `groups` clause can be replaced by `group_and` to require
 
 To define user groups provider you should specify:
 
-* `name` for service \(then this name is used as id in `user_groups_provider` attribute of `groups_provider_authorization` rule\)
-* `groups_endpoint` - service with groups endpoint \(GET request\)
-* `auth_token_name` - user identifier will be passed with this name
-* `auth_token_passed_as` - user identifier can be send using HEADER or QUERY\_PARAM
-* `response_groups_json_path` - response can be unrestricted, but you have to specify JSON Path for groups name list \(see example in tests\)
+* `name` - (string, required) - identifier of the service which needs to be passed in the `groups_provider_authorization` rule (`user_groups_provider` attribute)
+* `groups_endpoint` - (string, required) - service with groups endpoint
+* `auth_token_name` - (string, required) - user identifier will be passed with this name
+* `auth_token_passed_as` - (string, required, can be one of `HEADER` or `QUERY_PARAM`) - the way how user identifier is passed to the service
+* `http_method` - (string, optional, can be one of `GET` (default), `POST`) - HTTP method used to send request
+* `response_group_ids_json_path`,`response_groups_json_path` (string, required) - response can be unrestricted, but you have to specify [JSON Path](https://github.com/json-path/JsonPath) for group ID list
+* `response_group_names_json_path` (string, optional, default: `response_group_ids_json_path`)- [JSON Path](https://github.com/json-path/JsonPath) for [groups name](details/structured-groups.md) list (both arrays, available at `response_group_ids_json_path` and `response_group_names_json_path`, have to have the same length and have the same order)
 
 As usual, the cache behaviour can be defined at service level or/and at rule level.
 
@@ -2489,18 +2523,26 @@ readonlyrest:
       signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC
       signature_key: "your_signature_min_256_chars"
       user_claim: email
-      groups_claim: resource_access.client-app.groups # JSON-path style
+      group_ids_claim: resource_access.client_app.group_ids # JSON-path style, see https://github.com/json-path/JsonPath
+      group_names_claim: resource_access.client_app.group_names # optional, JSON-path style, see https://github.com/json-path/JsonPath
       header_name: Authorization
 ```
 You can verify groups assigned to the user with the `groups` field. The rule matches when the user belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` matches when the user belongs to all given groups (AND logic).
 
-The `user_claim` indicates which field in the JSON will be interpreted as the username.
+To define JWT provider, you need to provide:
+* `name` - (string, required) - identifier of the JWT provider, which needs to be passed in the `jwt_auth` rule
 
-The `signature_key` is used shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
+* `user_claim` - (string, optional) - indicates which field in the JSON will be interpreted as the username. To define the claim path, use [JSON-path](https://github.com/json-path/JsonPath) syntax.
 
-The `header_name` is used if we expect the JWT Token in a custom header \(i.e. [Google Cloud IAP signed headers](https://cloud.google.com/iap/docs/signed-headers-howto)\)
+* `group_ids_claim` (string, optional) - indicates which field in the JSON will be interpreted as the group ID. To define the claim path, use [JSON-path](https://github.com/json-path/JsonPath) syntax.
 
-The `signature_algo` indicates the family of cryptographic algorithms used to validate the JWT.
+* `group_names_claim` (string, optional, defaults to `group_ids_claim`) - indicates which field in the JSON will be interpreted as the [group name](details/structured-groups.md). To define the claim path, use [JSON-path](https://github.com/json-path/JsonPath) syntax.
+
+* `header_name` (string, optional, defaults to `Authorization`) - HTTP header name carrying the JWT Token, can be used if we expect the JWT Token in a custom header \(i.e. [Google Cloud IAP signed headers](https://cloud.google.com/iap/docs/signed-headers-howto)\).
+
+* `signature_key` (string, required) - shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
+
+* `signature_algo` (string, optional, can be one of `NONE`, `RSA`, `HMAC` (default), and `EC`) - indicates the family of cryptographic algorithms used to validate the JWT.
 
 **Accepted signature\_algo values**
 

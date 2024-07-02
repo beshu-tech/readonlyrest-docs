@@ -1,6 +1,6 @@
 # External to local groups mapping 
 
-The `groups` ACL rule accepts a list of group names. This rule will match on a requests in which the resolved username belongs at least to one of the listed groups. The association between usernames and groups is explicitly declared in the users section of the ACL. This is a list of usernames, and today, full wildcard patterns are also supported.
+The `groups` ACL rule accepts a list of group IDs. This rule will match on a requests in which the resolved username belongs at least to one of the listed groups. The association between usernames and groups is explicitly declared in the users section of the ACL. This is a list of usernames, and today, full wildcard patterns are also supported.
 
 In the `users` section, each entry requires:
 * an authentication rule: (I.e. one of the `auth_key_*` rules for local credentials, or `ldap_authentication`, `external_authentication`, etc)
@@ -52,6 +52,26 @@ readonlyrest:
     groups: 
       - devops: ["ldap_role_ops", "ldap_*_devops"]
       - developers: ["ldap_role_dev"]
+    ldap_auth:
+      name: "ldap1"
+      groups: ["ldap_*_devops", "ldap_role_ops", "ldap_role_dev"]
+
+
+  # DETAILED GROUP MAPPING EXAMPLE (STRUCTURED GROUPS)
+  # LDAP authenticated user + authorization via LDAP + groups detailed mapping (any LDAP user is valid; groups from `ldap1` are mapped to local groups) 
+  # Users belonging to LDAP role `ldap_role_ops`, or any other LDAP role that matched `ldap_*_devops` pattern, will be mapped to "devops" local group 
+  # AND 
+  # Users belonging to LDAP `ldap_role_dev` are mapped to "developers" local group
+  - username: "*"
+    groups:
+    - local_group:
+        id: "devops"
+        name: "DevOps Group"
+      external_group_ids:  ["ldap_role_ops", "ldap_*_devops"]
+    - local_group:
+        id: "developers"
+        name: "Developers Group"
+      external_group_ids: ["ldap_role_dev"]
     ldap_auth:
       name: "ldap1"
       groups: ["ldap_*_devops", "ldap_role_ops", "ldap_role_dev"]
