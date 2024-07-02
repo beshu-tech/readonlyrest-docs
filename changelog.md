@@ -73,7 +73,7 @@
 * **🧐Enhancement** (KBN) Optional `readonlyrest_kbn.auth.oidc_kc.proxyURL` kibana.yml configuration for the OIDC connection which allows declaring your proxy URL
 * **🧐Enhancement** (KBN) Upon successful activation and edition changes all sessions are cleared and users are logged out
 * **🐞Fix** (KBN) Saved objects are not visible for the users on Kibana >= 8.8.0
-* **🐞Fix** (ES) [LDAP nested group names are properly escaped](https://forum.readonlyrest.com/t/support-kbn-ent-ldap-and-parentheses/2466)
+* **🐞Fix** (ES) [LDAP nested group IDs are properly escaped](https://forum.readonlyrest.com/t/support-kbn-ent-ldap-and-parentheses/2466)
 * **🐞Fix** (ES) Logout when a user with restricted `kibana.access` tried to see a restoration status of snapshots in Kibana
 
 ### (2023-12-17) What's new in **ROR 1.54.0**
@@ -158,7 +158,7 @@
 * **🧐Enhancement** (KBN) Handle `elasticsearch.serviceAccountSupport` configuration property
 * **🧐Enhancement** (KBN) Provide a way to Hidden apps Stack management items hiding
 * **🧐Enhancement** (KBN) Provide an automated migration of tenancy indices on major Kibana version upgrade
-* **🧐Enhancement** (ES) external group name patterns support in the external to local groups mapping
+* **🧐Enhancement** (ES) external group ID patterns support in the external to local groups mapping
 * **🐞Fix** (KBN) the issue with the replica number being set to 0 on tenant index creation
 * **🐞Fix** (KBN) users won’t log out from Kibana on the 500 status error
 * **🐞Fix** (KBN) the issue with Kibana keystore not being read by the Kibana plugin
@@ -226,7 +226,7 @@
 * **🚀New** (KBN) Inject CSS/JS files in login page
 * **🚀New** (KBN) Add user metadata to <body> for extra UI customization
 * **🚀New** (ES) Added groups_and mode to [groups_provider_authorization](https://docs.readonlyrest.com/elasticsearch#groups_provider_authorization) rule
-* **🧐Enhancement** (ES) all authorization rules support wildcards in group names 
+* **🧐Enhancement** (ES) all authorization rules support wildcards in group IDs 
 * **🧐Enhancement** (ES) connections in the LDAP pool should not be closed unnecessarily 
 * **🧐Enhancement** (KBN) Deterministic reporting index detection
 * **🧐Enhancement** (KBN) Move free type impersonation to the local users area
@@ -699,7 +699,7 @@
 ### What's new in 1.18.10
 
 * **🚀New** \(ES/KBN\) Support v6.8.6, v7.5.0, v7.5.1
-* **🚀New** \(KBN\) Group names can now be mapped to aliases
+* **🚀New** \(KBN\) Group IDs can now be mapped to aliases
 * **🚀New** \(ES\) New, more robust and simple method of creating custom audit log serializers
 * **🚀New** \(ES\) Example projects with custom audit log serializers
 * 🐞**Fix** \(KBN\) Prevent index migration after kibana startup
