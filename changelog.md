@@ -2,6 +2,7 @@
 
 ### (2024-08-01) What's new in **ROR 1.59.0**
 * **🚀New** (ES) 7.17.23, 6.7.x support
+* **🚀New** (KBN) 7.17.23 support
 * **🧐Enhancement** (KBN) Replace a broken Alert and Connectors applications with the link to our (new tool)[https://anaphora.it] for Reports and alerting for Kibana > 8.6.0 (edited) 
 * **🐞Fix** (KBN) Handling reporting URL for report generation
 * **🐞Fix** (KBN) Embedding with inline JWT is a feature available only in ReadonlyREST PRO and Enterprise
