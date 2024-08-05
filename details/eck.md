@@ -140,3 +140,7 @@ And these are all differences we need to make to run [ECK Quickstart](https://ww
 * [ReadonlyREST SSL](https://docs.readonlyrest.com/elasticsearch#encryption) can be used but it's simpler to leave `xpack.security.enabled: true` and use X-Pack SSL instead
 * If running POD with root privileges is something you cannot accept, you can create your own image with the patching step done at the image creation level (not in the runtime as our image does) and place it your your registry
 * It's possible, but we don't recommend installing the ReadonlyREST plugin using the init-container pattern, because of the patching required patching step
+
+## Example
+
+You can check the ROR-powered ECK Quickstart example by running our [one-liner script](tps://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/tree/master/docker-envs/eck). It supports MacOS and Linux.
