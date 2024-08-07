@@ -50,6 +50,33 @@ You will receive another email notification that a new deliverable is available.
 
 If the update contains a security fix, it is very important that you take action and **update the plugin immediately**.
 
+## Running as Docker container
+
+The simplest method to run Kibana with ReadonlyREST plugin is to use one of our docker images which you can find on [Docker Hub](https://hub.docker.com/r/beshultd/kibana-readonlyrest):
+
+```bash
+docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" beshultd/kibana-readonlyrest:8.14.3-ror-latest
+```
+
+This line will run Elasticsearch container with ReadonlyREST with [init settings](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/docker-image/init-readonlyrest.yml). 
+
+Default `KIBANA_USER_PASS` is `kibana`
+Default `ADMIN_USER_PASS` is `admin`
+
+When the service is started you can test it using curl or Postman:
+```
+curl -v -u admin:admin http://localhost:9200
+```
+
+#### Customizing ROR settings
+
+You can create locally customized `readonlyrest.yml` file and mount it as a [docker volume](https://docs.docker.com/storage/volumes/). 
+Assuming that your ROR settings file is located in `/tmp/my-readonlyrest.yml` you can use it like that:
+
+```bash
+docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" -v /tmp/my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+```
+
 ## Installation
 
 You can install this as a normal Kibana plugin using the `bin/kibana-plugin` utility. Let's see the two ways to use this utility with ReadonlyREST.

@@ -40,6 +40,35 @@ The following diagram models an instance of Elasticsearch with the ReadonlyREST 
 
 10. The HTTP response flows back to ReadonlyREST's HTTPS filter and to the User agent
 
+### Running as Docker container
+
+The simplest method to run Elasticsearch with ReadonlyREST plugin is to use one of our docker images which you can find on [Docker Hub](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest):
+
+```bash
+docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+```
+
+This line will run Elasticsearch container with ReadonlyREST with [init settings](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/docker-image/init-readonlyrest.yml). 
+
+Default `KIBANA_USER_PASS` is `kibana`
+Default `ADMIN_USER_PASS` is `admin`
+
+When the service is started you can test it using curl or Postman:
+```
+curl -v -u admin:admin https://localhost:9200
+```
+
+#### Customizing ROR settings
+
+You can create locally customized `readonlyrest.yml` file and mount it as a [docker volume](https://docs.docker.com/storage/volumes/). 
+Assuming that your ROR settings file is located in `/tmp/my-readonlyrest.yml` you can use it like that:
+
+```bash
+docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" -v /tmp/my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+```
+
+####
+
 ### Installing the plugin
 
 To install ReadonlyREST plugin for Elasticsearch:
@@ -308,6 +337,7 @@ service start elasticsearch
 ```
 
 Depending on your environment.
+
 
 ### Deploying ReadonlyREST in a stable production cluster
 
