@@ -1305,8 +1305,8 @@ Now try to login as user1, and ReadonlyREST Enterprise should initialize the ind
 
 You can configure the `number_of_shards` and `number_of_replicas` for the tenant index via the `kibana.yml` file, allowing you to override the default index settings. This can be particularly useful in a single-node environment.
 ```yaml
-readonlyrest.tenantIndex.number_of_shards: 1
-readonlyrest.tenantIndex.number_of_replicas: 0
+readonlyrest_kbn.tenantIndex.number_of_shards: 1
+readonlyrest_kbn.tenantIndex.number_of_replicas: 0
 ```
 
 {% hint style="warning" %}
