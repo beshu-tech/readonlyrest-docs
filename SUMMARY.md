@@ -36,6 +36,8 @@
     * [Reject machine-to-machine traffic using custom metadata ACL rules](examples/custom-middleware/reject-machine-to-machine-traffic-using-custom-metadata-ACL-rules.md)
     * [Reordering available tenancies](examples/custom-middleware/reordering-available-tenancies.md)
     * [Available rorRequest API](examples/custom-middleware/available-ror-request-api.md)
+    * [Secure Logstash](examples/secure_logstash.md)
+    * [Secure Metricbeats](examples/secure_metricbeats.md)
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
 * [Changelog](changelog.md)
