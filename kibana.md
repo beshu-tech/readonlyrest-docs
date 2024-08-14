@@ -50,32 +50,54 @@ You will receive another email notification that a new deliverable is available.
 
 If the update contains a security fix, it is very important that you take action and **update the plugin immediately**.
 
-## Running as Docker container
+## Running with Docker
 
-The simplest method to run Kibana with ReadonlyREST plugin is to use one of our docker images which you can find on [Docker Hub](https://hub.docker.com/r/beshultd/kibana-readonlyrest):
+The simplest method to run Kibana with the ReadonlyREST plugin is to use one of our docker images which you can find on [Docker Hub](https://hub.docker.com/r/beshultd/kibana-readonlyrest). In the example below we will use [Docker Compose](https://docs.docker.com/compose/):
 
+```yaml
+# docker-compose.yml file content
+services:
+
+  kbn-ror:
+    image: beshultd/kibana-readonlyrest:8.14.3-ror-latest
+    user: "0:0"
+    ports: 
+      - "5601:5601"
+    environment:
+      - I_UNDERSTAND_IMPLICATION_OF_KBN_PATCHING=yes
+      - ELASTICSEARCH_HOSTS=https://es-ror:9200
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=kibana
+      - ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+      - readonlyrest_kbn__cookiePass=abcd1234abcd1234abcd1234abcd1234 # this is an equivalent of the `readonlyrest_kbn.cookiePass` setting defined in kibana.yml
+    depends_on:
+      - es-ror
+
+  es-ror:
+    image: beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+    user: "0:0"
+    ports:
+      - "9200:9200"
+    environment:
+      - I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes
+      - KIBANA_USER_PASS=kibana
+      - ADMIN_USER_PASS=admin
+      - discovery.type=single-node
+
+```
+
+It can be run like this:
 ```bash
-docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" beshultd/kibana-readonlyrest:8.14.3-ror-latest
+docker-compose up
 ```
 
-This line will run Elasticsearch container with ReadonlyREST with [init settings](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/docker-image/init-readonlyrest.yml). 
+It will run Kibana container with ReadonlyREST connected with the single ES node (with ReadonlyREST too). 
+You can access Kibana by calling `http://localhost:5601` in the browser (use `admin:admin` credentials to log in).
 
-Default `KIBANA_USER_PASS` is `kibana`
-Default `ADMIN_USER_PASS` is `admin`
+#### Customizing ROR Kibana settings
 
-When the service is started you can test it using curl or Postman:
-```
-curl -v -u admin:admin http://localhost:9200
-```
-
-#### Customizing ROR settings
-
-You can create locally customized `readonlyrest.yml` file and mount it as a [docker volume](https://docs.docker.com/storage/volumes/). 
-Assuming that your ROR settings file is located in `/tmp/my-readonlyrest.yml` you can use it like that:
-
-```bash
-docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" -v /tmp/my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
-```
+All config options are described in the [configuration section](#configuration) below. In general, you will use the `kibana.yml` file
+to configure ROR Kibana settings. But in the case, of the ROR Docker image, you can pass any ROR settings as ENV - just remember to replace `.` (dot) with `__` (double underscore). E.g. to configure `readonlyrest_kbn.store_sessions_in_index: true` pass `readonlyrest_kbn__store_sessions_in_index=true` ENV. 
 
 ## Installation
 
@@ -93,30 +115,29 @@ This installation method is more practical if your Kibana server is connected to
 
 Please note that this will always download the latest version of Kibana plugin available for the current supported Elasticsearch version.
 
+
 ```bash
-# ReadonlyREST Universal Kibana plugin
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&email=<your_email_address>"
+bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&email=<your_email_address>" # ReadonlyREST Universal Kibana plugin
 ```
 
 If you want to download the latest version of the plugin for a specific version of Kibana, then use the query parameter `esVersion` to specify your required Kibana version.
 
 ```bash
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=7.6.1&email=<your_email_address>"
-
+bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=7.6.1&email=<your_email_address>"
 ```
 
 If you want to download an older version of the plugin for a specific version of Elasticsearch, then use the query parameter `pluginVersion` along with `esVersion`. Please note that you can only go so far back with plugin versions. [Let us know](https://readonlyrest.com/contact) if you can't download a specific one.
 
 ```bash
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=8.6.0&pluginVersion=1.46.0&email=<your_email_address>"
+bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=8.6.0&pluginVersion=1.46.0&email=<your_email_address>"
 ```
 
 It's possible to add an extra query parameter (`checksum=true`) to any download URL to obtain a `sha1` checksum of the corresponding deliverable. For example:
 
 ```bash
-$curl -vvv  "https://api.beshu.tech/download/kbn?esVersion=8.6.0&pluginVersion=1.46.0&email=your@emailaddress.com&edition=kbn_universal&checksum=true" 
+curl -vvv  "https://api.beshu.tech/download/kbn?esVersion=8.6.0&pluginVersion=1.46.0&email=your@emailaddress.com&edition=kbn_universal&checksum=true" 
 [...]
-$ curl -vvv  "https://api.beshu.tech/download/es?esVersion=8.6.0&pluginVersion=1.46.0&checksum=true" 
+curl -vvv  "https://api.beshu.tech/download/es?esVersion=8.6.0&pluginVersion=1.46.0&checksum=true" 
 [...]
 ```
 
@@ -125,7 +146,7 @@ Now you are ready to [patch Kibana](./#patching-kibana).
 ### Installing from a zip file
 
 ```bash
-$ bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
+bin/kibana-plugin install file:///home/user/downloads/readonlyrest_kbn-X.Y.Z_esW.Q.U.zip
 ```
 
 Notice how we need to type in the format `file://` + absolute path (yes, with three slashes).
@@ -135,8 +156,7 @@ Notice how we need to type in the format `file://` + absolute path (yes, with th
 If you are using Kibana 7.9.x or newer, you need **an extra post-installation step**. This will slightly modify some core Kibana files.
 
 ```bash
-# Patch Kibana core files 
-$ node/bin/node plugins/readonlyrestkbn/ror-tools.js patch
+node/bin/node plugins/readonlyrestkbn/ror-tools.js patch # Patch Kibana core files 
 ```
 
 ### Unpatching Kibana
@@ -144,8 +164,7 @@ $ node/bin/node plugins/readonlyrestkbn/ror-tools.js patch
 If you are using Kibana 7.9.x or newer, you need **an extra pre-uninstallation step**. This will restore the core Kibana files to the original state.
 
 ```bash
-# Unpatch Kibana core files 
-$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch # Unpatch Kibana core files 
 ```
 
 ### Configuring Kibana
@@ -165,17 +184,17 @@ Need inspiration? Try the [ROR Docker demo](https://github.com/sscarduzio/ror-do
 To bring Kibana to its pre-patching original state, it's possible to unpatch.
 
 ```bash
-# Un-patch Kibana core files 
-$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch # Un-patch Kibana core files 
+```
 
-# Uninstall normally
-$ bin/kibana-plugin remove readonlyrestkbn
+```bash
+bin/kibana-plugin remove readonlyrestkbn # Uninstall normally
 ```
 
 And the classic uninstall command...
 
 ```bash
-$ bin/kibana-plugin remove readonlyrest_kbn
+bin/kibana-plugin remove readonlyrest_kbn
 ```
 
 ### Upgrading
@@ -541,7 +560,7 @@ kibana:
   hide_apps: [ "<submenu-title|app-title>" ]
 ```
 
-For example the following is a valid rule:
+For example, the following is a valid rule:
 
 ```yaml
 kibana:
@@ -568,13 +587,13 @@ kibana:
   hide_apps: ["/^(?!(Analytics|Management).*$).*$/"]
 ```
 
-In this case everything except of `Analytics` and `Management` will submenus will be hidden
+In this case, everything except of `Analytics` and `Management`, will submenus will be hidden
 
-**⚠️IMPORTANT** In this case `|` is treated ad logical `or` operator, that's why it shouldn't be escaped
+**⚠️IMPORTANT** In this case `|` is treated as logical `or` operator, that's why it shouldn't be escaped
 
-To check all regular expressions available options, check [regular expressions syntax cheatsheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular\_Expressions/Cheatsheet)
+To check all regular expressions available options, check the [regular expressions syntax cheatsheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular\_Expressions/Cheatsheet)
 
-#### Hiding kibana management apps
+#### Hiding Kibana management apps
 
 There is an option to hide specific management apps. You can declare hide\_apps value like:
 
@@ -619,7 +638,7 @@ In this case, all Stack Management apps except Data Views and Tags will be hidde
 
 This feature will work in ReadonlyREST PRO and Enterprise.
 
-To hide the `Manage kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana.hide_apps`
+To hide the `Manage Kibana` button for the specific user you need to provide `ROR Manage Kibana` value into a `kibana.hide_apps`
 
 ```yaml
 kibana:
@@ -703,7 +722,7 @@ To enable this:
 1. Find your authentication proxy or identity provider login URL for the ROR app
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.custom_login_link: "https://../login"`
 
-The advantage of this approach is a streamlined user experience for users that login with an external IdP. The disadvantage is that you give up the possibility to login as a local user in ROR, as the login form will be always skipped.
+The advantage of this approach is a streamlined user experience for users that login with an external IdP. The disadvantage is that you give up the possibility to log in as a local user in ROR, as the login form will be always skipped.
 
 #### Caveat
 
@@ -915,7 +934,7 @@ For advanced SAML options, see [passport-saml documentation](https://github.com/
 
 Example response:
 
-```markup
+```xml
 <?xml version="1.0"?>
 <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="onelogin_saml" ID="onelogin_saml">
   <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
