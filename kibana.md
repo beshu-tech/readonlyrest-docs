@@ -258,7 +258,9 @@ In general, by design, we tend to concentrate all configuration within the main 
 
 ### Cluster-wide Settings VS readonlyrest.yml
 
-This feature is available in Free and PRO editions
+{% hint style="warning" %}
+This feature is NOT available in Free and PRO editions.
+{% endhint %}
 
 Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
 

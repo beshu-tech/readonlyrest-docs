@@ -37,7 +37,7 @@
     * [Reordering available tenancies](examples/custom-middleware/reordering-available-tenancies.md)
     * [Available rorRequest API](examples/custom-middleware/available-ror-request-api.md)
     * [Secure Logstash](examples/secure_logstash.md)
-    * [Secure Metricbeats](examples/secure_metricbeats.md)
+    * [Secure Metricbeat](examples/secure_metricbeat.md)
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
 * [Changelog](changelog.md)
