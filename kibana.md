@@ -134,7 +134,7 @@ node/default/bin/node plugins/readonlyrestkbn/ror-tools.js patch
 
 ```shell
 # Patch Kibana core files 
-node\default\node plugins/readonlyrestkbn/ror-tools.js patch
+node\default\node plugins\readonlyrestkbn\ror-tools.js patch
 ```
 
 ### Unpatching Kibana
@@ -169,7 +169,7 @@ node/default/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
 
 ```shell
 # Un-patch Kibana core files 
-node\default\node plugins/readonlyrestkbn/ror-tools.js unpatch
+node\default\node plugins\readonlyrestkbn\ror-tools.js unpatch
 ```
 
 ### Configuring Kibana
@@ -224,7 +224,7 @@ bin/kibana-plugin remove readonlyrestkbn
 
 ```shell
 # Un-patch Kibana core files 
-node\default\node plugins/readonlyrestkbn/ror-tools.js unpatch
+node\default\node plugins\readonlyrestkbn\ror-tools.js unpatch
 
 # Uninstall normally
 bin/kibana-plugin remove readonlyrestkbn
