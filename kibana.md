@@ -107,18 +107,69 @@ Notice how we need to type in the format `file://` + absolute path (yes, with th
 
 If you are using Kibana 7.9.x or newer, you need **an extra post-installation step**. This will slightly modify some core Kibana files.
 
+#### Before Kibana 8.15.0
+
 ```bash
 # Patch Kibana core files 
-$ node/bin/node plugins/readonlyrestkbn/ror-tools.js patch
+node/bin/node plugins/readonlyrestkbn/ror-tools.js patch
+```
+
+#### For Kibana 8.15.0 and never
+
+##### For Linux 
+
+```bash
+# Patch Kibana core files 
+node/glibc-217/bin/node plugins/readonlyrestkbn/ror-tools.js patch
+```
+
+##### For macOS
+
+```bash
+# Patch Kibana core files 
+node/default/bin/node plugins/readonlyrestkbn/ror-tools.js patch
+```
+
+##### For Windows
+
+```shell
+# Patch Kibana core files 
+node\default\node plugins/readonlyrestkbn/ror-tools.js patch
 ```
 
 ### Unpatching Kibana
 
 If you are using Kibana 7.9.x or newer, you need **an extra pre-uninstallation step**. This will restore the core Kibana files to the original state.
 
+
+#### Before Kibana 8.15.0
+
 ```bash
-# Unpatch Kibana core files 
-$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+# Un-patch Kibana core files 
+node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+```
+
+#### For Kibana 8.15.0 and never
+
+##### For Linux
+
+```bash
+# Un-patch Kibana core files 
+node/glibc-217/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+```
+
+##### For macOS
+
+```bash
+# Un-patch Kibana core files 
+node/default/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+```
+
+##### For Windows
+
+```shell
+# Un-patch Kibana core files 
+node\default\node plugins/readonlyrestkbn/ror-tools.js unpatch
 ```
 
 ### Configuring Kibana
@@ -137,18 +188,52 @@ Need inspiration? Try the [ROR Docker demo](https://github.com/sscarduzio/ror-do
 
 To bring Kibana to its pre-patching original state, it's possible to unpatch.
 
+#### Before Kibana 8.15.0
+
 ```bash
 # Un-patch Kibana core files 
-$ node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+node/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
 
 # Uninstall normally
-$ bin/kibana-plugin remove readonlyrestkbn
+bin/kibana-plugin remove readonlyrestkbn
+```
+
+#### For Kibana 8.15.0 and never
+
+##### For Linux
+
+```bash
+# Un-patch Kibana core files 
+node/glibc-217/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+
+# Uninstall normally
+bin/kibana-plugin remove readonlyrestkbn
+```
+
+##### For macOS
+
+```bash
+# Un-patch Kibana core files 
+node/default/bin/node plugins/readonlyrestkbn/ror-tools.js unpatch
+
+# Uninstall normally
+bin/kibana-plugin remove readonlyrestkbn
+```
+
+##### For Windows
+
+```shell
+# Un-patch Kibana core files 
+node\default\node plugins/readonlyrestkbn/ror-tools.js unpatch
+
+# Uninstall normally
+bin/kibana-plugin remove readonlyrestkbn
 ```
 
 And the classic uninstall command...
 
 ```bash
-$ bin/kibana-plugin remove readonlyrest_kbn
+bin/kibana-plugin remove readonlyrest_kbn
 ```
 
 ### Upgrading
