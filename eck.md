@@ -147,7 +147,7 @@ And these are all differences we need to make to run [ECK Quickstart](https://ww
 ## Using Docker images built by you and stored in your registry
 
 As you probably noticed, our docker images have to be run with root privileges. It's due to legal reasons and you, as a user, 
-have to confirm that you agree to do the patching steps. If running POD with root privileges is something you cannot accept, you can create your own image with the patching step done at the image creation level (not in the runtime as our image does) and place it your your registry.
+have to confirm that you agree to do the patching steps. If running a pod with root privileges is something you cannot accept, you can create your own image with the patching step done at the image creation level (not at runtime as our image does) and save it your your own registry.
 
 ### Elasticsearch with ROR custom image
 
