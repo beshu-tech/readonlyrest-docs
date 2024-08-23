@@ -4,12 +4,14 @@ ReadonlyREST plugins officially support installation on Elasticsearch and Kibana
 
 You can choose one of the following installation methods:
 
-## Using our Docker images from Docker Hub
+## Installation methods 
+
+### Using our Docker images from Docker Hub
 
 The easiest and fastest method to start with a ROR-powered ELK stack on ECK is to use our official images.
 We will show you how to do it in the following sections:
 
-### Elasticsearch node with ReadonlyREST plugin
+#### Elasticsearch node with ReadonlyREST plugin
 
 If we want to add the ReadonlyREST plugin to the simple Elasticsearch cluster specification from [ECK Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-elasticsearch.html) we should do it as below:
 
@@ -68,7 +70,7 @@ spec:
                 name: config-readonlyrest.yml
 ```
 
-#### ReadonlyREST initial settings
+##### ReadonlyREST initial settings
 
 The initial settings can be defined as ConfigMap like this:
 
@@ -104,7 +106,7 @@ metadata:
 
 Notice that if you use ROR Enterprise, you can take advantage of the [Cluster-wide Settings](kibana.md#cluster-wide-settings-vs-readonlyrestyml) functionality and reload configuration on all your nodes without restarting K8s' PODs. 
 
-### Kibana node with ReadonlyREST plugin
+#### Kibana node with ReadonlyREST plugin
 
 If we want to add the ReadonlyREST plugin to the simple Kibana instance specification from [ECK Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html) we should do it as follows:
 
@@ -144,12 +146,15 @@ spec:
 
 And these are all differences we need to make to run [ECK Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html) with ReadonlyREST instead of X-Pack security. 
 
-## Using Docker images built by you and stored in your registry
+### Using Docker images built by you and stored in your registry
 
 As you probably noticed, our docker images have to be run with root privileges. It's due to legal reasons and you, as a user, 
 have to confirm that you agree to do the patching steps. If running a pod with root privileges is something you cannot accept, you can create your own image with the patching step done at the image creation level (not at runtime as our image does) and save it your your own registry.
 
-### Elasticsearch with ROR custom image
+<details>
+  <summary>Expand to see details</summary>
+  
+#### Elasticsearch with ROR custom image
 
 The minimal Elasticsearch with ROR image definition looks like this:
 
@@ -174,7 +179,7 @@ docker build --build-arg ES_VERSION=8.14.3 --build-arg ROR_VERSION=1.59.0 -t ela
 ```
 And place the `elasticsearch-with-ror` image in your registry.
 
-### Elasticsearch node with ReadonlyREST plugin
+#### Elasticsearch node with ReadonlyREST plugin
 
 If we want to add the ReadonlyREST plugin to the simple Elasticsearch cluster specification from [ECK Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-elasticsearch.html) we should do it as below:
 
@@ -227,7 +232,7 @@ spec:
 
 Check [the section from the previous paragraph](#readonlyrest-initial-settings) to see how to define `config-ror`.
 
-### Kibana with ROR custom image
+#### Kibana with ROR custom image
 
 The minimal Kibana with ROR image definition looks like this:
 
@@ -253,7 +258,7 @@ docker build --build-arg KBN_VERSION=8.14.3 --build-arg ROR_VERSION=1.59.0 -t ki
 ```
 And place the `kibana-with-ror` image in your registry.
 
-### Kibana node with ReadonlyREST plugin
+#### Kibana node with ReadonlyREST plugin
 
 If we want to add the ReadonlyREST plugin to the simple Kibana instance specification from [ECK Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html) we should do it as follows:
 
@@ -285,22 +290,28 @@ spec:
 
 And these are all differences we need to make to run [ECK Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html) with ReadonlyREST instead of X-Pack security. 
 
+</details>
 
-## Using an Init Container 
+### Using an Init Container 
 
 {% hint style="warning" %}
 This is not a recommended method.
 {% endhint %}
 
-It's possible to install ROR using an [Init Container] (https://kubernetes.io/docs/concepts/workloads/pods/init-containers/). Unfortunately, this
+It's possible to install ROR using an [Init Container](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/). Unfortunately, this
 method is not as easy to use in the case of ROR. This is due to the required ReadonlyREST patching step (for both plugins), which allows ROR to work with Elasticsearch/Kibana. During this step, the ROR patcher tool modifies some of the Elasticsearch and Kibana binaries. 
 Different versions of Elasticsearch/Kibana require different binaries to be modified. In order to do this in a Kubernetes-based environment, 
 we need to mount appropriate locations from the Elasticsearch/Kibana POD to the init container that will install ROR. The volumes should have write permissions because of the changes made by the ROR patcher. You can still use this method, but as you can see
 it's not that easy.
 
+<details>
+  <summary>Expand to see details</summary>
+  
 If you are still interested in this one, please take a look at the examples in our repository:
 * [Elasticsearch with ROR installed using the Init Container method](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/v1.58.0_es8.14.3/docker-envs/eck/kind-cluster/ror/es.yml)
 * [Kibana with ROR installed using the Init Container method](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/v1.58.0_es8.14.3/docker-envs/eck/kind-cluster/ror/kbn.yml)
+
+</details>
 
 ## Notes
 
