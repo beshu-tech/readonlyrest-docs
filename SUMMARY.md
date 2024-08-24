@@ -12,6 +12,7 @@
   * [Impersonation](details/impersonation.md)
   * [Kibana 7.8.x and older](details/kibana-7.8.x-and-older.md)
   * [ReadonlyREST API](kibana/readonlyrest-api.md)
+* [For ECK](eck.md)
 * [Universal Builds](universal-builds/universal-builds.md)
 * [Examples](examples/README.md)
   * [Multi-tenancy Elastic Stack](examples/multitenancy\_guide.md)
@@ -35,7 +36,8 @@
     * [Reject machine-to-machine traffic using custom metadata ACL rules](examples/custom-middleware/reject-machine-to-machine-traffic-using-custom-metadata-ACL-rules.md)
     * [Reordering available tenancies](examples/custom-middleware/reordering-available-tenancies.md)
     * [Available rorRequest API](examples/custom-middleware/available-ror-request-api.md)
-    *
+    * [Secure Logstash](examples/secure_logstash.md)
+    * [Secure Metricbeat](examples/secure_metricbeat.md)
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
 * [Changelog](changelog.md)

@@ -2,7 +2,7 @@
 
 ## Overview: The ReadonlyREST Suite
 
-ReadonlyREST is a light weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API. The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall. There are a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
+ReadonlyREST is a light-weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API. The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall. There are a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
 
 The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv3 license, or alternatively a commercial license \(see [ReadonlyREST Embedded](https://readonlyrest.com/embedded)\) and lays the technological foundations for the companion Kibana plugin which is released in two versions: [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise).
 
@@ -12,37 +12,102 @@ For a description of the Kibana plugins, skip to the [dedicated documentation pa
 
 ### ReadonlyREST Free plugin for Elasticsearch
 
-In this document we are going to describe how to operate the Elasticsearch plugin in all its features. Once installed, this plugin will greatly extend the Elasticsearch HTTP API \(port 9200\), adding numerous extra capabilities:
+In this document, we are going to describe how to operate the Elasticsearch plugin in all its features. Once installed, this plugin will greatly extend the Elasticsearch HTTP API \(port 9200\), adding numerous extra capabilities:
 
 * **Encryption**: transform the Elasticsearch API from HTTP to HTTPS
 * **Authentication**: require credentials
 * **Authorization**: declare groups of users, permissions and partial access to indices.
 * **Access control**: complex logic can be modeled using an ACL \(access control list\) written in YAML.
-* **Audit events**: a trace of the access requests can be logged to file or index \(or both\).
+* **Audit events**: a trace of the access requests can be logged to a file or index \(or both\).
 
 #### Flow of a Search Request
 
-The following diagram models an instance of Elasticsearch with the ReadonlyREST plugin installed, and configured with SSL encryption and an ACL with at least one "allow" type ACL block.
+The following diagram models an instance of Elasticsearch with the ReadonlyREST plugin installed and configured with SSL encryption and an ACL with at least one "allow" type ACL block.
 
 ![readonlyrest request processing diagram](https://i.imgur.com/VX28w1V.png)
 
-1. The User Agent \(i.e. cURL, Kibana\) sends a search request to Elasticsearch using the port 9200 and the HTTPS URL schema.
-2. The HTTPS filter in ReadonlyREST plugin unwraps the SSL layer and hands over the request to Elasticsearch HTTP stack
+1. The User Agent \(i.e. cURL, Kibana\) sends a search request to Elasticsearch using port 9200 and the HTTPS URL schema.
+2. The HTTPS filter in the ReadonlyREST plugin unwraps the SSL layer and hands over the request to the Elasticsearch HTTP stack
 3. The HTTP stack in Elasticsearch parses the HTTP request
-4. The HTTP handler in Elasticsearch extracts the indices, action, request type and creates a `SearchRequest` \(internal Elasticsearch format\).
+4. The HTTP handler in Elasticsearch extracts the indices, action, request type, and creates a `SearchRequest` \(internal Elasticsearch format\).
 5. The SearchRequest goes through the ACL \(access control list\), external systems like LDAP can be asynchronously queried, and an exit result is eventually produced.
 6. The exit result is used by the audit event serializer, to write a record to index and/or Elasticsearch log file
-7. If no ACL block was matched, or if a `type: forbid` block was matched, ReadonlyREST does not forward the search request to the search engine, and creates an "unauthorized" HTTP response.
-8. In case the ACL matched an `type: allow` block, the request is forwarded to the search engine
+7. If no ACL block was matched, or if a `type: forbid` block was matched, ReadonlyREST does not forward the search request to the search engine and creates an "unauthorized" HTTP response.
+8. In case the ACL matches a `type: allow` block, the request is forwarded to the search engine
 9. The Elasticsearch code creates a search response containing the results of the query
+10. The search response is converted to an HTTP response by the Elasticsearch code
 
-   10.The search response is converted to an HTTP response by the Elasticsearch code
+11. The HTTP response flows back to ReadonlyREST's HTTPS filter and to the User agent
 
-10. The HTTP response flows back to ReadonlyREST's HTTPS filter and to the User agent
+### Running with Docker
+
+The simplest method to run Elasticsearch with the ReadonlyREST plugin is to use one of our docker images which you can find on [Docker Hub](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest):
+
+```bash
+docker run -u root -p 9200:9200 -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" -e "KIBANA_USER_PASS=kibana" -e "ADMIN_USER_PASS=admin" -e "discovery.type=single-node" beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+```
+
+OR with [Docker Compose](https://docs.docker.com/compose/):
+
+```yaml
+# docker-compose.yml file content
+services:
+
+  es-ror:
+    image: beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+    user: "0:0"
+    ports:
+      - "9200:9200"
+    environment:
+      - I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes
+      - KIBANA_USER_PASS=kibana
+      - ADMIN_USER_PASS=admin
+      - discovery.type=single-node
+```
+
+(To run the docker-compose.yml call `docker compose up`)
+
+Any of these methods, runs Elasticsearch container with ReadonlyREST with [init settings](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/docker-image/init-readonlyrest.yml). 
+
+When the service is started you can test it using curl or Postman:
+```
+curl -v -u admin:admin https://localhost:9200
+```
+
+#### Customizing ROR settings
+
+You can create locally customized `readonlyrest.yml` file and mount it as a [docker volume](https://docs.docker.com/storage/volumes/). 
+Assuming that your ROR settings file is located in `/tmp/my-readonlyrest.yml` you can use it like that:
+
+```bash
+docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" -v /tmp/my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+```
+
+OR
+
+```yaml
+# docker-compose.yml file content
+services:
+
+  es-ror:
+    image: beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+    user: "0:0"
+    ports:
+      - "9200:9200"
+    environment:
+      - I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes
+      - KIBANA_USER_PASS=kibana
+      - ADMIN_USER_PASS=admin
+      - discovery.type=single-node
+    volumes:
+      - ./my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml # we assume that the `my-readonlyrest.yml` file is in the same folder as `docker-compose.yml` file is
+```
+
+####
 
 ### Installing the plugin
 
-To install ReadonlyREST plugin for Elasticsearch:
+To install the ReadonlyREST plugin for Elasticsearch:
 
 #### 1. Obtain the build
 
@@ -69,43 +134,42 @@ When prompted about additional permissions, answer **y**.
 If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
-# Patch ES
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
-You can verify if Elasticsearch was correctly patched using command `verify`:
+You can verify if Elasticsearch was correctly patched using the command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
-Please note that the tool assumes that you run it from the root of your ES installation directory or the default installation directory is `/usr/share/elasticsearch`. But if you want or need, you can instruct it where your Elasticsearch is installed by executing one of tool's command with `--es-path` parameter:
+Please note that the tool assumes that you run it from the root of your ES installation directory or the default installation directory is `/usr/share/elasticsearch`. But if you want or need, you can instruct it where your Elasticsearch is installed by executing one of the tool's command with the `--es-path` parameter:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --es-path /my/custom/path/to/es/folder
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --es-path /my/custom/path/to/es/folder
 ```
 or
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify --es-path /my/custom/path/to/es/folder
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify --es-path /my/custom/path/to/es/folder
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 ```
 
-#### 4.Create settings file
+#### 4. Create settings file
 
 Create and edit the `readonlyrest.yml` settings file in the **same directory where `elasticsearch.yml` is found**:
 
 ```bash
- vim $ES_PATH_CONF/conf/readonlyrest.yml
+vim $ES_PATH_CONF/conf/readonlyrest.yml
 ```
 
-Now write some basic settings, just to get started. In this example we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
+Now write some basic settings, just to get started. In this example, we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
 
 ```yaml
 readonlyrest:
@@ -125,7 +189,7 @@ ReadonlyREST and X-Pack security module can't run together, so the latter needs 
 Edit `elasticsearch.yml` and append `xpack.security.enabled: false`.
 
 ```bash
- vim $ES_PATH_CONF/conf/elasticsearch.yml
+vim $ES_PATH_CONF/conf/elasticsearch.yml
 ```
 
 #### 6. Start Elasticsearch
@@ -142,7 +206,7 @@ service start elasticsearch
 
 Depending on your environment.
 
-Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+Now you should be able to see the logs and ReadonlyREST-related lines like the one below:
 
 ```text
 [2018-09-18T13:56:25,275][INFO ][o.e.p.PluginsService     ] [c3RKGFJ] loaded plugin [readonlyrest]
@@ -181,20 +245,19 @@ depending on your environment.
 If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
-# Unpatch ES
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
 ```
 
-You can verify if Elasticsearch was correctly unpatched using command `verify`:
+You can verify if Elasticsearch was correctly unpatched using the command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 ```
 
 #### 3. Uninstall ReadonlyREST
@@ -217,11 +280,10 @@ bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.56.0_es8.12.2.zip
 
 #### 5. Patch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
+If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to the `plugins/readonlyrest` directory.
 
 ```bash
-# Patch ES
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
@@ -229,13 +291,13 @@ $ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 You can verify if Elasticsearch was correctly patched using the command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 ```
 
 #### 6. Restart Elasticsearch.
@@ -250,7 +312,7 @@ service start elasticsearch
 
 Depending on your environment.
 
-Now you should be able to see the logs and ReadonlyREST related lines like the one below:
+Now you should be able to see the logs and ReadonlyREST-related lines like the one below:
 
 ```text
 [2024-03-14T20:21:49,589][INFO ][t.b.r.b.RorInstance      ] [ROR_SINGLE_1] ReadonlyREST was loaded ...
@@ -273,20 +335,19 @@ depending on your environment.
 If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
-# Unpatch ES
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
 ```
 
 You can verify if Elasticsearch was correctly unpatched using the command `verify`:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 ```
 
 **NB:** In case of any problems with the `ror-tools`, please call:
 
 ```bash
-$ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 ```
 
 #### 3. Uninstall ReadonlyREST from Elasticsearch:
@@ -309,6 +370,7 @@ service start elasticsearch
 
 Depending on your environment.
 
+
 ### Deploying ReadonlyREST in a stable production cluster
 
 Unless some advanced features are being used \(see below\), this Elasticsearch plugin operates like a lightweight, stateless filter glued in front of Elasticsearch HTTP API. Therefore it's sufficient to install the plugin **only in the nodes that expose the HTTP interface** \(port 9200\).
@@ -316,11 +378,11 @@ Unless some advanced features are being used \(see below\), this Elasticsearch p
 Installing ReadonlyREST in a dedicated node has numerous advantages:
 
 * No need to restart all nodes, only the one you have installed the plugin into.
-* No need to restart all nodes for updating the security settings
+* No need to restart all nodes to update the security settings
 * No need to restart all nodes when a security update is out
 * Less complexity on the actual cluster nodes.
 
-For example, if we want to move to HTTPS all the traffic coming from Logstash into a 9 nodes Elasticsearch cluster which has been running stable in production for a while, it's not necessary to install ReadonlyREST plugin in all the nodes.
+For example, if we want to move to HTTPS all the traffic coming from Logstash into a 9-node Elasticsearch cluster which has been running stable in production for a while, it's not necessary to install the ReadonlyREST plugin in all the nodes.
 
 Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
@@ -331,7 +393,7 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 #### An exception
 
-**⚠️IMPORTANT** By default when the `fields` [rule](elasticsearch.md#fields) is used, it's required to install ReadonlyREST plugin in all the data nodes.
+**⚠️IMPORTANT** By default when the `fields` [rule](elasticsearch.md#fields) is used, it's required to install the ReadonlyREST plugin in all the data nodes.
 
 ### ACL basics
 
@@ -341,7 +403,7 @@ The core of this plugin is an ACL \(access control list\). A logic structure ver
 * Each block contains some **rules**, and a policy \(forbid or allow\)
 * HTTP requests run through the blocks, starting from the first,
 * The _first_ block that satisfies _all the rules_ decides if to forbid or allow the request \(according to its policy\).
-* If none of the block match, the request is rejected
+* If none of the blocks is matched, the request is rejected
 
 **⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
 
@@ -358,15 +420,15 @@ readonlyrest:
       hosts: ["10.0.0.0/24"] # <-- this is a rule
 ```
 
-_An Example of Access Control List \(ACL\) made of 2 blocks._
+_An Example of the Access Control List \(ACL\) made of 2 blocks._
 
 The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. Create this file **on the same path where `elasticsearch.yml` is found**.
 
-**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for ReadonlyREST plugin for Kibana](kibana/).
+**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for the ReadonlyREST plugin for Kibana](kibana/).
 
 ### Encryption
 
-An SSL encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore. 
+An SSL-encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore. 
 
 ReadonlyREST can be configured to encrypt network traffic on two independent levels:
 1. HTTP (port 9200)
@@ -388,10 +450,10 @@ Now in `readonlyrest.yml` add the following settings:
 
 ```yaml
 readonlyrest:
-    ssl:
-      keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
-      keystore_pass: readonlyrest
-      key_pass: readonlyrest
+  ssl:
+    keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
+    keystore_pass: readonlyrest
+    key_pass: readonlyrest
 ```
 
 The keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
@@ -410,10 +472,10 @@ In `readonlyrest.yml` following settings must be added \(it's just example confi
 
 ```yaml
 readonlyrest:
-    ssl_internode:
-      keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
-      keystore_pass: readonlyrest
-      key_pass: readonlyrest
+  ssl_internode:
+    keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
+    keystore_pass: readonlyrest
+    key_pass: readonlyrest
 ```
 
 Similar to `ssl` for HTTP, the keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`. This config must be added to all nodes taking part in encrypted communication within cluster.
@@ -474,13 +536,13 @@ Optionally, it's possible to specify a list allowed SSL protocols and SSL cipher
 
 ```yaml
 readonlyrest:
-    ssl:
-      # put the keystore in the same dir with elasticsearch.yml
-      keystore_file: "keystore.jks"
-      keystore_pass: readonlyrest
-      key_pass: readonlyrest
-      allowed_protocols: [TLSv1.2]
-      allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
+  ssl:
+    # put the keystore in the same dir with elasticsearch.yml
+    keystore_file: "keystore.jks"
+    keystore_pass: readonlyrest
+    key_pass: readonlyrest
+    allowed_protocols: [TLSv1.2]
+    allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
 ```
 
 ReadonlyREST will log a list of available ciphers and protocols supported by the current JVM at startup.
@@ -519,7 +581,6 @@ To use PEM file instead of truststore file, use such configuration instead of `t
 ```yaml
 client_trusted_certificate_file: trusted_certs.pem
 ```
-
 
 #### Using Let's encrypt
 We are  going to show how to first add all the certificates and private key into PKCS#12 keystore, and then (optionally) converting it to JKS keystore. ReadonlyREST supports both formats.
@@ -659,7 +720,7 @@ If you configured sha512 encryption with 65535 rounds on your system the hash in
 
 ```yaml
 readonlyrest:
-    access_control_rules:
+  access_control_rules:
     - name: Accept requests from users in group team1 on index1
       groups: ["team1"]
       indices: ["index1"]
@@ -2602,158 +2663,3 @@ Here is a practical summary of what dealing with GPLv3 means:
 Please don't hesitate to [contact us](mailto:info@readonlyrest.com) for a re-licensed copy of this source. Your success is what makes this project worthwhile, don't let legal issues slow you down.
 
 See [commercial license FAQ page](https://github.com/beshu-tech/readonlyrest-docs/tree/d77c4981b29a843fc82f89c4272fdddaab390d89/commercial.html) for more information.
-
-## Installation
-
-1. Download the binary release of the latest version of ReadonlyREST from the [download page](https://readonlyrest.com/download.html)
-2. `cd` to the Elasticsearch home
-3. Install the plugin
-
-**Elasticsearch 5.x**
-
-```bash
- bin/elasticsearch-plugin install file:///download-folder/readonlyrest-1.13.2_es5.1.2.zip
-```
-
-**Elasticsearch 2.x**
-
-```bash
- bin/plugin install file:///download-folder/readonlyrest-1.13.2_es5.1.2.zip
-```
-
-1. Edit `config/readonlyrest.yml` and add your configuration as seen in examples.
-
-### Build from Source
-
-You need to have installed: git, maven, Java 8 JDK, zip. So use apt-get or brew to get them.
-
-1. Clone the repo
-
-```bash
-git clone https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
-```
-
-1. `cd elasticsearch-readonlyrest-plugin`
-2. Launch the build script `bin/build.sh`
-
-You should find the plugin's zip files under `/target` \(Elasticsearch 2.x\) or `build/releases/` \(Elasticsearch 5.x\).
-
-## Examples
-
-A small library of typical use cases.
-
-### Secure Logstash
-
-We have a Logstash agent installed somewhere and we want to ship the logs to our Elasticsearch cluster securely.
-
-#### Elasticsearch side
-
-**Step 1: Bring Elasticsearch HTTP interface \(port 9200\) to HTTPS** When you get SSL certificates \(i.e. from your IT department, or from LetsEncrypt\), you should obtain a private key and a certificate chain. In order to use them with ReadonlyREST, we need to wrap them into a JKS \(Java key store\) file. For the sake of this example, or for your testing, we won't use real SSL certificates, we are going to create a self signed certificate.
-
-Remember, we'll do with a self-signed certificate for example convenience, but if you deploy this to a server, use a real one!
-
-```bash
-keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass readonlyrest -validity 360 -keysize 2048
-```
-
-Now copy the `keystore.jks` inside the plugin directory inside the Elasticsearch home.
-
-```bash
-cp keystore.jks /elasticsearch/config/
-```
-
-**IMPORTANT:** to enable ReadonlyREST's SSL stack, open `elasticsearch.yml` and append this one line:
-
-```yaml
-http.type: ssl_netty4
-```
-
-**Step 3** Now We need to create some credentials for logstash to login, let's say
-
-* user = logstash
-* password = logstash
-
-**Step 4** Hash the credentials string `logstash:logstash` using SHA256. The simplest way is to paste the string in an [online tool](http://www.xorbin.com/tools/sha256-hash-calculator) You should have obtained "280ac6f756a64a80143447c980289e7e4c6918b92588c8095c7c3f049a13fbf9".
-
-**Step 5** Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` and append the following lines:
-
-```yaml
- readonlyrest:
-
-     ssl:
-       enable: true
-       # keystore in the same dir with readonlyrest.yml
-       keystore_file: "keystore.jks"
-       keystore_pass: readonlyrest
-       key_pass: readonlyrest
-
-     response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
-
-     access_control_rules:
-
-     - name: "::LOGSTASH::"
-       auth_key_sha256: "280ac6f756a64a80143447c980289e7e4c6918b92588c8095c7c3f049a13fbf9" #logstash:logstash
-       actions: ["cluster:monitor/main","indices:admin/types/exists","indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
-       indices: ["logstash-*"]
-```
-
-#### Logstash side
-
-Edit the logstash configuration file and fix the output block as follows:
-
-```ruby
- output {
-   elasticsearch {
-     ssl => true
-     ssl_certificate_verification => false
-     hosts => ["YOUR_ELASTICSEARCH_HOST:9200"]
-     user => logstash
-     password => logstash
-   }
- }
-```
-
-The `ssl_certificate_verification` bit is necessary for accepting self-signed SSL certificates. You might also need to add cacert parameter to provide the path to your .cer or .pem file.
-
-### Secure Metricbeats
-
-Very similarly to Logstash, here's a snippet of configuration for [Metricbeats](https://www.elastic.co/downloads/beats/metricbeat) logging agent configuration of metricbeat - elasticsearch section
-
-#### On the Metricbeats side
-
-```text
-output.elasticsearch:
-  output.elasticsearch:
-  username: metricbeat
-  password: hereyourpasswordformetricbeat
-  protocol: https
-  hosts: ["xx.xx.xx.xx:9200"]
-  worker: 1
-  index: "log_metricbeat-%{+yyyy.MM}"
-  template.enabled: false
-  template.versions.2x.enabled: false
-  ssl.enabled: true
-  ssl.certificate_authorities: ["./certs/your-rootca_cert.pem"]
-  ssl.certificate: "./certs/your_srv_cert.pem"
-  ssl.key: "./certs/your_srv_key.pem"
-```
-
-Of course, if you do not use ssl, disable it.
-
-#### On the Elasticsearch side
-
-```yaml
- readonlyrest:
-     ssl:
-       enable: true
-       # keystore in the same dir with elasticsearch.yml
-       keystore_file: "keystore.jks"
-       keystore_pass: readonlyrest
-       key_pass: readonlyrest
-
-    access_control_rules:
-    - name: "metricbeat can write and create its own indices"
-      auth_key_sha1: fd2e44724a234234454324253094080986e8fda
-      actions: ["indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
-      indices: ["metricbeat-*", "log_metricbeat*"]
-```
