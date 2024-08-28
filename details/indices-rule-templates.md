@@ -6,7 +6,6 @@
 
 ```yaml
   readonlyrest:
-    prompt_for_basic_auth: false
 
     access_control_rules:
       - name: "admin block"

@@ -37,9 +37,6 @@ On the same directory with your `elasticsearch.yml` \(default: `config/`, create
 ```yaml
 readonlyrest:
 
-    # IMPORTANT FOR LOGIN/LOGOUT TO WORK WITH ROR PLUGIN FOR KIBANA
-    prompt_for_basic_auth: false
-
     access_control_rules:
 
     #########################################################

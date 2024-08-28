@@ -124,8 +124,6 @@ readonlyrest:
       keystore_pass: readonlyrest
       key_pass: readonlyrest
 
-    prompt_for_basic_auth: false
-
     audit:
       enabled: true
       outputs:
