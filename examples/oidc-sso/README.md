@@ -10,10 +10,6 @@ Follow the guides to know more.
 
 ## Client Authentication Methods
 
-Here is a rephrased and reformatted version of the text:
-
----
-
 There are two possible authentication methods:
 
 1. **client_secret_basic** (default): The `client_id` and `client_secret` are sent using the Authorization header, as specified in [RFC 6749, Section 2.3.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1). Before sending, the `client_id` and `client_secret` are encoded.
