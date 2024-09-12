@@ -1,7 +1,7 @@
 # Changelog
 
 ### (2024-08-01) What's new in **ROR 1.59.0**
-* **🚀New** (ES) 8.15.1, 8.15.0, 7.17.23, 6.7.x support
+* **🚀New** (ES) 8.15.1, 8.15.0, 7.17.24, 7.17.23, 6.7.x support
 * **🚀New** (KBN) 8.15.1, 8.15.0, 7.17.23 support
 * **🧐Enhancement** (KBN) Replace a broken Alert and Connectors applications with the link to our [new tool](https://anaphora.it) for Reports and alerting for Kibana > 8.6.0 (edited) 
 * **🐞Fix** (KBN) Handling reporting URL for report generation
