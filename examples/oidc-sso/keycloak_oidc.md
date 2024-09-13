@@ -81,6 +81,7 @@ readonlyrest_kbn:
       kibanaExternalHost: 'localhost:5601'
       logoutUrl: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/logout' <-- Value from OpenID Endpoint Configuration
       jwksURL: 'http://localhost:8080/auth/realms/ror/protocol/openid-connect/certs' <-- Value from OpenID Endpoint Configuration
+      # tokenEndpointAuthMethod: 'client_secret_post' <-- Optional value, the way the auth information will be send to the OIDC provider. Possible values 'client_secret_post' | ''client_secret_basic'
       # proxyURL: 'https://localhost:6200' <-- Optional value. Your proxy server URL
 ```
 
