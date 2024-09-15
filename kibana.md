@@ -1123,6 +1123,12 @@ readonlyrest_kbn.auth:
 6. If you want to use OpenID for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting. ( **TIP**: the `groupsParameter` must be present in the `userinfo` token of your OIDC provider.)
 7. If Kibana is accessed through a reverse proxy, kibanaExternalHost should be configured with the external hostname. if omitted, the default value is equal to `server.host:server.port` defined in kibana.yml. ( This parameter can be used also when Kibana is bound to 0.0.0.0, for example, if using docker.)
 
+### Client Authentication Methods
+
+You can configure how the ReadonlyREST Kibana plugin sends `client_id` and `client_secret` to the identity provider using the option `readonlyrest_kbn.auth.<YOUR_OIDC_CONFIG>.tokenEndpointAuthMethod`. There are two available methods for authentication:
+
+1. **client_secret_basic** (default): The `client_id` and `client_secret` are sent using the Authorization header, as specified in [RFC 6749, Section 2.3.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1). Before sending, the `client_id` and `client_secret` are encoded.
+2. **client_secret_post**: The `client_id` and `client_secret` are included in the request body, following the guidelines in [RFC 6749, Section 2.3.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1). In this method, the `client_id` and `client_secret` are not encoded before being sent. Choose this method when the OpenID Connect provider, such as [lemonLDAP::NG](https://lemonldap-ng.org/), cannot decode the encoded values.
 ## Load balancers
 
 These features will work with all ReadonlyREST Editions
