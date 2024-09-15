@@ -1,5 +1,17 @@
 # Changelog
 
+### (2024-09-15) What's new in **ROR 1.60.0**
+* **🚀New** (KBN|ES) [ECK support documentation](https://docs.readonlyrest.com/eck)
+* **🚀New** (ES) configurable ROR YAML settings max size
+* **⚠️Warning** (ES) The prompt for basic authorization is disabled by default. To keep the previous behavior, set `readonlyrest.prompt_for_basic_auth` to `true` in the ROR configuration
+* **🧐Enhancement** (KBN) There is an option to define [client authentication methods](https://docs.readonlyrest.com/kibana#client-authentication-methods) in the `kibana.yml` via `readonlyrest_kbn.auth.<YOUR_OIDC_CONFIG>.tokenEndpointAuthMethod`, 'client_secret_post' or ''client_secret_basic' 
+* **🧐Enhancement** (KBN) Stop Kibana when enabled features are not available
+* **🐞Fix** (KBN) HTTP 400 (bad request) issue when there is a Nginx proxy server between es and Kibana
+* **🐞Fix** (KBN) Fix for the problem with correctly hiding Management features `ROR Manage Kibana` defined in the readonlyrest.yml `kibana_hide_apps` property
+* **🐞Fix** (ES) ROR KBN docker image: passing ROR settings as ENVs fixes
+* **🐞Fix** (ES) [Data stream backing indices access issue with the indices rule](https://forum.readonlyrest.com/t/requested-index-doesnt-exist/2573)
+* **🐞Fix** (ES) [Fix for the problem with remote access to data stream aliases](https://forum.readonlyrest.com/t/requested-index-doesnt-exist/2573)
+
 ### (2024-08-01) What's new in **ROR 1.59.0**
 * **🚀New** (ES) 8.15.1, 8.15.0, 7.17.24, 7.17.23, 6.7.x support
 * **🚀New** (KBN) 8.15.1, 8.15.0, 7.17.24, 7.17.23 support
