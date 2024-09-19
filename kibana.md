@@ -1125,7 +1125,17 @@ readonlyrest_kbn.auth:
 
 ### Client Authentication Methods
 
-You can configure how the ReadonlyREST Kibana plugin sends `client_id` and `client_secret` to the identity provider using the option `readonlyrest_kbn.auth.<YOUR_OIDC_CONFIG>.tokenEndpointAuthMethod`. There are two available methods for authentication:
+You can configure how the ReadonlyREST Kibana plugin sends `client_id` and `client_secret` to the identity provider using the option 
+
+```yaml
+readonlyrest_kbn:
+   auth:
+      oidc_kc:
+         tokenEndpointAuthMethod: 'client_secret_post'  #Available options: client_secret_basic (default) or client_secret_post
+              [...]
+``` 
+
+There are two available methods for authentication:
 
 1. **client_secret_basic** (default): The `client_id` and `client_secret` are sent using the Authorization header, as specified in [RFC 6749, Section 2.3.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1). Before sending, the `client_id` and `client_secret` are encoded.
 2. **client_secret_post**: The `client_id` and `client_secret` are included in the request body, following the guidelines in [RFC 6749, Section 2.3.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1). In this method, the `client_id` and `client_secret` are not encoded before being sent. Choose this method when the OpenID Connect provider, such as [lemonLDAP::NG](https://lemonldap-ng.org/), cannot decode the encoded values.
