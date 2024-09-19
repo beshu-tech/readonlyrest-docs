@@ -1127,8 +1127,12 @@ readonlyrest_kbn.auth:
 
 You can configure how the ReadonlyREST Kibana plugin sends `client_id` and `client_secret` to the identity provider using the option 
 
-```
-readonlyrest_kbn.auth.oidc_kc.tokenEndpointAuthMethod: 'client_secret_post' // Available options: client_secret_basic (default) or client_secret_post 
+```yaml
+readonlyrest_kbn:
+   auth:
+      oidc_kc:
+         tokenEndpointAuthMethod: 'client_secret_post'  #Available options: client_secret_basic (default) or client_secret_post
+              [...]
 ``` 
 
 There are two available methods for authentication:
