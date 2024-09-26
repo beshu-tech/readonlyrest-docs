@@ -1751,7 +1751,7 @@ You can change the content of the response as follows:
 
 ```yaml
 readonlyrest:
-  response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin # custom response for all forbidden responses
+  response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin # custom response for all forbidden requests
 
   access_control_rules:
 
@@ -1763,7 +1763,7 @@ readonlyrest:
     - name: "Block 2"
       type: # extended format for `type` property
         policy: forbid
-        # response returned when a request matches 'Block 2' (response on the block level takes precedence over the global setting)
+        # response returned when a request matches 'Block 2' (setting on the block level takes precedence over the global setting)
         response_if_req_forbidden: "You are unauthorized to access this resource"
       indices: ["templates-*"]
 ```
