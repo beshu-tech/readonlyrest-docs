@@ -1764,7 +1764,7 @@ readonlyrest:
       type: # extended format for `type` property
         policy: forbid
         # response returned when a request matches 'Block 2' (setting on the block level takes precedence over the global setting)
-        response_if_req_forbidden: "You are unauthorized to access this resource"
+        response_message: "You are unauthorized to access this resource"
       indices: ["templates-*"]
 ```
 
