@@ -1744,6 +1744,30 @@ logger.access_log_rolling.filter.regex.onMatch = DENY
 logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
 ```
 
+## Unauthorized response configuration
+
+When the request does not match any of the ACL blocks or the request matches the block with the `forbid` policy, the plugin rejects such requests with the `403` response code and `forbidden` content.
+You can change the content of the response as follows:
+
+```yaml
+readonlyrest:
+  response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin # custom response for all forbidden requests
+
+  access_control_rules:
+
+    - name: "Block 1"
+      type: # extended format for `type` property
+        policy: allow
+      indices: ["logstash-*"]
+
+    - name: "Block 2"
+      type: # extended format for `type` property
+        policy: forbid
+        # response returned when a request matches 'Block 2' (setting on the block level takes precedence over the global setting)
+        response_message: "You are unauthorized to access this resource"
+      indices: ["templates-*"]
+```
+
 ## Users and Groups
 
 Sometimes we want to make allow/forbid decisions according to the username associated to a HTTP request. The extraction of the user identity \(username\) can be done via HTTP Basic Auth \(Authorization header\) or delegated to a reverse proxy \(see `proxy_auth` rule\).
