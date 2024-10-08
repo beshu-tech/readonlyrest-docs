@@ -8,7 +8,7 @@ description: User manual for ReadonlyREST Enterprise/PRO/Free
 
 ### Kibana Plugin overview
 
-ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro.html) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise.html), and [ReadonlyREST Free](https://readonlyrest.com/free) packages. See product descriptions and a comparison chart on the official [ReadonlyREST website](https://readonlyrest.com)
+ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise), and [ReadonlyREST Free](https://readonlyrest.com/free) packages. See product descriptions and a comparison chart on the official [ReadonlyREST website](https://readonlyrest.com)
 
 ReadonlyREST plugins for Kibana **always require** the ReadonlyREST open-source plugin to be installed in the Elasticsearch nodes your Kibana instance(s) will connect to.
 

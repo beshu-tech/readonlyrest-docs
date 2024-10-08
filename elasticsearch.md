@@ -424,7 +424,7 @@ _An Example of the Access Control List \(ACL\) made of 2 blocks._
 
 The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. Create this file **on the same path where `elasticsearch.yml` is found**.
 
-**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro.html) or [Enterprise](https://readonlyrest.com/pro.html) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for the ReadonlyREST plugin for Kibana](kibana/).
+**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro) or [Enterprise](https://readonlyrest.com/enterprise) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for the ReadonlyREST plugin for Kibana](kibana/).
 
 ### Encryption
 
@@ -938,7 +938,7 @@ Used to delegate groups resolution for a user to a JSON microservice. See below,
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `ror_kbn_auth`
+#### `ror_kbn_auth` ([Enterprise](https://readonlyrest.com/enterprise))
 
 For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication. From ROR's perspective it authenticates and authorize users. 
 
@@ -1040,7 +1040,7 @@ Possible access levels:
 
 This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
-##### `index` 
+##### `index` ([Enterprise](https://readonlyrest.com/enterprise))
 
 **Default value is `.kibana`**
 
@@ -1064,13 +1064,13 @@ Example:
   indices: ["r*"] # .kibana, .kibana_8.10.4, .kibana_task_manager, etc are allowed here, because there is the `kibana` rule present in the same block
 ```
 
-##### `template_index`
+##### `template_index` ([Enterprise](https://readonlyrest.com/enterprise))
 
 Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
 
 It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
-##### `hide_apps`
+##### `hide_apps` ([PRO](https://readonlyrest.com/pro))
 
 Specify which Kibana apps and menu items should be hidden. 
 This feature will work in ReadonlyREST PRO and Enterprise.
@@ -1089,7 +1089,7 @@ kibana:
       http_path: "^/api/saved_objects/.*$"
 ```
 
-##### `metadata`
+##### `metadata` ([PRO](https://readonlyrest.com/pro))
 
 User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](./kibana.md#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
 
@@ -1122,19 +1122,19 @@ if (alertMessage) {
 
 **⚠️Deprecated**: it's equivalent of [`kibana.access`](elasticsearch.md#access). Should no longer be used.
 
-#### `kibana_index`
+#### `kibana_index` ([Enterprise](https://readonlyrest.com/enterprise))
 
 `kibana_index: .kibana-user1`
 
 **⚠️Deprecated**: it's equivalent of [`kibana.index`](elasticsearch.md#index). Should no longer be used.
 
-#### `kibana_template_index`
+#### `kibana_template_index` ([Enterprise](https://readonlyrest.com/enterprise))
 
 `kibana_template_index: .kibana_template`
 
 **⚠️Deprecated**: it's equivalent of [`kibana.template_index`](elasticsearch.md#template_index). Should no longer be used.
 
-#### `kibana_hide_apps`
+#### `kibana_hide_apps` ([PRO](https://readonlyrest.com/pro))
 
 `kibana_hide_apps: [ "Security", "Enterprise Search"]`
 
