@@ -1,4 +1,4 @@
-# Multi-tenancy Elastic Stack
+# Multi-tenancy Elastic Stack ([Enterprise](https://readonlyrest.com/enterprise))
 
 This document will guide you through setting up your Elasticsearch and Kibana stack with ReadonlyREST such that:
 

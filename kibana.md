@@ -327,11 +327,7 @@ ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsea
 
 In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.
 
-### Cluster-wide Settings VS readonlyrest.yml
-
-{% hint style="warning" %}
-This feature is NOT available in Free and PRO editions.
-{% endhint %}
+### Cluster-wide Settings VS readonlyrest.yml ([PRO](https://readonlyrest.com/pro))
 
 Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
 
@@ -508,7 +504,7 @@ The solution to this is to reorder the ACL blocks, so the ones that authenticate
       actions: [...]
 ```
 
-### Multi-tenancy Kibana
+### Multi-tenancy Kibana ([Enterprise](https://readonlyrest.com/enterprise))
 
 ReadonlyREST Enterprise is capable of going beyond multi-user. Users or groups can be isolated into tenancies, so their dashboards and configurations won't mix. Behind each tenancy, there is a kibana index.
 
@@ -526,7 +522,7 @@ In ReadonlyREST Enterprise, multi-tenancy is activated by default. But if you wa
 readonlyrest_kbn.multiTenancyEnabled: false
 ```
 
-### Configuring Multi-tenancy
+### Configuring Multi-tenancy ([Enterprise](https://readonlyrest.com/enterprise))
 
 You can configure an ACL in multi tenancy mode by adding a few ACL blocks containing the `kibana.index` [rule](https://docs.readonlyrest.com/elasticsearch#kibana). See examples and further explanation under our [multi-tenancy guide](examples/multitenancy\_guide.md).
 
@@ -858,7 +854,7 @@ The result may look something like this:
 http://localhost:5601/login?nextUrl=%2Fapp%2Fkibana%23%2Fvisualize%2Fedit%2F28dcde30-2258-11e8-82a3-af58d04b3c02%3F_g%3D%28%29&jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
 ```
 
-## Embedding Kibana Dashboard or Visualization with an iframe and JWT Authentication
+## Embedding Kibana Dashboard or Visualization with an iframe and JWT Authentication ([PRO](https://readonlyrest.com/pro))
 
 You have the option to embed visualizations and dashboards inside iframes. For more information, refer to the [official Elastic documentation](https://www.elastic.co/guide/en/kibana/current/reporting-getting-started.html#embed-code).
 
@@ -1162,7 +1158,7 @@ Each Kibana node stores user sessions in memory. This will cause problems when u
 From ReadonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter.
 {% endhint %}
 
-## Login screen tweaking
+## Login screen tweaking ([PRO](https://readonlyrest.com/pro))
 
 These features will work with ReadonlyREST PRO and Enterprise.
 
@@ -1229,7 +1225,7 @@ There is an option to inject CSS file before the login screen is rendered.
 readonlyrest_kbn.login_custom_css_inject_file: '<ABSOLUTE_PATH_TO_CUSTOM_CSS_FILE>'
 ```
 
-## Kibana UI tweaking
+## Kibana UI tweaking ([Enterprise](https://readonlyrest.com/enterprise))
 
 This feature will work with ReadonlyREST Enterprise
 
@@ -1275,7 +1271,7 @@ readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 
 **⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group ID will be used as fallback. Also, if the mapping function is not specified, the original group ID value will be used.
 
-## Tenancy index templating
+## Tenancy index templating ([Enterprise](https://readonlyrest.com/enterprise))
 
 This feature will work only with ReadonlyREST Enterprise
 
@@ -1421,7 +1417,7 @@ So, an impersonation can be understood as imitating behaviors or actions. In the
 
 ROR plugins support impersonation and provide UI for configuring a cluster before using it. Visit the [impersonation details page](details/impersonation.md) to know more.
 
-## Custom middleware
+## Custom middleware ([Enterprise](https://readonlyrest.com/enterprise))
 
 Sometimes, Enterprise users might need more flexibility and customize the plugin behavior to adjust the product to the business needs. There are two options to declare the custom middleware:
 
