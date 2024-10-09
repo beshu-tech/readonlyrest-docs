@@ -1089,7 +1089,7 @@ kibana:
       http_path: "^/api/saved_objects/.*$"
 ```
 
-##### `metadata` ([PRO](https://readonlyrest.com/pro))
+##### `metadata` ([Enterprise](https://readonlyrest.com/enterprise))
 
 User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](./kibana.md#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
 
