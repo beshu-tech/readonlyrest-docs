@@ -2,7 +2,7 @@
 description: Impersonation
 ---
 
-# Impersonation
+# Impersonation ([Enterprise](https://readonlyrest.com/enterprise))
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Impersonator):
 

@@ -1,4 +1,4 @@
-# Multi-tenancy Elastic Stack
+# Multi-tenancy Elastic Stack ([Enterprise](https://readonlyrest.com/enterprise))
 
 This document will guide you through setting up your Elasticsearch and Kibana stack with ReadonlyREST such that:
 
@@ -45,7 +45,7 @@ For the scope of this guide, we will assume:
 * You have [installed the ROR plugin for Elasticsearch](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#installing)
 * You have [installed the ROR Enterprise plugin for Kibana](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#installation)
 
-If you don't have the ROR [Enterprise](https://readonlyrest.com/enterprise.html) for Kibana plugin, get yourself a two weeks free trial build!
+If you don't have the ROR [Enterprise](https://readonlyrest.com/enterprise) for Kibana plugin, get yourself a two weeks free trial build!
 
 ### IMPORTANT: disable Xpack Security module
 
