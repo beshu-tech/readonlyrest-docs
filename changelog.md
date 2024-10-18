@@ -1,7 +1,7 @@
 # Changelog
 
 ### (2024-09-15) What's new in **ROR 1.60.0**
-* **🚀New** (KBN) 8.15.2 support
+* **🚀New** (KBN) 8.15.3, 8.15.2 support
 * **🚀New** (ES) 8.15.3, 8.15.2 support
 * **🚀New** (KBN|ES) [ECK support documentation](https://docs.readonlyrest.com/eck)
 * **🚀New** (ES) configurable ROR YAML settings max size
