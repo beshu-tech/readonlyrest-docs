@@ -603,9 +603,8 @@ kibana.yml (append)
 elasticsearch.customHeaders:  {"x-from-kibana":"true"}
 ```
 
-### Hiding Kibana Apps
+### Hiding Kibana Apps ([PRO](https://readonlyrest.com/pro))
 
-This feature will work in ReadonlyREST PRO and Enterprise.
 
 Previously we needed to keep track and document all Kibana app IDs, and you had to look them up all the time. Now we made it simpler by letting you type the apps and submenu titles exactly as you see them in the UI.
 
@@ -929,9 +928,8 @@ In detail, this feature creates three Kibana "saved objects":
 
 The audit log dashboard, by default, has only a few basic visualizations. They cover security, access logs, and performance metrics.
 
-## SAML
+## SAML ([Enterprise](https://readonlyrest.com/enterprise))
 
-This feature will work in ReadonlyREST Enterprise.
 
 ReadonlyREST Enterprise supports service provider-initiated via SAML. This connector supports both SSO (single sign-on) and SLO (single log out). Here is how to configure it.
 
