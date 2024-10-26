@@ -272,10 +272,10 @@ bin/kibana-plugin remove readonlyrest_kbn
 
 To upgrade to a new version of ReadonlyREST plugin for Kibana, you should:
 
-* [Unpatch Kibana](./#unpatching-kibana)
+* [Unpatch Kibana](kibana.md#unpatching-kibana)
 * [Uninstall](kibana.md#uninstalling) the old plugin
-* [Install](./#installation) the new one
-* [Patch Kibana](./#patching-kibana)
+* [Install](kibana.md#installation) the new one
+* [Patch Kibana](kibana.md#patching-kibana)
 * Restart Kibana
 
 ### Major version upgrades when using multi-tenancy
