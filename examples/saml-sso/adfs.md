@@ -336,7 +336,7 @@ Add-ADComputerServiceAccount -Identity 'lc-win2019-02' -ServiceAccount $ServiceA
 5. Enter a **Display Name** (in this case, “ror”), and click **Next.**
 6. It’s not necessary to specify a token encryption certificate, so click **Next** to continue.
 7. Select the option **Enable support for the SAML 2.0 SSL service URL,** and enter:
-8. [https://{IP Address of Kibana Server}:5601/ror\_kbn\_sso\_saml\_adfs/assert](https://10.0.0.6:5601/ror\_kbn\_sso\_saml\_adfs/assert)
+8. [https://{IP Address of Kibana Server}:5601/ror_kbn_sso_saml_adfs/assert](https://10.0.0.6:5601/ror_kbn_sso_saml_adfs/assert)
 9. The saml\_adfs will change depending on the name chosen in the configuration of the kibana.yml file.
 10. Enter the **Relying party trust identifiers**, in this case, “ror.” This will match the **Issuer** in the Kibana configuration. Click **Next** when you are done with this step.
 11. On the **Access Control Policy** screen, select **Permit everyone,** and click **Next.**
@@ -405,7 +405,7 @@ Therefore, we need two rules: one to pull back the LDAP attribute from the Activ
 1. On the **Endpoints** screen, click on **Add SAML,** and enter the **SAML Logout** details as follows:
    * **Endpoint Type**: SAML Logout
    * **Binding**: POST
-   * **Trusted URL**: [https://{IP](https://{ip) Address of Kibana Server}:5601/ror\_kbn\_sso\_saml\_adfs/notifylogout
+   * **Trusted URL**: [https://{IP](https://{ip) Address of Kibana Server}:5601/ror_kbn_sso_saml_adfs/notifylogout
 
 ![](../../.gitbook/assets/100.png)
 
@@ -443,11 +443,11 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 5. <img src="../../.gitbook/assets/109.png" alt="" data-size="original">
 6. Navigate to the C:\ProgramData\Elastic\ElasticSearch\config directory, and create the file readonlyrest.yml.
 7. <img src="../../.gitbook/assets/110.png" alt="" data-size="original">
-8. Open the readonlyrest.yml file in Notepad to run this very basic configuration that configures the following two different access control rules: 1. **“**::KIBANA-SRV::**”**—this rule allows the Kibana server to authenticate to Elasticsearch using digest authentication with the username “kibana” and password “kibana.” 2. “ADFS Users”—this rule uses the ror\_kbn\_auth method which allows SAML authenticates to succeed.
+8. Open the readonlyrest.yml file in Notepad to run this very basic configuration that configures the following two different access control rules: 1. **“**::KIBANA-SRV::**”**—this rule allows the Kibana server to authenticate to Elasticsearch using digest authentication with the username “kibana” and password “kibana.” 2. “ADFS Users”—this rule uses the ror_kbn_auth method which allows SAML authenticates to succeed.
 9. Create a random 256-character signature\_key. This key will be shared between Kibana and Elasticsearch.
-10. Please note that the kbn1 identifier must match in the ror\_kbn\_auth and ror\_kbn sections; however, any names can be used for them.
+10. Please note that the kbn1 identifier must match in the ror_kbn_auth and ror_kbn sections; however, any names can be used for them.
 
-    ```
+    ```yaml
     readonlyrest:  
      access_control_rules:
 
@@ -475,7 +475,7 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 5. ![](../../.gitbook/assets/112.png)
 6. Open an administrative command prompt, and navigate to the **Kibana** directory to run the kibana.bat batch file and start **Kibana.**
 7. ![](../../.gitbook/assets/113.png)
-8. Once Kibana has started, navigate to \[[http://localhost:5601\](http://localhost:5601\\](http://localhost/:5601]\(http://localhost:5601\)/) to verify that Kibana is functional.
+8. Once Kibana has started, navigate to http://localhost:5601 to verify that Kibana is functional.
 9. ![](../../.gitbook/assets/114.png)
 
 ### Creating a Self-Signed Certificate for Kibana
@@ -515,26 +515,35 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
 2. The email that you receive will contain installation instructions. The link will be time-limited, as shown below.
 3. Navigate to C:\kibana\config, and locate the kibana.yml configuration file.
 4. Open the kibana.yml file in Notepad and update it with the following details:
-   * elasticsearch.username—This field matches the first part (pre-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
-   * elasticsearch.password—This field matches the second part (post-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
-   * elasticsearch.ssl.verificationMode—Set the value to “true” to ignore SSL errors. This is useful when working in a test environment.
-   * xpack.security.enabled—This must be disabled for ReadonlyREST to work.
-   * \[server.host]\([http://server.host—By](http://server.xn--hostby-6g0c) default, this will be \[localhost]\([http://localhost\\](http://localhost\)); but, we need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.
-   * server.ssl.enabled—This is used to turn on SSL and respond to https.
-   * server.ssl.certificate—This is the location of the public key certificate.
-   * server.ssl.key—This is the location of the private key for the certificate.
-   * readonlyrest\_kbn.logLevel—The value is set to “debug” to enable troubleshooting in the console.
-   * readonlyrest\_kbn.clearSessionOnEvents—This clears the session on a successful login event.
-   * readonlyrest\_kbn.auth.signature\_key—This must match the 256-character value in the signature\_key attribute of the readonlyrest.yml Elasticsearch configuration file.
-   * readonlyrest\_kbn.auth.saml\_adfs.buttonName—This is the name of the login button on the login screen of Kibana.
-   * readonlyrest\_kbn.auth.saml\_adfs.enabled—This enables the SAML SSO configuration.
-   * readonlyrest\_kbn.auth.saml\_adfs.type—For AD FS, this must be “saml.”
-   * readonlyrest\_kbn.auth.saml\_adfs.issue —This is the unique identifier that was defined in the AD FS Relying Party Trust configuration, in this case, “ror.”
-   * readonlyrest\_kbn.auth.saml\_adfs.protocol—AD FS requires https.
-   * readonlyrest\_kbn.auth.saml\_adfs.entryPoint—This is the entry point for AD FS—[https://{AD](https://{ad) FS Server}/adfs/ls.
-   * readonlyrest\_kbn.auth.saml\_adfs.logoutUrl—This is the logout call to AD FS— [https://{AD](https://{ad) FS Server}/adfs/ls?wa=wsignout1.0.
-   * readonlyrest\_kbn.auth.saml\_adfs.kibanaExternalHost—This is the address and port without the protocol preceding (i.e., https).
-   * readonlyrest\_kbn.auth.saml\_adfs.usernameParameter—This configuration is only doing authentication, and it must match the nameID parameter.
+```yaml
+    elasticsearch.username: kibana  # This field matches the first part (pre-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
+    elasticsearch.password: kibana # This field matches the second part (post-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
+    elasticsearch.ssl.verificationMode: true # Set the value to “true” to ignore SSL errors. This is useful when working in a test environment.
+    xpack.security.enabled: false # This must be disabled for ReadonlyREST to work.
+    server.host: 10.0.0.6 # We need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.
+    server.ssl.enabled: true # This is used to turn on SSL and respond to https.
+    server.ssl.certificate: '/etc/kibana/ssl_cert/localhost.pem' # This is the location of the public key certificate.
+    server.ssl.key: '/etc/kibana/ssl_cert/localhost-key.pem' # This is the location of the private key for the certificate.
+    readonlyrest_kbn:
+      logLevel: debug # The value is set to “debug” to enable troubleshooting in the console.
+      clearSessionOnEvents: [ login ] # This clears the session on a successful login event.
+      auth:
+        signature_key: "VEGj@YLLhsAigspnNi2Xsopsqja_nrKUqU__eQW9VQ2!9p!RoeHwc-G.y-MVJtYYcDFCH.e3W2BKcZsoynJaHyjjXyh7kDHjsYKPkczvai-xCzP@Ez3QW23ZBFuReA7kPAqnc6pQ3VeNeFf3sWNoKeJAt_d9J7aFwEvCP2Gb-kQcA8YR*wNWHQuo-jwmmo2Qqpu_Fq3aKFCbNFWUbK@BVwmmKezxn3h687mAkuyhV4.hnfrjVjF-Rphjqmy4.tB8" # This must match the 256-character value in the signature\_key attribute of the readonlyrest.yml Elasticsearch configuration file.
+        saml_adfs:
+          buttonName: "ADFS SAML SSO" # This is the name of the login button on the login screen of Kibana.
+          enabled: true # This enables the SAML SSO configuration.
+          type: "saml" #  For AD FS, this must be “saml.”
+          issue: "ror" #  This is the unique identifier that was defined in the AD FS Relying Party Trust configuration, in this case, “ror”.
+          protocol: "https" # AD FS requires https.
+          entryPoint: "https://{AD_FS Server}/adfs/ls" # This is the entry point for AD FS
+          logoutUrl: "https://{AD_FS Server}/adfs/ls?wa=wsignout1.0" # This is the logout call to AD FS
+          kibanaExternalHost: "10.0.0.6:5601" # This is the address and port without the protocol preceding (i.e., https).
+          usernameParameter: "nameID" # This configuration is only doing authentication, and it must match the nameID parameter.
+          # disableRequestedAuthnContext: false # This is optional configuration which can fix known `SAML provider returned Responder error: NoAuthnContext` https://github.com/node-saml/passport-saml/issues/226. Allowed value is true/false
+          # authnContext: "http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/windows" # Name identifier format to request auth context. Allowed value is a string array of strings. Default: `urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport`
+          # identifierFormat: null # Name identifier format to request from identity provider. Allowed value is a string. Default: `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`
+```
+   
 
 ### Opening the Firewall Port
 
