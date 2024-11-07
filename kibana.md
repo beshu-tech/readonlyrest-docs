@@ -181,6 +181,19 @@ node/default/bin/node plugins/readonlyrestkbn/ror-tools.js patch
 node\default\node plugins\readonlyrestkbn\ror-tools.js patch
 ```
 
+##### Patching Kibana acknowledgement in a silent mode
+To apply patches in Kibana using a script with automatic acknowledgment in silent mode, you have two options:
+
+- Using `--I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes` Script Argument:
+
+```shell
+node/bin/node plugins/readonlyrestkbn/ror-tools.js patch --I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes # This command applies to Kibana before 8.15.0. Be sure to use the correct Node.js path based on the Kibana version and your operating system.
+```
+
+- Using environment variable:
+
+Define `I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes` env variable and run patching script as usual
+
 ### Unpatching Kibana
 
 If you are using Kibana 7.9.x or newer, you need **an extra pre-uninstallation step**. This will restore the core Kibana files to the original state.
