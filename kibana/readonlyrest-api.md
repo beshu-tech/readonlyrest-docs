@@ -4,7 +4,8 @@ description: >-
   ES cluster.
 ---
 
-# ReadonlyREST API ([Enterprise](https://readonlyrest.com/enterprise))
+# ReadonlyREST API 
+([Enterprise](https://readonlyrest.com/enterprise))
 
 As an Enterprise user, you can benefit from automating the security configuration changes without the need to reboot the ES cluster.
 

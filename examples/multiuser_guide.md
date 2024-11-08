@@ -1,4 +1,5 @@
-# Multi-user Elastic Stack ([PRO](https://readonlyrest.com/pro))
+# Multi-user Elastic Stack 
+([PRO](https://readonlyrest.com/pro))
 
 This document will guide you through setting up your Elasticsearch and Kibana stack with ReadonlyREST such that:
 
