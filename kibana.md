@@ -1030,6 +1030,19 @@ Example response:
 3. Match the name of the parameter used by the identity provider to carry the unique user ID (in the assertion message) to the `usernameParameter` kibana YAML setting.
 4. If you want to use SAML for authorization, take care of matching also the `groupsParameter` to the parameter name found in the assertion message to the kibana YAML setting.
 
+### Usage with Active Directory Federation Services
+
+To work properly with ADFS, ensure that you add the following to the configuration:
+
+```yaml
+readonlyrest_kbn:
+   auth:
+      saml_adfs:
+              authnContext: "http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/windows" # Name identifier format to request auth context.`
+              identifierFormat: null # Name identifier format to request from identity provider.`
+              [...]
+``` 
+
 ## OpenID Connect (OIDC)
 
 This feature will work in ReadonlyREST Enterprise.
