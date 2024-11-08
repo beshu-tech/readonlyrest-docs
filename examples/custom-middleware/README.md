@@ -2,7 +2,8 @@
 description: Custom middleware 
 ---
 
-# Custom middleware ([Enterprise](https://readonlyrest.com/enterprise))
+# Custom middleware 
+([Enterprise](https://readonlyrest.com/enterprise))
 
 Sometimes, Enterprise users might need more flexibility and customize the plugin behavior to adjust the product to the business needs.
 There are two options to declare the custom middleware:

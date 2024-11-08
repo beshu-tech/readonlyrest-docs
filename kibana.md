@@ -1295,16 +1295,6 @@ readonlyrest_kbn.kibana_custom_js_inject_file: '/tmp/custom.js'
 
 **⚠️IMPORTANT** If you use relative paths, you end up pointing to kibana home, i.e. `readonlyrest_kbn.kibana_custom_js_inject: 'config/custom.js'` will refer to `$KBN_HOME/config/custom.js` which is the same directory where `kibana.yml` can normally be found.
 
-### Map groups to aliases
-
-You can provide a function, mapping group IDs to aliases of your choosing. To do so, add the following line to `config/kibana.yml`:
-
-```yaml
-readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
-```
-
-**⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group ID will be used as fallback. Also, if the mapping function is not specified, the original group ID value will be used.
-
 ## Tenancy index templating ([Enterprise](https://readonlyrest.com/enterprise))
 
 This feature will work only with ReadonlyREST Enterprise
