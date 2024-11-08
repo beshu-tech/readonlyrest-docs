@@ -2,7 +2,8 @@
 description: External connectors integration
 ---
 
-# OpenID Connect (OIDC) SSO ([Enterprise](https://readonlyrest.com/enterprise))
+# OpenID Connect (OIDC) SSO 
+([Enterprise](https://readonlyrest.com/enterprise))
 
 With ReadonlyREST Enterprise, you can integrate with OpenID Connect (OIDC) Single Sign-on identity providers for both authentication and authorization.
 
