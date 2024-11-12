@@ -1,5 +1,24 @@
 # Changelog
 
+### (2024-11-12) What's new in **ROR 1.61.0**
+* **🚨Security Fix** (KBN) [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)
+* **⚠️Warning** (KBN) Acknowledgement needs to be accepted before a Kibana patching process. For scripts, you can [set a flag](https://docs.readonlyrest.com/kibana#patching-kibana) to automate a process (edited) 
+* **🚀New** (ES) 8.15.4 support
+* **🚀New** (ES) There is an option to define [a custom response for users in ACL block with the 'forbid' policy](https://docs.readonlyrest.com/elasticsearch#unauthorized-response-configuration)
+* **🧐Enhancement** (KBN) Set-Cookie is not returned with KBN API response
+* **🧐Enhancement** (KBN) Reduce the amount of ReadonlyREST session updates
+* **🧐Enhancement** (KBN) Kibana plugin won't start until connection with elasticsearch established
+* **🧐Enhancement** (KBN) api and activation key tabs in the Security settings are visible only for the admin or unrestricted access users
+* **🧐Enhancement** (KBN) detecting issues related to high disk watermark warning
+* **🧐Enhancement** (KBN) License expiration info only for admin and unrestricted access users
+* **🧐Enhancement** (ES) index exclusion (dash) syntax support
+* **🐞Fix** (KBN) Don't stop Kibana when correlationId is not available in the session
+* **🐞Fix** (KBN) Provide additional [SAML configuration options](https://docs.readonlyrest.com/kibana#usage-with-active-directory-federation-services) to handle Active Directory Federation Services (ADFS) properly
+* **🐞Fix** (KBN) login page customization should be a PRO feature instead of an Enterprise
+* **🐞Fix** (KBN) Logging to file doesn't work for Kibana 8.x
+* **🐞Fix** (ES) Snapshot Status API - forbidden response while checking the status of all snapshots of the given repository
+* **🐞Fix** (ES) Snapshot API - misc issues for ES 6.x
+
 ### (2024-09-15) What's new in **ROR 1.60.0**
 * **🚀New** (KBN) 8.15.3, 8.15.2, 7.17.25 support
 * **🚀New** (ES) 8.15.3, 8.15.2, 7.17.25 support
