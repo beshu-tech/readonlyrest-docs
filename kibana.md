@@ -64,7 +64,7 @@ services:
     ports: 
       - "5601:5601"
     environment:
-      - I_UNDERSTAND_IMPLICATION_OF_KBN_PATCHING=yes
+      - I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes
       - ELASTICSEARCH_HOSTS=https://es-ror:9200
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=kibana
