@@ -137,7 +137,7 @@ spec:
         - name: kibana
           env:
             # we have to explicitly agree to patch the KBN binaries (the patching step will be done only once)
-            - name: I_UNDERSTAND_IMPLICATION_OF_KBN_PATCHING
+            - name: I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING
               value: "yes"
             # we have to provide a ROR license if we want to use ROR Pro or Enterprise (if the license is not provided, then ROR Free is used)
             - name: ROR_ACTIVATION_KEY
