@@ -3,6 +3,7 @@
 ### (2024-11-12) What's new in **ROR 1.61.0**
 * **🚨Security Fix** (KBN) [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)
 * **⚠️Warning** (KBN) Acknowledgement needs to be accepted before a Kibana patching process. For scripts, you can [set a flag](https://docs.readonlyrest.com/kibana#patching-kibana) to automate a process (edited) 
+* **🚀New** (KBN) 8.15.4 support
 * **🚀New** (ES) 8.15.4 support
 * **🚀New** (ES) There is an option to define [a custom response for users in ACL block with the 'forbid' policy](https://docs.readonlyrest.com/elasticsearch#unauthorized-response-configuration)
 * **🧐Enhancement** (KBN) Set-Cookie is not returned with KBN API response
