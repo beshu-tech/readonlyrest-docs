@@ -519,7 +519,7 @@ It is necessary to make Kibana operate under SSL for AD FS to perform SAML authe
     elasticsearch.username: kibana  # This field matches the first part (pre-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
     elasticsearch.password: kibana # This field matches the second part (post-colon) of the auth\_key in the readonlyrest.yml Elasticsearch configuration file.
     elasticsearch.ssl.verificationMode: true # Set the value to “true” to ignore SSL errors. This is useful when working in a test environment.
-    xpack.security.enabled: false # This must be disabled for ReadonlyREST to work.
+    xpack.security.enabled: false # This must be disabled for ReadonlyREST to work. Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
     server.host: 10.0.0.6 # We need to use a routable address, which, in this case, is the 10.0.0.6 IP of this server.
     server.ssl.enabled: true # This is used to turn on SSL and respond to https.
     server.ssl.certificate: '/etc/kibana/ssl_cert/localhost.pem' # This is the location of the public key certificate.
