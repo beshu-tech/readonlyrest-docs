@@ -1,5 +1,12 @@
 # Changelog
 
+### (2024-11-20) What's new in **ROR 1.61.1**
+* **🚨Security Fix** (ES) [Data leak through the ESQL API](https://forum.readonlyrest.com/t/eql-requests-returns-data-even-though-they-aren-t-allowed/2679) (for ES >= 8.11.0)
+* **🚨Security Fix** (KBN) [CVE-2024-21538](https://www.cve.org/CVERecord?id=CVE-2024-21538), [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)
+* **🚨Security Fix** (ES) [CVE-2024-47535](https://nvd.nist.gov/vuln/detail/CVE-2024-47535)
+* **🚀New** (ES) ESQL support 
+* **🐞Fix** (KBN) Elasticsearch red status shouldn't kill the Kibana process on initialization
+
 ### (2024-11-12) What's new in **ROR 1.61.0**
 * **🚨Security Fix** (KBN) [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)
 * **⚠️Warning** (KBN) Acknowledgement needs to be accepted before a Kibana patching process. For scripts, you can [set a flag](https://docs.readonlyrest.com/kibana#patching-kibana) to automate a process (edited) 
