@@ -17,8 +17,8 @@
 * **🚀New** (ES) There is an option to define [a custom response for users in ACL block with the 'forbid' policy](https://docs.readonlyrest.com/elasticsearch#unauthorized-response-configuration)
 * **🧐Enhancement** (KBN) Set-Cookie is not returned with KBN API response
 * **🧐Enhancement** (KBN) Reduce the amount of ReadonlyREST session updates
-* **🧐Enhancement** (KBN) Kibana plugin won't start until connection with elasticsearch established
-* **🧐Enhancement** (KBN) api and activation key tabs in the Security settings are visible only for the admin or unrestricted access users
+* **🧐Enhancement** (KBN) Kibana plugin won't start until the connection with Elasticsearch is established
+* **🧐Enhancement** (KBN) API and activation key tabs in the Security settings are visible only for the admin or unrestricted access users
 * **🧐Enhancement** (KBN) detecting issues related to high disk watermark warning
 * **🧐Enhancement** (KBN) License expiration info only for admin and unrestricted access users
 * **🧐Enhancement** (ES) index exclusion (dash) syntax support
