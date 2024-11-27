@@ -5,7 +5,7 @@
 * **🚨Security Fix** (KBN) [CVE-2024-21538](https://www.cve.org/CVERecord?id=CVE-2024-21538), [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)
 * **🚨Security Fix** (ES) [CVE-2024-47535](https://nvd.nist.gov/vuln/detail/CVE-2024-47535)
 * **🚀New** (KBN) 8.16.1, 8.16.0 support
-* **🚀New** (ES) 8.16.1 support
+* **🚀New** (ES) 8.16.1, 8.15.5 support
 * **🚀New** (ES) ESQL support 
 * **🐞Fix** (KBN) Elasticsearch red status shouldn't kill the Kibana process on initialization
 
