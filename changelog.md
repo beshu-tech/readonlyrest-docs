@@ -4,6 +4,8 @@
 * **🚨Security Fix** (ES) [Data leak through the ESQL API](https://forum.readonlyrest.com/t/eql-requests-returns-data-even-though-they-aren-t-allowed/2679) (for ES >= 8.11.0)
 * **🚨Security Fix** (KBN) [CVE-2024-21538](https://www.cve.org/CVERecord?id=CVE-2024-21538), [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)
 * **🚨Security Fix** (ES) [CVE-2024-47535](https://nvd.nist.gov/vuln/detail/CVE-2024-47535)
+* **🚀New** (KBN) 8.16.1, 8.16.0, 8.15.5, 7.17.26 support
+* **🚀New** (ES) 8.16.1, 8.15.5, 7.17.26 support
 * **🚀New** (ES) ESQL support 
 * **🐞Fix** (KBN) Elasticsearch red status shouldn't kill the Kibana process on initialization
 
@@ -15,8 +17,8 @@
 * **🚀New** (ES) There is an option to define [a custom response for users in ACL block with the 'forbid' policy](https://docs.readonlyrest.com/elasticsearch#unauthorized-response-configuration)
 * **🧐Enhancement** (KBN) Set-Cookie is not returned with KBN API response
 * **🧐Enhancement** (KBN) Reduce the amount of ReadonlyREST session updates
-* **🧐Enhancement** (KBN) Kibana plugin won't start until connection with elasticsearch established
-* **🧐Enhancement** (KBN) api and activation key tabs in the Security settings are visible only for the admin or unrestricted access users
+* **🧐Enhancement** (KBN) Kibana plugin won't start until the connection with Elasticsearch is established
+* **🧐Enhancement** (KBN) API and activation key tabs in the Security settings are visible only for the admin or unrestricted access users
 * **🧐Enhancement** (KBN) detecting issues related to high disk watermark warning
 * **🧐Enhancement** (KBN) License expiration info only for admin and unrestricted access users
 * **🧐Enhancement** (ES) index exclusion (dash) syntax support

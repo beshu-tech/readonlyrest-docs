@@ -416,9 +416,9 @@ Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` (on the Ela
 # For X-Pack users: you may only leave monitoring on. 
 # Don't add this if X-Pack is not installed at all, or Kibana won't start.
 xpack.monitoring.enabled: true
-xpack.security.enabled: false
-xpack.watcher.enabled: false
-xpack.telemetry.enabled: false
+xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
+xpack.watcher.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
+xpack.telemetry.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
 ```
 
 This is a typical example of a configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
@@ -744,11 +744,11 @@ Open up `conf/kibana.yml` and add the following:
 
 ```yaml
 # This is kibana.yml, but copy the exact same in elasticsearch.yml if you have to use some X-pack features.
-xpack.graph.enabled: false
-xpack.ml.enabled: false
+xpack.graph.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
+xpack.ml.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
 xpack.monitoring.enabled: true
-xpack.security.enabled: false # this is fundamental!
-xpack.watcher.enabled: false
+xpack.security.enabled: false # this is fundamental! Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
+xpack.watcher.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
 
 # Kibana server use the ::KIBANA-SRV:: basic auth credentials
 elasticsearch.username: "kibana"

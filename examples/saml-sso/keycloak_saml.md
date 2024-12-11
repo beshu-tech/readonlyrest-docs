@@ -61,13 +61,13 @@ Provided that you have ReadonlyREST Enterprise installed and configured, you can
 
 **kibana.yml**
 
-```
+```yaml
 # More on how to enable SSL on the official documentation of Kibana
 server.ssl.enabled: true
 server.ssl.key: /home/xx/selfsigned_ssl_localhost/localhost.key
 server.ssl.certificate: /home/xx/selfsigned_ssl_localhost/localhost.crt
 
-xpack.security.enabled: false
+xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
 
 server.basePath: /k  # <-- optional, remember to change it in KC
 elasticsearch:
@@ -108,7 +108,7 @@ Our Elasticsearch needs to be available on HTTPS (more detailed info in our [doc
 
 **append to elasticsearch.yml**
 
-```
+```yaml
 xpack.security.enabled: false
 http.type: ssl_netty4 # <-- needed for ROR SSL
 ```
