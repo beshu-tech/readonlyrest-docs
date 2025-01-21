@@ -1,5 +1,13 @@
 # Changelog
 
+### (2025-01-21) What's new in **ROR 1.62.0**
+* **🚨Security Fix**  [CVE-2024-53990](https://nvd.nist.gov/vuln/detail/CVE-2024-53990)
+* **🚀New** (KBN) Added [Kibana images with the preinstalled ReadonlyREST plugin for the arm64 platform](https://hub.docker.com/r/beshultd/kibana-readonlyrest) on Docker Hub.
+* **🚀New** (ES) Added [Elasticsearch images with the preinstalled ReadonlyREST plugin for the arm64 platform](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest) on Docker Hub.
+* **🧐Enhancement** (ES) [Introduced validation to prevent multiple username entries in the users section.](https://forum.readonlyrest.com/t/ror-1-57-3-es-8-13-2-double-usernames-allowed/2621/2)
+* **🐞Fix** (ES) Relaxed restrictions on snapshot restoration during index checks.
+* **🐞Fix** (ES) Resolved issue with Stack Monitoring access when `xpack.security.enabled: true` is configured.
+
 ### (2024-11-20) What's new in **ROR 1.61.1**
 * **🚨Security Fix** (ES) [Data leak through the ESQL API](https://forum.readonlyrest.com/t/eql-requests-returns-data-even-though-they-aren-t-allowed/2679) (for ES >= 8.11.0)
 * **🚨Security Fix** (KBN) [CVE-2024-21538](https://www.cve.org/CVERecord?id=CVE-2024-21538), [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)
