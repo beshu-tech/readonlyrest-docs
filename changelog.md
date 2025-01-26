@@ -5,6 +5,7 @@
 * **🚨Security Fix** (KBN) [CVE-2024-21538](https://www.cve.org/CVERecord?id=CVE-2024-21538), [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764), [CVE-2024-52798](https://www.cve.org/CVERecord?id=CVE-2024-52798)
 * **⚠️Warning** (KBN) Updated [`readonlyrest_kbn: license: activationKeyRefreshInterval`](https://forum.readonlyrest.com/t/restricting-access-to-some-spaces/2633/4) - the maximum refresh interval is now set to 1 day.
 * **🚀New** (ES|KBN) Introduced support for [Elastic APM (Application Performance Monitoring)](https://www.elastic.co/observability/application-performance-monitoring).
+* **🚀New** (ES) 8.17.1, 8.16.3 support
 * **🚀New** (KBN) Added [Kibana images with the preinstalled ReadonlyREST plugin for the arm64 platform](https://hub.docker.com/r/beshultd/kibana-readonlyrest) on Docker Hub.
 * **🚀New** (ES) Added [Elasticsearch images with the preinstalled ReadonlyREST plugin for the arm64 platform](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest) on Docker Hub.
 * **🧐Enhancement** (ES) [Introduced validation to prevent multiple username entries in the users section.](https://forum.readonlyrest.com/t/ror-1-57-3-es-8-13-2-double-usernames-allowed/2621/2)
