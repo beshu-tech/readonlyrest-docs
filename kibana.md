@@ -181,7 +181,7 @@ node/default/bin/node plugins/readonlyrestkbn/ror-tools.js patch
 node\default\node plugins\readonlyrestkbn\ror-tools.js patch
 ```
 
-#### Patching Kibana acknowledgement in a silent mode
+#### Patching Kibana acknowledgment in a silent mode
 To apply patches in Kibana using a script in non-interactive mode (bypassing prompts), you have two options:
 
 - Using `--I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes` Script Argument:
