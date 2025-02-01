@@ -821,16 +821,16 @@ In general it looks like this:
 
   users:
   - username: ["pattern1", "pattern2", ...]
-    groups_or: ["local_group1", "local_group2", ...]
+    groups: ["local_group1", "local_group2", ...]
     <any_authentication_rule>: ...
 
   - username: ["pattern1", "pattern2", ...]
-    groups_or: ["local_group1", "local_group2", ...]
+    groups: ["local_group1", "local_group2", ...]
     <any_authentication_rule>: ...
     <optionally_any_authorization_rule>: ...
 
   - username: ["pattern1", "pattern2", ...]
-    groups_or:
+    groups:
       - local_group1: ["external_group1", "external_group2"]
       - local_group2: ["external_group2"]
     <authentication_with_authorization_rule>: ... # `ldap_auth` or `jwt_auth` or `ror_kbn_auth`
