@@ -856,7 +856,7 @@ Looking at the example below (and notice the difference with `not_any_of` rule):
 - ACL block will not match for user that belongs to both `group1` and `group2`
 ```yaml
   user_belongs_to_groups:
-    not_any_of: ["group1", "group2"]
+    not_all_of: ["group1", "group2"]
 ```
 
 With deprecated syntax (without being wrapped inside the `user_belongs_to_groups` section):
@@ -867,7 +867,7 @@ With deprecated syntax (without being wrapped inside the `user_belongs_to_groups
 The combined rule is a rule, that combines in a single ACL block both positive logic (`all_of`/`any_of`) with negative logic (`not_all_of`/`not_any_of`)
 The ACL block will match, when conditions of both rules are met.
 
-Looking at the example below (and notice the difference with `not_any_of` rule):
+Looking at the example below:
 - ACL block will NOT MATCH for user that belongs only to `group0` (because the `any_of` logic is not satisfied)
 - ACL block will MATCH for user that belongs only to `group1` (the `any_of` logic is satisfied, the `not_all_of` too, because the user is not member of `group2`)
 - ACL block will MATCH for user that belongs to `group1` and `group3` for the same reason
