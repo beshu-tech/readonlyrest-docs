@@ -805,78 +805,94 @@ The ACL block will match when the user belongs to groups matching the condition 
 
 ##### `any_of`
 
-The ACL block will match when the user belongs to any of the specified groups.
+The ACL block will match when the user belongs to any of the specified groups (boolean OR logic).
 
+Extended syntax:
 ```yaml
   user_belongs_to_groups:
     any_of: ["group1", "group2"]
 ```
 
-With deprecated syntax (without being wrapped inside the `user_belongs_to_groups` section):
-- `groups_or: ["group1", "group2"]`
-- `groups: ["group1", "group2"]`
+Simplified syntax:
+```yaml
+  groups_any_of: ["group1", "group2"]
+```
 
 ##### `all_of`
 
-This rule is very similar to the above defined `any_of` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `any_of` rule.
+This subrule is very similar to the above defined `any_of` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `any_of` rule.
 
+Extended syntax:
 ```yaml
   user_belongs_to_groups:
     all_of: ["group1", "group2"]
 ```
 
-With deprecated syntax (without being wrapped inside the `user_belongs_to_groups` section):
-- `groups_and: ["group1", "group2"]`
+Simplified syntax:
+```yaml
+  groups_all_of: ["group1", "group2"]
+```
 
 ##### `not_any_of`
 
 The ACL block will match when the user belongs to NONE of the specified groups.
 
-Looking at the example below:
-- ACL block will match for user that belongs to `group0`
-- ACL block will NOT MATCH for user that belongs only to `group1`
-- ACL block will NOT MATCH for user that belongs only to `group2`
-- ACL block will not match for user that belongs to both `group1` and `group2`
+Extended syntax:
 ```yaml
   user_belongs_to_groups:
     not_any_of: ["group1", "group2"]
 ```
 
-With deprecated syntax (without being wrapped inside the `user_belongs_to_groups` section):
-- `groups_not_any_of: ["group1", "group2"]`
+Simplified syntax:
+```yaml
+  groups_not_any_of: ["group1", "group2"]
+```
+
+Looking at the examples above:
+- ACL block will MATCH for user that belongs to `group0`
+- ACL block will NOT MATCH for user that belongs only to `group1`
+- ACL block will NOT MATCH for user that belongs only to `group2`
+- ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
+- ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
 
 ##### `not_all_of`
 
 The ACL block will match when the user does not belong to all the specified groups.
 
-Looking at the example below (and notice the difference with `not_any_of` rule):
-- ACL block will match for user that belongs to `group0`
-- ACL block will MATCH for user that belongs only to `group1`
-- ACL block will MATCH for user that belongs only to `group2`
-- ACL block will not match for user that belongs to both `group1` and `group2`
+Extended syntax:
 ```yaml
   user_belongs_to_groups:
     not_all_of: ["group1", "group2"]
 ```
 
-With deprecated syntax (without being wrapped inside the `user_belongs_to_groups` section):
-- `groups_not_all_of: ["group1", "group2"]`
+Simplified syntax:
+```yaml
+  groups_not_all_of: ["group1", "group2"]
+```
 
-##### Combined rule
+Looking at the example above:
+- ACL block will MATCH for user that belongs to `group0`
+- ACL block will MATCH for user that belongs only to `group1`
+- ACL block will MATCH for user that belongs only to `group2`
+- ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
+- ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
 
-The combined rule is a rule, that combines in a single ACL block both positive logic (`all_of`/`any_of`) with negative logic (`not_all_of`/`not_any_of`)
+##### Subrules combination
+
+Subrules can be combined inside a single ACL block. It applies only to combining one positive logic subrule (`all_of`/`any_of`) with one negative logic subrule (`not_all_of`/`not_any_of`)
 The ACL block will match, when conditions of both rules are met.
 
-Looking at the example below:
-- ACL block will NOT MATCH for user that belongs only to `group0` (because the `any_of` logic is not satisfied)
-- ACL block will MATCH for user that belongs only to `group1` (the `any_of` logic is satisfied, the `not_all_of` too, because the user is not member of `group2`)
-- ACL block will MATCH for user that belongs to `group1` and `group3` for the same reason
-- ACL block will NOT MATCH for user that belongs to `group1` and `group2` (the `any_of` logic is satisfied, but `not_all_of` is not)
 ```yaml
   user_belongs_to_groups:
     any_of: ["group1", "group2", "group3"]
     not_all_of: ["group1", "group2"]
 ```
+
+Looking at the example above:
+- ACL block will NOT MATCH for user that belongs only to `group0` (because the `any_of` logic is not satisfied)
+- ACL block will MATCH for user that belongs only to `group1` (the `any_of` logic is satisfied, the `not_all_of` too, because the user is not member of `group2`)
+- ACL block will MATCH for user that belongs to `group1` and `group3` for the same reason
+- ACL block will NOT MATCH for user that belongs to `group1` and `group2` (the `any_of` logic is satisfied, but `not_all_of` is not)
 
 ##### User management
 
@@ -2687,7 +2703,7 @@ readonlyrest:
       header_name: Authorization
 ```
 
-You can verify groups assigned to the user with the groups logic (`any_of`/`all_of`/`not_any_of`/`not_all_of`/combined) described here [Groups logic](elasticsearch.md#user_belongs_to_groups)
+You can verify groups assigned to the user with the groups logic (`any_of`/`all_of`/`not_any_of`/`not_all_of`/combined) described in the [Groups logic](elasticsearch.md#user_belongs_to_groups) section.
 
 To define JWT provider, you need to provide:
 * `name` - (string, required) - identifier of the JWT provider, which needs to be passed in the `jwt_auth` rule
