@@ -799,11 +799,108 @@ So that Kibana will forward the necessary headers to Elasticsearch.
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### `groups_or` (or `groups`)
+#### Groups subrules
 
-`groups_or: ["group1", "group2"]`
+The ACL block will match, when the user belongs to groups matching the specified conditions.
 
-The ACL block will match when the user belongs to any of the specified groups. The information about what users belong to what groups is defined in the `users` section, typically situated after the ACL, further down in the YAML.
+The groups subrules use the user definitions from the `users` section. In that section, we define static users (and we assign groups to them) or we can authorize dynamic users (and we can map the external groups to the local groups).
+
+- the first step of the groups subrules is authorizing the user
+- after this step, we have an authorized user with information about the authorized groups to which the user belongs
+- then we check whether the authorized user groups are permitted in context of the rule
+
+##### `any_of`
+
+The ACL block will match when the user belongs to any of the specified groups (boolean OR logic).
+
+Extended syntax:
+```yaml
+  user_belongs_to_groups:
+    any_of: ["group1", "group2"]
+```
+
+Simplified syntax:
+```yaml
+  groups_any_of: ["group1", "group2"]
+```
+
+##### `all_of`
+
+This subrule is very similar to the above defined `any_of` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `any_of` rule.
+
+Extended syntax:
+```yaml
+  user_belongs_to_groups:
+    all_of: ["group1", "group2"]
+```
+
+Simplified syntax:
+```yaml
+  groups_all_of: ["group1", "group2"]
+```
+
+##### `not_any_of`
+
+The ACL block will match when the user belongs to NONE of the specified groups.
+
+Extended syntax:
+```yaml
+  user_belongs_to_groups:
+    not_any_of: ["group1", "group2"]
+```
+
+Simplified syntax:
+```yaml
+  groups_not_any_of: ["group1", "group2"]
+```
+
+Looking at the examples above:
+- ACL block will MATCH for user that belongs to `group0`
+- ACL block will NOT MATCH for user that belongs only to `group1`
+- ACL block will NOT MATCH for user that belongs only to `group2`
+- ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
+- ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
+
+##### `not_all_of`
+
+The ACL block will match when the user does not belong to all the specified groups.
+
+Extended syntax:
+```yaml
+  user_belongs_to_groups:
+    not_all_of: ["group1", "group2"]
+```
+
+Simplified syntax:
+```yaml
+  groups_not_all_of: ["group1", "group2"]
+```
+
+Looking at the example above:
+- ACL block will MATCH for user that belongs to `group0`
+- ACL block will MATCH for user that belongs only to `group1`
+- ACL block will MATCH for user that belongs only to `group2`
+- ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
+- ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
+
+##### Subrules combination
+
+Subrules can be combined inside a single ACL block. It applies only to combining one positive logic subrule (`all_of`/`any_of`) with one negative logic subrule (`not_all_of`/`not_any_of`)
+The ACL block will match, when conditions of both rules are met.
+
+```yaml
+  user_belongs_to_groups:
+    any_of: ["group1", "group2", "group3"]
+    not_all_of: ["group1", "group2"]
+```
+
+Looking at the example above:
+- ACL block will NOT MATCH for user that belongs only to `group0` (because the `any_of` logic is not satisfied)
+- ACL block will MATCH for user that belongs only to `group1` (the `any_of` logic is satisfied, the `not_all_of` too, because the user is not member of `group2`)
+- ACL block will MATCH for user that belongs to `group1` and `group3` for the same reason
+- ACL block will NOT MATCH for user that belongs to `group1` and `group2` (the `any_of` logic is satisfied, but `not_all_of` is not)
+
+##### User management
 
 In the `users` section, each entry tells us that:
 
@@ -843,12 +940,6 @@ authentication and authorization rules used in `users` section.
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `groups_and`
-
-`groups_and: ["group1", "group2"]`
-
-This rule is identical to the above defined `groups` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `groups` rule.
-
 #### `ldap_authentication`
 
 simple version:
@@ -868,11 +959,17 @@ It handles LDAP authentication only using the configured LDAP connector (here `l
 ```yaml
 ldap_authorization:
   name: "ldap1"
-  groups: ["group3"]
+  user_belongs_to_groups:
+    any_of: ["group3"]
   cache_ttl: 10 sec
 ```
 
-It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` can be used to require users belong to all the listed groups (AND logic). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+- It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). 
+
+- It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `any_of` (OR logic). 
+Alternatively, `all_of`/`not_any_of`/`not_all_of`/combined logic can be used to require users to meet certain conditions concerning group membership, as described [here](elasticsearch.md#user_belongs_to_groups)
+- **⚠️IMPORTANT** the negative groups logic (`not_any_of`/`not_all_of`) cannot be used, when `server_side_groups_filtering` is enabled for LDAP. In that case please use the combined logic, for example with `any_of` positive logic.
+- Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
 #### `ldap_auth`
 
@@ -2611,7 +2708,8 @@ readonlyrest:
       group_names_claim: resource_access.client_app.group_names # optional, JSON-path style, see https://github.com/json-path/JsonPath
       header_name: Authorization
 ```
-You can verify groups assigned to the user with the `groups` field. The rule matches when the user belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` matches when the user belongs to all given groups (AND logic).
+
+You can verify groups assigned to the user with the groups logic (`any_of`/`all_of`/`not_any_of`/`not_all_of`/combined) described in the [Groups logic](elasticsearch.md#user_belongs_to_groups) section.
 
 To define JWT provider, you need to provide:
 * `name` - (string, required) - identifier of the JWT provider, which needs to be passed in the `jwt_auth` rule
