@@ -799,9 +799,15 @@ So that Kibana will forward the necessary headers to Elasticsearch.
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### `user_belongs_to_groups`
+#### Groups subrules
 
-The ACL block will match when the user belongs to groups matching the condition defined in the `user_belongs_to_groups` config section. The information about what users belong to what groups is defined in the `users` section, typically situated after the ACL, further down in the YAML.
+The ACL block will match, when the user belongs to groups matching the specified conditions.
+
+The groups subrules use the user definitions from the `users` section. In that section, we define static users (and we assign groups to them) or we can authorize dynamic users (and we can map the external groups to the local groups).
+
+- the first step of the groups subrules is authorizing the user
+- after this step, we have an authorized user with information about the authorized groups to which the user belongs
+- then we check whether the authorized user groups are permitted in context of the rule
 
 ##### `any_of`
 
