@@ -117,7 +117,7 @@ Impersonation mode has some limitations. Please check if they have an impact on 
       access_control_rules:
         - name: "LDAP group g1"
           type: allow
-          groups: ["g1"]
+          groups_any_of: ["g1"]
         
       users:
         - username: "admin*"  // To impersonate a user with a username matching 'admin*' you need to enter the username manually, like 'admin123'
@@ -125,7 +125,7 @@ Impersonation mode has some limitations. Please check if they have an impact on 
             - g1: group1
           ldap_auth:
             name: "ldap1"
-            groups: ["group1"]
+            groups_any_of: ["group1"]
           
       ldaps:
         - name: ldap1

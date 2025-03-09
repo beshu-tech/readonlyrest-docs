@@ -145,19 +145,19 @@ readonlyrest:
     [...]
     ldap_auth:
       name: ldap1
-      groups: [group1_*]
+      groups_any_of: [group1_*]
 
   - name: "Block 2"
     [...]
     ldap_auth:
       name: ldap1
-      groups: [group2_*]
+      groups_any_of: [group2_*]
 
   - name: "Block 3"
     [...]
     ldap_auth:
       name: ldap1
-      groups: [group3_*]
+      groups_any_of: [group3_*]
 
   ldaps:
   - name: ldap1

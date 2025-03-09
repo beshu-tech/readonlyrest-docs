@@ -10,7 +10,7 @@ We can also reject the specific request for example based on the custom metadata
 
 ```yaml
   - name: ADMIN_GRP
-    groups: [ administrators ]
+    groups_any_of: [ administrators ]
     kibana:
        access: admin
        index: '.kibana_@{acl:current_group}'
