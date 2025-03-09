@@ -914,7 +914,7 @@ In general it looks like this:
   ...
   - name: "ACL block with groups rule"
     indices: [x, y]
-    groups_or: ["local_group1"] # this group ID is defined in the "users" section
+    groups_any_of: ["local_group1"] # this group ID is defined in the "users" section
 
   users:
   - username: ["pattern1", "pattern2", ...]
@@ -994,7 +994,7 @@ In both `ldap_auth`and `ldap_authorization`, the `groups` clause can be replaced
 ```yaml
 ldap_auth:
   name: "ldap1"
-  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+  groups_all_of: ["group1", "group2"] # match when user belongs to ALL listed groups
 ```
 
 Or equivalently:
@@ -1003,7 +1003,7 @@ Or equivalently:
 ldap_authentication: ldap1
 ldap_authorization:
   name: "ldap1"
-  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+  groups_all_of: ["group1", "group2"] # match when user belongs to ALL listed groups
 ```
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
@@ -1050,7 +1050,7 @@ readonlyrest:
     - name: "ReadonlyREST Enterprise instance #1 - two groups required"
       ror_kbn_auth:
         name: "kbn1"
-        groups_and: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
+        groups_all_of: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
 
     - name: "ReadonlyREST Enterprise instance #2"
       ror_kbn_auth:
@@ -1911,17 +1911,17 @@ The username `bob` is statically associated with [structered groups](details/str
       indices: ["index3"]
 
     - name: Accept requests from users in groups team4 OR team5 on index3
-      groups_or: ["team4", "team5"]
+      groups_any_of: ["team4", "team5"]
       indices: ["index3"]
 
     - name: Accept requests from users in groups team1 AND team2 on index3
-      groups_and: ["team1", "team2"]
+      groups_all_of: ["team1", "team2"]
       indices: ["index3"]
 
     users:
 
     - username: "alice"
-      groups: ["team1"] # group id - a value that ROR operates in `groups`, `groups_or`, and `groups_and` rules
+      groups: ["team1"] # group id - a value that ROR operates in groups rules
       auth_key: alice:p455phrase
 
     - username: "bob"
@@ -1982,7 +1982,7 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `groups_or`, `groups_and`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`. The variables are related to different contexts:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`, [groups rules](#groups-rules). The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group ID explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
@@ -2328,7 +2328,7 @@ Usually, we would like to configure three main things for defining the way LDAP 
       * `group_attribute_is_dn` (boolean, optional, default: `true`) -
         * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))`
         * then `false` the search filer will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_ID_ATTRIBUTE_VALUE}))`
-      * `server_side_groups_filtering` (boolean, optional, default: `false`) - by default ROR's LDAP connector asks for all groups of the given user. The group filtering is done on ROR's side. It allows ROR to cache them efficiently. But in some cases (e.g. when the user has hundreds of groups), it's better to filter them on the LDAP server side. If this setting is `true`, LDAP will only be queried for a certain subset of the user groups (defined by the `groups_or`/`groups_and` subrule of the `ldap_authorization`/`ldap_auth` rule). Note, however, that ONLY the returned subset of the user's groups is cached. See [groups caching details](/details/caching.md#group-caching) for a deep explanation.
+      * `server_side_groups_filtering` (boolean, optional, default: `false`) - by default ROR's LDAP connector asks for all groups of the given user. The group filtering is done on ROR's side. It allows ROR to cache them efficiently. But in some cases (e.g. when the user has hundreds of groups), it's better to filter them on the LDAP server side. If this setting is `true`, LDAP will only be queried for a certain subset of the user groups (defined by the `groups_any_of`/`groups_all_of` subrule of the `ldap_authorization`/`ldap_auth` rule). Note, however, that ONLY the returned subset of the user's groups is cached. See [groups caching details](/details/caching.md#group-caching) for a deep explanation.
       * `nested_groups_depth` (positive int, optional, no default) - it defines how deep ROR should ask LDAP to extract the nested LDAP groups. See the [nested groups support section](#nested-ldap-groups-support) for details.
    2. User entry - it has an attribute that refers to Group entries (`mode: search_groups_in_user_entries` has to be set to use this strategy):
       * `search_groups_base_DN` (string, required) - should refer to the base Distinguished ID of the groups to which these users may belong
@@ -2655,7 +2655,7 @@ Also in this rule, the `groups` clause can be replaced by `group_and` to require
 ```yaml
   groups_provider_authorization:
     user_groups_provider: "GroupsService"
-    groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+    groups_all_of: ["group1", "group2"] # match when user belongs to ALL listed groups
 ```
 
 To define user groups provider you should specify:
@@ -2696,7 +2696,7 @@ readonlyrest:
         access: rw
       jwt_auth:
         name: "jwt_provider_1"
-        groups_and: ["writer", "viewer"]
+        groups_all_of: ["writer", "viewer"]
 
     jwt:
     - name: jwt_provider_1
@@ -2708,7 +2708,7 @@ readonlyrest:
       header_name: Authorization
 ```
 
-You can verify groups assigned to the user with the groups logic (`groups_any_of`/`groups_all_of`/`groups_not_any_of`/`groups_not_all_of`/combined) described in the [Groups logic](elasticsearch.md#user_belongs_to_groups) section.
+You can verify groups assigned to the user with the groups logic (`groups_any_of`/`groups_all_of`/`groups_not_any_of`/`groups_not_all_of`/`groups_combined`) described in the [Groups logic](elasticsearch.md#user_belongs_to_groups) section.
 
 To define JWT provider, you need to provide:
 * `name` - (string, required) - identifier of the JWT provider, which needs to be passed in the `jwt_auth` rule
