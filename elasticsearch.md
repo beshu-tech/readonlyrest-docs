@@ -964,8 +964,8 @@ ldap_authorization:
 ```
 
 - It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). 
-
-- It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `any_of` (OR logic). 
+- Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+- It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups_any_of` (OR logic). 
 Alternatively, `all_of`/`not_any_of`/`not_all_of`/combined logic can be used to require users to meet certain conditions concerning group membership, as described [here](elasticsearch.md#groups_combined)
 - **⚠️IMPORTANT** the negative groups logic (`not_any_of`/`not_all_of`) cannot be used, when `server_side_groups_filtering` is enabled for LDAP. In that case please use the combined logic, for example with `any_of` positive logic.
 - Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
@@ -1010,13 +1010,17 @@ See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
 [Impersonation](details/impersonation.md) support by LDAP rules requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `jwt_auth`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
 
 [Impersonation](details/impersonation.md) is not currently supported by this rule.
+
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `external_authentication`
 
@@ -1032,7 +1036,8 @@ Used to delegate groups resolution for a user to a JSON microservice. See below,
 
 [Impersonation](details/impersonation.md) support by this rule requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `ror_kbn_auth` ([Enterprise](https://readonlyrest.com/enterprise))
 
@@ -1070,7 +1075,8 @@ Continue reading about this in the kibana plugin documentation, in the dedicated
 
 [Impersonation](details/impersonation.md) is currently not supported by this rule.
 
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `users`
 
@@ -1770,7 +1776,7 @@ In the example, the block `::PERSONAL_GRP::` is allowing the request because all
 This is an example of a request that gets forbidden by ReadonlyREST ACL.
 
 ```text
-FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, CGR:N/A, USR:[no basic auth header], BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::Infosec::->[groups->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]], [::Infosec::->[groups->false]], [::ADMIN_GRP::->[groups->false]], [::Kafka::->[auth_key->false]], [::PERSONAL_GRP::->[groups->false]] }
+FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, CGR:N/A, USR:[no basic auth header], BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::Infosec::->[groups_any_of->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]], [::Infosec::->[groups->false]], [::ADMIN_GRP::->[groups->false]], [::Kafka::->[auth_key->false]], [::PERSONAL_GRP::->[groups->false]] }
 ```
 
 The above rule gets forbidden "by default". This means that no ACL block has matched the request, so ReadonlyREST's default policy of rejection takes effect.
