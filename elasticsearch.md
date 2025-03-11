@@ -722,7 +722,7 @@ If you configured sha512 encryption with 65535 rounds on your system the hash in
 readonlyrest:
   access_control_rules:
     - name: Accept requests from users in group team1 on index1
-      groups: ["team1"]
+      groups_any_of: ["team1"]
       indices: ["index1"]
 
     users:
@@ -799,11 +799,108 @@ So that Kibana will forward the necessary headers to Elasticsearch.
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### `groups_or` (or `groups`)
+#### Groups rules
 
-`groups_or: ["group1", "group2"]`
+The ACL block will match, when the user belongs to groups matching the specified conditions.
 
-The ACL block will match when the user belongs to any of the specified groups. The information about what users belong to what groups is defined in the `users` section, typically situated after the ACL, further down in the YAML.
+The groups rules use the user definitions from [the `users` section](#users-and-groups). In that section, we define static users (and we assign groups to them) or we can authorize dynamic users (and we can map the external groups to the local groups).
+
+- the first step of the groups subrules is authorizing the user
+- after this step, we have an authorized user with information about the authorized groups to which the user belongs
+- then we check whether the authorized user groups are permitted in context of the rule
+
+##### `groups_any_of`
+
+The ACL block will match when the user belongs to any of the specified groups (boolean OR logic).
+
+Simplified syntax:
+```yaml
+  groups_any_of: ["group1", "group2"]
+```
+
+Extended syntax:
+```yaml
+  groups:
+    any_of: ["group1", "group2"]
+```
+
+##### `groups_all_of`
+
+This rule is very similar to the above defined `groups_any_of` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `any_of` rule.
+
+Simplified syntax:
+```yaml
+  groups_all_of: ["group1", "group2"]
+```
+
+Extended syntax:
+```yaml
+  groups:
+    all_of: ["group1", "group2"]
+```
+
+##### `groups_not_any_of`
+
+The ACL block will match when the user belongs to NONE of the specified groups.
+
+Simplified syntax:
+```yaml
+  groups_not_any_of: ["group1", "group2"]
+```
+
+Extended syntax:
+```yaml
+  groups:
+    not_any_of: ["group1", "group2"]
+```
+
+Looking at the examples above:
+- ACL block will MATCH for user that belongs to `group0`
+- ACL block will NOT MATCH for user that belongs only to `group1`
+- ACL block will NOT MATCH for user that belongs only to `group2`
+- ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
+- ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
+
+##### `groups_not_all_of`
+
+The ACL block will match when the user does not belong to all the specified groups.
+
+Simplified syntax:
+```yaml
+  groups_not_all_of: ["group1", "group2"]
+```
+
+Extended syntax:
+```yaml
+  groups:
+    not_all_of: ["group1", "group2"]
+```
+
+Looking at the example above:
+- ACL block will MATCH for user that belongs to `group0`
+- ACL block will MATCH for user that belongs only to `group1`
+- ACL block will MATCH for user that belongs only to `group2`
+- ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
+- ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
+
+##### groups_combined
+
+Logic conditions can be combined inside a single ACL block. It applies only to combining one positive logic (`all_of`/`any_of`) with one negative logic (`not_all_of`/`not_any_of`)
+The ACL block will match, when both conditions are met.
+
+```yaml
+  groups:
+    any_of: ["group1", "group2", "group3"]
+    not_all_of: ["group1", "group2"]
+```
+
+Looking at the example above:
+- ACL block will NOT MATCH for user that belongs only to `group0` (because the `any_of` logic is not satisfied)
+- ACL block will MATCH for user that belongs only to `group1` (the `any_of` logic is satisfied, the `not_all_of` too, because the user is not member of `group2`)
+- ACL block will MATCH for user that belongs to `group1` and `group3` for the same reason
+- ACL block will NOT MATCH for user that belongs to `group1` and `group2` (the `any_of` logic is satisfied, but `not_all_of` is not)
+
+##### User management
 
 In the `users` section, each entry tells us that:
 
@@ -817,7 +914,7 @@ In general it looks like this:
   ...
   - name: "ACL block with groups rule"
     indices: [x, y]
-    groups_or: ["local_group1"] # this group ID is defined in the "users" section
+    groups_any_of: ["local_group1"] # this group ID is defined in the "users" section
 
   users:
   - username: ["pattern1", "pattern2", ...]
@@ -843,12 +940,6 @@ authentication and authorization rules used in `users` section.
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `groups_and`
-
-`groups_and: ["group1", "group2"]`
-
-This rule is identical to the above defined `groups` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `groups` rule.
-
 #### `ldap_authentication`
 
 simple version:
@@ -868,11 +959,16 @@ It handles LDAP authentication only using the configured LDAP connector (here `l
 ```yaml
 ldap_authorization:
   name: "ldap1"
-  groups: ["group3"]
+  groups_any_of: ["group3"]
   cache_ttl: 10 sec
 ```
 
-It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` can be used to require users belong to all the listed groups (AND logic). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
+- It handles LDAP authorization only using the configured LDAP connector (here `ldap1`). 
+- Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+- It matches when previously authenticated user has groups in LDAP and when he belongs to at least one of the configured `groups_any_of` (OR logic). 
+Alternatively, `all_of`/`not_any_of`/`not_all_of`/combined logic can be used to require users to meet certain conditions concerning group membership, as described [here](elasticsearch.md#groups_combined)
+- **⚠️IMPORTANT** the negative groups logic (`not_any_of`/`not_all_of`) cannot be used, when `server_side_groups_filtering` is enabled for LDAP. In that case please use the combined logic, for example with `any_of` positive logic.
+- Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
 #### `ldap_auth`
 
@@ -881,7 +977,7 @@ Shorthand rule that combines `ldap_authentication` and `ldap_authorization` rule
 ```yaml
 ldap_auth:
   name: "ldap1"
-  groups: ["group1", "group2"]
+  groups_any_of: ["group1", "group2"]
 ```
 
 The same functionality can be achieved using the two rules described below:
@@ -890,7 +986,7 @@ The same functionality can be achieved using the two rules described below:
 ldap_authentication: ldap1
 ldap_authorization:
   name: "ldap1"
-  groups: ["group1", "group2"] # match when user belongs to at least one group
+  groups_any_of: ["group1", "group2"] # match when user belongs to at least one group
 ```
 
 In both `ldap_auth`and `ldap_authorization`, the `groups` clause can be replaced by `group_and` to require the valid LDAP user must belong to all the listed groups:
@@ -898,7 +994,7 @@ In both `ldap_auth`and `ldap_authorization`, the `groups` clause can be replaced
 ```yaml
 ldap_auth:
   name: "ldap1"
-  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+  groups_all_of: ["group1", "group2"] # match when user belongs to ALL listed groups
 ```
 
 Or equivalently:
@@ -907,20 +1003,24 @@ Or equivalently:
 ldap_authentication: ldap1
 ldap_authorization:
   name: "ldap1"
-  groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+  groups_all_of: ["group1", "group2"] # match when user belongs to ALL listed groups
 ```
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
 [Impersonation](details/impersonation.md) support by LDAP rules requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `jwt_auth`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
 
 [Impersonation](details/impersonation.md) is not currently supported by this rule.
+
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `external_authentication`
 
@@ -936,7 +1036,8 @@ Used to delegate groups resolution for a user to a JSON microservice. See below,
 
 [Impersonation](details/impersonation.md) support by this rule requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `ror_kbn_auth` ([Enterprise](https://readonlyrest.com/enterprise))
 
@@ -949,12 +1050,12 @@ readonlyrest:
     - name: "ReadonlyREST Enterprise instance #1"
       ror_kbn_auth:
         name: "kbn1"
-        groups: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to at least one of the configured groups
+        groups_any_of: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to at least one of the configured groups
 
     - name: "ReadonlyREST Enterprise instance #1 - two groups required"
       ror_kbn_auth:
         name: "kbn1"
-        groups_and: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
+        groups_all_of: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
 
     - name: "ReadonlyREST Enterprise instance #2"
       ror_kbn_auth:
@@ -974,7 +1075,8 @@ Continue reading about this in the kibana plugin documentation, in the dedicated
 
 [Impersonation](details/impersonation.md) is currently not supported by this rule.
 
-For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `users`
 
@@ -993,7 +1095,7 @@ readonlyrest:
       users: ["root", "*@mydomain.com"]
       jwt_auth:
         name: "jwt_provider_1"
-        groups: ["viewer"]
+        groups_any_of: ["viewer"]
 ```
 
 ### Kibana-related rules
@@ -1273,7 +1375,7 @@ In this example, we want to avoid that users belonging to group "press" can see 
 
 ```yaml
 - name: "::Press::"
-  groups: ["press"]
+  groups_any_of: ["press"]
   filter: '{"bool": { "must_not": { "match": { "access_level": "CLASSIFIED" }}}}'
 ```
 
@@ -1395,7 +1497,7 @@ Before adding the `filter` rule:
 
 ```yaml
   - name: "::PERSONAL_GRP::"
-    groups: ["Personal"]
+    groups_any_of: ["Personal"]
     kibana:
       access: rw
       index: ".kibana_@{user}"
@@ -1407,12 +1509,12 @@ After adding the `filter` rule \(using the block duplication strategy\).
 
 ```yaml
     - name: "::PERSONAL_GRP (FILTERED SEARCH)::"
-      groups: ["Personal"]
+      groups_any_of: ["Personal"]
       indices: [ "r*" ]
       filter: '{"query_string":{"query":"DestCountry:FR"}}'
 
     - name: "::PERSONAL_GRP::"
-      groups: ["Personal"]
+      groups_any_of: ["Personal"]
       indices: ["r*"]
       kibana:
         access: rw
@@ -1674,7 +1776,7 @@ In the example, the block `::PERSONAL_GRP::` is allowing the request because all
 This is an example of a request that gets forbidden by ReadonlyREST ACL.
 
 ```text
-FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, CGR:N/A, USR:[no basic auth header], BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::Infosec::->[groups->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]], [::Infosec::->[groups->false]], [::ADMIN_GRP::->[groups->false]], [::Kafka::->[auth_key->false]], [::PERSONAL_GRP::->[groups->false]] }
+FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, CGR:N/A, USR:[no basic auth header], BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::Infosec::->[groups_any_of->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]], [::Infosec::->[groups->false]], [::ADMIN_GRP::->[groups->false]], [::Kafka::->[auth_key->false]], [::PERSONAL_GRP::->[groups->false]] }
 ```
 
 The above rule gets forbidden "by default". This means that no ACL block has matched the request, so ReadonlyREST's default policy of rejection takes effect.
@@ -1803,29 +1905,29 @@ The username `bob` is statically associated with [structered groups](details/str
 
     - name: Accept requests from users in group team1 on index1
       type: allow  # Optional, defaults to "allow" will omit now on.
-      groups: ["team1"]
+      groups_any_of: ["team1"]
       indices: ["index1"]
 
     - name: Accept requests from users in group team2 on index2
-      groups: ["team2"]
+      groups_any_of: ["team2"]
       indices: ["index2"]
 
     - name: Accept requests from users in groups team1 OR team2 on index3
-      groups: ["team1", "team2"]
+      groups_any_of: ["team1", "team2"]
       indices: ["index3"]
 
     - name: Accept requests from users in groups team4 OR team5 on index3
-      groups_or: ["team4", "team5"]
+      groups_any_of: ["team4", "team5"]
       indices: ["index3"]
 
     - name: Accept requests from users in groups team1 AND team2 on index3
-      groups_and: ["team1", "team2"]
+      groups_all_of: ["team1", "team2"]
       indices: ["index3"]
 
     users:
 
     - username: "alice"
-      groups: ["team1"] # group id - a value that ROR operates in `groups`, `groups_or`, and `groups_and` rules
+      groups: ["team1"] # group id - a value that ROR operates in groups rules
       auth_key: alice:p455phrase
 
     - username: "bob"
@@ -1886,7 +1988,7 @@ And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
 ### Dynamic variables
 
-One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `groups_or`, `groups_and`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`. The variables are related to different contexts:
+One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`, [groups rules](#groups-rules). The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
     * `@{acl:user}` gets replaced with the username of the successfully authenticated user. Using this variable is allowed only in blocks where one of the rules is an authentication rule of course it must be a rule different from the one containing the given variable.
     * `@{acl:current_group}` is the group ID explicitly requested by the tenancy selector in ReadonlyREST Enterprise plugin when using multi-tenancy.
@@ -1958,7 +2060,7 @@ readonlyrest:
     - name: "Users can see only logstash indices for their departments" # i.e. alice belongs to 'dev' and 'ops' department groups, so she can see dev_logstash-20170922, ops_logstash-20170922
       ldap_auth:
         name: "myLDAP"
-        groups: ["dev", "ops", "qa"]
+        groups_any_of: ["dev", "ops", "qa"]
       indices: ["@explode{acl:available_groups}_logstash-*"] # i.e when available_groups=[dev, ops] we will get indices: ["dev_logstash-*", "ops_logstash-*"] 
 
     # LDAP connector settings omitted, see LDAP section below..
@@ -1975,7 +2077,7 @@ readonlyrest:
     - name: "Users can only see documents related to their departments" # i.e. alice belongs to 'dev' and 'ops' department groups, so she can see documents where "department" field is equal 'dev' or 'ops' 
       ldap_auth:
         name: "myLDAP"
-        groups: ["dev", "ops", "qa"]
+        groups_any_of: ["dev", "ops", "qa"]
       filter: '{ "terms": { "department": [@{acl:available_groups}] }}' # i.e. from available_groups=[dev, ops] we will get filter: '{ "terms": { "department": ["dev","ops"] }}'
       indices: ["logstash-*"]
 
@@ -1993,7 +2095,7 @@ readonlyrest:
     - name: "Users can access uri with value containing user's current group, i.e. user with group 'g1' can access: '/path/g1/some_thing'"
       ldap_authorization:
         name: "ldap1"
-        groups: ["g1", "g2", "g3"]
+        groups_any_of: ["g1", "g2", "g3"]
       uri_re: ["^/path/@{acl:current_group}/.*"]
 
     # LDAP connector settings omitted, see LDAP section below..
@@ -2133,7 +2235,7 @@ Currently, we support functions like this:
 * `to_uppercase` - Converts all characters in the variable string to upper case
   Usage example:
    ```yaml
-   groups: [ 'x1', '@{header:group}#{to_uppercase}' ]
+   groups_any_of: [ 'x1', '@{header:group}#{to_uppercase}' ]
    ```
 
 **💡 Didn't find the function you are looking for?**
@@ -2232,7 +2334,7 @@ Usually, we would like to configure three main things for defining the way LDAP 
       * `group_attribute_is_dn` (boolean, optional, default: `true`) -
         * when `true` the search filter will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_DN}))`
         * then `false` the search filer will look like that: `(&YOUR_GROUP_SEARCH_FILTER(unique_member_attribute={USER_ID_ATTRIBUTE_VALUE}))`
-      * `server_side_groups_filtering` (boolean, optional, default: `false`) - by default ROR's LDAP connector asks for all groups of the given user. The group filtering is done on ROR's side. It allows ROR to cache them efficiently. But in some cases (e.g. when the user has hundreds of groups), it's better to filter them on the LDAP server side. If this setting is `true`, LDAP will only be queried for a certain subset of the user groups (defined by the `groups_or`/`groups_and` subrule of the `ldap_authorization`/`ldap_auth` rule). Note, however, that ONLY the returned subset of the user's groups is cached. See [groups caching details](/details/caching.md#group-caching) for a deep explanation.
+      * `server_side_groups_filtering` (boolean, optional, default: `false`) - by default ROR's LDAP connector asks for all groups of the given user. The group filtering is done on ROR's side. It allows ROR to cache them efficiently. But in some cases (e.g. when the user has hundreds of groups), it's better to filter them on the LDAP server side. If this setting is `true`, LDAP will only be queried for a certain subset of the user groups (defined by the `groups_any_of`/`groups_all_of` subrule of the `ldap_authorization`/`ldap_auth` rule). Note, however, that ONLY the returned subset of the user's groups is cached. See [groups caching details](/details/caching.md#group-caching) for a deep explanation.
       * `nested_groups_depth` (positive int, optional, no default) - it defines how deep ROR should ask LDAP to extract the nested LDAP groups. See the [nested groups support section](#nested-ldap-groups-support) for details.
    2. User entry - it has an attribute that refers to Group entries (`mode: search_groups_in_user_entries` has to be set to use this strategy):
       * `search_groups_base_DN` (string, required) - should refer to the base Distinguished ID of the groups to which these users may belong
@@ -2340,13 +2442,13 @@ readonlyrest:
       type: allow                                           # Optional, defaults to "allow", will omit from now on.
       ldap_auth:
         name: "ldap1"                                       # ldap name from below 'ldaps' section
-        groups: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
+        groups_any_of: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
       indices: ["index1"]
 
     - name: Accept requests from users in group team2 on index2
       ldap_auth:
         name: "ldap2"
-        groups: ["g3"]
+        groups_any_of: ["g3"]
         cache_ttl_in_sec: 60
       indices: ["index2"]
 
@@ -2410,7 +2512,7 @@ readonlyrest:
       ldap_authentication: "ldap1"
       ldap_authorization:
         name: "ldap1"                                       # ldap name from 'ldaps' section
-        groups: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
+        groups_any_of: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
       indices: ["index1"]
 
     - name: Accept requests to index2 from users with valid LDAP credentials, belonging to LDAP group 'team2'
@@ -2419,7 +2521,7 @@ readonlyrest:
         cache_ttl: 60s
       ldap_authorization:
         name: "ldap2"
-        groups: ["g3"]
+        groups_any_of: ["g3"]
         cache_ttl: 60s
       indices: ["index2"]
 
@@ -2518,7 +2620,7 @@ readonlyrest:
         users: ["*"]
       groups_provider_authorization:
         user_groups_provider: "GroupsService"
-        groups: ["group3"]
+        groups_any_of: ["group3"]
 
     - name: "::Facebook posts::"
       methods: GET
@@ -2528,7 +2630,7 @@ readonlyrest:
         users: ["*"]
       groups_provider_authorization:
         user_groups_provider: "GroupsService"
-        groups: ["group1"]
+        groups_any_of: ["group1"]
         cache_ttl_in_sec: 60
 
     proxy_auth_configs:
@@ -2559,7 +2661,7 @@ Also in this rule, the `groups` clause can be replaced by `group_and` to require
 ```yaml
   groups_provider_authorization:
     user_groups_provider: "GroupsService"
-    groups_and: ["group1", "group2"] # match when user belongs to ALL listed groups
+    groups_all_of: ["group1", "group2"] # match when user belongs to ALL listed groups
 ```
 
 To define user groups provider you should specify:
@@ -2586,21 +2688,21 @@ readonlyrest:
         access: ro
       jwt_auth:
         name: "jwt_provider_1"
-        groups: ["viewer"]
+        groups_any_of: ["viewer"]
 
     - name: Valid JWT token with a writer group
       kibana:
         access: rw
       jwt_auth:
         name: "jwt_provider_1"
-        groups: ["writer"]
+        groups_any_of: ["writer"]
 
     - name: Valid JWT token with a viewer and writer groups
       kibana:
         access: rw
       jwt_auth:
         name: "jwt_provider_1"
-        groups_and: ["writer", "viewer"]
+        groups_all_of: ["writer", "viewer"]
 
     jwt:
     - name: jwt_provider_1
@@ -2611,7 +2713,8 @@ readonlyrest:
       group_names_claim: resource_access.client_app.group_names # optional, JSON-path style, see https://github.com/json-path/JsonPath
       header_name: Authorization
 ```
-You can verify groups assigned to the user with the `groups` field. The rule matches when the user belongs to at least one of the configured `groups` (OR logic). Alternatively, `groups_and` matches when the user belongs to all given groups (AND logic).
+
+You can verify groups assigned to the user with the groups logic (`groups_any_of`/`groups_all_of`/`groups_not_any_of`/`groups_not_all_of`/`groups_combined`) described in the [Groups logic](elasticsearch.md#user_belongs_to_groups) section.
 
 To define JWT provider, you need to provide:
 * `name` - (string, required) - identifier of the JWT provider, which needs to be passed in the `jwt_auth` rule
