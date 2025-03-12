@@ -5,7 +5,7 @@
 * **🚨Security Fix** (ES) [CVE-2024-57699](https://nvd.nist.gov/vuln/detail/CVE-2024-53990) [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193) [CVE-2025-24970](https://nvd.nist.gov/vuln/detail/CVE-2025-24970)
 * **🚀New** (ES) 9.0.0-beta1 support
 * **🚀New** (ES) [Added `groups_not_any_of` and `groups_not_all_of` rules](https://forum.readonlyrest.com/t/support-kbn-ent-managing-forbidden-messages/2623)
-* **🚀New** (ES) [New unified and simplified syntax for groups rules](https://docs.readonlyrest.com/develop/elasticsearch#groups-rules)
+* **🚀New** (ES) [New unified and simplified syntax for groups rules](https://docs.readonlyrest.com/elasticsearch#groups-rules)
 * **🧐Enhancement** (KBN) For Kibana >= 8.14.0: Added backward compatibility to hide the Dashboard app by declaring Analytics|Dashboard and Analytics|Dashboards in the `kibana.hide_apps` rule
 * **🧐Enhancement** (KBN) Added information about skipping patching confirmation prompt to the patching helper
 * **🧐Enhancement** (KBN) [When Kibana is opened in multiple browser tabs, logging into Kibana in one tab automatically logs in all browser tabs]
