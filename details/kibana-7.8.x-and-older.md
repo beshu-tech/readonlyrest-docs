@@ -653,12 +653,12 @@ readonlyrest:
     - name: "ReadonlyREST Enterprise instance #1 for group 1"
       ror_kbn_auth:
         name: "kbn1"
-        groups: ["group1"]
+        groups_any_of: ["group1"]
 
     - name: "ReadonlyREST Enterprise instance #1 for group 2"
       ror_kbn_auth:
         name: "kbn1"
-        groups: ["group2"]
+        groups_any_of: ["group2"]
 
     ror_kbn:
     - name: kbn1
@@ -832,14 +832,14 @@ readonlyrest:
     verbosity: error
 
   - name: "Admin Tenancy"
-    groups: ["Admins"]
+    groups_any_of: ["Admins"]
     verbosity: error
     kibana:
       access: admin
       index: ".kibana"
 
   - name: "Template Tenancy"
-    groups: ["Template"]
+    groups_any_of: ["Template"]
     verbosity: error
     kibana:
       access: admin
@@ -885,14 +885,14 @@ readonlyrest:
     verbosity: error
 
   - name: "Admin Tenancy"
-    groups: ["Admins"]
+    groups_any_of: ["Admins"]
     verbosity: error
     kibana:
       access: admin
       index: ".kibana"
 
   - name: "Template Tenancy"
-    groups: ["Template"]
+    groups_any_of: ["Template"]
     verbosity: error
     kibana:
       access: admin

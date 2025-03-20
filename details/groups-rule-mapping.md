@@ -18,11 +18,11 @@ readonlyrest:
   access_control_rules:
   - name: "Viewer block"
     indices: ["logstash-viewers*"]
-    groups: ["viewers"]
+    groups_any_of: ["viewers"]
 
   - name: "DevOps block"
     indices: ["logstash-devops*"]
-    groups: ["devops"]
+    groups_any_of: ["devops"]
 
   [...]
 
@@ -41,7 +41,7 @@ readonlyrest:
     external_authentication: "ext1"
     groups_provider_authorization:
       user_groups_provider: "ext2"
-      groups: ["external_group1", "external_group2"]
+      groups_any_of: ["external_group1", "external_group2"]
   
   # DETAILED GROUP MAPPING EXAMPLE
   # LDAP authenticated user + authorization via LDAP + groups detailed mapping (any LDAP user is valid; groups from `ldap1` are mapped to local groups) 
@@ -54,7 +54,7 @@ readonlyrest:
       - developers: ["ldap_role_dev"]
     ldap_auth:
       name: "ldap1"
-      groups: ["ldap_*_devops", "ldap_role_ops", "ldap_role_dev"]
+      groups_any_of: ["ldap_*_devops", "ldap_role_ops", "ldap_role_dev"]
 
 
   # DETAILED GROUP MAPPING EXAMPLE (STRUCTURED GROUPS)
@@ -74,7 +74,7 @@ readonlyrest:
       external_group_ids: ["ldap_role_dev"]
     ldap_auth:
       name: "ldap1"
-      groups: ["ldap_*_devops", "ldap_role_ops", "ldap_role_dev"]
+      groups_any_of: ["ldap_*_devops", "ldap_role_ops", "ldap_role_dev"]
 
   external_authentication_service_configs:
   - name: "ext1"
@@ -101,7 +101,7 @@ As we can see, there are two blocks in our ACL:
     external_authentication: "ext1"
     groups_provider_authorization:
       user_groups_provider: "ext2"
-      groups: ["external_group1", "external_group2"]
+      groups_any_of: ["external_group1", "external_group2"]
 ```
 
 `viewers`, `devops`, (unused in the ACL example), `editors` and `developers` are local groups. That is, they exist only at ROR's configuration level. But ROR can also integrate with external authorization systems like an LDAP or some REST service, where we can find similar concepts to ROR groups (eg. users in LDAP can have roles assigned).
@@ -129,7 +129,7 @@ We have just "mapped" the external groups `external_group1`, `external_group2` r
       - developers: ["ldap_role_dev"]
     ldap_auth:
       name: "ldap1"
-      groups: ["ldap_role_devops", "ldap_role_ops", "ldap_role_dev"]
+      groups_any_of: ["ldap_role_devops", "ldap_role_ops", "ldap_role_dev"]
 ```
 The third element of `users` array (in the example above) is similar, but we use one rule which is authentication and authorization rule at the same time (it can authenticate a user and then authorize him). And that's how we defined the following mappings: 
 * `ldap_role_ops` LDAP role, and any other LDAP role matching `ldap_*_devops` pattern, are mapped to `devops` ROR's local group
