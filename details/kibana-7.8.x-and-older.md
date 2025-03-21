@@ -159,7 +159,8 @@ ReadonlyREST for Kibana is completely remote-controlled from the Elasticsearch c
 
 In general, by design, we tend to concentrate all configuration within the main plugin (the Elasticsearch one) as much as possible.
 
-### Clusterwide Settings vs readonlyrest.yml  ([PRO](https://readonlyrest.com/pro))
+### Clusterwide Settings vs readonlyrest.yml  
+([PRO](https://readonlyrest.com/pro))
 
 Our Kibana plugins introduce a "ReadonlyREST" Kibana app. From here, you can edit the security settings of the whole Elasticsearch cluster, and they will take effect within 10 seconds in all Elasticsearch cluster nodes without the need to restart them.
 
@@ -727,7 +728,8 @@ Each Kibana node stores user sessions in-memory. This will cause problems when u
    * `readonlyrest_kbn.sessions_probe_interval_seconds: 15` (default 10s) how often should the browser poll Kibana to check if their session is still valid. Raise this value if you connect to Kibana through slow networks (i.e. VPN), or have very slow loading dashboards.
 3. Add the above config in all Kibana nodes behind the load balancer, and restart them.
 
-## Login screen tweaking ([PRO](https://readonlyrest.com/pro))
+## Login screen tweaking 
+([PRO](https://readonlyrest.com/pro))
 
 It is possible to customize the look of the login screen.
 
@@ -764,7 +766,8 @@ Open `config/kibana.yml` and append the following:
 readonlyrest_kbn.login_html_head_inject: '<style> * { color:red; }</style>'
 ```
 
-## Kibana UI tweaking ([Enterprise](https://readonlyrest.com/enterprise))
+## Kibana UI tweaking 
+([Enterprise](https://readonlyrest.com/enterprise))
 
 With ReadonlyREST Enterprise, it's possible to inject custom CSS and Javascript to achieve a customized user experience for your users/tenants.
 
@@ -798,7 +801,8 @@ readonlyrest_kbn.groupsMapping: '(group) => group.toLowerCase()'
 
 **⚠️IMPORTANT** The mapping function has to return a string. Otherwise, an error will be printed in kibana logs and the original group ID will be used as fallback. Also, if the mapping function is not specified, the original group ID value will be used.
 
-## Tenancy index templating ([Enterprise](https://readonlyrest.com/enterprise))
+## Tenancy index templating 
+([Enterprise](https://readonlyrest.com/enterprise))
 
 When a tenants logs in for the first time, ReadonlyREST Enterprise will create the ".kibana" index associated to the tenancy. For example, it will create and initialize the ".kibana\_user1" index, where "user1" will store all the visualizations, dashboards, settings and index-patterns.
 
