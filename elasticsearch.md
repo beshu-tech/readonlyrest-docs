@@ -137,6 +137,8 @@ If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installa
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
+**⚠️IMPORTANT**: During patching, user will be prompted for confirmation. Please see the [silent mode](elasticsearch.md#patch-elasticsearch-in-a-silent-mode) is there is a need to bypass this step.
+
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
 You can verify if Elasticsearch was correctly patched using the command `verify`:
@@ -286,7 +288,18 @@ If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installa
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
-**⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
+**⚠️IMPORTANT**: When performing the patching operation, user will be asked to confirm (by providing an answer 'yes' to the displayed question),
+that he understands and accepts the implications of ES patching. See the [silent mode](elasticsearch.md#patch-elasticsearch-in-a-silent-mode) if there is a need to bypass this step.
+
+**⚠️IMPORTANT**: For Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
+
+##### Patch Elasticsearch in a silent mode
+To apply patches in ES using ror-tools in non-interactive mode (bypassing prompts), 
+you can provide `--I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes` script argument :
+
+```bash
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
+```
 
 You can verify if Elasticsearch was correctly patched using the command `verify`:
 
