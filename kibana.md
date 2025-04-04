@@ -545,7 +545,7 @@ You can configure an ACL in multi tenancy mode by adding a few ACL blocks contai
 ### Extending the Kibana API with the x-ror-tenancy-id header
 ([Enterprise](https://readonlyrest.com/enterprise))
 
-To target a specific tenant when making a [Kibana API](https://www.elastic.co/guide/en/kibana/current/api.html) request, include the custom HTTP header `x-ror-tenancy-id`. The value of this header should match one of the [groups rules](/elasticsearch#groups-rules) defined in your ACL configuration.
+To target a specific tenant when making a [Kibana API](https://www.elastic.co/guide/en/kibana/current/api.html) request, include the custom HTTP header `x-ror-tenancy-id`. The value of this header should match one of the [groups rules](/elasticsearch#groups-rules) id defined in your ACL configuration.
 
 example usage:
 
