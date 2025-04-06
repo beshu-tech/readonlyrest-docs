@@ -214,6 +214,15 @@ paths:
               examples:
                 UpdateMainSettingsSuccessResponse:
                   $ref: "#/components/examples/GetAllTenantsResponse"
+        403:
+          description: The request was forbidden by ReadonlyREST's ACL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRorResponse'
+              examples:
+                GetAllTenantsViaApiEnterpriseOnly:
+                  $ref: "#/components/examples/GetAllTenantsViaApiEnterpriseOnly"
 
   /api/example:
     get:
@@ -482,6 +491,11 @@ components:
             "name": "template"
           }
         ]
+    GetAllTenantsViaApiEnterpriseOnly:
+      summary: You need a ReadonlyREST Enterprise license to use get all tenants endpoint
+      value:
+        status: FORBIDDEN
+        message: "You need a ReadonlyREST Enterprise license to use get all tenants endpoint"
 security:
   - http: []
   - https: []
