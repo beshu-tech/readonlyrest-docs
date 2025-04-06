@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ReadonlyREST API
   description: The API is designed for ReadonlyREST Kibana plugin users.
-  version: 1.1.0
+  version: 1.2.0
 
 paths:
   /api/ror/settings:
@@ -194,6 +194,46 @@ paths:
               examples:
                 UnsupportedMediaTypeResponseExample:
                   $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
+
+  /api/ror/settings/all_tenants:
+    get:
+      summary: Get all tenants for the authorized user
+      description: The endpoint retrieves all tenants associated with the authorized user.
+      tags:
+        - ReadonlyREST Enterprise license endpoints
+        - All Tenants
+      parameters:
+        - $ref: '#/components/parameters/XRorCorrelationIdHeader'
+      responses:
+        200:
+          description: Returns a status of updating Main Settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllTenants'
+              examples:
+                UpdateMainSettingsSuccessResponse:
+                  $ref: "#/components/examples/GetAllTenantsResponse"
+
+  /api/example:
+    get:
+      summary: Example endpoint to demonstrate x-ror-tenancy-id header usage
+      description: This endpoint is a representation of the Kibana REST API endpoint to demonstrate the usage of the x-ror-tenancy-id header for multi-tenancy support.
+      tags:
+        - ReadonlyREST Enterprise license endpoints
+        - Example
+      parameters:
+        - name: x-ror-tenancy-id
+          in: header
+          required: false
+          description: The tenant's unique identifier (tenant_id) for the API request.
+          schema:
+            type: string
+            example: infosec_group
+      responses:
+        200:
+          description: Successful response
+
 components:
   securitySchemes:
     http:
@@ -310,7 +350,20 @@ components:
           type: string
           description: License key
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
+    GetAllTenants:
+      type: object
+      required:
+        - status
+        - tenants
+      properties:
+        status:
+          type: string
+          description: Update Main Settings status
+          enum:
+            - SUCCESS
+        tenants:
+          type: string
+          description: List of all available tenants
   parameters:
     XRorCorrelationIdHeader:
       name: X-ROR-Correlation-ID
@@ -411,6 +464,24 @@ components:
       value:
         status: FORBIDDEN
         message: "You don't have sufficient permissions to perform this operation."
+    GetAllTenantsResponse:
+      summary: Tenants received with success
+      value:
+        status: SUCCESS
+        tenants: [
+          {
+            "id": "admins_group",
+            "name": "administrators"
+          },
+          {
+            "id": "infosec_group",
+            "name": "infosec"
+          },
+          {
+            "id": "template_group",
+            "name": "template"
+          }
+        ]
 security:
   - http: []
   - https: []
