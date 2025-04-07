@@ -1050,6 +1050,7 @@ readonlyrest_kbn:
 ``` 
 
 ## OpenID Connect (OIDC)
+([Enterprise](https://readonlyrest.com/enterprise))
 
 This feature will work in ReadonlyREST Enterprise.
 
