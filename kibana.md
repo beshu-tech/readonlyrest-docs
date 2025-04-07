@@ -542,6 +542,19 @@ readonlyrest_kbn.multiTenancyEnabled: false
 
 You can configure an ACL in multi tenancy mode by adding a few ACL blocks containing the `kibana.index` [rule](https://docs.readonlyrest.com/elasticsearch#kibana). See examples and further explanation under our [multi-tenancy guide](examples/multitenancy\_guide.md).
 
+### Extending the Kibana API with the x-ror-tenancy-id header
+([Enterprise](https://readonlyrest.com/enterprise))
+
+To target a specific tenant when making a [Kibana API](https://www.elastic.co/guide/en/kibana/current/api.html) request, include the custom HTTP header `x-ror-tenancy-id`. The value of this header should match one of the [groups rules](/elasticsearch#groups-rules) id defined in your ACL configuration. The first group defined in the ACL for a specific user is used as the default tenancy id.
+
+example usage:
+
+```bash
+curl -X GET "http://localhost:5601/api/saved_objects/_find?type=dashboard" \
+  -H "kbn-xsrf: true" \
+  -H "x-ror-tenancy-id: marketing-team"
+```
+
 #### Session cookie expiration
 
 When a user logs in, ReadonlyREST will write an encrypted cookie in the browser. This cookie has an time to live that can be tweaked with the following configuration key in `kibana.yml`.
@@ -1050,6 +1063,7 @@ readonlyrest_kbn:
 ``` 
 
 ## OpenID Connect (OIDC)
+([Enterprise](https://readonlyrest.com/enterprise))
 
 This feature will work in ReadonlyREST Enterprise.
 
