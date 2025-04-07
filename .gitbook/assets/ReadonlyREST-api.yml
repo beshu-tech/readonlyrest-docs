@@ -206,7 +206,7 @@ paths:
         - $ref: '#/components/parameters/XRorCorrelationIdHeader'
       responses:
         200:
-          description: Returns a status of updating Main Settings
+          description: Returns a list of tenants associated with the authorized user.
           content:
             application/json:
               schema:
@@ -371,8 +371,15 @@ components:
           enum:
             - SUCCESS
         tenants:
-          type: string
+          type: array
           description: List of all available tenants
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
   parameters:
     XRorCorrelationIdHeader:
       name: X-ROR-Correlation-ID
