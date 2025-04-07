@@ -367,7 +367,7 @@ components:
       properties:
         status:
           type: string
-          description: Update Main Settings status
+          description: Get list of all tenants
           enum:
             - SUCCESS
         tenants:
