@@ -499,10 +499,10 @@ components:
           }
         ]
     GetAllTenantsViaApiEnterpriseOnly:
-      summary: You need a ReadonlyREST Enterprise license to use get all tenants endpoint
+      summary: You need a ReadonlyREST Enterprise license to use get all tenants via ReadonlyREST API endpoint
       value:
         status: FORBIDDEN
-        message: "You need a ReadonlyREST Enterprise license to use get all tenants endpoint"
+        message: "You need a ReadonlyREST Enterprise license to use get all tenants via ReadonlyREST API endpoint"
 security:
   - http: []
   - https: []
