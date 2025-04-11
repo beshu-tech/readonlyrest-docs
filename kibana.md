@@ -1066,7 +1066,7 @@ readonlyrest_kbn:
 When configuring SAML authentication in ReadonlyREST Enterprise, you can provide additional parameters to customize the behavior of the SAML service provider integration. 
 These parameters allow for fine-tuning the SAML integration to work with various identity providers and specific configurations
 
-You can find a list of all supported parameters in a [documentation](https://github.com/node-saml/passport-saml/tree/3.x?tab=readme-ov-file#config-parameter-details)
+You can find a list of all supported parameters in the [Passport-SAML Configuration Parameters documentation](https://github.com/node-saml/passport-saml/tree/3.x?tab=readme-ov-file#config-parameter-details)
 
 ```yaml
 readonlyrest_kbn:
