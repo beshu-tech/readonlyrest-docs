@@ -3,7 +3,7 @@
 ### (2025-03-12) What's new in **ROR 1.63.0**
 * **🚨Security Fix** (KBN) [CVE-2025-26791](https://www.cve.org/CVERecord?id=CVE-2025-26791), [CWE-772](https://cwe.mitre.org/data/definitions/772.html)
 * **🚨Security Fix** (ES) [CVE-2024-57699](https://nvd.nist.gov/vuln/detail/CVE-2024-53990) [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193) [CVE-2025-24970](https://nvd.nist.gov/vuln/detail/CVE-2025-24970)
-* **🚀New** (KBN) 9.0.0-rc1, 9.0.0-beta1, 8.17.4, 8.16.6 support
+* **🚀New** (KBN) 9.0.0, 9.0.0-rc1, 9.0.0-beta1, 8.17.4, 8.16.6 support
 * **🚀New** (ES) 9.0.0, 9.0.0-rc1, 9.0.0-beta1, 8.17.4, 8.16.6 support
 * **🚀New** (ES) [Added `groups_not_any_of` and `groups_not_all_of` rules](https://forum.readonlyrest.com/t/support-kbn-ent-managing-forbidden-messages/2623)
 * **🚀New** (ES) [New unified and simplified syntax for groups rules](https://docs.readonlyrest.com/elasticsearch#groups-rules)
