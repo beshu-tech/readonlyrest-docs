@@ -195,7 +195,7 @@ paths:
                 UnsupportedMediaTypeResponseExample:
                   $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
 
-  /api/ror/settings/tenants:
+  /api/ror/user/tenants:
     get:
       summary: Get all tenants for the authorized user
       description: The endpoint retrieves all tenants associated with the authorized user.
