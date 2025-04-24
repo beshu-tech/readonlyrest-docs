@@ -224,13 +224,12 @@ paths:
                 GetAllTenantsViaApiEnterpriseOnly:
                   $ref: "#/components/examples/GetAllTenantsViaApiEnterpriseOnly"
 
-  /api/example:
+  /api/*:
     get:
-      summary: Example endpoint to demonstrate x-ror-tenancy-id header usage
-      description: This endpoint is a representation of the Kibana REST API endpoint to demonstrate the usage of the x-ror-tenancy-id header for multi-tenancy support.
+      summary: Example endpoint demonstrating multi-tenancy with the x-ror-tenancy-id header
+      description:   This endpoint represents how all Kibana API requests can use the x-ror-tenancy-id header for multi-tenancy support ([Enterprise](https://readonlyrest.com/enterprise) only). The value should match one of your configured group IDs in the ACL. If not specified, the first group defined in the ACL for the user is used as the default value. See [Kibana API documentation](https://www.elastic.co/docs/api/doc/kibana/) for details about available endpoints.
       tags:
-        - ReadonlyREST Enterprise license endpoints
-        - Example
+        - Example ReadonlyREST headers usage with Kibana API
       parameters:
         - name: x-ror-tenancy-id
           in: header
