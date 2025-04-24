@@ -1060,7 +1060,21 @@ readonlyrest_kbn:
               authnContext: "http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/windows" # Name identifier format to request auth context.`
               identifierFormat: null # Name identifier format to request from identity provider.`
               [...]
-``` 
+```
+
+### Additional Parameters
+When configuring SAML authentication in ReadonlyREST Enterprise, you can provide additional parameters to customize the behavior of the SAML service provider integration. 
+These parameters allow for fine-tuning the SAML integration to work with various identity providers and specific configurations
+
+You can find a list of all supported parameters in the [Passport-SAML Configuration Parameters documentation](https://github.com/node-saml/passport-saml/tree/3.x?tab=readme-ov-file#config-parameter-details)
+
+```yaml
+readonlyrest_kbn:
+   auth:
+      saml_serv1:
+              audience: "https://sp.example.com/metadata"`
+              [...]
+```
 
 ## OpenID Connect (OIDC)
 ([Enterprise](https://readonlyrest.com/enterprise))
@@ -1179,6 +1193,77 @@ There are two available methods for authentication:
 
 1. **client_secret_basic** (default): The `client_id` and `client_secret` are sent using the Authorization header, as specified in [RFC 6749, Section 2.3.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1). Before sending, the `client_id` and `client_secret` are encoded.
 2. **client_secret_post**: The `client_id` and `client_secret` are included in the request body, following the guidelines in [RFC 6749, Section 2.3.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1). In this method, the `client_id` and `client_secret` are not encoded before being sent. Choose this method when the OpenID Connect provider, such as [lemonLDAP::NG](https://lemonldap-ng.org/), cannot decode the encoded values.
+
+The following description explains the available options for the setting:
+
+### User Info Source Methods
+
+You can configure where the ReadonlyREST Kibana plugin obtains the OIDC user profile information using the `userInfoSource` option in the `readonlyrest_kbn.auth.oidc_kc` block. There are two available methods:
+
+1. **user_info_endpoint** (default):  
+   When set to `user_info_endpoint`, the plugin makes an additional call to the URL specified under `userInfoURL` to retrieve the most up-to-date user profile information from the OIDC provider.
+
+2. **access_token**:  
+   When set to `access_token`, the plugin extracts the user profile information directly from the access token.
+
+For example, you can configure it as follows:
+
+```yaml
+readonlyrest_kbn:
+   auth:
+      oidc_kc:
+         userInfoSource: 'access_token'  # Available options: 'user_info_endpoint' (default) or 'access_token'
+```
+
+
+### Additional Parameters
+When configuring OpenID Connect (OIDC) in ReadonlyREST Enterprise, you can provide additional parameters to customize the behavior of the OIDC client and issuer. These parameters allow for fine-tuning the OIDC integration to work with various providers and specific configurations.
+These additional parameters allow you to solve complex authentication scenarios, work with non-standard OIDC providers, and fine-tune the security and performance characteristics of your OIDC integration.
+
+#### Issuer Additional Parameters
+You can find a list of all supported parameters:
+
+For Kibana 7.12.0 and above: [documentation](https://github.com/panva/openid-client/tree/v5.x/docs#new-issuermetadata)
+
+For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.x/docs#new-issuermetadata)
+
+```yaml
+readonlyrest_kbn.auth:
+   oidc_kc:
+      [...]
+      issuerAdditionalParameters:
+         metadata:
+            token_endpoint: 'https://custom-token-endpoint'
+            jwks_uri: 'https://custom-jwks-uri'
+```
+
+#### Client Additional Parameters
+You can find a list of all supported parameters:
+
+For Kibana 7.12.0 and above: [documentation](https://github.com/panva/openid-client/tree/v5.x/docs#new-clientmetadata-jwks-options)
+
+For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.x/docs#new-clientmetadata-jwks-options)
+
+```yaml
+readonlyrest_kbn.auth:
+   oidc_kc:
+      [...]
+      clientAdditionalParameters:
+        metadata:
+          response_types: ['code']
+          redirect_uris: ['https://my-app/callback']
+        jwks:
+           keys:
+           - kty: 'RSA'
+             use: 'sig'
+             alg: 'RS256'
+             kid: 'key1'
+             n: 'PLACEHOLDER_TO_CHANGE_INTO_REAL_CERTIFICATE'
+             e: 'AQAB'
+        options:
+          additionalAuthorizedParties: 'my-app'
+```
+
 ## Load balancers
 
 These features will work with all ReadonlyREST Editions
