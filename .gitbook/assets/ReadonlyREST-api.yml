@@ -212,8 +212,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllTenants'
               examples:
-                UpdateMainSettingsSuccessResponse:
-                  $ref: "#/components/examples/GetAllTenantsResponse"
+                GetAllTenantsSuccessResponse:
+                  $ref: "#/components/examples/GetAllTenantsSuccessResponse"
         403:
           description: The request was forbidden by ReadonlyREST's ACL
           content:
@@ -227,7 +227,7 @@ paths:
   /api/*:
     get:
       summary: Example endpoint demonstrating multi-tenancy with the x-ror-tenancy-id header
-      description:   This endpoint represents how all Kibana API requests can use the x-ror-tenancy-id header for multi-tenancy support ([Enterprise](https://readonlyrest.com/enterprise) only). The value should match one of your configured group IDs in the ACL. If not specified, the first group defined in the ACL for the user is used as the default value. See [Kibana API documentation](https://www.elastic.co/docs/api/doc/kibana/) for details about available endpoints.
+      description: This endpoint represents how all Kibana API requests can use the x-ror-tenancy-id header for multi-tenancy support ([Enterprise](https://readonlyrest.com/enterprise) only). The value should match one of your configured group IDs in the ACL. If not specified, the first group defined in the ACL for the user is used as the default value. See [Kibana API documentation](https://www.elastic.co/docs/api/doc/kibana/) for details about available endpoints.
       tags:
         - Example ReadonlyREST headers usage with Kibana API
       parameters:
@@ -479,7 +479,7 @@ components:
       value:
         status: FORBIDDEN
         message: "You don't have sufficient permissions to perform this operation."
-    GetAllTenantsResponse:
+    GetAllTenantsSuccessResponse:
       summary: Tenants received with success
       value:
         status: SUCCESS
