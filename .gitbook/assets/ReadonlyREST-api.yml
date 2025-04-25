@@ -210,10 +210,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAllTenants'
+                $ref: '#/components/schemas/getUserTenants'
               examples:
-                GetAllTenantsSuccessResponse:
-                  $ref: "#/components/examples/GetAllTenantsSuccessResponse"
+                GetUserTenantsSuccessResponse:
+                  $ref: "#/components/examples/GetUserTenantsSuccessResponse"
         403:
           description: The request was forbidden by ReadonlyREST's ACL
           content:
@@ -221,8 +221,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ForbiddenRorResponse'
               examples:
-                GetAllTenantsViaApiEnterpriseOnly:
-                  $ref: "#/components/examples/GetAllTenantsViaApiEnterpriseOnly"
+                GetUserTenantsViaApiEnterpriseOnly:
+                  $ref: "#/components/examples/GetUserTenantsViaApiEnterpriseOnly"
 
   /api/*:
     get:
@@ -358,7 +358,7 @@ components:
           type: string
           description: License key
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-    GetAllTenants:
+    getUserTenants:
       type: object
       required:
         - status
@@ -479,7 +479,7 @@ components:
       value:
         status: FORBIDDEN
         message: "You don't have sufficient permissions to perform this operation."
-    GetAllTenantsSuccessResponse:
+    GetUserTenantsSuccessResponse:
       summary: Tenants received with success
       value:
         status: SUCCESS
@@ -497,7 +497,7 @@ components:
             "name": "template"
           }
         ]
-    GetAllTenantsViaApiEnterpriseOnly:
+    GetUserTenantsViaApiEnterpriseOnly:
       summary: You need a ReadonlyREST Enterprise license to use get user's tenants via ReadonlyREST API endpoint
       value:
         status: FORBIDDEN
