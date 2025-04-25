@@ -197,11 +197,11 @@ paths:
 
   /api/ror/user/tenants:
     get:
-      summary: Get all tenants for the authorized user
-      description: The endpoint retrieves all tenants associated with the authorized user.
+      summary: Get user's tenants for the authorized user
+      description: The endpoint retrieves user's tenants associated with the authorized user.
       tags:
         - ReadonlyREST Enterprise license endpoints
-        - All Tenants
+        - User's tenants
       parameters:
         - $ref: '#/components/parameters/XRorCorrelationIdHeader'
       responses:
@@ -366,7 +366,7 @@ components:
       properties:
         status:
           type: string
-          description: Get list of all tenants
+          description: Get list of user's tenants
           enum:
             - SUCCESS
         tenants:
@@ -498,10 +498,10 @@ components:
           }
         ]
     GetAllTenantsViaApiEnterpriseOnly:
-      summary: You need a ReadonlyREST Enterprise license to use get all tenants via ReadonlyREST API endpoint
+      summary: You need a ReadonlyREST Enterprise license to use get user's tenants via ReadonlyREST API endpoint
       value:
         status: FORBIDDEN
-        message: "You need a ReadonlyREST Enterprise license to use get all tenants via ReadonlyREST API endpoint"
+        message: "You need a ReadonlyREST Enterprise license to use get user's tenants via ReadonlyREST API endpoint"
 security:
   - http: []
   - https: []
