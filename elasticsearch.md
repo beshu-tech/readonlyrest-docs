@@ -1976,7 +1976,7 @@ Sometimes we'd like to take advantage of groups (roles) existing in external sys
 
 ### Username case sensitivity
 
-ReadonlyREST can cooperate with services, that operates in case-insensitive way. For this case ROR has toggleable username case sensitivity option. For details see the [this](#username_case_sensitivity).
+ReadonlyREST can cooperate with services that operate in a case-insensitive way. For this case, ROR has a toggleable username case sensitivity option. For details, see the [username_case_sensitivity section](#username_case_sensitivity) in Global Settings.
 
 ### Static variables
 
@@ -2521,7 +2521,6 @@ readonlyrest:
 
 ```yaml
 readonlyrest:
-  enable: true
   
   global_settings:
     response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
@@ -2773,6 +2772,19 @@ The value of this configuration represents the cryptographic family of the JWT p
 | ES512 | **EC** |
 
 ## Other settings
+
+### Disabling ReadonlyREST ACL 
+
+### Disabling ReadonlyREST ACL
+
+The ReadonlyREST ACL can be temporarily disabled without uninstalling the plugin by setting `readonlyrest.enable: false` in the configuration. The default value is `true`. When disabled, all requests will bypass the ACL rules.
+
+Example:
+
+```yaml
+readonlyrest:
+  enable: false
+```
 
 ### Global settings
 
