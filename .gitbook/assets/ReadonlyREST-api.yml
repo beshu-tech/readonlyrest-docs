@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ReadonlyREST API
   description: The API is designed for ReadonlyREST Kibana plugin users.
-  version: 1.1.0
+  version: 1.2.0
 
 paths:
   /api/ror/settings:
@@ -194,6 +194,54 @@ paths:
               examples:
                 UnsupportedMediaTypeResponseExample:
                   $ref: "#/components/examples/UnsupportedMediaTypeResponseExample"
+
+  /api/ror/user/tenants:
+    get:
+      summary: Get user's tenants for the authorized user
+      description: The endpoint retrieves user's tenants associated with the authorized user.
+      tags:
+        - ReadonlyREST Enterprise license endpoints
+        - User's tenants
+      parameters:
+        - $ref: '#/components/parameters/XRorCorrelationIdHeader'
+      responses:
+        200:
+          description: Returns a list of tenants associated with the authorized user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUserTenants'
+              examples:
+                GetUserTenantsSuccessResponse:
+                  $ref: "#/components/examples/GetUserTenantsSuccessResponse"
+        403:
+          description: The request was forbidden by ReadonlyREST's ACL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRorResponse'
+              examples:
+                GetUserTenantsViaApiEnterpriseOnly:
+                  $ref: "#/components/examples/GetUserTenantsViaApiEnterpriseOnly"
+
+  /api/*:
+    get:
+      summary: Example endpoint demonstrating multi-tenancy with the x-ror-tenancy-id header
+      description: This endpoint represents how all Kibana API requests can use the x-ror-tenancy-id header for multi-tenancy support ([Enterprise](https://readonlyrest.com/enterprise) only). The value should match one of your configured group IDs in the ACL. If not specified, the first group defined in the ACL for the user is used as the default value. See [Kibana API documentation](https://www.elastic.co/docs/api/doc/kibana/) for details about available endpoints.
+      tags:
+        - Example ReadonlyREST headers usage with Kibana API
+      parameters:
+        - name: x-ror-tenancy-id
+          in: header
+          required: false
+          description: The tenant's unique identifier (tenant_id) for the API request.
+          schema:
+            type: string
+            example: infosec_group
+      responses:
+        200:
+          description: Successful response
+
 components:
   securitySchemes:
     http:
@@ -310,7 +358,27 @@ components:
           type: string
           description: License key
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
+    getUserTenants:
+      type: object
+      required:
+        - status
+        - tenants
+      properties:
+        status:
+          type: string
+          description: Get list of user's tenants
+          enum:
+            - SUCCESS
+        tenants:
+          type: array
+          description: List of all available tenants
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
   parameters:
     XRorCorrelationIdHeader:
       name: X-ROR-Correlation-ID
@@ -411,6 +479,29 @@ components:
       value:
         status: FORBIDDEN
         message: "You don't have sufficient permissions to perform this operation."
+    GetUserTenantsSuccessResponse:
+      summary: Tenants received with success
+      value:
+        status: SUCCESS
+        tenants: [
+          {
+            "id": "admins_group",
+            "name": "administrators"
+          },
+          {
+            "id": "infosec_group",
+            "name": "infosec"
+          },
+          {
+            "id": "template_group",
+            "name": "template"
+          }
+        ]
+    GetUserTenantsViaApiEnterpriseOnly:
+      summary: You need a ReadonlyREST Enterprise license to use get user's tenants via ReadonlyREST API endpoint
+      value:
+        status: FORBIDDEN
+        message: "You need a ReadonlyREST Enterprise license to use get user's tenants via ReadonlyREST API endpoint"
 security:
   - http: []
   - https: []

@@ -247,7 +247,7 @@ ARG ROR_VERSION
 
 RUN /usr/share/kibana/bin/kibana-plugin install "https://api.beshu.tech/download/kbn?esVersion=$KBN_VERSION&pluginVersion=$ROR_VERSION&edition=kbn_universal&email=[YOUR-EMAIL-ADDRESS]"
 USER root
-RUN /usr/share/kibana/node/bin/node plugins/readonlyrestkbn/ror-tools.js patch && \
+RUN /usr/share/kibana/node/bin/node plugins/readonlyrestkbn/ror-tools.js patch --I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes && \
     chown -R kibana:kibana /usr/share/kibana/config
 USER 1000:0
 ```
