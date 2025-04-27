@@ -2773,8 +2773,6 @@ The value of this configuration represents the cryptographic family of the JWT p
 
 ## Other settings
 
-### Disabling ReadonlyREST ACL 
-
 ### Disabling ReadonlyREST ACL
 
 The ReadonlyREST ACL can be temporarily disabled without uninstalling the plugin by setting `readonlyrest.enable: false` in the configuration. The default value is `true`. When disabled, all requests will bypass the ACL rules.
