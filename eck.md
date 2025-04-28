@@ -104,7 +104,7 @@ metadata:
   name: config-readonlyrest.yml
 ```
 
-Notice that if you use ROR Enterprise, you can take advantage of the [Cluster-wide Settings](kibana.md#cluster-wide-settings-vs-readonlyrestyml) functionality and reload configuration on all your nodes without restarting K8s' PODs. 
+Notice that if you use ROR Enterprise, you can take advantage of the [Cluster-wide Settings](kibana#cluster-wide-settings-vs-readonlyrest.yml) functionality and reload configuration on all your nodes without restarting K8s' PODs. 
 
 #### Kibana node with ReadonlyREST plugin
 

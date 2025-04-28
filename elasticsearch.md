@@ -8,7 +8,7 @@ The Elasticsearch plugin known as `ReadonlyREST Free` is released under the GPLv
 
 Unlike the Elasticsearch plugin, the Kibana plugins are commercial only. But rely on the Elasticsearch plugin in order to work.
 
-For a description of the Kibana plugins, skip to the [dedicated documentation page](kibana/) instead.
+For a description of the Kibana plugins, skip to the [dedicated documentation page](kibana) instead.
 
 ### ReadonlyREST Free plugin for Elasticsearch
 
@@ -424,7 +424,7 @@ _An Example of the Access Control List \(ACL\) made of 2 blocks._
 
 The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. Create this file **on the same path where `elasticsearch.yml` is found**.
 
-**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro) or [Enterprise](https://readonlyrest.com/enterprise) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for the ReadonlyREST plugin for Kibana](kibana/).
+**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro) or [Enterprise](https://readonlyrest.com/enterprise) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for the ReadonlyREST plugin for Kibana](kibana).
 
 ### Encryption
 
@@ -1198,9 +1198,9 @@ kibana:
 ##### `metadata` 
 ([Enterprise](https://readonlyrest.com/enterprise))
 
-User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](./kibana.md#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
+User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](kibana#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
 
-It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
+It supports [dynamic variables](elasticsearch.md#dynamic-variables).
 
 Sample usage:
 
