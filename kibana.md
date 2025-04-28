@@ -106,7 +106,7 @@ You can install this as a normal Kibana plugin using the `bin/kibana-plugin` uti
 {% hint style="warning" %}
 **Don't forget**
 
-After Kibana 7.9.x, it's necessary to [patch](./#patching-kibana) Kibana after you install, otherwise ReadonlyREST will NOT work.
+After Kibana 7.9.x, it's necessary to [patch](#patching-kibana) Kibana after you install, otherwise ReadonlyREST will NOT work.
 {% endhint %}
 
 ### Installing via URL
@@ -141,7 +141,7 @@ curl -vvv  "https://api.beshu.tech/download/es?esVersion=8.6.0&pluginVersion=1.4
 [...]
 ```
 
-Now you are ready to [patch Kibana](./#patching-kibana).
+Now you are ready to [patch Kibana](#patching-kibana).
 
 ### Installing from a zip file
 
@@ -776,7 +776,7 @@ ROR for Elasticsearch can delegate authentication to a reverse proxy which will 
 
 > Today, it's possible to skip the regular ROR login form and use the "delegated authentication" technique in ROR for Kibana as well.
 
-1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](elasticsearch.md#proxy\_auth-)) in ROR for ES documentation.
+1. Configure ROR for ES to expect delegated authentication (see [`proxy_auth` rule](elasticsearch.md#proxy\_auth)) in ROR for ES documentation.
 2. Open up `conf/kibana.yml` and add `readonlyrest_kbn.proxy_auth_passthrough: true`
 
 Now ROR for Kibana will **skip the login form entirely**, and will only require that all incoming requests must carry an `X-Forwarded-User` header containing the user's name. Based on this identity, ROR for Kibana will build an encrypted cookie and handle your session normally.
@@ -924,7 +924,7 @@ xpack.security.secureCookies: true
 
 This feature will work in all ReadonlyREST editions.
 
-The audit log feature is widely described in [📖docs for the Elasticsearch plugin](elasticsearch.md#audit-logs). The Kibana plugin has a predefined dashboard representing collected audit data.
+The audit log feature is widely described in [📖docs for the Elasticsearch plugin](elasticsearch.md#audit). The Kibana plugin has a predefined dashboard representing collected audit data.
 
 ### Loading visualization
 
@@ -1112,7 +1112,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [dedicated section ](<elasticsearch.md#Dynamic variables from JWT claims>)for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [Dynamic variables from JWT claims section](elasticsearch##usage-examples) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
