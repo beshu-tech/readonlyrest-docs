@@ -34,23 +34,24 @@ http.type: ssl_netty4
 **Step 5** Let's add some configuration to our Elasticsearch: edit `conf/readonlyrest.yml` and append the following lines:
 
 ```yaml
- readonlyrest:
+readonlyrest:
 
-     ssl:
-       enable: true
-       # keystore in the same dir with readonlyrest.yml
-       keystore_file: "keystore.jks"
-       keystore_pass: readonlyrest
-       key_pass: readonlyrest
+  ssl:
+    enable: true
+    # keystore in the same dir with readonlyrest.yml
+    keystore_file: "keystore.jks"
+    keystore_pass: readonlyrest
+    key_pass: readonlyrest
 
-     response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
+  global_settings:
+    response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
 
-     access_control_rules:
+  access_control_rules:
 
-     - name: "::LOGSTASH::"
-       auth_key_sha256: "280ac6f756a64a80143447c980289e7e4c6918b92588c8095c7c3f049a13fbf9" #logstash:logstash
-       actions: ["cluster:monitor/main","indices:admin/types/exists","indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
-       indices: ["logstash-*"]
+  - name: "::LOGSTASH::"
+    auth_key_sha256: "280ac6f756a64a80143447c980289e7e4c6918b92588c8095c7c3f049a13fbf9" #logstash:logstash
+    actions: ["cluster:monitor/main","indices:admin/types/exists","indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
+    indices: ["logstash-*"]
 ```
 
 ## Logstash side
