@@ -191,7 +191,7 @@ Users in Azure AD can belong to groups. The list of group associated to a user i
 
 ### Example: ReadonlyREST Admins group
 
-Suppose we would like to authorise the group "ReadonlyREST Admins" to access the administrative dashboard that can oversee all the indices, and we want to grant them access to an "admin" tenancy that contains dashboards based on the real time [ReadonlyREST audit logs](../../elasticsearch.md#audit-logs) indices.
+Suppose we would like to authorise the group "ReadonlyREST Admins" to access the administrative dashboard that can oversee all the indices, and we want to grant them access to an "admin" tenancy that contains dashboards based on the real time [ReadonlyREST audit logs](../../elasticsearch.md#audit) indices.
 
 #### Creating and assigning the group in Azure Ad
 
