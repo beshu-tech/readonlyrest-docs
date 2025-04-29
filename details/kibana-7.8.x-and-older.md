@@ -665,7 +665,7 @@ readonlyrest:
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
 
-You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [Dynamic variables from JWT claims section](elasticsearch##usage-examples) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
+You may also use any custom claim from the OIDC `userinfo` token in ACL rules by using `{{jwt:assertion.<path_to_your_claim>}}` syntax. See the [Dynamic variables from JWT claims section](../elasticsearch.md##usage-examples) for more information. ( **TIP** : Do not forget the `assertion` prefix in front of you jsonpath. )
 
 ### Kibana side
 
