@@ -1,6 +1,6 @@
 # FLS engine
 
-Applicable in the context of the [`fields` rule](elasticsearch#fields) 
+Applicable in the context of the [`fields` rule](../elasticsearch.md#fields) 
  
 FLS engine specifies how ROR handles field-level security internally. Previously FLS was based entirely on [Lucene](https://en.wikipedia.org/wiki/Apache_Lucene) - that's why ROR needed to be installed on all nodes to make the `fields` rule work properly.
 Now the `fields` rule is more flexible and part of FLS responsibilities is handled solely by ES. Increasing ES usage and reducing Lucene exploitation in FLS implementation makes the rule more efficient.
