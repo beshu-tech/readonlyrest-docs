@@ -10,7 +10,7 @@ Lucene is still used by `fields` rule when ES is not able to handle a request pr
 
 ## Configuration 
 
-FLS engine can be configured with global, optional property `fls_engine` set under the `readonlyrest:` section. 
+FLS engine can be configured with global, optional property `fls_engine` set under the `readonlyrest.global_settings` section. 
 
 There are two engines available:   
 
@@ -63,7 +63,8 @@ Example configuration (ROR using `es` FLS engine):
  ```yaml
 readonlyrest:
   
-  fls_engine: "es"
+  global_settings:
+    fls_engine: "es"
   
   access_control_rules:
 

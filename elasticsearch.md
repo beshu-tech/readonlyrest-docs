@@ -137,6 +137,8 @@ If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installa
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
+**⚠️IMPORTANT**: During patching, user will be prompted for confirmation. Please see the [silent mode](elasticsearch.md#patch-elasticsearch-in-a-silent-mode) is there is a need to bypass this step.
+
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
 You can verify if Elasticsearch was correctly patched using the command `verify`:
@@ -286,7 +288,18 @@ If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installa
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch
 ```
 
-**⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
+**⚠️IMPORTANT**: When performing the patching operation, user will be asked to confirm (by providing an answer 'yes' to the displayed question),
+that he understands and accepts the implications of ES patching. See the [silent mode](elasticsearch.md#patch-elasticsearch-in-a-silent-mode) if there is a need to bypass this step.
+
+**⚠️IMPORTANT**: For Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
+
+##### Patch Elasticsearch in a silent mode
+To apply patches in ES using ror-tools in non-interactive mode (bypassing prompts), 
+you can provide `--I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes` script argument :
+
+```bash
+jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
+```
 
 You can verify if Elasticsearch was correctly patched using the command `verify`:
 
@@ -1250,7 +1263,6 @@ if (alertMessage) {
 
 **⚠️Deprecated**: it's equivalent of [`kibana.hide_apps`](elasticsearch.md#hide_apps). Should no longer be used.
 
-
 ### Elasticsearch level rules
 
 #### `indices`
@@ -1294,8 +1306,8 @@ When the subset of indices is empty, it means that user are not allowed to acces
 
 For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled \(for nonexistent index\). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. See [detailed example](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/index-not-found-examples.md).
 
-It's also worth mentioning, that when `prompt_for_basic_auth` is set to `true` \(that is disabled by default\), ROR will return 401 instead of 404 HTTP status code. It is relevant for users who don't use ROR Kibana's plugin and would like to take advantage of default Kibana's behavior which shows the native browser basic auth dialog, when it receives HTTP 401 response.
-If a **write request** wants to write to indices they don't have permission for, the write request is rejected.
+It's also worth mentioning, that when `global_settings.prompt_for_basic_auth` is set to `true` \(that is disabled by default\), ROR will return 401 instead of 404 HTTP status code. It is relevant for users who don't use ROR Kibana's plugin and would like to take advantage of default Kibana's behavior which shows the native browser basic auth dialog, when it receives HTTP 401 response (see [the example](#prompt_for_basic_auth)).
+If a **write request** wants to write to indices they don't have permission for, the write request is rejected. 
 
 **Requests related to templates**
 
@@ -1861,7 +1873,9 @@ You can change the content of the response as follows:
 
 ```yaml
 readonlyrest:
-  response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin # custom response for all forbidden requests
+  
+  global_settings:
+    response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin # custom response for all forbidden requests
 
   access_control_rules:
 
@@ -1877,6 +1891,8 @@ readonlyrest:
         response_message: "You are unauthorized to access this resource"
       indices: ["templates-*"]
 ```
+
+See also [response_if_req_forbidden](#response_if_req_forbidden) section.
 
 ## Users and Groups
 
@@ -1960,14 +1976,8 @@ Sometimes we'd like to take advantage of groups (roles) existing in external sys
 
 ### Username case sensitivity
 
-ReadonlyREST can cooperate with services, that operates in case-insensitive way. For this case ROR has toggleable username case sensitivity option `username_case_sensitivity`.
+ReadonlyREST can cooperate with services that operate in a case-insensitive way. For this case, ROR has a toggleable username case sensitivity option. For details, see the [username_case_sensitivity section](#username_case_sensitivity) in Global Settings.
 
-```yaml
-readonlyrest:
-  username_case_sensitivity: case_sensitive
-```
-
-By default, usernames are case-sensitive `username_case_sensitivity: case_sensitive`. By setting `username_case_sensitivity: case_insensitive` username comparison will be case-insensitive in any rule.
 ### Static variables
 
 Anywhere in `readonlyrest.yml` you can use the expression `${env:MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
@@ -2511,97 +2521,99 @@ readonlyrest:
 
 ```yaml
 readonlyrest:
-    enable: true
+  
+  global_settings:
     response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
 
-    access_control_rules:
+  access_control_rules:
 
-    - name: Accept requests to index1 from users with valid LDAP credentials, belonging to LDAP group 'team1'
-      ldap_authentication: "ldap1"
-      ldap_authorization:
-        name: "ldap1"                                       # ldap name from 'ldaps' section
-        groups_any_of: ["g1", "g2"]                                # group within 'ou=Groups,dc=example,dc=com'
-      indices: ["index1"]
+  - name: Accept requests to index1 from users with valid LDAP credentials, belonging to LDAP group'team1'
+    ldap_authentication: "ldap1"
+    ldap_authorization:
+      name: "ldap1"                                       # ldap name from 'ldaps' section
+      groups_any_of: ["g1", "g2"]                         # group within 'ou=Groups,dc=example dc=com'
+    indices: ["index1"]
 
-    - name: Accept requests to index2 from users with valid LDAP credentials, belonging to LDAP group 'team2'
-      ldap_authentication:
-        name: "ldap2"
-        cache_ttl: 60s
-      ldap_authorization:
-        name: "ldap2"
-        groups_any_of: ["g3"]
-        cache_ttl: 60s
-      indices: ["index2"]
+  - name: Accept requests to index2 from users with valid LDAP credentials, belonging to LDAP group 'team2'
+    ldap_authentication:
+      name: "ldap2"
+      cache_ttl: 60s
+    ldap_authorization:
+      name: "ldap2"
+      groups_any_of: ["g3"]
+      cache_ttl: 60s
+    indices: ["index2"]
 
-    ldaps:
+  ldaps:
 
-    - name: ldap1
-      host: "ldap1.example.com"
-      port: 389
-      ssl_enabled: false
-      ssl_trust_all_certs: true
-      ignore_ldap_connectivity_problems: true
-      bind_dn: "cn=admin,dc=example,dc=com"
-      bind_password: "password"
-      users:
-        search_user_base_DN: "ou=People,dc=example,dc=com"
-        user_id_attribute: "uid"
-      groups:
-        search_groups_base_DN: "ou=Groups,dc=example,dc=com"
-        unique_member_attribute: "uniqueMember"                   
-      connection_pool_size: 20                                  
-      connection_timeout: 1s                                   
-      request_timeout: 2s                                      
-      cache_ttl: 60s                                            
+  - name: ldap1
+    host: "ldap1.example.com"
+    port: 389
+    ssl_enabled: false
+    ssl_trust_all_certs: true
+    ignore_ldap_connectivity_problems: true
+    bind_dn: "cn=admin,dc=example,dc=com"
+    bind_password: "password"
+    users:
+      search_user_base_DN: "ou=People,dc=example,dc=com"
+      user_id_attribute: "uid"
+    groups:
+      search_groups_base_DN: "ou=Groups,dc=example,dc=com"
+      unique_member_attribute: "uniqueMember"                   
+    connection_pool_size: 20                                  
+    connection_timeout: 1s                                   
+    request_timeout: 2s                                      
+    cache_ttl: 60s                                            
 
-    # High availability LDAP settings (using "hosts", rather than "host")
-    - name: ldap2
-      hosts:
-      - "ldaps://ssl-ldap2.foo.com:636"
-      - "ldaps://ssl-ldap3.foo.com:636"
-      ha: "ROUND_ROBIN"
-      users: 
-        search_user_base_DN: "ou=People,dc=example2,dc=com"
-      groups:
-        search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
+  # High availability LDAP settings (using "hosts", rather than "host")
+  - name: ldap2
+    hosts:
+    - "ldaps://ssl-ldap2.foo.com:636"
+    - "ldaps://ssl-ldap3.foo.com:636"
+    ha: "ROUND_ROBIN"
+    users: 
+      search_user_base_DN: "ou=People,dc=example2,dc=com"
+    groups:
+      search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
+
 ### External Basic Auth
 
 ReadonlyREST will forward the received `Authorization` header to a website of choice and evaluate the returned HTTP status code to verify the provided credentials. This is useful if you already have a web server with all the credentials configured and the credentials are passed over the `Authorization` header.
 
 ```yaml
 readonlyrest:
-    access_control_rules:
+  access_control_rules:
 
-    - name: "::Tweets::"
-      methods: GET
-      indices: ["twitter"]
-      external_authentication: "ext1"
+  - name: "::Tweets::"
+    methods: GET
+    indices: ["twitter"]
+    external_authentication: "ext1"
 
-    - name: "::Facebook posts::"
-      methods: GET
-      indices: ["facebook"]
-      external_authentication:
-        service: "ext2"
-        cache_ttl_in_sec: 60
-
-    external_authentication_service_configs:
-
-    - name: "ext1"
-      authentication_endpoint: "http://external-website1:8080/auth1"
-      success_status_code: 200
+  - name: "::Facebook posts::"
+    methods: GET
+    indices: ["facebook"]
+    external_authentication:
+      service: "ext2"
       cache_ttl_in_sec: 60
-      http_connection_settings:
-        validate: false # SSL certificate validation (default to true)
-        connection_timeout_in_sec: 1           # default 2
-        socket_timeout_in_sec: 2               # default 5
-        connection_request_timeout_in_sec: 1   # default 5  
-        connection_pool_size: 20               # default 30
 
-    - name: "ext2"
-      authentication_endpoint: "http://external-website2:8080/auth2"
-      success_status_code: 204
-      cache_ttl_in_sec: 60
+  external_authentication_service_configs:
+
+  - name: "ext1"
+    authentication_endpoint: "http://external-website1:8080/auth1"
+    success_status_code: 200
+    cache_ttl_in_sec: 60
+    http_connection_settings:
+      validate: false # SSL certificate validation (default to true)
+      connection_timeout_in_sec: 1           # default 2
+      socket_timeout_in_sec: 2               # default 5
+      connection_request_timeout_in_sec: 1   # default 5  
+      connection_pool_size: 20               # default 30
+
+  - name: "ext2"
+    authentication_endpoint: "http://external-website2:8080/auth2"
+    success_status_code: 204
+    cache_ttl_in_sec: 60
 ```
 
 To define an external authentication service the user should specify:
@@ -2618,48 +2630,48 @@ This external authorization connector makes it possible to resolve to what group
 
 ```yaml
 readonlyrest:
-    access_control_rules:
+  access_control_rules:
 
-    - name: "::Tweets::"
-      methods: GET
-      indices: ["twitter"]
-      proxy_auth:
-        proxy_auth_config: "proxy1"
-        users: ["*"]
-      groups_provider_authorization:
-        user_groups_provider: "GroupsService"
-        groups_any_of: ["group3"]
+  - name: "::Tweets::"
+    methods: GET
+    indices: ["twitter"]
+    proxy_auth:
+      proxy_auth_config: "proxy1"
+      users: ["*"]
+    groups_provider_authorization:
+      user_groups_provider: "GroupsService"
+      groups_any_of: ["group3"]
 
-    - name: "::Facebook posts::"
-      methods: GET
-      indices: ["facebook"]
-      proxy_auth:
-        proxy_auth_config: "proxy1"
-        users: ["*"]
-      groups_provider_authorization:
-        user_groups_provider: "GroupsService"
-        groups_any_of: ["group1"]
-        cache_ttl_in_sec: 60
-
-    proxy_auth_configs:
-
-    - name: "proxy1"
-      user_id_header: "X-Auth-Token"                           # default X-Forwarded-User
-
-    user_groups_providers:
-
-    - name: GroupsService
-      groups_endpoint: "http://localhost:8080/groups"
-      auth_token_name: "token"
-      auth_token_passed_as: QUERY_PARAM                              # HEADER OR QUERY_PARAM
-      response_groups_ids_json_path: "$..groups[?(@.id)].id"         # JSON-path style, see https://github.com/json-path/JsonPath
-      response_groups_names_json_path: "$..groups[?(@.name)].name"   # optional, JSON-path style, see https://github.com/json-path/JsonPath
+  - name: "::Facebook posts::"
+    methods: GET
+    indices: ["facebook"]
+    proxy_auth:
+      proxy_auth_config: "proxy1"
+      users: ["*"]
+    groups_provider_authorization:
+      user_groups_provider: "GroupsService"
+      groups_any_of: ["group1"]
       cache_ttl_in_sec: 60
-      http_connection_settings:
-        connection_timeout_in_sec: 1                           # default 2
-        socket_timeout_in_sec: 2                               # default 5
-        connection_request_timeout_in_sec: 2                   # default 5  
-        connection_pool_size: 20                               # default 30
+
+  proxy_auth_configs:
+
+  - name: "proxy1"
+    user_id_header: "X-Auth-Token"                         
+
+  user_groups_providers:
+
+  - name: GroupsService
+    groups_endpoint: "http://localhost:8080/groups"
+    auth_token_name: "token"
+    auth_token_passed_as: QUERY_PARAM                              # HEADER OR QUERY_PARAM
+    response_groups_ids_json_path: "$..groups[?(@.id)].id"         # JSON-path style, see https://github.com/json-path/JsonPath
+    response_groups_names_json_path: "$..groups[?(@.name)].name"   # optional, JSON-path style, see https://github.com/json-path/JsonPath
+    cache_ttl_in_sec: 60
+    http_connection_settings:
+      connection_timeout_in_sec: 1                        
+      socket_timeout_in_sec: 2                            
+      connection_request_timeout_in_sec: 2                
+      connection_pool_size: 20                            
 ```
 
 In example above, a user is authenticated by reverse proxy and then external service is asked for groups for that user. If groups returned by the service contain any group declared in `groups` list, user is authorized and rule matches.
@@ -2690,36 +2702,36 @@ The information about the username can be extracted from the "claims" inside a J
 
 ```yaml
 readonlyrest:
-    access_control_rules:
-    - name: Valid JWT token with a viewer group
-      kibana:
-        access: ro
-      jwt_auth:
-        name: "jwt_provider_1"
-        groups_any_of: ["viewer"]
+  access_control_rules:
+  - name: Valid JWT token with a viewer group
+    kibana:
+      access: ro
+    jwt_auth:
+      name: "jwt_provider_1"
+      groups_any_of: ["viewer"]
 
-    - name: Valid JWT token with a writer group
-      kibana:
-        access: rw
-      jwt_auth:
-        name: "jwt_provider_1"
-        groups_any_of: ["writer"]
+  - name: Valid JWT token with a writer group
+    kibana:
+      access: rw
+    jwt_auth:
+      name: "jwt_provider_1"
+      groups_any_of: ["writer"]
 
-    - name: Valid JWT token with a viewer and writer groups
-      kibana:
-        access: rw
-      jwt_auth:
-        name: "jwt_provider_1"
-        groups_all_of: ["writer", "viewer"]
+  - name: Valid JWT token with a viewer and writer groups
+    kibana:
+      access: rw
+    jwt_auth:
+      name: "jwt_provider_1"
+      groups_all_of: ["writer", "viewer"]
 
-    jwt:
-    - name: jwt_provider_1
-      signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC
-      signature_key: "your_signature_min_256_chars"
-      user_claim: email
-      group_ids_claim: resource_access.client_app.group_ids # JSON-path style, see https://github.com/json-path/JsonPath
-      group_names_claim: resource_access.client_app.group_names # optional, JSON-path style, see https://github.com/json-path/JsonPath
-      header_name: Authorization
+  jwt:
+  - name: jwt_provider_1
+    signature_algo: HMAC # can be NONE, RSA, HMAC (default), and EC
+    signature_key: "your_signature_min_256_chars"
+    user_claim: email
+    group_ids_claim: resource_access.client_app.group_ids # JSON-path style, see https://github.com/json-path/JsonPath
+    group_names_claim: resource_access.client_app.group_names # optional, JSON-path style, see https://github.com/json-path/JsonPath
+    header_name: Authorization
 ```
 
 You can verify groups assigned to the user with the groups logic (`groups_any_of`/`groups_all_of`/`groups_not_any_of`/`groups_not_all_of`/`groups_combined`) described in the [Groups logic](elasticsearch.md#user_belongs_to_groups) section.
@@ -2758,6 +2770,83 @@ The value of this configuration represents the cryptographic family of the JWT p
 | ES256 | **EC** |
 | ES384 | **EC** |
 | ES512 | **EC** |
+
+## Other settings
+
+### Disabling ReadonlyREST ACL
+
+The ReadonlyREST ACL can be temporarily disabled without uninstalling the plugin by setting `readonlyrest.enable: false` in the configuration. The default value is `true`. When disabled, all requests will bypass the ACL rules.
+
+Example:
+
+```yaml
+readonlyrest:
+  enable: false
+```
+
+### Global settings
+
+The `readonlyrest.global_settings` section contains various settings that affect different parts of the ACL:
+
+#### `prompt_for_basic_auth`
+
+When set to `true`, ROR will return HTTP 401 instead of 403 when authentication fails. This prompts browsers to show a basic auth dialog. This is particularly useful when not using ReadonlyREST Kibana plugin and wanting to take advantage of Kibana's default behavior. Defaults to `false`. But we don't recommend to change this default behaviour.
+
+Example:
+```yaml
+readonlyrest:
+  global_settings:
+    prompt_for_basic_auth: true
+```
+
+#### `response_if_req_forbidden` 
+
+Customize the response message returned when a request is forbidden by any ACL block. This can be overridden at the block level using the `type.response_message` setting (see section on [Unauthorized response configuration](#unauthorized-response-configuration)). Defaults to "Forbidden by ReadonlyREST ES plugin".
+
+Example:
+```yaml
+readonlyrest:
+  global_settings:
+    response_if_req_forbidden: "You shall not pass!"
+```
+
+#### `fls_engine`
+
+Specifies which Field Level Security engine to use for document filtering. Can be either "es_with_lucene" (default) or "es". This setting determines how ReadonlyREST handles field-level security with the [`fields` rule](#fields).
+
+- **es_with_lucene** (default): Hybrid approach where most FLS operations are handled by Elasticsearch, with Lucene as a fallback for complex cases. Provides full functionality but requires ReadonlyREST to be installed on all nodes.
+- **es**: FLS is handled only by Elasticsearch without Lucene fallback. This mode doesn't require ReadonlyREST on all nodes but has limitations for certain request types.
+
+For detailed information about capabilities and limitations of each engine, see [FLS engine documentation](details/fls-engine.md).
+
+Example:
+```yaml
+readonlyrest:
+  global_settings:
+    fls_engine: es
+```
+
+#### `username_case_sensitivity`
+
+Controls username comparison behavior across all authentication rules. Can be either "case_sensitive" (default) or "case_insensitive". Useful when integrating with case-insensitive systems.
+
+Example:
+```yaml
+readonlyrest:
+  global_settings:
+    username_case_sensitivity: case_insensitive
+```
+
+#### `users_section_duplicate_usernames_detection`
+
+When enabled, ROR validates the `users` section during startup to ensure there are no duplicate usernames defined. This helps prevent configuration errors. Defaults to `true`. In some scenarios you may want to disable it.
+
+Example:
+```yaml
+readonlyrest:
+  global_settings:
+    users_section_duplicate_usernames_detection: false
+```
 
 ## GPLv3 License
 
