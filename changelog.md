@@ -1,5 +1,8 @@
 # Changelog
 
+### (2025-05-13) What's new in **ROR 1.64.1**
+* **🐞Fix** (ES) Correct patching verification in ROR Docker image entrypoint
+
 ### (2025-05-11) What's new in **ROR 1.64.0**
 * **🚨Security Fix** (KBN)  
 [CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382), [CVE-2025-27789](https://nvd.nist.gov/vuln/detail/CVE-2025-27789)
