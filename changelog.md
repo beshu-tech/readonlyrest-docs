@@ -1,5 +1,8 @@
 # Changelog
 
+### (2025-05-17) What's new in **ROR 1.64.2**
+* **🐞Fix** (ES) Fixed an issue with Elasticsearch patching process on Windows operating systems
+
 ### (2025-05-13) What's new in **ROR 1.64.1**
 * **🐞Fix** (ES) Correct patching verification in ROR Docker image entrypoint
 
