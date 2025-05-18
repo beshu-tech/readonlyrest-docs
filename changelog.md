@@ -8,7 +8,7 @@
 
 ### (2025-05-11) What's new in **ROR 1.64.0**
 * **🚨Security Fix** (KBN)  
-[CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382), [CVE-2025-27789](https://nvd.nist.gov/vuln/detail/CVE-2025-27789)
+[CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382), [CVE-2025-27789](https://nvd.nist.gov/vuln/detail/CVE-2025-27789), [CVE-2025-29774](https://www.cve.org/CVERecord?id=CVE-2025-29774)
 * **🚨Security Fix** (ES) [CVE-2023-3894](https://nvd.nist.gov/vuln/detail/CVE-2023-3894),
 [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193)
 * **⚠️Warning** (ES) Acknowledgement needs to be accepted before the Elasticsearch patching process. For scripts, you can [set the flag](https://docs.readonlyrest.com/elasticsearch#id-3.-patch-elasticsearch) to automate the process.
