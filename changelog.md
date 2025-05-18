@@ -1,7 +1,7 @@
 # Changelog
 
 ### (2025-05-17) What's new in **ROR 1.64.2**
-* **🐞Fix** (ES) Fixed an issue with Elasticsearch patching process on Windows operating systems
+* **🐞Fix** (ES) [Fixed an issue with Elasticsearch patching process on Windows operating systems](https://forum.readonlyrest.com/t/ror-1-64-0-for-es9-0-1-windows-setup/2778)
 
 ### (2025-05-13) What's new in **ROR 1.64.1**
 * **🐞Fix** (ES) Correct patching verification in ROR Docker image entrypoint
@@ -21,7 +21,7 @@ Introduced support for passing `x-ror-impersonating` in direct Kibana requests. 
 * **🧐Enhancement** (KBN)  
 Retains the currently selected group information after user logout. This setting is user-configurable and disabled by default.
 * **🧐Enhancement** (KBN)  
-Displays detailed "reason" messages from the ROR Elasticsearch response in the login form instead of a generic "Wrong credentials" message.
+Displays [detailed "reason" messages from the ROR Elasticsearch](https://docs.readonlyrest.com/elasticsearch#unauthorized-response-configuration) response in the login form instead of a generic "Wrong credentials" message.
 * **🧐Enhancement** (KBN)  
 Added support for passing additional [SAML](https://docs.readonlyrest.com/kibana#additional-parameters) and [OIDC](https://docs.readonlyrest.com/kibana#additional-parameters) config parameters via `kibana.yml`.
 * **🧐Enhancement** (KBN)  
