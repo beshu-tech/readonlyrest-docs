@@ -1205,6 +1205,8 @@ You can configure where the ReadonlyREST Kibana plugin obtains the OIDC user pro
 
 2. **access_token**:  
    When set to `access_token`, the plugin extracts the user profile information directly from the access token.
+3. **id_token**:  
+   When set to `id_token`, the plugin extracts the user profile information directly from the ID token.
 
 For example, you can configure it as follows:
 
@@ -1212,7 +1214,7 @@ For example, you can configure it as follows:
 readonlyrest_kbn:
    auth:
       oidc_kc:
-         userInfoSource: 'access_token'  # Available options: 'user_info_endpoint' (default) or 'access_token'
+         userInfoSource: 'access_token'  # Available options: 'user_info_endpoint' (default), 'access_token', 'id_token'
 ```
 
 
