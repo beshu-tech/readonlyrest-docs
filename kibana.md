@@ -1198,7 +1198,7 @@ The following description explains the available options for the setting:
 
 ### User Info Source Methods
 
-You can configure where the ReadonlyREST Kibana plugin obtains the OIDC user profile information using the `userInfoSource` option in the `readonlyrest_kbn.auth.oidc_kc` block. There are two available methods:
+You can configure where the ReadonlyREST Kibana plugin obtains the OIDC user profile information using the `userInfoSource` option in the `readonlyrest_kbn.auth.oidc_kc` block. There are three available methods:
 
 1. **user_info_endpoint** (default):  
    When set to `user_info_endpoint`, the plugin makes an additional call to the URL specified under `userInfoURL` to retrieve the most up-to-date user profile information from the OIDC provider.
