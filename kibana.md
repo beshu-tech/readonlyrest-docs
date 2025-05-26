@@ -281,7 +281,25 @@ And the classic uninstall command...
 bin/kibana-plugin remove readonlyrest_kbn
 ```
 
-### Upgrading
+### Upgrading Kibana
+
+The ReadonlyREST plugin version must always match the currently installed Kibana version.
+As a result, if you want to upgrade Kibana with ROR plugin installed:
+
+1. Before upgrading Kibana, unpatch and uninstall the ReadonlyREST plugin according to the instructions:
+    * [Unpatch Kibana](kibana.md#unpatching-kibana)
+    * [Uninstall the plugin](kibana.md#uninstalling)
+2. Upgrade Kibana.
+3. After upgrading Kibana, install the matching version of the ReadonlyREST plugin and patch according to the instructions:
+   * [Install matching plugin version](kibana.md#installation)
+   * [Patch Kibana](kibana.md#patching-kibana)
+
+{% hint style="warning" %}
+Upgrading Kibana without following the instructions above may cause
+corruption of the Kibana installation and inability to patch the upgraded version.
+{% endhint %}
+
+### Upgrading ReadonlyREST plugin
 
 To upgrade to a new version of ReadonlyREST plugin for Kibana, you should:
 
