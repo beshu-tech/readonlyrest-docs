@@ -385,12 +385,19 @@ Depending on your environment.
 
 ### Upgrading Elasticsearch
 
-The ReadonlyREST plugin version must always match the currently installed Elasticsearch version.\
+The ReadonlyREST plugin version must always match the currently installed Elasticsearch version.
 As a result, if you want to upgrade Elasticsearch:
 
-1. Before upgrading Elasticsearch unpatch and uninstall the ReadonlyREST plugin according to the [instruction](elasticsearch.md#removing-the-plugin)
-2. Upgrade Elasticsearch
-3. After upgrading Elasticsearch install the matching version of the ReadonlyREST plugin and patch according to the [instruction](elasticsearch.md#installing-the-plugin)
+1. Before upgrading Elasticsearch unpatch and uninstall the ReadonlyREST plugin according to the instructions:
+    * [Unpatch Elasticsearch and uninstall the plugin](elasticsearch.md#removing-the-plugin)
+2. Upgrade Elasticsearch.
+3. After upgrading Elasticsearch install the matching version of the ReadonlyREST plugin and patch according to the instructions:
+    * [Install matching plugin version and patch Elasticsearch](elasticsearch.md#installing-the-plugin)
+
+{% hint style="warning" %}
+Upgrading Elasticsearch without following the instructions above may cause 
+corruption of the ES installation and inability to patch the upgraded version.
+{% endhint %}
 
 ### Deploying ReadonlyREST in a stable production cluster
 
