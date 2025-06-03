@@ -137,7 +137,7 @@ If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installa
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
 ```
 
-**⚠️IMPORTANT**: During patching, user will be prompted for confirmation. Please see the [silent mode](elasticsearch.md#patch-elasticsearch-in-a-silent-mode) is there is a need to bypass this step.
+**⚠️IMPORTANT**: The command above runs in silent mode with the `--I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes` flag. Without this flag, the patcher runs in interactive mode and will prompt you to confirm that you understand and accept the implications of ES patching. 
 
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
@@ -288,8 +288,7 @@ If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installa
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
 ```
 
-**⚠️IMPORTANT**: When performing the patching operation, user will be asked to confirm (by providing an answer 'yes' to the displayed question),
-that he understands and accepts the implications of ES patching. See the [silent mode](elasticsearch.md#patch-elasticsearch-in-a-silent-mode) if there is a need to bypass this step.
+**⚠️IMPORTANT**: The command above runs in silent mode with the `--I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes` flag. Without this flag, the patcher runs in interactive mode and will prompt you to confirm that you understand and accept the implications of ES patching. 
 
 **⚠️IMPORTANT**: For Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
