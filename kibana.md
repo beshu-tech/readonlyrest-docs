@@ -349,7 +349,8 @@ ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsea
 
 ### ROR Settings in kibana.yml
 
-* `readonlyrest_kbn.logLevel: <trace|debug|info>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
+* `readonlyrest_kbn.logLevel: <trace|debug|info|error|warn>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
+* `readonlyrest_kbn.logPrettyPrintEnabled: true|false`: if you want to see pretty-printed or compact logs.
 * [session configuration](#session-management-with-multiple-kibana-instances)
 * [UI customisation](#login-screen-tweaking)
 * [custom middleware](#custom-middleware)
