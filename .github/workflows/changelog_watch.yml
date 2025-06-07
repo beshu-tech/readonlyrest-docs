@@ -34,4 +34,4 @@ jobs:
           curl -X POST -H "Content-Type: application/json" \
             -H "x-api-key: ${{ secrets.DOCS_REPO_API_SECRET }}" \
             -d "$(jq -nc --arg diff "$DIFF" '{"changelog_diff": $diff}')" \
-            ${{ vars.CHANGELOG_WEBHOOK_URL }}
+            ${{ secrets.CHANGELOG_WEBHOOK_URL }}
