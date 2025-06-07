@@ -1,0 +1,37 @@
+name: Watch Changelog
+
+on:
+  push:
+    branches:  # may need to parameterize this
+      - master
+    paths:
+      - changelog.md
+
+jobs:
+  on-changelog-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get changelog diff
+        id: changelog
+        run: |
+          git fetch --deepen=1
+          PREV_COMMIT=$(git rev-parse HEAD~1 || echo "")
+          if [ -z "$PREV_COMMIT" ]; then
+            DIFF=$(cat changelog.md)
+          else
+            DIFF=$(git diff "$PREV_COMMIT" HEAD -- changelog.md)
+          fi
+          
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$DIFF" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send webhook with changelog diff
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+            -H "x-api-key: ${{ secrets.DOCS_REPO_API_SECRET }}" \
+            -d "$(jq -nc --arg diff "$DIFF" '{"changelog_diff": $diff}')" \
+            ${{ vars.CHANGELOG_WEBHOOK_URL }}
