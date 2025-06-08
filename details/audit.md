@@ -92,11 +92,11 @@ readonlyrest:
 
 The other settings, specific to the type of audit outputs, are mentioned in the next sections.
 
-### The 'index' outputs specific configurations
+### The 'index' output specific configurations
 
 #### Custom audit indices name and time granularity
 
-By default, ReadonlyREST audit index name template is `readonlyrest_audit-YYYY-MM-DD`.
+By default, the ReadonlyREST audit index name template is `readonlyrest_audit-YYYY-MM-DD`.
 You can customize the name template using the `index_template` settings.
 
 Example: tell ROR to write on the monthly index.
@@ -110,7 +110,7 @@ readonlyrest:
       index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
   ...
 ```
-**⚠️IMPORTANT**: notice the single quotes inside the double-quoted expression. This is the same syntax used for [Java's SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+**⚠️IMPORTANT**: Notice the single quotes inside the double-quoted expression. This is the same syntax used for [Java's SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
 
 #### Custom audit cluster
 
@@ -128,9 +128,9 @@ readonlyrest:
 
 Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
 
-### The 'data_stream' outputs specific configurations
+### The 'data_stream' output specific configurations
 #### Custom audit data stream name
-To change the default data stream name `readonlyrest_audit`, add the following configuration to your readonlyrest.yml config:
+To change the default data stream name `readonlyrest_audit`, add the following configuration to your `readonlyrest.yml` config:
 
 ```yaml
 
@@ -147,11 +147,11 @@ Here, `custom_audit_data_stream` is the Elasticsearch data stream where audit ev
 If the specified data stream does not exist, it will be automatically created by the ReadonlyREST plugin.
 This creation process includes setting up the following components, each dedicated specifically to the configured data stream:
 
-* A dedicated Index Lifecycle Policy `({{data-stream-name}}-lifecycle-policy)`
+* A dedicated Index Lifecycle Policy `({{data-stream-name}}-lifecycle-policy)`.
 
-* Necessary index settings and mappings (component templates: `{{data-stream-name}}-mappings` and `{{data-stream-name}}-settings`)
+* Necessary index settings and mappings (component templates: `{{data-stream-name}}-mappings` and `{{data-stream-name}}-settings`).
 
-* A customized Index Template (`{{data-stream-name}}-template`)
+* A customized Index Template (`{{data-stream-name}}-template`).
 
 #### Custom audit cluster
 
