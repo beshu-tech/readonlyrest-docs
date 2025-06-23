@@ -42,8 +42,9 @@ The currently supported output types are:
 * `index` - similarly to Logstash it writes audit events in the documents stored in the ReadonlyREST audit index
 * `data_stream` - similar to index type, but the audit events are stored in the ES data stream
 * `log` - it allows you to collect audit events using the Elasticsearch logs and format them with the help of features that `log4j2` enables.
-  You can configure multiple outputs for audit events. When the audit is enabled, at least one output has to be defined.
-  If you omit `outputs` definition, the default `index` output will be used.
+
+You can configure multiple outputs for audit events. When the audit is enabled, at least one output has to be defined.
+If you omit `outputs` definition, the default `index` output will be used.
 
 
 Here is an example of how to enable audit events collecting with all defaults:
@@ -252,17 +253,17 @@ readonlyrest:
 
 2. **Verify Data Stream Creation**
 
-```json
+```
 GET _data_stream/custom_audit_data_stream
 ```
 
 Ensure the data stream is being created and audit events are flowing in.
 
-4. **Monitor for Consistency**
+3. **Monitor for Consistency**
 
 Use Kibana or the `_search` API to confirm that events are present in both audit indices and `custom_audit_data_stream`.
 
-5. **(Optional) Backfill Historical Data**
+4. **(Optional) Backfill Historical Data**
 
 If you wish to migrate historical audit data from the old audit index, you can reindex it manually:
 
@@ -286,7 +287,7 @@ POST _reindex
 
 > ⚠️ If the source index contains documents already present in the destination data stream, `"conflicts": "proceed"` will skip duplicates.
 
-6. **Remove the `index` Output**
+5. **Remove the `index` Output**
 
 After confirming successful logging to the data stream from all nodes, update your config to remove the `index` output:
 
@@ -299,7 +300,7 @@ readonlyrest:
         data_stream: "custom_audit_data_stream"
 ```
 
-7. **Final Verification**
+6. **Final Verification**
 
 Use Kibana dashboards, metrics, or direct queries to confirm that new audit events are flowing into the configured data stream.
 
