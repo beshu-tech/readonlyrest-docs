@@ -349,7 +349,8 @@ ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsea
 
 ### ROR Settings in kibana.yml
 
-* `readonlyrest_kbn.logLevel: <trace|debug|info>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
+* `readonlyrest_kbn.logLevel: <trace|debug|info|error|warn>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
+* `readonlyrest_kbn.logPrettyPrintEnabled: true|false`: if you want to see pretty-printed or compact logs.
 * [session configuration](#session-management-with-multiple-kibana-instances)
 * [UI customisation](#login-screen-tweaking)
 * [custom middleware](#custom-middleware)
@@ -1216,13 +1217,15 @@ The following description explains the available options for the setting:
 
 ### User Info Source Methods
 
-You can configure where the ReadonlyREST Kibana plugin obtains the OIDC user profile information using the `userInfoSource` option in the `readonlyrest_kbn.auth.oidc_kc` block. There are two available methods:
+You can configure where the ReadonlyREST Kibana plugin obtains the OIDC user profile information using the `userInfoSource` option in the `readonlyrest_kbn.auth.oidc_kc` block. There are three available methods:
 
 1. **user_info_endpoint** (default):  
    When set to `user_info_endpoint`, the plugin makes an additional call to the URL specified under `userInfoURL` to retrieve the most up-to-date user profile information from the OIDC provider.
 
 2. **access_token**:  
    When set to `access_token`, the plugin extracts the user profile information directly from the access token.
+3. **id_token**:  
+   When set to `id_token`, the plugin extracts the user profile information directly from the ID token.
 
 For example, you can configure it as follows:
 
@@ -1230,7 +1233,7 @@ For example, you can configure it as follows:
 readonlyrest_kbn:
    auth:
       oidc_kc:
-         userInfoSource: 'access_token'  # Available options: 'user_info_endpoint' (default) or 'access_token'
+         userInfoSource: 'access_token'  # Available options: 'user_info_endpoint' (default), 'access_token', 'id_token'
 ```
 
 
