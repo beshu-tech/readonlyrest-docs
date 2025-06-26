@@ -1,7 +1,7 @@
 # Changelog
 
 ### (2025-05-17) What's new in **ROR 1.64.2**
-* **🚀New** (KBN) 9.0.2, 8.18.2, 8.17.7 support
+* **🚀New** (KBN) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support 
 * **🚀New** (ES) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support 
 * **🐞Fix** (ES) [Fixed an issue with Elasticsearch patching process on Windows operating systems](https://forum.readonlyrest.com/t/ror-1-64-0-for-es9-0-1-windows-setup/2778)
 
