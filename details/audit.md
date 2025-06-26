@@ -40,9 +40,11 @@ The audit collecting by default is disabled. To enable it, you need to add `audi
 In the `outputs` array, you can define i.a. where the audit events should be sent.
 The currently supported output types are:
 * `index` - similarly to Logstash it writes audit events in the documents stored in the ReadonlyREST audit index
+* `data_stream` - similar to index type, but the audit events are stored in the ES data stream
 * `log` - it allows you to collect audit events using the Elasticsearch logs and format them with the help of features that `log4j2` enables.
-  You can configure multiple outputs for audit events. When the audit is enabled, at least one output has to to be defined.
-  If you omit `outputs` definition, the default `index` output will be used.
+
+You can configure multiple outputs for audit events. When the audit is enabled, at least one output has to be defined.
+If you omit `outputs` definition, the default `index` output will be used.
 
 
 Here is an example of how to enable audit events collecting with all defaults:
@@ -50,7 +52,7 @@ Here is an example of how to enable audit events collecting with all defaults:
 readonlyrest:
 
   audit:
-    enabled: true
+    enabled: true 
 
   access_control_rules:
 
@@ -71,7 +73,7 @@ You can also use multiple audit outputs, e.g.
 readonlyrest:
   audit:
     enabled: true
-    outputs: [ index, log ]
+    outputs: [ index, data_stream, log ]
 
     ...
 ```
@@ -95,7 +97,7 @@ The other settings, specific to the type of audit outputs, are mentioned in the 
 
 #### Custom audit indices name and time granularity
 
-By default ReadonlyREST audit index name template is `readonlyrest_audit-YYYY-MM-DD`.
+By default, the ReadonlyREST audit index name template is `readonlyrest_audit-YYYY-MM-DD`.
 You can customize the name template using the `index_template` settings.
 
 Example: tell ROR to write on the monthly index.
@@ -109,11 +111,11 @@ readonlyrest:
       index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
   ...
 ```
-**⚠️IMPORTANT**: notice the single quotes inside the double quoted expression. This is the same syntax used for [Java's SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+**⚠️IMPORTANT**: Notice the single quotes inside the double-quoted expression. This is the same syntax used for [Java's SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
 
 #### Custom audit cluster
 
-It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
+It's possible to set up a custom audit cluster responsible for storing audit events. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
 ```yaml
 readonlyrest:
@@ -125,7 +127,182 @@ readonlyrest:
   ...
 ```
 
-Setting `audit.cluster` is optional, it accepts non empty list of audit cluster nodes URIs.
+Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
+
+### The 'data_stream' output specific configurations
+#### Custom audit data stream name
+To change the default data stream name `readonlyrest_audit`, add the following configuration to your `readonlyrest.yml` config:
+
+```yaml
+
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+      - type: data_stream
+        data_stream: "custom_audit_data_stream"
+```
+
+Here, `custom_audit_data_stream` is the Elasticsearch data stream where audit events will be stored.
+
+If the specified data stream does not exist, it will be automatically created by the ReadonlyREST plugin.
+This creation process includes setting up the following components, each dedicated specifically to the configured data stream:
+
+* A dedicated Index Lifecycle Policy `({{data-stream-name}}-lifecycle-policy)`.
+
+* Necessary index settings and mappings (component templates: `{{data-stream-name}}-mappings` and `{{data-stream-name}}-settings`).
+
+* A customized Index Template (`{{data-stream-name}}-template`).
+
+#### Custom audit cluster
+
+It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs: 
+    - type: data_stream
+      cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
+  ...
+```
+
+Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
+
+#### Data stream settings
+
+Here are the default settings set for the audit data stream created by the ReadonlyREST plugin:
+
+![Audit data stream](../.gitbook/assets/ror_audit_datastream.png)![Audit data stream template](../.gitbook/assets/ror_audit_datastream_template.png)
+![Index lifecycle policy defaults](../.gitbook/assets/ror_audit_datastream_lifecycle_policy.png)
+
+Managing Elasticsearch data streams, such as the ReadonlyREST audit data stream, should be customized based on your specific use case. Aspects like:
+
+* data retention policies (how long to keep and when to delete data),
+
+* migrating old indices into the new data stream,
+
+* handling transitions between different index lifecycle phases (e.g., hot, warm, cold, delete),
+
+depend on your business requirements, data volume and characteristics, and how the data is analyzed and used.
+
+Therefore, we encourage you to configure these settings yourself to best fit your needs. Elasticsearch provides flexible tools, like Index Lifecycle Management (ILM), that allow automating data management based on user-defined rules.
+Customizing your configuration helps optimize storage costs and search performance.
+
+You can manage and update settings related to your audit data stream directly from Kibana's **Index Management** UI.
+
+##### Steps to Change Data Stream Settings using Kibana
+
+1. **Open Kibana and Navigate to Index Management**
+
+   * In Kibana, go to **Management** > **Stack Management** > **Index Management**.
+   * Select the **Data Streams** tab to see the list of available data streams.
+
+2. **Select Your Audit Data Stream**
+
+   * Find your audit data stream (e.g., `custom_audit_data_stream`) in the list.
+   * Click on it to view details such as indices backing the data stream, mappings, and lifecycle policies.
+
+3. **Edit Index Lifecycle Policy (ILM)**
+
+   * If you want to update rollover criteria, retention period, or other lifecycle actions:
+     * Navigate to **Index Lifecycle Policies** under **Stack Management**.
+     * Select the ILM policy associated with your audit data stream.
+     * Modify phases such as `hot`, `warm`, or `delete` to adjust settings like maximum size, max age, or deletion timing.
+     * Save your changes — they will be applied automatically to the indices backing the data stream.
+
+4. **Update Index Template**
+
+   * To change index settings or mappings for new backing indices:
+     * Go to **Index Templates** in Stack Management.
+     * Locate the template associated with your audit data stream (usually matching the data stream name or pattern).
+     * Edit the template’s settings or mappings as needed.
+     * Save the updated template; new indices created for the data stream will use these settings.
+
+5. **Verify Changes**
+
+   * After updating policies or templates, monitor your data stream to ensure rollover and retention behave as expected.
+   * You can also query audit events via Kibana’s Discover tab or using the Elasticsearch API.
+
+###### Important Notes
+
+* Changes to lifecycle policies and index templates affect **new indices** created after the update; existing indices are not modified retroactively.
+* To apply mapping changes to existing indices, you may need to reindex data.
+* Ensure you carefully test ILM and template changes in a staging environment before applying to production audit streams.
+
+#### Rolling Migration from `index` to `data_stream`
+
+To migrate ReadonlyREST audit logging from the `index` output type to `data_stream` in a **rolling update**, follow this safe, zero-downtime approach:
+
+1. **Add `data_stream` as an Additional Output**
+
+Temporarily configure both `index` and `data_stream` outputs so that audit events are sent to both destinations:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+      - type: index
+      - type: data_stream # add data stream output type to your config
+        data_stream: "custom_audit_data_stream" 
+```
+
+> ✅ This ensures no audit logs are lost during the transition.
+
+2. **Verify Data Stream Creation**
+
+```
+GET _data_stream/custom_audit_data_stream
+```
+
+Ensure the data stream is being created and audit events are flowing in.
+
+3. **Monitor for Consistency**
+
+Use Kibana or the `_search` API to confirm that events are present in both audit indices and `custom_audit_data_stream`.
+
+4. **(Optional) Backfill Historical Data**
+
+If you wish to migrate historical audit data from the old audit index, you can reindex it manually:
+
+```json
+POST _reindex
+{
+  "conflicts": "proceed",
+  "source": {
+    "index": "readonlyrest_audit-2025-06-07"
+  },
+  "dest": {
+    "index": "custom_audit_data_stream",
+    "op_type": "create"
+  }
+}
+```
+
+> ⚠️ Ensure both audit outputs have the same serializer for data consistency.
+
+> ⚠️ Data streams are append-only — use `"op_type": "create"` to avoid overwrites.
+
+> ⚠️ If the source index contains documents already present in the destination data stream, `"conflicts": "proceed"` will skip duplicates.
+
+5. **Remove the `index` Output**
+
+After confirming successful logging to the data stream from all nodes, update your config to remove the `index` output:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+      - type: data_stream
+        data_stream: "custom_audit_data_stream"
+```
+
+6. **Final Verification**
+
+Use Kibana dashboards, metrics, or direct queries to confirm that new audit events are flowing into the configured data stream.
 
 ### The 'log' output specific configurations
 
