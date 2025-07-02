@@ -1136,7 +1136,7 @@ kibana:
       http_path: "^/api/saved_objects/.*$"
   metadata: 
     dept: "@{jwt:tech.beshu.department}"
-    alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+    alert_message:  "Dear @{acl:current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
 ```
 
 The rule consists of several sub-rules:
@@ -1227,7 +1227,7 @@ Sample usage:
 kibana:
   [...]
   metadata:
-     alert_message:  "Dear @{acl.current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+     alert_message:  "Dear @{acl:current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
 ```
 
 `alert_message` Metadata can be used on the Kibana side to display information to the user on login to the Kibana.
