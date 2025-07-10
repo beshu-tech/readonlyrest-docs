@@ -79,7 +79,7 @@ services:
     ports:
       - "9200:9200"
     environment:
-      - I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes
+      - I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
       - KIBANA_USER_PASS=kibana
       - ADMIN_USER_PASS=admin
       - discovery.type=single-node
