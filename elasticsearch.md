@@ -111,7 +111,7 @@ To install the ReadonlyREST plugin for Elasticsearch:
 
 #### 1. Obtain the build
 
-From the [official download page](https://readonlyrest.com/download.html). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
+From the [official download page](https://readonlyrest.com/download). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
 
 #### 2. Install the build
 
@@ -2891,4 +2891,4 @@ Here is a practical summary of what dealing with GPLv3 means:
 
 Please don't hesitate to [contact us](mailto:info@readonlyrest.com) for a re-licensed copy of this source. Your success is what makes this project worthwhile, don't let legal issues slow you down.
 
-See [commercial license FAQ page](https://github.com/beshu-tech/readonlyrest-docs/tree/d77c4981b29a843fc82f89c4272fdddaab390d89/commercial.html) for more information.
+See [commercial license FAQ page](commercial.md) for more information.

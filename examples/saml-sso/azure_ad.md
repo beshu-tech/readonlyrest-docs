@@ -4,7 +4,7 @@ description: Integration with the managed cloud service Microsoft Azure Active D
 
 # Microsoft Azure AD
 
-[Azure Active Directory (Azure AD)](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis) is Microsoft’s cloud-based identity and access management ([IAM](https://en.wikipedia.org/wiki/Identity\_management)) service. And it can be used as a SAML Single Sign-On (SSO) \[identity provider (IdP)]\([https://en.wikipedia.org/wiki/Identity\_provider\_(SAML](https://en.wikipedia.org/wiki/Identity\_provider\_\(SAML))) for a pool of exiting users to sign in and access resources in external service providers like [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise/).
+[Azure Active Directory (Azure AD)](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis) is Microsoft’s cloud-based identity and access management ([IAM](https://en.wikipedia.org/wiki/Identity\_management)) service. And it can be used as a SAML Single Sign-On (SSO) \[identity provider (IdP)]\([https://en.wikipedia.org/wiki/Identity_provider_(SAML)](https://en.wikipedia.org/wiki/Identity_provider_(SAML))) for a pool of exiting users to sign in and access resources in external service providers like [ReadonlyREST Enterprise](https://readonlyrest.com/enterprise).
 
 With Azure AD, you can graphically manage users, groups, credentials and permissions. ReadonlyREST Enterprise for Kibana will collaborate with Azure AD to authenticate, grant permissions and access to tenancies for users that are entirely managed within Azure AD.
 

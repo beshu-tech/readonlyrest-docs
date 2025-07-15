@@ -564,7 +564,7 @@ You can configure an ACL in multi tenancy mode by adding a few ACL blocks contai
 ### Extending the Kibana API with the x-ror-tenancy-id header
 ([Enterprise](https://readonlyrest.com/enterprise))
 
-To target a specific tenant when making a [Kibana API](https://www.elastic.co/guide/en/kibana/current/api.html) request, include the custom HTTP header `x-ror-tenancy-id`. The value of this header should match one of the [groups rules](/elasticsearch#groups-rules) id defined in your ACL configuration. The first group defined in the ACL for a specific user is used as the default tenancy id.
+To target a specific tenant when making a [Kibana API](https://www.elastic.co/guide/en/kibana/current/api.html) request, include the custom HTTP header `x-ror-tenancy-id`. The value of this header should match one of the [groups rules](elasticsearch.md#groups-rules) id defined in your ACL configuration. The first group defined in the ACL for a specific user is used as the default tenancy id.
 
 example usage:
 
@@ -1244,9 +1244,9 @@ These additional parameters allow you to solve complex authentication scenarios,
 #### Issuer Additional Parameters
 You can find a list of all supported parameters:
 
-For Kibana 7.12.0 and above: [documentation](https://github.com/panva/openid-client/tree/v5.x/docs#new-issuermetadata)
+For Kibana 7.12.0 and above: [documentation](https://github.com/panva/openid-client/tree/v5.7.1/docs#new-issuermetadata)
 
-For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.x/docs#new-issuermetadata)
+For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.9.1/docs#new-issuermetadata)
 
 ```yaml
 readonlyrest_kbn.auth:
