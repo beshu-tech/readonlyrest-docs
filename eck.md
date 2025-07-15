@@ -40,7 +40,7 @@ spec:
                 runAsGroup: 0
               env:
                 # we have to explicitly agree to patch the ES binaries (the patching step will be done only once)
-                - name: I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING
+                - name: I_UNDERSTAND_AND_ACCEPT_ES_PATCHING
                   value: "yes"
                 # these two passwords are used by "elastic-internal" and "elastic-internal-probe" users - these users are used by ECK
                 - name: INTERNAL_USR_PASS

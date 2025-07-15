@@ -40,4 +40,4 @@
     * [Secure Metricbeat](examples/secure_metricbeat.md)
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
-* [Changelog](changelog.md)
+* [Changelog](detailed_changelog.md)

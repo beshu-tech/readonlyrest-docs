@@ -44,7 +44,7 @@ The following diagram models an instance of Elasticsearch with the ReadonlyREST 
 The simplest method to run Elasticsearch with the ReadonlyREST plugin is to use one of our docker images which you can find on [Docker Hub](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest):
 
 ```bash
-docker run -u root -p 9200:9200 -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" -e "KIBANA_USER_PASS=kibana" -e "ADMIN_USER_PASS=admin" -e "discovery.type=single-node" beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+docker run -u root -p 9200:9200 -e "I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes" -e "KIBANA_USER_PASS=kibana" -e "ADMIN_USER_PASS=admin" -e "discovery.type=single-node" beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
 ```
 
 OR with [Docker Compose](https://docs.docker.com/compose/):
@@ -59,7 +59,7 @@ services:
     ports:
       - "9200:9200"
     environment:
-      - I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes
+      - I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
       - KIBANA_USER_PASS=kibana
       - ADMIN_USER_PASS=admin
       - discovery.type=single-node
@@ -80,7 +80,7 @@ You can create locally customized `readonlyrest.yml` file and mount it as a [doc
 Assuming that your ROR settings file is located in `/tmp/my-readonlyrest.yml` you can use it like that:
 
 ```bash
-docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes" -v /tmp/my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+docker run -u root -p 9200:9200 -e "discovery.type=single-node" -e "I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes" -v /tmp/my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
 ```
 
 OR
@@ -95,7 +95,7 @@ services:
     ports:
       - "9200:9200"
     environment:
-      - I_UNDERSTAND_IMPLICATION_OF_ES_PATCHING=yes
+      - I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
       - KIBANA_USER_PASS=kibana
       - ADMIN_USER_PASS=admin
       - discovery.type=single-node
@@ -374,6 +374,21 @@ service start elasticsearch
 
 Depending on your environment.
 
+### Upgrading Elasticsearch
+
+The ReadonlyREST plugin version must always match the currently installed Elasticsearch version.
+As a result, if you want to upgrade Elasticsearch:
+
+1. Before upgrading Elasticsearch, unpatch and uninstall the ReadonlyREST plugin according to the instructions:
+    * [Unpatch Elasticsearch and uninstall the plugin](elasticsearch.md#removing-the-plugin)
+2. Upgrade Elasticsearch.
+3. After upgrading Elasticsearch, install the matching version of the ReadonlyREST plugin and patch according to the instructions:
+    * [Install matching plugin version and patch Elasticsearch](elasticsearch.md#installing-the-plugin)
+
+{% hint style="warning" %}
+Upgrading Elasticsearch without following the instructions above may cause 
+corruption of the ES installation and inability to patch the upgraded version.
+{% endhint %}
 
 ### Deploying ReadonlyREST in a stable production cluster
 
