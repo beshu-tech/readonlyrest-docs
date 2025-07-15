@@ -28,7 +28,7 @@ This tutorial was created using KeyCloak 14.0.0.
 1. Download the Keycloak from their [official website](https://www.keycloak.org/archive/downloads-14.0.0.html). This guide will use [keycloak docker image](https://hub.docker.com/r/jboss/keycloak/)
 2. Run Keycloak: run docker run -e KEYCLOAK\_USER= -e KEYCLOAK\_PASSWORD= jboss/keycloak where USERNAME and PASSWORD are credentials for your admin account
 3. log in as admin
-4. Follow the explanation below, or (if your KC version is the same or close enough to this) use the import function to load this [configuration file](../../keycloak\_ror\_OIDC.json)
+4. Follow the explanation below, or (if your KC version is the same or close enough to this) use the import function to load this [configuration file](../keycloak_ror_OIDC.json)
 
 If you imported the JSON file, you should have a "ror" realm, and an OpenID Connect (OIDC) client called "ror\_oidc" (keep this ID or change the "clientID" setting in kibana.yml). Please now select "ror" realm, navigate to "clients", click "ror\_oidc" client and double-check everything matches with your use case, as this guide assumes both Kibana, Elasticsearch, and Keycloak are running on "localhost".
 
