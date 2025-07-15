@@ -1,5 +1,8 @@
 # Changelog
 
+### (2025-07-15) What's new in **ROR 1.65.1**
+* **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
+
 ### (2025-07-10) What's new in **ROR 1.65.0**
 * **🚨Security Fix** (KBN) [CVE-2025-5889](https://nvd.nist.gov/vuln/detail/CVE-2025-5889)
 * **🚨Security Fix** (ES) [CVE-2024-29857](https://nvd.nist.gov/vuln/detail/cve-2024-29857) (when FIPS SSL is used)
