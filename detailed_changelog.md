@@ -7,62 +7,63 @@ This security fix addresses a vulnerability (CVE-2025-5889) in Kibana, ensuring 
 </details>
 <details>
 <summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/cve-2024-29857">CVE-2024-29857</a> (when FIPS SSL is used)</summary>
-This update resolves a security vulnerability (CVE-2024-29857) in Elasticsearch when FIPS SSL is enabled, preventing potential security breaches. Upgrading is recommended for users utilizing FIPS SSL.
+This update resolves a security issue (CVE-2024-29857) in Elasticsearch when FIPS SSL is enabled, preventing potential vulnerabilities in secure communication. Upgrading is recommended for users relying on FIPS-compliant SSL.
 </details>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN)  Added support for configuring [JSON log format](https://www.elastic.co/docs/troubleshoot/kibana/using-kibana-server-logs) in `kibana.yml`.
+<details>
+<summary><strong>🚀New</strong> (KBN)  Added support for configuring <a href="https://www.elastic.co/docs/troubleshoot/kibana/using-kibana-server-logs">JSON log format</a> in <code>kibana.yml</code>.</summary>
+Users can now configure Kibana logs in JSON format via `kibana.yml`, simplifying log parsing and integration with monitoring tools. This feature enhances log management and troubleshooting capabilities.
+</details>
 <details>
 <summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#configuration">Added support for a new output type: <code>data_stream</code> in audit logging</a>.</summary>
-Elasticsearch now supports `data_stream` as an output type for audit logging, providing more flexibility in how audit logs are stored and managed.
+Elasticsearch audit logs now support `data_stream` as an output type, enabling more efficient log storage and retrieval. This addition aligns with modern logging practices and improves scalability.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ES) Included Elasticsearch node name and cluster name in the audit reports.</summary>
-Audit reports now include the Elasticsearch node name and cluster name, enhancing traceability and debugging capabilities for administrators.
+Audit reports now include the Elasticsearch node name and cluster name, providing better context for log analysis and troubleshooting. This enhancement aids in identifying the source of events more accurately.
 </details>
 <details>
 <summary><strong>🧐Enhancement</strong> (KBN) Logged detailed messages when the CSRF token has expired.</summary>
-Kibana now logs detailed messages when a CSRF token expires, aiding administrators in troubleshooting session-related issues more effectively.
+Kibana now logs detailed messages when a CSRF token expires, helping administrators diagnose and resolve authentication issues more efficiently. This improves debugging and user experience.
 </details>
 <details>
 <summary><strong>🧐Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#user-info-source-methods">Added <code>id_token</code> as a valid option for <code>userInfoSource</code></a>.</summary>
-The `id_token` is now a valid option for `userInfoSource` in Kibana, offering more flexibility in user authentication and information retrieval.
+The `id_token` is now a valid option for `userInfoSource` in Kibana, offering more flexibility in user authentication workflows. This update supports diverse identity provider configurations.
 </details>
 <details>
 <summary><strong>🧐Enhancement</strong> (ES) Improved handling of JVM properties related to ROR settings.</summary>
-This enhancement optimizes the handling of JVM properties tied to ROR settings, ensuring smoother performance and configuration management.
+This enhancement optimizes the handling of JVM properties tied to ROR settings, ensuring smoother performance and configuration management. It reduces potential conflicts and improves stability.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed OIDC logout redirection issue by switching <code>redirect_uri</code> to <code>id_token_hint</code> and using <code>post_logout_redirect_uri</code>.</summary>
-This fix resolves an OIDC logout redirection issue by replacing `redirect_uri` with `id_token_hint` and utilizing `post_logout_redirect_uri`, ensuring seamless logout flows.
+The OIDC logout process now correctly redirects users by replacing `redirect_uri` with `id_token_hint` and utilizing `post_logout_redirect_uri`. This resolves logout flow issues and enhances security.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) The ReadonlyREST Kibana plugin now accepts custom appender names defined in <code>kibana.yml</code>.</summary>
-The plugin now correctly processes custom appender names specified in `kibana.yml`, addressing previous configuration issues.
+The plugin now respects custom appender names specified in `kibana.yml`, ensuring compatibility with user-defined logging configurations. This fix addresses previous limitations in log management.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) When "Remember Group After Logout" is enabled, groups without access are correctly ignored during login.</summary>
-This fix ensures that groups without access are properly ignored during login when "Remember Group After Logout" is enabled, improving security and user experience.
+Groups without access are now properly ignored during login when "Remember Group After Logout" is enabled, preventing unauthorized access attempts. This improves security and user experience.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed issue where the Kibana index template was not applied for Kibana versions ≥ 8.8.0.</summary>
-The Kibana index template is now correctly applied for versions 8.8.0 and above, resolving a compatibility issue.
+The Kibana index template is now correctly applied for versions 8.8.0 and above, resolving compatibility issues. This ensures consistent behavior across supported Kibana releases.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Resolved a bug with <code>readonlyrest_kbn.resetKibanaIndexToTemplate: true</code> for Kibana 7.x.</summary>
-A bug affecting the `resetKibanaIndexToTemplate` setting in Kibana 7.x has been fixed, ensuring proper template application.
+A bug affecting the `resetKibanaIndexToTemplate` setting in Kibana 7.x has been fixed, restoring expected functionality. This ensures proper index management for older Kibana versions.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed an issue where a custom session index name was not respected after Kibana restart.</summary>
-Custom session index names are now correctly preserved after Kibana restarts, addressing a previous inconsistency.
+Custom session index names are now preserved after Kibana restarts, addressing a previous inconsistency. This fix enhances reliability in session management.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) Fixed an issue preventing snapshots from being restored when no indices were specified.</summary>
-This fix allows snapshots to be restored even when no indices are explicitly specified, resolving a previous limitation.
+Snapshots can now be restored even when no indices are explicitly specified, resolving a previous limitation. This improves flexibility in backup and recovery operations.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) File ownership and permissions are now preserved during <code>ror-tools</code> patch and unpatch operations.</summary>
-File ownership and permissions are now maintained during `ror-tools` patch and unpatch operations, preventing unintended changes.
+The `ror-tools` utility now maintains file ownership and permissions during patch and unpatch operations, preventing unintended changes. This ensures system integrity and security.
 </details>
 
 ### (2025-05-17) What's new in **ROR 1.64.2**
