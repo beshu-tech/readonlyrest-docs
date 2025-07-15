@@ -1,5 +1,11 @@
 # Changelog
 
+### (2025-07-15) What's new in **ROR 1.65.1**
+<details>
+<summary><strong>🐞Fix</strong> (ES) Docker images now start correctly when <code>I_UNDERSTAND_AND_ACCEPT_ES_PATCHING</code> is set.</summary>
+This fix ensures that Docker images for Elasticsearch (ES) start without issues when the environment variable `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is enabled. Previously, users might have encountered startup failures under this condition.
+</details>
+
 ### (2025-07-10) What's new in **ROR 1.65.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-5889">CVE-2025-5889</a></summary>
