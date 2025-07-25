@@ -1,5 +1,6 @@
 # Changelog
 
+* **🚀New** (KBN) 9.0.4, 8.18.4, 8.17.9, 8.17.7 support
 * **🚀New** (ES) 9.0.4, 8.18.4, 8.17.9, 8.17.7 support 
 * **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
 
