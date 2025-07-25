@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2025-07-15) What's new in **ROR 1.65.1**
+* **🚀New** (ES) 9.0.4, 8.18.4, 8.17.9, 8.17.7 support 
 * **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
 
 ### (2025-07-10) What's new in **ROR 1.65.0**
