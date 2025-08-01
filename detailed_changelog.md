@@ -1,8 +1,17 @@
 # Changelog
 
-* **🚀New** (KBN) 9.0.4, 8.18.4, 8.17.9, 8.17.7 support
-* **🚀New** (ES) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support 
-* **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
+### (2025-07-15) What's new in **ROR 1.65.1**
+<details>
+<summary><strong>🚀New</strong> (KBN) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support</summary>
+This update extends compatibility with Kibana versions 9.0.4, 8.19.0, 8.18.4, 8.17.9, and 8.17.7, ensuring seamless integration and performance for users running these Kibana releases.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support</summary>
+The plugin now supports Elasticsearch versions 9.0.4, 8.19.0, 8.18.4, 8.17.9, and 8.17.7, providing users with the latest security and performance enhancements from these Elasticsearch releases.
+</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
 
 ### (2025-07-10) What's new in **ROR 1.65.0**
 <details>
