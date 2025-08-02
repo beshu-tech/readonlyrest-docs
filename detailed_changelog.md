@@ -1,9 +1,22 @@
 # Changelog
 
-* **🚀New** (KBN) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support
-* **🚀New** (ES) 9.1.0, 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support
-* **🚀New** (ECK) 3.1.0 support 
-* **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
+### (2025-07-15) What's new in **ROR 1.65.1**
+<details>
+<summary><strong>🚀New</strong> (KBN) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support</summary>
+This update extends compatibility with Kibana versions 9.0.4, 8.19.0, 8.18.4, 8.17.9, and 8.17.7, ensuring seamless integration and security for users running these versions.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.1.0, 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support</summary>
+The plugin now supports Elasticsearch versions 9.1.0, 9.0.4, 8.19.0, 8.18.4, 8.17.9, and 8.17.7, providing enhanced compatibility and security for users on these Elasticsearch releases.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ECK) 3.1.0 support</summary>
+Added support for Elastic Cloud on Kubernetes (ECK) version 3.1.0, enabling users to leverage the latest features and improvements in the ECK ecosystem.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Docker images now start correctly when <code>I_UNDERSTAND_AND_ACCEPT_ES_PATCHING</code> is set.</summary>
+Resolved an issue where Docker images for Elasticsearch would fail to start when the environment variable `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` was enabled, ensuring smooth operation in containerized environments.
+</details>
 
 ### (2025-07-10) What's new in **ROR 1.65.0**
 <details>
