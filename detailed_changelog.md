@@ -1,8 +1,22 @@
 # Changelog
 
-* **🚀New** (KBN) 9.0.4, 8.18.4, 8.17.9, 8.17.7 support
-* **🚀New** (ES) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support 
-* **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
+### (2025-07-15) What's new in **ROR 1.65.1**
+<details>
+<summary><strong>🚀New</strong> (KBN) 9.1.0, 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support</summary>
+This update extends compatibility with Kibana versions 9.1.0, 9.0.4, 8.19.0, 8.18.4, 8.17.9, and 8.17.7, ensuring seamless integration for users running these versions.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.1.1, 9.1.0, 9.0.4, 8.19.1, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support</summary>
+The plugin now supports Elasticsearch versions 9.1.1, 9.1.0, 9.0.4, 8.19.1, 8.19.0, 8.18.4, 8.17.9, and 8.17.7, providing users with broader version compatibility.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ECK) 3.1.0 support</summary>
+Added support for Elastic Cloud on Kubernetes (ECK) version 3.1.0, enabling users to leverage the latest features and improvements in ECK deployments.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Docker images now start correctly when <code>I_UNDERSTAND_AND_ACCEPT_ES_PATCHING</code> is set.</summary>
+Resolved an issue where Elasticsearch Docker images failed to start when the environment variable `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` was enabled, ensuring smooth operation in such configurations.
+</details>
 
 ### (2025-07-10) What's new in **ROR 1.65.0**
 <details>
@@ -73,15 +87,15 @@ The `ror-tools` utility now maintains file ownership and permissions during patc
 ### (2025-05-17) What's new in **ROR 1.64.2**
 <details>
 <summary><strong>🚀New</strong> (KBN) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support</summary>
-This update adds support for Kibana versions 9.0.2, 8.18.2, and 8.17.7, ensuring compatibility with the latest Kibana releases.
+This update extends compatibility with Kibana versions 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29, ensuring seamless integration and security for users running these versions.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ES) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support</summary>
-Extended support for Elasticsearch versions 9.0.2, 8.18.2, and 8.17.7, enabling users to secure their clusters with the latest stable releases.
+This release adds support for Elasticsearch versions 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29, enabling users to leverage ROR's security features across these Elasticsearch distributions.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-1-64-0-for-es9-0-1-windows-setup/2778">Fixed an issue with Elasticsearch patching process on Windows operating systems</a></summary>
-Resolved an issue during the Elasticsearch patching process on Windows, improving installation and updates for Windows users.
+Resolved a bug in the Elasticsearch patching process specific to Windows systems, ensuring smoother updates and installations for users on this platform.
 </details>
 
 ### (2025-05-13) What's new in **ROR 1.64.1**

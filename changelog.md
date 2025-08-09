@@ -1,8 +1,9 @@
 # Changelog
 
 ### (2025-07-15) What's new in **ROR 1.65.1**
-* **🚀New** (KBN) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support
-* **🚀New** (ES) 9.0.4, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support 
+* **🚀New** (KBN) 9.1.1, 9.1.0, 9.0.4, 8.19.1, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support
+* **🚀New** (ES) 9.1.1, 9.1.0, 9.0.4, 8.19.1, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support
+* **🚀New** (ECK) 3.1.0 support 
 * **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
 
 ### (2025-07-10) What's new in **ROR 1.65.0**
