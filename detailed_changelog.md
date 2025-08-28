@@ -2,20 +2,20 @@
 
 ### (2025-07-15) What's new in **ROR 1.65.1**
 <details>
-<summary><strong>🚀New</strong> (KBN) 9.1.1, 9.1.0, 9.0.4, 8.19.1, 8.19.0, 8.18.4, 8.17.9, 8.17.7 support</summary>
-Extended compatibility with Kibana versions 9.1.1 through 8.17.7, ensuring seamless integration and security.
+<summary><strong>🚀New</strong> (KBN) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support</summary>
+Extended compatibility with Kibana versions 9.1.1 through 8.17.9, ensuring seamless integration and security.
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9, 8.17.7 support</summary>
-Added support for Elasticsearch versions 9.1.1 through 8.17.7, enabling ROR's security features with these releases.
+<summary><strong>🚀New</strong> (ES) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support</summary>
+Added support for Elasticsearch versions 9.1.1 through 8.17.9, enabling ROR's security features across these releases.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ECK) 3.1.0 support</summary>
-Introduced compatibility with ECK 3.1.0 for seamless deployment of ROR-secured Elasticsearch clusters in Kubernetes.
+Introduced compatibility with Elastic Cloud on Kubernetes (ECK) 3.1.0 for seamless deployment in Kubernetes environments.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) Docker images now start correctly when <code>I_UNDERSTAND_AND_ACCEPT_ES_PATCHING</code> is set.</summary>
-Fixed an issue where Docker images failed to start with `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` enabled, ensuring smooth containerized deployments.
+Resolved an issue where Elasticsearch Docker images failed to start with the `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` variable enabled.
 </details>
 
 ### (2025-07-10) What's new in **ROR 1.65.0**
