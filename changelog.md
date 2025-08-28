@@ -1,17 +1,17 @@
 # Changelog
 
 ### (2025-08-28) What's new in **ROR 1.66.0**
-* **🚨 Security Fix** (KBN) [CVE-2025-7339](https://nvd.nist.gov/vuln/detail/CVE-2025-7339), [CVE-2025-7783](https://nvd.nist.gov/vuln/detail/CVE-2025-7783), [CVE-2025-54419](https://nvd.nist.gov/vuln/detail/CVE-2025-54419), [CVE-2025-9288](https://nvd.nist.gov/vuln/detail/CVE-2025-9288)
-* **🐞 Security Fix** (KBN) [Prevented visibility of hidden functions through Kibana UI search](https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2)
+* **🚨Security Fix** (KBN) [CVE-2025-7339](https://nvd.nist.gov/vuln/detail/CVE-2025-7339), [CVE-2025-7783](https://nvd.nist.gov/vuln/detail/CVE-2025-7783), [CVE-2025-54419](https://nvd.nist.gov/vuln/detail/CVE-2025-54419), [CVE-2025-9288](https://nvd.nist.gov/vuln/detail/CVE-2025-9288)
+* **🚨Security Fix** (KBN) [Prevented visibility of hidden functions through Kibana UI search](https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2)
 * **🚨Security Fix** (ES) Removed internal failure details from error responses to prevent unintended information disclosure
 * **🧐Enhancement** (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index
 * **🧐Enhancement** (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration
-* **🐞 Fix** (KBN) Resolved issue with index deletion in **Index Management** via Kibana UI
-* **🐞 Fix** (KBN) Corrected document display in **Discover** when indices are defined in the user ACL block
-* **🐞 Fix** (KBN) Fixed an error preventing **Spaces** from being deleted in Kibana **9.1.0**
-* **🐞 Fix** (KBN) Corrected handling of `readonlyrest_kbn.whitelistedPaths` in `kibana.yml` when `xpack.security.enabled: true`
-* **🐞 Fix** (KBN) Resolved startup issues for Kibana versions **7.9.0 → 7.10.2**
-* **🐞 Fix** (KBN) Fixed report generation when `xpack.security.enabled: true` and `xpack.encryptedSavedObjects.encryptionKey` is set in Kibana **8.19.x** and **9.1.x**
+* **🐞Fix** (KBN) Resolved issue with index deletion in **Index Management** via Kibana UI
+* **🐞Fix** (KBN) Corrected document display in **Discover** when indices are defined in the user ACL block
+* **🐞Fix** (KBN) Fixed an error preventing **Spaces** from being deleted in Kibana **9.1.0**
+* **🐞Fix** (KBN) Corrected handling of `readonlyrest_kbn.whitelistedPaths` in `kibana.yml` when `xpack.security.enabled: true`
+* **🐞Fix** (KBN) Resolved startup issues for Kibana versions **7.9.0 → 7.10.2**
+* **🐞Fix** (KBN) Fixed report generation when `xpack.security.enabled: true` and `xpack.encryptedSavedObjects.encryptionKey` is set in Kibana **8.19.x** and **9.1.x**
 
 ### (2025-07-15) What's new in **ROR 1.65.1**
 * **🚀New** (KBN) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support
