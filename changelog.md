@@ -4,6 +4,7 @@
 * **🚨Security Fix** (KBN) [CVE-2025-7339](https://nvd.nist.gov/vuln/detail/CVE-2025-7339), [CVE-2025-7783](https://nvd.nist.gov/vuln/detail/CVE-2025-7783), [CVE-2025-54419](https://nvd.nist.gov/vuln/detail/CVE-2025-54419), [CVE-2025-9288](https://nvd.nist.gov/vuln/detail/CVE-2025-9288)
 * **🚨Security Fix** (KBN) [Prevented visibility of hidden functions through Kibana UI search](https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2)
 * **🚨Security Fix** (ES) Removed internal failure details from error responses to prevent unintended information disclosure
+* **🚀New** (ES) 9.1.3, 9.1.2, 9.0.6, 9.0.4, 8.19.3, 8.18.6 support
 * **🧐Enhancement** (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index
 * **🧐Enhancement** (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration
 * **🐞Fix** (KBN) Resolved issue with index deletion in **Index Management** via Kibana UI
