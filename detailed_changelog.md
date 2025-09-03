@@ -1,5 +1,11 @@
 # Changelog
 
+### (2025-09-03) What's new in **ROR 1.66.1**
+<details>
+<summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841">Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17</a></summary>
+This fix addresses a critical compatibility issue that prevented ReadonlyREST from starting on Java 17 with Elasticsearch versions 9.x, 8.19.x, and 8.18.x. The patch ensures proper initialization and resolves the startup failures.
+</details>
+
 ### (2025-08-28) What's new in **ROR 1.66.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-7339">CVE-2025-7339</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-7783">CVE-2025-7783</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-54419">CVE-2025-54419</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-9288">CVE-2025-9288</a></summary>
@@ -14,41 +20,44 @@ Fixes a security issue where hidden functions and administrative features were i
 Enhances security by sanitizing error responses to exclude internal system details that could be exploited by attackers, preventing potential information leakage.
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) 9.1.3, 9.1.2, 9.0.6, 9.0.4, 8.19.3, 8.18.6 support</summary>
+<summary><strong>🚀New</strong> (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
 Adds official support for the latest Elasticsearch patch versions, ensuring compatibility with recent security updates and bug fixes from Elasticsearch.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index</summary>
+<summary><strong>🚀New</strong> (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
 Improves authentication flow by optimizing metadata selection to prioritize ACL blocks with Kibana index definitions, ensuring more consistent user session behavior.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration</summary>
+<summary><strong>🧐Enhancement</strong> (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index</summary>
 Enhances configuration reliability by improving how consent flags are processed when set through environment variables, preventing configuration issues.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Resolved issue with index deletion in <strong>Index Management</strong> via Kibana UI</summary>
+<summary><strong>🧐Enhancement</strong> (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration</summary>
 Fixes a bug that prevented proper index deletion operations through Kibana's Index Management interface, restoring full lifecycle management functionality.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Corrected document display in <strong>Discover</strong> when indices are defined in the user ACL block</summary>
+<summary><strong>🐞Fix</strong> (KBN) Resolved issue with index deletion in <strong>Index Management</strong> via Kibana UI</summary>
 Addresses inconsistent document visibility in Kibana's Discover tab when user ACLs include index definitions, ensuring proper rendering based on permissions.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Fixed an error preventing <strong>Spaces</strong> from being deleted in Kibana <strong>9.1.0</strong></summary>
+<summary><strong>🐞Fix</strong> (KBN) Corrected document display in <strong>Discover</strong> when indices are defined in the user ACL block</summary>
 Resolves a compatibility issue with Kibana 9.1.0 that prevented Space deletion, restoring full Spaces management functionality for administrators.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Corrected handling of <code>readonlyrest_kbn.whitelistedPaths</code> in <code>kibana.yml</code> when <code>xpack.security.enabled: true</code></summary>
+<summary><strong>🐞Fix</strong> (KBN) Fixed an error preventing <strong>Spaces</strong> from being deleted in Kibana <strong>9.1.0</strong></summary>
 Fixes configuration parsing issues when both ROR whitelisted paths and X-Pack security are enabled, ensuring proper path-based access control.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Resolved startup issues for Kibana versions <strong>7.9.0 → 7.10.2</strong></summary>
+<summary><strong>🐞Fix</strong> (KBN) Corrected handling of <code>readonlyrest_kbn.whitelistedPaths</code> in <code>kibana.yml</code> when <code>xpack.security.enabled: true</code></summary>
 Addresses compatibility problems causing startup failures in older Kibana versions 7.9.0-7.10.2, ensuring backward compatibility.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Fixed report generation when <code>xpack.security.enabled: true</code> and <code>xpack.encryptedSavedObjects.encryptionKey</code> is set in Kibana <strong>8.19.x</strong> and <strong>9.1.x</strong></summary>
+<summary><strong>🐞Fix</strong> (KBN) Resolved startup issues for Kibana versions <strong>7.9.0 → 7.10.2</strong></summary>
 Resolves report generation failures when X-Pack security is enabled with encrypted saved objects, ensuring proper reporting functionality in secured environments.
 </details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Fixed report generation when `xpack.security.enabled: true` and `xpack.encryptedSavedObjects.encryptionKey` is set in Kibana **8.19.x** and **9.1.x**
 
 ### (2025-07-15) What's new in **ROR 1.65.1**
 <details>
