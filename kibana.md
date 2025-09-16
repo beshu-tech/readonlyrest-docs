@@ -1258,6 +1258,19 @@ readonlyrest_kbn.auth:
             jwks_uri: 'https://custom-jwks-uri'
 ```
 
+### Clock skew tolerance
+You can configure the clock tolerance (in seconds) to account for potential time discrepancies between the Kibana server and the OpenID Connect provider. This setting helps prevent authentication failures due to minor time differences.
+
+```yaml
+readonlyrest_kbn.auth:
+   oidc_kc:
+      [...]
+      clockToleranceSeconds: 5  # Default is 0 seconds
+```
+
+
+```yaml
+
 #### Client Additional Parameters
 You can find a list of all supported parameters:
 
