@@ -1268,9 +1268,6 @@ readonlyrest_kbn.auth:
       clockToleranceSeconds: 5  # Default is 0 seconds
 ```
 
-
-```yaml
-
 #### Client Additional Parameters
 You can find a list of all supported parameters:
 
