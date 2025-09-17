@@ -359,7 +359,7 @@ The audit events are JSON documents describing incoming requests and how the sys
 The example [event](#audit) is in default format and was produced by the default serializer (`tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`).
 
 You can:
-- not explicitly configure which serializer is used - in that case the default is `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
+* not explicitly configure which serializer is used - in that case the default is `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
     ```yaml
     readonlyrest:
       audit:
@@ -367,7 +367,7 @@ You can:
         outputs:
         - type: index
     ```
-- use any of the predefined serializer implementations provided by us ([see the list of predefined serializers](#predefined-serializers))
+* use any of the predefined serializer implementations provided by us ([see the list of predefined serializers](#predefined-serializers))
     ```yaml
     readonlyrest:
       audit:
@@ -378,16 +378,16 @@ You can:
             type: "static"
             class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
     ```
-- define serializer in config file, by specifying field names and values - with no implementation required ([see how to do it](#using-configurable-serializer))
-- create and use your own, custom implementation of the serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
+* define serializer in config file, by specifying field names and values - with no implementation required ([see how to do it](#using-configurable-serializer))
+* create and use your own, custom implementation of the serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
 #### Predefined serializers:
-- `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
-  - Serializes all non-`Allowed` events.
-  - Serializes `Allowed` events only when the corresponding rule specifies, that they should be logged at `INFO` verbosity level.
-  - Recommended for standard audit logging, where full request body capture is not required.
-  - Fields included:
+* `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
+  * Serializes all non-`Allowed` events.
+  * Serializes `Allowed` events only when the corresponding rule specifies, that they should be logged at `INFO` verbosity level.
+  * Recommended for standard audit logging, where full request body capture is not required.
+  * Fields included:
     ```
      `match` — whether the request matched a rule (boolean)
      `block` — reason for blocking, if blocked (string)
@@ -416,18 +416,18 @@ You can:
      `es_node_name` — Elasticsearch node name (string)
      `es_cluster_name` — Elasticsearch cluster name (string)
      ```
-- `tech.beshu.ror.audit.instances.QueryAuditLogSerializer`
-  - Similar to the `BlockVerbosityAwareAuditLogSerializer` regarding `Allowed` event handling and included JSON fields.
-  - Additionally, captures the full request body (`content` field)
-  - Recommended for standard audit logging, where full request body capture is required.
-- `tech.beshu.ror.audit.instances.FullAuditLogSerializer`
-  - Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
-  - Included fields are the same as for `BlockVerbosityAwareAuditLogSerializer`
-  - Use this serializer, when you need complete coverage of all events.
-- `tech.beshu.ror.audit.instances.FullAuditLogWithQuerySerializer`
-  - Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
-  - Included fields are the same as for `QueryAuditLogSerializer` (includes `content` field - full request body)
-  - Use this serializer, when you need complete coverage of all events with full request body.
+* `tech.beshu.ror.audit.instances.QueryAuditLogSerializer`
+  * Similar to the `BlockVerbosityAwareAuditLogSerializer` regarding `Allowed` event handling and included JSON fields.
+  * Additionally, captures the full request body (`content` field)
+  * Recommended for standard audit logging, where full request body capture is required.
+* `tech.beshu.ror.audit.instances.FullAuditLogSerializer`
+  * Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
+  * Included fields are the same as for `BlockVerbosityAwareAuditLogSerializer`
+  * Use this serializer, when you need complete coverage of all events.
+* `tech.beshu.ror.audit.instances.FullAuditLogWithQuerySerializer`
+  * Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
+  * Included fields are the same as for `QueryAuditLogSerializer` (includes `content` field - full request body)
+  * Use this serializer, when you need complete coverage of all events with full request body.
 
 #### Using configurable serializer:
 
