@@ -378,8 +378,8 @@ You can:
             type: "static"
             class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
     ```
-* define serializer in config file, by specifying field names and values - with no implementation required ([see how to do it](#using-configurable-serializer))
-* create and use your own, custom implementation of the serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
+* define a serializer in the config file, by specifying field names and values - no implementation required ([see how to do it](#using-configurable-serializer))
+* create and use your own custom implementation of the serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
 #### Predefined serializers:
@@ -440,8 +440,8 @@ Configuration should look like that:
         - type: index
           serializer:
             type: "configurable"
-            verbosity_level_serialization_mode: [INFO, ERROR] # defined, which Allowed events will be serialized, based on the rule verbosity level
-            fields: # list of fields in the resulting Json, placeholders (like {ES_NODE_NAME}) will be replaced with their corresponding values
+            verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+            fields: # list of fields in the resulting JSON; placeholders (like {ES_NODE_NAME}) will be replaced with their corresponding values
               node_name_with_static_suffix: "{ES_NODE_NAME} with suffix"
               another_field: "{ES_CLUSTER_NAME} {HTTP_METHOD}"
               tid: "{TASK_ID}"
