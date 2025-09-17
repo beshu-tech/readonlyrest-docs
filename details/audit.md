@@ -367,7 +367,7 @@ You can:
         outputs:
         - type: index
     ```
-- use any of the predefined serializer implementations provided by us ([see the list of predefined serializer](#predefined-serializers))
+- use any of the predefined serializer implementations provided by us ([see the list of predefined serializers](#predefined-serializers))
     ```yaml
     readonlyrest:
       audit:
@@ -378,14 +378,14 @@ You can:
             type: "static"
             class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
     ```
-- define serializer in config file, by specifying field names and values - with no implementation needed ([see how to do it](#using-configurable-serializer))
+- define serializer in config file, by specifying field names and values - with no implementation required ([see how to do it](#using-configurable-serializer))
 - create and use your own, custom implementation of the serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
 #### Predefined serializers:
 - `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
   - Serializes all non-`Allowed` events.
-  - Serializes `Allowed` events only when the corresponding rule specifies, that they should be logged at `Verbosity.Info`.
+  - Serializes `Allowed` events only when the corresponding rule specifies, that they should be logged at `INFO` verbosity level.
   - Recommended for standard audit logging, where full request body capture is not required.
   - Fields included:
     ```
