@@ -1,10 +1,12 @@
 # Changelog
 
 ### (2025-09-03) What's new in **ROR 1.66.1**
-<details>
-<summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841">Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17</a></summary>
-This fix addresses a critical compatibility issue that prevented ReadonlyREST from starting on Java 17 with Elasticsearch versions 9.x, 8.19.x, and 8.18.x. The patch ensures proper initialization and resolves the startup failures.
-</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 9.0.7, 8.18.7 support
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) [Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17](https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841)
 
 ### (2025-08-28) What's new in **ROR 1.66.0**
 <details>
@@ -20,11 +22,11 @@ Fixes a security issue where hidden functions and administrative features were i
 Enhances security by sanitizing error responses to exclude internal system details that could be exploited by attackers, preventing potential information leakage.
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
+<summary><strong>🚀New</strong> (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
 Adds official support for the latest Elasticsearch patch versions, ensuring compatibility with recent security updates and bug fixes from Elasticsearch.
 </details>
 <details>
-<summary><strong>🚀New</strong> (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
+<summary><strong>🚀New</strong> (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
 Improves authentication flow by optimizing metadata selection to prioritize ACL blocks with Kibana index definitions, ensuring more consistent user session behavior.
 </details>
 <details>
