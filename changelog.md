@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2025-09-03) What's new in **ROR 1.66.1**
+* **🚀New** (KBN) 9.0.7, 8.18.7 support
 * **🚀New** (ES) 9.0.7, 8.18.7 support
 * **🐞Fix** (ES) [Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17](https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841)
 
