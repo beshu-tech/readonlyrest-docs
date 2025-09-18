@@ -1263,8 +1263,7 @@ You can find a list of all supported parameters:
 
 For Kibana 7.12.0 and above: [documentation](https://github.com/panva/openid-client/tree/v5.x/docs#new-clientmetadata-jwks-options)
 
-For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.x/docs#new-clientmetadata-jwks-options)
-
+For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.x/docs#new-clientmetadata-jwks-options
 ```yaml
 readonlyrest_kbn.auth:
    oidc_kc:
@@ -1579,3 +1578,14 @@ Sometimes, Enterprise users might need more flexibility and customize the plugin
 * Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
 
 Visit the [Custom middleware](examples/custom-middleware/) to know more.
+
+
+## Terminate Kibana on ES high-watermark
+
+When enabled, Kibana will exit if the connected Elasticsearch cluster reports a disk high‑watermark condition. This is useful to prevent Kibana from running in a degraded state when Elasticsearch is unable to allocate shards due to insufficient disk space.
+
+```yaml
+# kibana.yml
+# If set to true, Kibana will exit when Elasticsearch reports a disk high-watermark condition.
+readonlyrest_kbn.diskThresholdVerificationEnabled: false  # default: true
+```
