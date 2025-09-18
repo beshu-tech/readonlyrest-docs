@@ -1263,7 +1263,8 @@ You can find a list of all supported parameters:
 
 For Kibana 7.12.0 and above: [documentation](https://github.com/panva/openid-client/tree/v5.x/docs#new-clientmetadata-jwks-options)
 
-For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.x/docs#new-clientmetadata-jwks-options
+For Kibana below 7.12.0: [documentation](https://github.com/panva/openid-client/tree/v4.x/docs#new-clientmetadata-jwks-options)
+
 ```yaml
 readonlyrest_kbn.auth:
    oidc_kc:
