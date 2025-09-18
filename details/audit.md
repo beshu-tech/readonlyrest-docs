@@ -359,7 +359,7 @@ The audit events are JSON documents describing incoming requests and how the sys
 The example [event](#audit) is in default format and was produced by the default serializer (`tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`).
 
 You can:
-* not explicitly configure which serializer is used - in that case the default is `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
+* skip serializer configuration - in that case the default is `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
     ```yaml
     readonlyrest:
       audit:
@@ -367,7 +367,7 @@ You can:
         outputs:
         - type: index
     ```
-* use any of the predefined serializer implementations provided by us ([see the list of predefined serializers](#predefined-serializers))
+* use any of the predefined serializers ([see the list of predefined serializers](#predefined-serializers))
     ```yaml
     readonlyrest:
       audit:
@@ -378,8 +378,8 @@ You can:
             type: "static"
             class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
     ```
-* define a serializer in the config file, by specifying field names and values - no implementation required ([see how to do it](#using-configurable-serializer))
-* create and use your own custom implementation of the serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
+* use dynamic, configurable serializer - define JSON fields in the configuration file (no implementation required,[see how to do it](#using-configurable-serializer))
+* implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
 #### Predefined serializers:
@@ -389,32 +389,32 @@ You can:
   * Recommended for standard audit logging, where full request body capture is not required.
   * Fields included:
     ```
-     `match` — whether the request matched a rule (boolean)
-     `block` — reason for blocking, if blocked (string)
-     `id` — audit event identifier (string)
-     `final_state` — final processing state (string)
-     `@timestamp` — event timestamp (ISO-8601 string)
-     `correlation_id` — correlation identifier for tracing (string)
-     `processingMillis` — request processing duration in milliseconds (number)
-     `error_type` — type of error, if any (string)
-     `error_message` — error message, if any (string)
-     `content_len` — request body size in bytes (number)
-     `content_len_kb` — request body size in kilobytes (number)
-     `type` — request type (string)
-     `origin` — client (remote) address (string)
-     `destination` — server (local) address (string)
-     `xff` — `X-Forwarded-For` HTTP header value (string)
-     `task_id` — Elasticsearch task ID (number)
-     `req_method` — HTTP request method (string)
-     `headers` — HTTP header names (array of strings)
-     `path` — HTTP request path (string)
-     `user` — authenticated user (string)
-     `impersonated_by` — impersonating user, if applicable (string)
-     `action` — Elasticsearch action name (string)
-     `indices` — indices involved in the request (array of strings)
-     `acl_history` — access control evaluation history (string)
-     `es_node_name` — Elasticsearch node name (string)
-     `es_cluster_name` — Elasticsearch cluster name (string)
+     match — whether the request matched a rule (boolean)  
+     block — reason for blocking, if blocked (string)  
+     id — audit event identifier (string)  
+     final_state — final processing state (string)  
+     @timestamp — event timestamp (ISO-8601 string)  
+     correlation_id — correlation identifier for tracing (string)  
+     processingMillis — request processing duration in milliseconds (number)  
+     error_type — type of error, if any (string)  
+     error_message — error message, if any (string)  
+     content_len — request body size in bytes (number)  
+     content_len_kb — request body size in kilobytes (number)  
+     type — request type (string)  
+     origin — client (remote) address (string)  
+     destination — server (local) address (string)  
+     xff — X-Forwarded-For HTTP header value (string)  
+     task_id — Elasticsearch task ID (number)  
+     req_method — HTTP request method (string)  
+     headers — HTTP header names (array of strings)  
+     path — HTTP request path (string)  
+     user — authenticated user (string)  
+     impersonated_by — impersonating user, if applicable (string)  
+     action — Elasticsearch action name (string)  
+     indices — indices involved in the request (array of strings)  
+     acl_history — access control evaluation history (string)  
+     es_node_name — Elasticsearch node name (string)  
+     es_cluster_name — Elasticsearch cluster name (string)  
      ```
 * `tech.beshu.ror.audit.instances.QueryAuditLogSerializer`
   * Similar to the `BlockVerbosityAwareAuditLogSerializer` regarding `Allowed` event handling and included JSON fields.
@@ -442,8 +442,8 @@ Configuration should look like that:
             type: "configurable"
             verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
             fields: # list of fields in the resulting JSON; placeholders (like {ES_NODE_NAME}) will be replaced with their corresponding values
-              node_name_with_static_suffix: "{ES_NODE_NAME} with suffix"
-              another_field: "{ES_CLUSTER_NAME} {HTTP_METHOD}"
+              node_details: "{ES_CLUSTER_NAME}/{ES_NODE_NAME}"
+              http_request: "{HTTP_METHOD} {HTTP_PATH}"
               tid: "{TASK_ID}"
               bytes: "{CONTENT_LENGTH_IN_BYTES}"
 ```
@@ -451,8 +451,8 @@ Configuration should look like that:
 The configuration above corresponds to serialized event looking like that:
 ```json
   {
-    "node_name_with_static_suffix": "myEsNode with suffix",
-    "another_field": "myEsClusterName GET",
+    "node_details": "mainEsCluster/esNode01",
+    "http_request": "GET /_cat",
     "tid": 0,
     "bytes": 123
   }
