@@ -378,7 +378,7 @@ You can:
             type: "static"
             class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
     ```
-* use dynamic, configurable serializer - define JSON fields in the configuration file (no implementation required,[see how to do it](#using-configurable-serializer))
+* use dynamic, configurable serializer - define JSON fields in ReadonlyREST settings (no implementation required, [see how to do it](#using-configurable-serializer))
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
