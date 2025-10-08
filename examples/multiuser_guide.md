@@ -63,7 +63,7 @@ readonlyrest:
       indices: ["logstash-2019*"] # <--- can see only data from 2019
       kibana:
         access: ro
-        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management"]
+        hide_apps: ["readonlyrest_kbn", "timelion", "kibana:dev_tools", "kibana:management", "^(?!(Analytics\\|Management).*$).*"]
 
     - name: "::RW::"
       auth_key: rw_usr:dev
@@ -78,6 +78,8 @@ readonlyrest:
       kibana:
         access: admin
 ```
+
+**⚠️IMPORTANT (Windows users)**: Regex patterns in configuration must use double backslashes (`\\`) and omit `/.../` delimiters in order to work correctly when ES with ROR is installed on Windows (the configuration above contains an example of regex, that will work correctly on Windows)
 
 ## Setup: the Kibana side
 
