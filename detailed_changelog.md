@@ -3,7 +3,7 @@
 ### (2025-09-03) What's new in **ROR 1.66.1**
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) 9.1.4, 9.0.7, 8.19.4, 8.18.7 support
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) 9.1.5, 9.1.4, 9.0.8, 9.0.7 8.19.5, 8.19.4, 8.18.7 support
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 9.1.5, 9.1.4, 9.0.7, 8.19.5, 8.19.4, 8.18.8, 8.18.7 support
