@@ -978,7 +978,7 @@ In detail, this feature creates three Kibana "saved objects":
 
 The audit log dashboard, by default, has only a few basic visualizations. They cover security, access logs, and performance metrics.
 
-## SAML 
+## SAML
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 
@@ -1009,6 +1009,9 @@ readonlyrest:
     - name: kbn1
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
+
+There are also [ror_kbn_authentication](elasticsearch.md#ror_kbn_authentication) (which handles only authentication) and 
+[ror_kbn_authorization](elasticsearch.md#ror_kbn_authorization) (only authorization) rules available in the ROR Elasticsearch plugin.
 
 **⚠️IMPORTANT** Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
 
