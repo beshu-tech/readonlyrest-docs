@@ -1058,7 +1058,66 @@ Used to delegate groups resolution for a user to a JSON microservice. See below,
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `ror_kbn_auth` 
+#### `ror_kbn_authentication`
+([Enterprise](https://readonlyrest.com/enterprise))
+
+For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication. From ROR's perspective it authenticates users.
+
+```yaml
+readonlyrest:
+  access_control_rules:
+    - name: "ReadonlyREST Enterprise instance"
+      ror_kbn_authentication:
+        name: "kbn1"
+
+  ror_kbn:
+    - name: kbn1
+      signature_key: "shared_secret_kibana1" # <- use environmental variables for better security!
+```
+
+It handles authentication only using the configured ROR KBN connector (here `kbn1`). Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
+
+[Impersonation](details/impersonation.md) is currently not supported by this rule.
+
+#### `ror_kbn_authorization`
+([Enterprise](https://readonlyrest.com/enterprise))
+
+For [Enterprise](https://readonlyrest.com/enterprise) customers only. From ROR's perspective it authorizes users.
+
+```yaml
+readonlyrest:
+  access_control_rules:
+
+    - name: "ReadonlyREST Enterprise instance #1"
+      ror_kbn_authorization:
+        name: "kbn1"
+        groups_any_of: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to at least one of the configured groups
+
+    - name: "ReadonlyREST Enterprise instance #1 - two groups required"
+      ror_kbn_authorization:
+        name: "kbn1"
+        groups_all_of: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
+
+    - name: "ReadonlyREST Enterprise instance #2"
+      ror_kbn_authorization:
+        name: "kbn2"
+
+  ror_kbn:
+    - name: kbn1
+      signature_key: "shared_secret_kibana1" # <- use environmental variables for better security!
+
+    - name: kbn2
+      signature_key: "shared_secret_kibana2" # <- use environmental variables for better security!
+```
+
+It handles authorization only using the configured ROR KBN connector (here `kbn1` and `kbn2`). Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
+
+[Impersonation](details/impersonation.md) is currently not supported by this rule.
+
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+#### `ror_kbn_auth`
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication. From ROR's perspective it authenticates and authorize users. 
