@@ -1098,10 +1098,6 @@ readonlyrest:
         name: "kbn1"
         groups_all_of: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
 
-    - name: "ReadonlyREST Enterprise instance #2"
-      ror_kbn_authorization:
-        name: "kbn2"
-
   ror_kbn:
     - name: kbn1
       signature_key: "shared_secret_kibana1" # <- use environmental variables for better security!
@@ -1135,10 +1131,6 @@ readonlyrest:
       ror_kbn_auth:
         name: "kbn1"
         groups_all_of: ["SAML_GRP_1", "SAML_GRP_2"] # <- use this field when a user should belong to all configured groups
-
-    - name: "ReadonlyREST Enterprise instance #2"
-      ror_kbn_auth:
-        name: "kbn2"
 
   ror_kbn:
     - name: kbn1

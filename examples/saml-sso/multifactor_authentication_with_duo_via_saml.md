@@ -52,13 +52,13 @@ readonlyrest:
 #    [... all your regular ACL blocks ...]
 
     - name: "ReadonlyREST Enterprise Kibana instance #1"
-      ror_kbn_auth:
+      ror_kbn_authentication:
         name: "kbn1"
 
 # OPTIONAL FOR SECONDARY KIBANA ###
 #
 #    - name: "ReadonlyREST Enterprise Kibana instance #2"
-#      ror_kbn_auth:
+#      ror_kbn_authentication:
 #        name: "kbn2"
 
   ror_kbn:

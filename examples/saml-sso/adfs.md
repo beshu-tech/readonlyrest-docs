@@ -445,7 +445,7 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
 7. <img src="../../.gitbook/assets/110.png" alt="" data-size="original">
 8. Open the readonlyrest.yml file in Notepad to run this very basic configuration that configures the following two different access control rules: 1. **“**::KIBANA-SRV::**”**—this rule allows the Kibana server to authenticate to Elasticsearch using digest authentication with the username “kibana” and password “kibana.” 2. “ADFS Users”—this rule uses the ror_kbn_auth method which allows SAML authenticates to succeed.
 9. Create a random 256-character signature\_key. This key will be shared between Kibana and Elasticsearch.
-10. Please note that the kbn1 identifier must match in the ror_kbn_auth and ror_kbn sections; however, any names can be used for them.
+10. Please note that the kbn1 identifier must match in the ror_kbn_authentication and ror_kbn sections; however, any names can be used for them.
 
     ```yaml
     readonlyrest:  
@@ -455,13 +455,19 @@ Elasticsearch will be installed on the lc-win2019-03 server provisioned with 8GB
        auth_key: kibana:kibana
 
      - name: "ADFS Users"  
-       ror_kbn_auth:  
+       ror_kbn_authentication:  
          name: "kbn1"
 
      ror_kbn:  
      - name: kbn1  
        signature_key: "VEGj@YLLhsAigspnNi2Xsopsqja_nrKUqU__eQW9VQ2!9p!RoeHwc-G.y-MVJtYYcDFCH.e3W2BKcZsoynJaHyjjXyh7kDHjsYKPkczvai-xCzP@Ez3QW23ZBFuReA7kPAqnc6pQ3VeNeFf3sWNoKeJAt_d9J7aFwEvCP2Gb-kQcA8YR*wNWHQuo-jwmmo2Qqpu_Fq3aKFCbNFWUbK@BVwmmKezxn3h687mAkuyhV4.hnfrjVjF-Rphjqmy4.tB8"
     ```
+
+There are three rule types available, depending on what you want to achieve:
+- [ror_kbn_authentication](../../elasticsearch.md#ror_kbn_authentication) (handles only authentication)
+- [ror_kbn_authorization](../../elasticsearch.md#ror_kbn_authorization) (handles only authorization)
+- [ror_kbn_auth](../../elasticsearch.md#ror_kbn_auth) (authentication + authorization in a single rule)
+
 11. Restart **Elasticsearch** **Windows Service**. This can be done in the **Services** MMC snapin.
 
 ## Installing and Configuring Kibana and the ReadonlyREST Enterprise Plugin

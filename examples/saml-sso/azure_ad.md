@@ -226,8 +226,8 @@ readonlyrest:
         access: "admin"
         index: ".kibana_admin_tenancy"
       ror_kbn_auth:
-        roles: ["3f8ebed8-f742-42a6-94ba-2d57550fc3cf"]
         name: "kbn1"
+        groups_any_of: ["3f8ebed8-f742-42a6-94ba-2d57550fc3cf"]
 
     - name: "Azure AD - Anyone else"
       indices: ["readonlyrest-audit*"]
@@ -237,6 +237,7 @@ readonlyrest:
         hide_apps: ["readonlyrest_kbn"]
       ror_kbn_auth:
         name: "kbn1"
+        groups_any_of: ["*"]
 
     ror_kbn:
     - name: kbn1
