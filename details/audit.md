@@ -382,7 +382,7 @@ You can:
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
-#### Predefined serializers:
+### Predefined serializers:
 * `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
   * Serializes all non-`Allowed` events.
   * Serializes `Allowed` events only when the corresponding rule specifies, that they should be logged at `INFO` verbosity level.
@@ -429,7 +429,7 @@ You can:
   * Included fields are the same as for `QueryAuditLogSerializer` (includes `content` field - full request body)
   * Use this serializer, when you need complete coverage of all events with full request body.
 
-#### Using configurable serializer:
+### Using configurable serializer:
 
 Configuration should look like that:
 ```yaml

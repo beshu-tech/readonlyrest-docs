@@ -1,5 +1,22 @@
 # Changelog
 
+### (2025-10-14) What’s new in **ROR 1.67.0**
+* **🚨 Security Fix** (KBN) [CVE-2025-58754](https://nvd.nist.gov/vuln/detail/CVE-2025-58754)
+* **🚨 Security Fix** (ES) [CVE-2025-58057](https://nvd.nist.gov/vuln/detail/CVE-2025-58057), [CVE-2025-58056](https://nvd.nist.gov/vuln/detail/CVE-2025-58056)
+* **🚀 New** (ES) [Added support for defining a custom audit serializer directly in ROR settings (no code required)](https://docs.readonlyrest.com/elasticsearch/audit#using-configurable-serializer)
+* **🚀 New** (ES) [Introduced new predefined audit serializers: `ReportingAllEventsAuditLogSerializer`, `ReportingAllEventsWithQueryAuditLogSerializer`](https://docs.readonlyrest.com/elasticsearch/audit#predefined-serializers)
+* **🚀 New** (ES) Added new rules: [`ror_kbn_authentication`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_authentication) and [`ror_kbn_authorization`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_authorization), as alternatives to the existing `ror_kbn_auth` rule
+* **🧐 Enhancement** (KBN) [Added OIDC `clock-skew-tolerance` configuration option in `kibana.yml`](https://docs.readonlyrest.com/kibana#clock-skew-tolerance)
+* **🧐 Enhancement** (KBN) [Added option to disable Kibana termination on watermark errors in `kibana.yml`](https://docs.readonlyrest.com/kibana#terminate-kibana-on-es-high-watermark)
+* **🐞 Fix** (KBN) Logout did not invalidate the app session when the `ror_kbn_auth` rule was used with local group definitions
+* **🐞 Fix** (KBN) [Restored keyword field value suggestions in Discover/Data View filters](https://forum.readonlyrest.com/t/kibana-data-view-filter-not-working-with-keyword/2843)
+* **🐞 Fix** (KBN) Integration-based options were visible in search results even when the app was marked as hidden
+* **🐞 Fix** (KBN) Index Management appeared in app search results even when the app was declared as hidden
+* **🐞 Fix** (KBN) Resolved an issue with CSRF token override when multiple browser tabs were open
+* **🐞 Fix** (KBN) Fixed OIDC compatibility for Kibana 7.10.2 and earlier
+* **🐞 Fix** (ES) Restored backward compatibility for custom audit log serializer implementations extending the `DefaultAuditLogSerializer` class. Custom serializers compiled against ROR 1.65 or 1.66 that use `DefaultAuditLogSerializer` must be recompiled to work correctly.
+* **🐞 Fix** (ES) Fixed a defect that broke the "Snapshot and Restore" functionality in Kibana
+
 ### (2025-09-03) What's new in **ROR 1.66.1**
 * **🚀New** (KBN) 9.1.4, 9.0.7, 8.19.4, 8.18.7 support
 * **🚀New** (ES) 9.1.4, 9.0.7, 8.19.4, 8.18.7 support
