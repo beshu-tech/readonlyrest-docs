@@ -978,13 +978,13 @@ In detail, this feature creates three Kibana "saved objects":
 
 The audit log dashboard, by default, has only a few basic visualizations. They cover security, access logs, and performance metrics.
 
-## SAML 
+## SAML
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 
 ReadonlyREST Enterprise supports service provider-initiated via SAML. This connector supports both SSO (single sign-on) and SLO (single log out). Here is how to configure it.
 
-### Configure `ror_kbn_auth` bridge
+### Configure ReadonlyREST ES bridge
 
 In order for the user identity information to flow securely from Kibana to Elasticsearch, we need to set up the two plugins with a shared secret, that is: an arbitrarily long string.
 
@@ -1002,13 +1002,18 @@ readonlyrest:
     # ... all usual blocks of rules...
 
     - name: "ReadonlyREST Enterprise instance #1"
-      ror_kbn_auth:
+      ror_kbn_authentication:
         name: "kbn1"
 
     ror_kbn:
     - name: kbn1
       signature_key: "my_shared_secret_kibana1_(min 256 chars)" # <- use environmental variables for better security!
 ```
+
+There are three rule types available, depending on what you want to achieve:
+- [ror_kbn_authentication](elasticsearch.md#ror_kbn_authentication) (handles only authentication)
+- [ror_kbn_authorization](elasticsearch.md#ror_kbn_authorization) (handles only authorization)
+- [ror_kbn_auth](elasticsearch.md#ror_kbn_auth) (authentication + authorization in a single rule)
 
 **⚠️IMPORTANT** Basic HTTP auth credentials for the Kibana server are **still needed** for now, due to how Kibana works.
 
@@ -1104,7 +1109,7 @@ ReadonlyREST Enterprise supports OpenID Connect for both authentication and auth
 
 Here is how to configure it.
 
-### Configure `ror_kbn_auth` bridge
+### Configure ReadonlyREST ES bridge
 
 This part is identical as seen in SAML connectors. In order for the user identity information to flow securely from Kibana to Elasticsearch, we need to set up the two plugins with a shared secret, that is: an arbitrarily long string.
 
@@ -1122,7 +1127,7 @@ readonlyrest:
     # ... all usual blocks of rules...
 
     - name: "ReadonlyREST Enterprise instance #1"
-      ror_kbn_auth:
+      ror_kbn_authentication:
         name: "kbn1"
 
     ror_kbn:
