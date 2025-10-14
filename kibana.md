@@ -1263,6 +1263,16 @@ readonlyrest_kbn.auth:
             jwks_uri: 'https://custom-jwks-uri'
 ```
 
+### Clock skew tolerance
+You can configure the clock tolerance (in seconds) to account for potential time discrepancies between the Kibana server and the OpenID Connect provider. This setting helps prevent authentication failures due to minor time differences.
+
+```yaml
+readonlyrest_kbn.auth:
+   oidc_kc:
+      [...]
+      clockToleranceSeconds: 5  # Default is 0 seconds
+```
+
 #### Client Additional Parameters
 You can find a list of all supported parameters:
 
@@ -1584,3 +1594,14 @@ Sometimes, Enterprise users might need more flexibility and customize the plugin
 * Inline: `readonlyrest_kbn.custom_middleware_inject: 'function test(req, res, next) {logger.debug("custom middleware called"); next()}'`
 
 Visit the [Custom middleware](examples/custom-middleware/) to know more.
+
+
+## Terminate Kibana on ES high-watermark
+
+When enabled, Kibana will exit if the connected Elasticsearch cluster reports a disk high‑watermark condition. This is useful to prevent Kibana from running in a degraded state when Elasticsearch is unable to allocate shards due to insufficient disk space.
+
+```yaml
+# kibana.yml
+# If set to true, Kibana will exit when Elasticsearch reports a disk high-watermark condition.
+readonlyrest_kbn.diskThresholdVerificationEnabled: false  # default: true
+```

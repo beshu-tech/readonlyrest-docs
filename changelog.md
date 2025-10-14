@@ -1,14 +1,16 @@
 # Changelog
 
 ### (2025-09-03) What's new in **ROR 1.66.1**
+* **🚀New** (KBN) 9.1.4, 9.0.7, 8.19.4, 8.18.7 support
+* **🚀New** (ES) 9.1.4, 9.0.7, 8.19.4, 8.18.7 support
 * **🐞Fix** (ES) [Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17](https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841)
 
 ### (2025-08-28) What's new in **ROR 1.66.0**
 * **🚨Security Fix** (KBN) [CVE-2025-7339](https://nvd.nist.gov/vuln/detail/CVE-2025-7339), [CVE-2025-7783](https://nvd.nist.gov/vuln/detail/CVE-2025-7783), [CVE-2025-54419](https://nvd.nist.gov/vuln/detail/CVE-2025-54419), [CVE-2025-9288](https://nvd.nist.gov/vuln/detail/CVE-2025-9288)
 * **🚨Security Fix** (KBN) [Prevented visibility of hidden functions through Kibana UI search](https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2)
 * **🚨Security Fix** (ES) Removed internal failure details from error responses to prevent unintended information disclosure
-* **🚀New** (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support
 * **🚀New** (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support
+* **🚀New** (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support
 * **🧐Enhancement** (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index
 * **🧐Enhancement** (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration
 * **🐞Fix** (KBN) Resolved issue with index deletion in **Index Management** via Kibana UI

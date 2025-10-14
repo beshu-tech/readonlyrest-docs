@@ -355,25 +355,138 @@ readonlyrest:
 
 ## Extending audit events
 
-The audit events are JSON documents describing incoming requests and how the system has handled them. To create such events, we use a  `serializer`, which is responsible for the event's serialization and filtering.
-The example [event](#audit) is in default format and was produced by the default serializer (`tech.beshu.ror.audit.instances.DefaultAuditLogSerializer`).
-You can use any of the predefined serializers or use a custom one.
+The audit events are JSON documents describing incoming requests and how the system has handled them. To create such events, we use a `serializer`, which is responsible for the event's serialization and filtering.
+The example [event](#audit) is in default format and was produced by the default serializer (`tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`).
 
-For example, if you want to add the request content to the audit event then an additional serializer is provided.
-This will add the entire user request within the content field of the audit event.
-To enable, configure the `serializer` parameter as below.
+You can:
+* skip serializer configuration - in that case the default is `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
+    ```yaml
+    readonlyrest:
+      audit:
+        enabled: true
+        outputs:
+        - type: index
+    ```
+* use any of the predefined serializers ([see the list of predefined serializers](#predefined-serializers))
+    ```yaml
+    readonlyrest:
+      audit:
+        enabled: true
+        outputs:
+        - type: index
+          serializer:
+            type: "static"
+            class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
+    ```
+* use dynamic, configurable serializer - define JSON fields in ReadonlyREST settings (no implementation required, [see how to do it](#using-configurable-serializer))
+* implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
+
+#### Predefined serializers:
+* `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
+  * Serializes all non-`Allowed` events.
+  * Serializes `Allowed` events only when the corresponding rule specifies, that they should be logged at `INFO` verbosity level.
+  * Recommended for standard audit logging, where full request body capture is not required.
+  * Fields included:
+    ```
+     match — whether the request matched a rule (boolean)  
+     block — reason for blocking, if blocked (string)  
+     id — audit event identifier (string)  
+     final_state — final processing state (string)  
+     @timestamp — event timestamp (ISO-8601 string)  
+     correlation_id — correlation identifier for tracing (string)  
+     processingMillis — request processing duration in milliseconds (number)  
+     error_type — type of error, if any (string)  
+     error_message — error message, if any (string)  
+     content_len — request body size in bytes (number)  
+     content_len_kb — request body size in kilobytes (number)  
+     type — request type (string)  
+     origin — client (remote) address (string)  
+     destination — server (local) address (string)  
+     xff — X-Forwarded-For HTTP header value (string)  
+     task_id — Elasticsearch task ID (number)  
+     req_method — HTTP request method (string)  
+     headers — HTTP header names (array of strings)  
+     path — HTTP request path (string)  
+     user — authenticated user (string)  
+     impersonated_by — impersonating user, if applicable (string)  
+     action — Elasticsearch action name (string)  
+     indices — indices involved in the request (array of strings)  
+     acl_history — access control evaluation history (string)  
+     es_node_name — Elasticsearch node name (string)  
+     es_cluster_name — Elasticsearch cluster name (string)  
+     ```
+* `tech.beshu.ror.audit.instances.QueryAuditLogSerializer`
+  * Similar to the `BlockVerbosityAwareAuditLogSerializer` regarding `Allowed` event handling and included JSON fields.
+  * Additionally, captures the full request body (`content` field)
+  * Recommended for standard audit logging, where full request body capture is required.
+* `tech.beshu.ror.audit.instances.FullAuditLogSerializer`
+  * Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
+  * Included fields are the same as for `BlockVerbosityAwareAuditLogSerializer`
+  * Use this serializer, when you need complete coverage of all events.
+* `tech.beshu.ror.audit.instances.FullAuditLogWithQuerySerializer`
+  * Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
+  * Included fields are the same as for `QueryAuditLogSerializer` (includes `content` field - full request body)
+  * Use this serializer, when you need complete coverage of all events with full request body.
+
+#### Using configurable serializer:
+
+Configuration should look like that:
 ```yaml
-readonlyrest:
-  audit:
-    enabled: true
-    outputs:
-    - type: index
-      serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
-      # in case when the `log` type is used
-    - type: log
-      serializer: tech.beshu.ror.requestcontext.QueryAuditLogSerializer
-  ...
+    readonlyrest:
+      audit:
+        enabled: true
+        outputs:
+        - type: index
+          serializer:
+            type: "configurable"
+            verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+            fields: # list of fields in the resulting JSON; placeholders (like {ES_NODE_NAME}) will be replaced with their corresponding values
+              node_details: "{ES_CLUSTER_NAME}/{ES_NODE_NAME}"
+              http_request: "{HTTP_METHOD} {HTTP_PATH}"
+              tid: "{TASK_ID}"
+              bytes: "{CONTENT_LENGTH_IN_BYTES}"
+```
+
+The configuration above corresponds to serialized event looking like that:
+```json
+  {
+    "node_details": "mainEsCluster/esNode01",
+    "http_request": "GET /_cat",
+    "tid": 0,
+    "bytes": 123
+  }
+```
+
+Available placeholders:
+```
+  {IS_MATCHED} — whether the request matched a rule (boolean)
+  {REASON} — reason for blocking, if blocked (string)
+  {ID} — audit event identifier (string)
+  {FINAL_STATE} — final processing state (string)
+  {TIMESTAMP} — event timestamp (ISO-8601 string)
+  {CORRELATION_ID} — correlation identifier for tracing (string)
+  {PROCESSING_DURATION_MILLIS} — request processing duration in milliseconds (number)
+  {ERROR_TYPE} — type of error, if any (string)
+  {ERROR_MESSAGE} — error message, if any (string)
+  {CONTENT_LENGTH_IN_BYTES} — request body size in bytes (number)
+  {CONTENT_LENGTH_IN_KB} — request body size in kilobytes (number)
+  {TYPE} — request type (string)
+  {REMOTE_ADDRESS} — client (remote) address (string)
+  {LOCAL_ADDRESS} — server (local) address (string)
+  {X_FORWARDED_FOR_HTTP_HEADER} — `X-Forwarded-For` HTTP header value (string)
+  {TASK_ID} — Elasticsearch task ID (number)
+  {HTTP_METHOD} — HTTP request method (string)
+  {HTTP_HEADER_NAMES} — HTTP header names (array of strings)
+  {HTTP_PATH} — HTTP request path (string)
+  {USER} — authenticated user (string)
+  {IMPERSONATED_BY_USER} — impersonating user, if applicable (string)
+  {ACTION} — Elasticsearch action name (string)
+  {INVOLVED_INDICES} — indices involved in the request (array of strings)
+  {ACL_HISTORY} — access control evaluation history (string)
+  {CONTENT} — request body content (string or object)
+  {ES_NODE_NAME} — Elasticsearch node name (string)
+  {ES_CLUSTER_NAME} — Elasticsearch cluster name (string)
 ```
 
 ### Custom audit event serializer
@@ -437,7 +550,9 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
           enabled: true
           outputs:
           - type: index
-            serializer: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
+            serializer:
+              type: "static"
+              class_name: "JavaCustomAuditLogSerializer" # when your serializer class is not in default package, you should use full class name here (eg. "tech.beshu.ror.audit.instances.QueryAuditLogSerializer")
    ```
 
 3. Start elasticsearch \(with ROR installed\) and grep for:
