@@ -732,7 +732,7 @@ In this case, only the Stack Management Tags application will be hidden
 
 ```yaml
 kibana:
-  hide_apps: [ "/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/" ]:
+  hide_apps: [ "/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/" ]
 ```
 
 In this case, all Stack Management Kibana sections will be hidden
