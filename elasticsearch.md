@@ -1293,33 +1293,6 @@ if (alertMessage) {
 }
 ```
 
-#### `kibana_access`
-
-`kibana_access: ro`
-
-**⚠️Deprecated**: it's equivalent of [`kibana.access`](elasticsearch.md#access). Should no longer be used.
-
-#### `kibana_index` 
-([Enterprise](https://readonlyrest.com/enterprise))
-
-`kibana_index: .kibana-user1`
-
-**⚠️Deprecated**: it's equivalent of [`kibana.index`](elasticsearch.md#index). Should no longer be used.
-
-#### `kibana_template_index` 
-([Enterprise](https://readonlyrest.com/enterprise))
-
-`kibana_template_index: .kibana_template`
-
-**⚠️Deprecated**: it's equivalent of [`kibana.template_index`](elasticsearch.md#template_index). Should no longer be used.
-
-#### `kibana_hide_apps` 
-([PRO](https://readonlyrest.com/pro))
-
-`kibana_hide_apps: [ "Security", "Enterprise Search"]`
-
-**⚠️Deprecated**: it's equivalent of [`kibana.hide_apps`](elasticsearch.md#hide_apps). Should no longer be used.
-
 ### Elasticsearch level rules
 
 #### `indices`
