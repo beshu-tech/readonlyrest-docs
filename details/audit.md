@@ -30,7 +30,8 @@ Here is an example of the data points contained in each audit event. We can leve
     "matched_block": "::RW::",
     "id": "933409190-292622897#1158",
     "content_len": 0,
-    "user": "simone"
+    "logged_user": "simone",
+    "presented_identity": "simone"
   }
 ```
 
@@ -408,7 +409,9 @@ You can:
      req_method — HTTP request method (string)  
      headers — HTTP header names (array of strings)  
      path — HTTP request path (string)  
-     user — authenticated user (string)  
+     user — authenticated user (string) - deprecated field, please use `logged_user` or `presented_identity`
+     logged_user — human-readable username (string)
+     presented_identity — user identity that was presented with the request, e.g. basic auth username (string)
      impersonated_by — impersonating user, if applicable (string)  
      action — Elasticsearch action name (string)  
      indices — indices involved in the request (array of strings)  
@@ -479,7 +482,8 @@ Available placeholders:
   {HTTP_METHOD} — HTTP request method (string)
   {HTTP_HEADER_NAMES} — HTTP header names (array of strings)
   {HTTP_PATH} — HTTP request path (string)
-  {USER} — authenticated user (string)
+  {LOGGED_USER} — human-readable username (string)
+  {PRESENTED_IDENTITY} — user identity that was presented with the request, e.g. basic auth username (string)
   {IMPERSONATED_BY_USER} — impersonating user, if applicable (string)
   {ACTION} — Elasticsearch action name (string)
   {INVOLVED_INDICES} — indices involved in the request (array of strings)
