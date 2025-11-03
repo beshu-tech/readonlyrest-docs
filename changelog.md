@@ -5,7 +5,7 @@
 * **🧐 Enhancement** (ES) Allow using the `actions` rule with the `kibana` rule in the same block when `kibana.access: unrestricted`
 * **🐞 Fix** (KBN) Fixed JWT handling for wrong license edition
 * **🐞 Fix** (KBN) Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x
-* **🐞 Fix** (KBN) [Resolved report download failure on Kibana 9.1.x](ttps://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2)
+* **🐞 Fix** (KBN) [Resolved report download failure on Kibana 9.1.x](https://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2)
 * **🐞 Fix** (KBN) Fixed timeout when saving Security settings
 * **🐞 Fix** (KBN) Restored visibility of reports when multiple data streams exist for a reporting index
 * **🐞 Fix** (KBN) Fixed invisible reports for non-tenancy users on Kibana 9.1.x
