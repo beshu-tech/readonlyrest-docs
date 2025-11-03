@@ -1,5 +1,67 @@
 # Changelog
 
+### (2025-10-14) What’s new in **ROR 1.67.0**
+<details>
+<summary><strong>🚨 Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58754">CVE-2025-58754</a></summary>
+This security fix addresses a vulnerability in Axios HTTP client affecting Kibana. In versions prior to 0.30.2 and 1.12.0, Axios improperly handled URLs with the `data:` scheme on Node.js, bypassing memory safety limits. An attacker could exploit this by supplying large `data:` URIs to cause excessive memory allocation and denial of service.
+</details>
+<details>
+<summary><strong>🚨 Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58057">CVE-2025-58057</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58056">CVE-2025-58056</a></summary>
+These security fixes address vulnerabilities in the Netty framework affecting Elasticsearch. CVE-2025-58057 involves BrotliDecoder and other decompression decoders that could be forced to allocate unlimited byte buffers, causing memory exhaustion. CVE-2025-58056 fixes HTTP request smuggling where Netty incorrectly accepted standalone newline characters instead of required CRLF sequences.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#using-configurable-serializer">Added support for defining a custom audit serializer directly in ROR settings (no code required)</a></summary>
+This enhancement allows administrators to configure custom audit serializers directly through ROR settings without requiring Java/Scala code implementation. Users can now define custom serialization formats for audit events through configuration files, making audit log customization more accessible and maintainable.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#predefined-serializers">Introduced new predefined audit serializers: <code>ReportingAllEventsAuditLogSerializer</code>, <code>ReportingAllEventsWithQueryAuditLogSerializer</code></a></summary>
+Two new predefined audit serializers have been added to enhance audit logging capabilities. The `ReportingAllEventsAuditLogSerializer` captures all audit events, while `ReportingAllEventsWithQueryAuditLogSerializer` includes both all events and the full request query content, providing more comprehensive audit trail options.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) Added new rules: <a href="https://docs.readonlyrest.com/elasticsearch#ror_kbn_authentication"><code>ror_kbn_authentication</code></a> and <a href="https://docs.readonlyrest.com/elasticsearch#ror_kbn_authorization"><code>ror_kbn_authorization</code></a>, as alternatives to the existing <code>ror_kbn_auth</code> rule</summary>
+These new rules provide more granular control over Kibana authentication and authorization processes. The `ror_kbn_authentication` rule handles user authentication separately from authorization, while `ror_kbn_authorization` manages access permissions, offering greater flexibility in security configuration compared to the combined `ror_kbn_auth` rule.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#clock-skew-tolerance">Added OIDC <code>clock-skew-tolerance</code> configuration option in <code>kibana.yml</code></a></summary>
+This enhancement adds a clock skew tolerance configuration option for OIDC authentication in Kibana. It allows administrators to define acceptable time differences between the Kibana server and OIDC identity provider, improving reliability in environments with potential clock synchronization issues.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#terminate-kibana-on-es-high-watermark">Added option to disable Kibana termination on watermark errors in <code>kibana.yml</code></a></summary>
+This enhancement provides administrators with the ability to prevent Kibana from automatically terminating when encountering Elasticsearch high watermark errors. This option improves system stability by allowing continued operation during temporary storage capacity issues.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Logout did not invalidate the app session when the <code>ror_kbn_auth</code> rule was used with local group definitions</summary>
+Fixed an issue where user logout failed to properly invalidate application sessions when using the `ror_kbn_auth` rule with locally defined groups. This ensures proper session cleanup and security when users log out of Kibana.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/kibana-data-view-filter-not-working-with-keyword/2843">Restored keyword field value suggestions in Discover/Data View filters</a></summary>
+This fix resolves an issue where keyword field value suggestions were not appearing in Kibana's Discover and Data View filter interfaces. Users can now properly see and select from available keyword field values when creating filters.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Integration-based options were visible in search results even when the app was marked as hidden</summary>
+Fixed a visibility issue where integration-based options appeared in Kibana search results despite being configured as hidden applications. This ensures proper application visibility control according to security settings.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Index Management appeared in app search results even when the app was declared as hidden</summary>
+Resolved an issue where the Index Management application remained visible in Kibana search results despite being marked as hidden in the configuration. This maintains proper access control and application visibility.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Resolved an issue with CSRF token override when multiple browser tabs were open</summary>
+Fixed a Cross-Site Request Forgery (CSRF) token conflict that occurred when users had multiple Kibana browser tabs open simultaneously. This prevents token override issues and maintains proper security validation across multiple sessions.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed OIDC compatibility for Kibana 7.10.2 and earlier</summary>
+This fix restores OIDC authentication compatibility for older Kibana versions 7.10.2 and earlier. Users running these legacy versions can now properly use OIDC authentication with ReadonlyREST.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Restored backward compatibility for custom audit log serializer implementations extending the <code>DefaultAuditLogSerializer</code> class. Custom serializers compiled against ROR 1.65 or 1.66 that use <code>DefaultAuditLogSerializer</code> must be recompiled to work correctly.</summary>
+This fix restores backward compatibility for custom audit log serializers that extend the `DefaultAuditLogSerializer` class. However, custom serializers compiled against ROR versions 1.65 or 1.66 need to be recompiled to ensure proper functionality with this release.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Fixed a defect that broke the "Snapshot and Restore" functionality in Kibana</summary>
+Resolved an issue that prevented the Snapshot and Restore functionality from working properly in Kibana. Users can now successfully create and restore Elasticsearch snapshots through the Kibana interface.
+</details>
+
 ### (2025-09-03) What's new in **ROR 1.66.1**
 
 

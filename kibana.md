@@ -722,7 +722,8 @@ hide_apps: [ "<submenu-title|app-title|management-submenu-title|management-app-t
 * To hide a single management application, you can use:
 
 ```yaml
-kibana_hide_apps: [ "Management|Stack Management|Kibana|Tags" ]
+kibana:
+  hide_apps: [ "Management|Stack Management|Kibana|Tags" ]
 ```
 
 In this case, only the Stack Management Tags application will be hidden
@@ -730,7 +731,8 @@ In this case, only the Stack Management Tags application will be hidden
 * To hide all management Kibana section applications, you can use:
 
 ```yaml
-kibana_hide_apps: [ "/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/" ]:
+kibana:
+  hide_apps: [ "/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/" ]
 ```
 
 In this case, all Stack Management Kibana sections will be hidden
@@ -738,7 +740,8 @@ In this case, all Stack Management Kibana sections will be hidden
 * To hide all management Kibana section applications except selected, you can use
 
 ```yaml
-kibana_hide_apps: ["/^Management\\|Stack Management\\|Kibana\\|(?!(Data Views|Tags)$).*$/"]
+kibana:
+  hide_apps: ["/^Management\\|Stack Management\\|Kibana\\|(?!(Data Views|Tags)$).*$/"]
 ```
 
 In this case, all Stack Management Kibana section apps except Data Views and Tags will be hidden
@@ -746,7 +749,8 @@ In this case, all Stack Management Kibana section apps except Data Views and Tag
 * To hide all management applications except selected, you can use
 
 ```yaml
-kibana_hide_apps: ["/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/", "/^Management\\|Stack Management\\|Kibana\\|(?!(Data Views|Tags)$).*$/"]
+kibana:
+  hide_apps: ["/^Management\\|Stack Management\\|(?!(Kibana)|$).*$/", "/^Management\\|Stack Management\\|Kibana\\|(?!(Data Views|Tags)$).*$/"]
 ```
 
 In this case, all Stack Management apps except Data Views and Tags will be hidden
