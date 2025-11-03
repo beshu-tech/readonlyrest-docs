@@ -1,5 +1,15 @@
 # Changelog
 
+### (2025-11-03) What’s new in **ROR 1.67.1**
+* **🚀New** (ES) 9.2.0, 9.1.6, 8.19.6 support
+* **🧐 Enhancement** (ES) Allow using the `actions` rule with the `kibana` rule in the same block when `kibana.access: unrestricted`
+* **🐞 Fix** (KBN) Fixed JWT handling for wrong license edition
+* **🐞 Fix** (KBN) Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x
+* **🐞 Fix** (KBN) [Resolved report download failure on Kibana 9.1.x](ttps://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2)
+* **🐞 Fix** (KBN) Fixed timeout when saving Security settings
+* **🐞 Fix** (KBN) Restored visibility of reports when multiple data streams exist for a reporting index
+* **🐞 Fix** (KBN) Fixed invisible reports for non-tenancy users on Kibana 9.1.x
+
 ### (2025-10-14) What’s new in **ROR 1.67.0**
 * **🚨 Security Fix** (KBN) [CVE-2025-58754](https://nvd.nist.gov/vuln/detail/CVE-2025-58754)
 * **🚨 Security Fix** (ES) [CVE-2025-58057](https://nvd.nist.gov/vuln/detail/CVE-2025-58057), [CVE-2025-58056](https://nvd.nist.gov/vuln/detail/CVE-2025-58056)
@@ -14,7 +24,7 @@
 * **🐞 Fix** (KBN) Index Management appeared in app search results even when the app was declared as hidden
 * **🐞 Fix** (KBN) Resolved an issue with CSRF token override when multiple browser tabs were open
 * **🐞 Fix** (KBN) Fixed OIDC compatibility for Kibana 7.10.2 and earlier
-* **🐞 Fix** (ES) Restored backward compatibility for custom audit log serializer implementations extending the `DefaultAuditLogSerializer` class. Custom serializers compiled against ROR 1.65 or 1.66 that use `DefaultAuditLogSerializer` must be recompiled to work correctly.
+* **🐞 Fix** (ES) Restored backward compatibility for custom audit log serializer implementations extending the `DefaultAuditLogSerializer` class. Custom serializers compiled against ROR 1.65 or 1.66 that use `DefaultAuditLogSerializer` must be recompiled to work correctly
 * **🐞 Fix** (ES) Fixed a defect that broke the "Snapshot and Restore" functionality in Kibana
 
 ### (2025-09-03) What's new in **ROR 1.66.1**
