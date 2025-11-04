@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2025-11-03) What’s new in **ROR 1.67.1**
+* **🚀New** (KBN) 9.2.0, 9.1.6, 8.19.6 support
 * **🚀New** (ES) 9.2.0, 9.1.6, 8.19.6 support
 * **🧐 Enhancement** (ES) Allow using the `actions` rule with the `kibana` rule in the same block when `kibana.access: unrestricted`
 * **🐞 Fix** (KBN) Fixed JWT handling for wrong license edition
