@@ -380,6 +380,7 @@ You can:
             class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
     ```
 * use dynamic, configurable serializer - define JSON fields in ReadonlyREST settings (no implementation required, [see how to do it](#using-configurable-serializer))
+* use ECS (Elastic Common Schema, https://www.elastic.co/docs/reference/ecs) serializer (no implementation required, [learn more about it](#using-ecs-serializer))
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
@@ -467,9 +468,11 @@ Available placeholders:
   {REASON} — reason for blocking, if blocked (string)
   {ID} — audit event identifier (string)
   {FINAL_STATE} — final processing state (string)
+  {ECS_EVENT_OUTCOME} - final processing state, mapped to ECS-compliant values: success/failure/unknown (string)
   {TIMESTAMP} — event timestamp (ISO-8601 string)
   {CORRELATION_ID} — correlation identifier for tracing (string)
   {PROCESSING_DURATION_MILLIS} — request processing duration in milliseconds (number)
+  {PROCESSING_DURATION_NANOS} — request processing duration in nanoseconds (number)
   {ERROR_TYPE} — type of error, if any (string)
   {ERROR_MESSAGE} — error message, if any (string)
   {CONTENT_LENGTH_IN_BYTES} — request body size in bytes (number)
@@ -491,6 +494,128 @@ Available placeholders:
   {CONTENT} — request body content (string or object)
   {ES_NODE_NAME} — Elasticsearch node name (string)
   {ES_CLUSTER_NAME} — Elasticsearch cluster name (string)
+```
+
+### Using ECS serializer:
+
+Configuration should look like that:
+```yaml
+    readonlyrest:
+      audit:
+        enabled: true
+        outputs:
+        - type: index
+          serializer:
+            type: "ecs"
+            verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+```
+
+The configuration above corresponds to serialized event, compatible with ECS 1.6 schema, looking like that:
+```json
+{
+  "@timestamp": "2017-06-30T09:41:58Z",
+  "trace" : {
+    "id" : "correlation_id_123"
+  },
+  "ecs" : {
+    "version" : "1.6.0"
+  },
+  "source" : {
+    "address" : "192.168.0.123"
+  },
+  "destination" : {
+    "address" : "192.168.100.100"
+  },
+  "http" : {
+    "request" : {
+      "method" : "GET",
+      "body" : {
+        "bytes" : 123,
+        "content" : "Full content of the request"
+      }
+    }
+  },
+  "event" : {
+    "duration" : 5000000000,
+    "reason" : "RRTestConfigRequest",
+    "action" : "cluster:internal_ror/user_metadata/get",
+    "id" : "trace_id_123",
+    "outcome" : "failure"
+  },
+  "error" : {},
+  "user" : {
+    "effective" : {
+      "name" : "impersonated_by_user"
+    },
+    "name" : "logged_user"
+  },
+  "url" : {
+    "path" : "/path/to/resource"
+  },
+  "labels" : {
+    "es_cluster_name" : "testEsCluster",
+    "es_task_id" : 123,
+    "es_node_name" : "testEsNode",
+    "ror_acl_history" : "historyEntry1, historyEntry2",
+    "ror_detailed_reason" : "default",
+    "ror_involved_indices" : [],
+    "ror_final_state" : "FORBIDDEN"
+  }
+}
+```
+
+The ECS schema is highly permissive and ambiguous. The ROR audit events can be mapped to ECS fields in multiple ways. 
+If the provided ECS implementation does not suit your needs, you can define your own ECS-compliant serializer as `configurable` serializer.
+
+The provided ECS implementation is equivalent to `configurable` serializer shown below. You can [use and adjust it as needed](#using-configurable-serializer) in the configuration.
+```yaml
+    readonlyrest:
+      audit:
+        enabled: true
+        outputs:
+          - type: index
+            serializer:
+              type: "configurable"
+              verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+              fields: 
+                ecs:
+                  version: "1.6.0"
+                trace:
+                  id: "{CORRELATION_ID}"
+                url:
+                  path: "{HTTP_PATH}"
+                source:
+                  address: "{REMOTE_ADDRESS}"
+                destination:
+                  address: "{LOCAL_ADDRESS}"
+                http:
+                  request:
+                    method: "{HTTP_METHOD}"
+                    body:
+                      content: "{CONTENT}"
+                      bytes: "{CONTENT_LENGTH_IN_BYTES}"
+                user:
+                  name: "{USER}"
+                  effective:
+                    name: "{IMPERSONATED_BY_USER}"
+                event:
+                  id: "{ID}"
+                  duration: "{PROCESSING_DURATION_NANOS}"
+                  action: "{ACTION}"
+                  reason: "{TYPE}"
+                  outcome: "{ECS_EVENT_OUTCOME}"
+                error:
+                  type: "{ERROR_TYPE}"
+                  message: "{ERROR_MESSAGE}"
+                labels:
+                  x_forwarded_for: "{X_FORWARDED_FOR_HTTP_HEADER}"
+                  es_cluster_name: "{ES_CLUSTER_NAME}"
+                  es_node_name: "{ES_NODE_NAME}"
+                  es_task_id: "{TASK_ID}"
+                  ror_involved_indices: "{INVOLVED_INDICES}"
+                  ror_acl_history: "{ACL_HISTORY}"
+                  ror_final_state: "{FINAL_STATE}"
+                  ror_detailed_reason: "{REASON}"
 ```
 
 ### Custom audit event serializer
