@@ -380,7 +380,7 @@ You can:
             class_name: "tech.beshu.ror.audit.instances.QueryAuditLogSerializer" # or any other serializer class
     ```
 * use dynamic, configurable serializer - define JSON fields in ReadonlyREST settings (no implementation required, [see how to do it](#using-configurable-serializer))
-* use ECS (Elastic Common Schema, https://www.elastic.co/docs/reference/ecs) serializer (no implementation required, [learn more about it](#using-ecs-serializer))
+* use ECS ([Elastic Common Schema](https://www.elastic.co/docs/reference/ecs)) serializer (no implementation required, [learn more about it](#using-ecs-serializer))
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
 
