@@ -462,6 +462,42 @@ The configuration above corresponds to serialized event looking like that:
   }
 ```
 
+You can also define nested structure of fields, and use fixed text, number and boolean values:
+```yaml
+  fields:
+    tid: "{TASK_ID}"
+    es_details:
+      node_name: "{ES_NODE_NAME}"
+      cluster_name: "{ES_CLUSTER_NAME}"
+    nesting_level_1:
+      levelOne: "Value on level one for request: {HTTP_METHOD} {HTTP_PATH}"
+      nesting_level_2:
+        levelTwo: false
+        nesting_level_3:
+          levelThree: 1234.567
+```
+
+The configuration above corresponds to serialized event looking like that:
+
+```json
+{
+  "tid": 0,
+  "es_details": {
+    "node_name": "esNode01",
+    "cluster_name": "mainEsCluster"
+  },
+  "nesting_level_1": {
+    "levelOne": "Value on level one for request: GET /_cat",
+    "nesting_level_2": {
+      "levelTwo": false,
+      "nesting_level_3": {
+        "levelThree": 1234.567
+      }
+    }
+  }
+}
+```
+
 Available placeholders:
 ```
   {IS_MATCHED} — whether the request matched a rule (boolean)
