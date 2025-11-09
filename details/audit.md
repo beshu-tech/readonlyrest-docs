@@ -52,6 +52,8 @@ Audit can also be controlled at the block level:
 - the audit can be optionally disabled for individual blocks, as shown in the example below for the `Kibana` block
 - if audit is globally disabled, then it is disabled for all blocks, regardless of individual block settings
 
+**⚠️IMPORTANT**: When audit is disabled for a specific block, then there will be no audit events when that block is matched.
+
 Here is an example of how to enable audit events collecting with all defaults:
 ```yaml
 readonlyrest:
