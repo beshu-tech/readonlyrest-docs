@@ -469,12 +469,14 @@ You can also define nested structure of fields, and use fixed text, number and b
     es_details:
       node_name: "{ES_NODE_NAME}"
       cluster_name: "{ES_CLUSTER_NAME}"
-    nesting_level_1:
-      levelOne: "Value on level one for request: {HTTP_METHOD} {HTTP_PATH}"
-      nesting_level_2:
-        levelTwo: false
-        nesting_level_3:
-          levelThree: 1234.567
+    event_details:
+      custom_system_id: 12345 # example of hardcoded number value, can also be a decimal number; in this example represents some hardcoded system id
+      is_dev_environment: false # example of hardcoded boolean value; in this example represents flag marking the events from development environment
+      http:
+        request_description: "HTTP request: {HTTP_METHOD} {HTTP_PATH}"
+        request_details:
+          method: "{HTTP_METHOD}"
+          path: "{HTTP_PATH}"
 ```
 
 The configuration above corresponds to serialized event looking like that:
@@ -486,12 +488,14 @@ The configuration above corresponds to serialized event looking like that:
     "node_name": "esNode01",
     "cluster_name": "mainEsCluster"
   },
-  "nesting_level_1": {
-    "levelOne": "Value on level one for request: GET /_cat",
-    "nesting_level_2": {
-      "levelTwo": false,
-      "nesting_level_3": {
-        "levelThree": 1234.567
+  "event_details": {
+    "custom_system_id": 12345,
+    "is_dev_environment": false,
+    "http": {
+      "request_description": "HTTP request: GET /_cat",
+      "request_details": {
+        "method": "GET",
+        "path": "/_cat"
       }
     }
   }
