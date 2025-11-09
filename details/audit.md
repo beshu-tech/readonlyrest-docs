@@ -635,7 +635,7 @@ The provided ECS implementation is equivalent to `configurable` serializer shown
                       content: "{CONTENT}"
                       bytes: "{CONTENT_LENGTH_IN_BYTES}"
                 user:
-                  name: "{USER}"
+                  name: "{LOGGED_USER}"
                   effective:
                     name: "{IMPERSONATED_BY_USER}"
                 event:
