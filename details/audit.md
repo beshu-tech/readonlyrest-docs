@@ -47,6 +47,12 @@ The currently supported output types are:
 You can configure multiple outputs for audit events. When the audit is enabled, at least one output has to be defined.
 If you omit `outputs` definition, the default `index` output will be used.
 
+Audit can also be controlled at the block level:
+- if audit is globally enabled, it is applied to all `access_control_rules` blocks by default — audit events will be generated for events pertaining to all blocks
+- the audit can be optionally disabled for individual blocks, as shown in the example below for the `Kibana` block
+- if audit is globally disabled, then it is disabled for all blocks, regardless of individual block settings
+
+**⚠️IMPORTANT**: When audit is disabled for a specific block, then there will be no audit events when that block is matched.
 
 Here is an example of how to enable audit events collecting with all defaults:
 ```yaml
@@ -61,6 +67,8 @@ readonlyrest:
      type: allow
      auth_key: kibana:kibana
      verbosity: error
+     audit: # the `audit` section is optional, by default audit is enabled for each block
+       enabled: false  
 
    - name: "::RO::"
      auth_key: simone:ro
