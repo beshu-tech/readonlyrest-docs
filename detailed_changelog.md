@@ -1,36 +1,50 @@
 # Changelog
 
+### (2025-11-13) What’s new in **ROR 1.67.2**
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when <code>server.rewriteBasePath: false</code> is set in kibana.yml</summary>
+This fix resolves an issue where SAML and OIDC authentication providers would fail when ReadonlyREST was deployed behind a reverse proxy with the Kibana configuration setting `server.rewriteBasePath: false`. The problem occurred because authentication redirects and callbacks were not properly handling the base path configuration.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses</summary>
+This fix improves error handling by delegating specific internal exceptions back to Elasticsearch's native exception handling system. This ensures error responses maintain their original format and behavior, providing users with more consistent and familiar error messages.
+</details>
+
 ### (2025-11-03) What’s new in **ROR 1.67.1**
 <details>
+<summary><strong>🚀New</strong> (KBN) 9.2.0, 9.1.6, 8.19.6 support</summary>
+Adds official support for the latest Kibana versions 9.2.0, 9.1.6, and 8.19.6, ensuring compatibility with the newest Kibana releases and their respective features.
+</details>
+<details>
 <summary><strong>🚀New</strong> (ES) 9.2.0, 9.1.6, 8.19.6 support</summary>
-Added official support for the latest Elasticsearch versions including 9.2.0, 9.1.6, and 8.19.6. This ensures compatibility with the newest Elasticsearch features and security updates while maintaining all ROR security functionality.
+Provides official support for Elasticsearch versions 9.2.0, 9.1.6, and 8.19.6, maintaining compatibility with the latest Elasticsearch releases and their security features.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (ES) Allow using the <code>actions</code> rule with the <code>kibana</code> rule in the same block when <code>kibana.access: unrestricted</code></summary>
-Enhanced rule flexibility by permitting the combination of `actions` and `kibana` rules within the same security block when Kibana access is set to unrestricted. This provides more granular control over user permissions while maintaining security policies.
+Enables combining the actions rule with the kibana rule in the same security block when kibana access is set to unrestricted, providing more flexible security configuration options.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed JWT handling for wrong license edition</summary>
-Resolved an issue where JWT authentication was incorrectly handled when using an incompatible license edition. This ensures proper authentication flow regardless of the license type being used.
+Resolved an issue where JWT authentication was not working correctly when the wrong license edition was detected, ensuring proper JWT functionality across different license types.
 </details>
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2">Resolved report download failure on Kibana 9.1.x</a></summary>
-Fixed a critical issue preventing users from downloading reports in Kibana 9.1.x. This addresses a community-reported problem where report downloads would fail, restoring full reporting functionality for affected versions.
+Fixed a critical issue where users were unable to download reports from Kibana 9.1.x, restoring report generation and download functionality.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed timeout when saving Security settings</summary>
-Resolved timeout issues that occurred when attempting to save Security settings in Kibana. This ensures that configuration changes can be applied reliably without encountering timeouts during the save process.
+Addressed a timeout issue that occurred when saving Security settings in Kibana, ensuring security configuration changes can be saved reliably.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Restored visibility of reports when multiple data streams exist for a reporting index</summary>
-Fixed a bug where reports became invisible when multiple data streams were present for a reporting index. This restores proper report visibility and accessibility in multi-stream reporting environments.
+Fixed an issue where reports were not visible when multiple data streams existed for a reporting index, ensuring all generated reports are properly displayed.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed invisible reports for non-tenancy users on Kibana 9.1.x</summary>
-Addressed an issue where reports were not visible to non-tenancy users in Kibana 9.1.x. This ensures that all authorized users can properly view and access reports regardless of their tenancy status.
+Resolved a problem where reports were not visible to non-tenancy users in Kibana 9.1.x, ensuring proper report visibility for all user types.
 </details>
 
 ### (2025-10-14) What’s new in **ROR 1.67.0**

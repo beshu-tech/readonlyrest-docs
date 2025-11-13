@@ -1,6 +1,11 @@
 # Changelog
 
+### (2025-11-13) What’s new in **ROR 1.67.2**
+* **🐞 Fix** (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when `server.rewriteBasePath: false` is set in kibana.yml
+* **🐞 Fix** (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses
+
 ### (2025-11-03) What’s new in **ROR 1.67.1**
+* **🚀New** (KBN) 9.2.0, 9.1.6, 8.19.6 support
 * **🚀New** (ES) 9.2.0, 9.1.6, 8.19.6 support
 * **🧐 Enhancement** (ES) Allow using the `actions` rule with the `kibana` rule in the same block when `kibana.access: unrestricted`
 * **🐞 Fix** (KBN) Fixed JWT handling for wrong license edition
