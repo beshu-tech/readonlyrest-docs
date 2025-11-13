@@ -1,5 +1,15 @@
 # Changelog
 
+### (2025-11-13) What’s new in **ROR 1.67.2**
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when <code>server.rewriteBasePath: false</code> is set in kibana.yml</summary>
+This fix resolves an issue where SAML and OIDC authentication providers would fail when ReadonlyREST was deployed behind a reverse proxy with the Kibana configuration setting `server.rewriteBasePath: false`. The problem occurred because authentication redirects and callbacks were not properly handling the base path configuration.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses</summary>
+This fix improves error handling by delegating specific internal exceptions back to Elasticsearch's native exception handling system. This ensures error responses maintain their original format and behavior, providing users with more consistent and familiar error messages.
+</details>
+
 ### (2025-11-03) What’s new in **ROR 1.67.1**
 <details>
 <summary><strong>🚀New</strong> (KBN) 9.2.0, 9.1.6, 8.19.6 support</summary>
