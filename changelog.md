@@ -1,6 +1,7 @@
 # Changelog
 
 ### (2025-11-13) What’s new in **ROR 1.67.2**
+* **🚀 New** (KBN) 9.2.1, 9.1.7, 8.19.7 support
 * **🚀 New** (ES) 9.2.1, 9.1.7, 8.19.7 support
 * **🐞 Fix** (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when `server.rewriteBasePath: false` is set in kibana.yml
 * **🐞 Fix** (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses
