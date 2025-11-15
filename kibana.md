@@ -117,27 +117,27 @@ Please note that this will always download the latest version of Kibana plugin a
 
 
 ```bash
-bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&email=<your_email_address>" # ReadonlyREST Universal Kibana plugin
+bin/kibana-plugin install "https://portal.readonlyrest.com/download/kbn?edition=kbn_universal&email=<your_email_address>" # ReadonlyREST Universal Kibana plugin
 ```
 
 If you want to download the latest version of the plugin for a specific version of Kibana, then use the query parameter `esVersion` to specify your required Kibana version.
 
 ```bash
-bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=7.6.1&email=<your_email_address>"
+bin/kibana-plugin install "https://portal.readonlyrest.com/download/kbn?edition=kbn_universal&esVersion=7.6.1&email=<your_email_address>"
 ```
 
 If you want to download an older version of the plugin for a specific version of Elasticsearch, then use the query parameter `pluginVersion` along with `esVersion`. Please note that you can only go so far back with plugin versions. [Let us know](https://readonlyrest.com/contact) if you can't download a specific one.
 
 ```bash
-bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_universal&esVersion=8.6.0&pluginVersion=1.46.0&email=<your_email_address>"
+bin/kibana-plugin install "https://portal.readonlyrest.com/download/kbn?edition=kbn_universal&esVersion=8.6.0&pluginVersion=1.46.0&email=<your_email_address>"
 ```
 
 It's possible to add an extra query parameter (`checksum=true`) to any download URL to obtain a `sha1` checksum of the corresponding deliverable. For example:
 
 ```bash
-curl -vvv  "https://api.beshu.tech/download/kbn?esVersion=8.6.0&pluginVersion=1.46.0&email=your@emailaddress.com&edition=kbn_universal&checksum=true" 
+curl -vvv  "https://portal.readonlyrest.com/download/kbn?esVersion=8.6.0&pluginVersion=1.46.0&email=your@emailaddress.com&edition=kbn_universal&checksum=true" 
 [...]
-curl -vvv  "https://api.beshu.tech/download/es?esVersion=8.6.0&pluginVersion=1.46.0&checksum=true" 
+curl -vvv  "https://portal.readonlyrest.com/download/es?esVersion=8.6.0&pluginVersion=1.46.0&checksum=true" 
 [...]
 ```
 
