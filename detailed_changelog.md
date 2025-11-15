@@ -2,21 +2,29 @@
 
 ### (2025-11-13) What’s new in **ROR 1.67.2**
 <details>
+<summary><strong>🚀 New</strong> (KBN) 9.2.1, 9.1.7, 8.19.7 support</summary>
+ReadonlyREST now officially supports Kibana versions 9.2.1, 9.1.7, and 8.19.7. These maintenance releases include various bug fixes and stability improvements, ensuring compatibility with the latest Kibana security features and performance enhancements.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) 9.2.1, 9.1.7, 8.19.7 support</summary>
+ReadonlyREST now officially supports Elasticsearch versions 9.2.1, 9.1.7, and 8.19.7. These releases include important bug fixes, security updates, and enhancements across various components including aggregations, authorization, and machine learning features.
+</details>
+<details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when <code>server.rewriteBasePath: false</code> is set in kibana.yml</summary>
-This fix resolves an issue where SAML and OIDC authentication providers would fail when ReadonlyREST was deployed behind a reverse proxy with the Kibana configuration setting `server.rewriteBasePath: false`. The problem occurred because authentication redirects and callbacks were not properly handling the base path configuration.
+This fix resolves an issue where SAML and OIDC authentication providers would fail when Kibana was deployed behind a reverse proxy with the `server.rewriteBasePath: false` configuration. The plugin now correctly handles authentication flows in this deployment scenario.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses</summary>
-This fix improves error handling by delegating specific internal exceptions back to Elasticsearch's native exception handling system. This ensures error responses maintain their original format and behavior, providing users with more consistent and familiar error messages.
+ReadonlyREST now properly delegates specific internal exception handling to Elasticsearch's native error management system. This ensures that error responses maintain their original format and behavior, providing better compatibility with Elasticsearch's standard error handling mechanisms.
 </details>
 
 ### (2025-11-03) What’s new in **ROR 1.67.1**
 <details>
-<summary><strong>🚀New</strong> (KBN) 9.2.0, 9.1.6, 8.19.6 support</summary>
+<summary><strong>🚀 New</strong> (KBN) 9.2.0, 9.1.6, 8.19.6 support</summary>
 Adds official support for the latest Kibana versions 9.2.0, 9.1.6, and 8.19.6, ensuring compatibility with the newest Kibana releases and their respective features.
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) 9.2.0, 9.1.6, 8.19.6 support</summary>
+<summary><strong>🚀 New</strong> (ES) 9.2.0, 9.1.6, 8.19.6 support</summary>
 Provides official support for Elasticsearch versions 9.2.0, 9.1.6, and 8.19.6, maintaining compatibility with the latest Elasticsearch releases and their security features.
 </details>
 <details>
@@ -112,13 +120,13 @@ Resolved a defect that prevented Snapshot and Restore functionality from working
 ### (2025-09-03) What's new in **ROR 1.66.1**
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) 9.1.5, 9.1.4, 9.0.8, 9.0.7 8.19.5, 8.19.4, 8.18.7 support
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (KBN) 9.1.5, 9.1.4, 9.0.8, 9.0.7 8.19.5, 8.19.4, 8.18.7 support
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 9.1.5, 9.1.4, 9.0.8, 9.0.7, 8.19.5, 8.19.4, 8.18.8, 8.18.7 support
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (ES) 9.1.5, 9.1.4, 9.0.8, 9.0.7, 8.19.5, 8.19.4, 8.18.8, 8.18.7 support
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) [Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17](https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (ES) [Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17](https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841)
 
 ### (2025-08-28) What's new in **ROR 1.66.0**
 <details>
