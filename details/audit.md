@@ -343,10 +343,12 @@ appender.readonlyrest_audit_rolling.policies.size.size = 1GB
 appender.readonlyrest_audit_rolling.strategy.type = DefaultRolloverStrategy
 appender.readonlyrest_audit_rolling.strategy.max = 4
 
-
-logger.readonlyrest_audit.name = readonlyrest_audit   # required logger name, must be the same as the one defined in `readonlyrest.yml` 
-logger.readonlyrest_audit.appenderRef.ror_audit.ref = readonlyrest_audit_rolling    
-logger.readonlyrest_audit.additivity = false          # set to false to use only desired appenders
+# Logger name, required, must be the same as the one defined in `readonlyrest.yml` audit configuration.
+# If a custom logger name is not defined there, then the default logger name is "readonlyrest_audit"
+logger.readonlyrest_audit.name = readonlyrest_audit
+logger.readonlyrest_audit.appenderRef.readonlyrest_audit_rolling.ref = readonlyrest_audit_rolling
+# set to false to use only desired appenders
+logger.readonlyrest_audit.additivity = false
 ```
 All settings are up to you. The only required entry is the logger name `logger.{your-logger-name}.name = {your-logger-name}`.
 The default logger name is the `readonlyrest_audit`.
