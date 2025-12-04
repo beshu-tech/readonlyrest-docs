@@ -1,6 +1,8 @@
 # Changelog
 
 ### (2025-11-29) What’s new in **ROR 1.67.3**
+* **🚀 New** (KBN) 9.2.2, 9.1.8, 8.19.8 support
+* **🚀 New** (ES) 9.2.2, 9.1.8, 8.19.8 support
 * **🐞 Fix** (ES) Resolved index resolution compatibility issue with Elasticsearch 9.1.7
 
 ### (2025-11-13) What’s new in **ROR 1.67.2**
