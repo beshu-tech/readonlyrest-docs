@@ -558,6 +558,7 @@ Configuration should look like that:
           serializer:
             type: "ecs"
             verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+            include_full_request_content: false # controls whether the full HTTP request body is included in the ECS audit log (http.request.body field), disabled by default
 ```
 
 The configuration above corresponds to serialized event, compatible with ECS 1.6 schema, looking like that:
@@ -642,6 +643,8 @@ The provided ECS implementation is equivalent to `configurable` serializer shown
                   request:
                     method: "{HTTP_METHOD}"
                     body:
+                      # Warning: Enabling logging of the full HTTP request body is not recommended when requests 
+                      # may contain sensitive data. It can also significantly increase the size of audit log entries.
                       content: "{CONTENT}"
                       bytes: "{CONTENT_LENGTH_IN_BYTES}"
                 user:
