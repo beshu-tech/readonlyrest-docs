@@ -24,7 +24,7 @@ In this document, we are going to describe how to operate the Elasticsearch plug
 
 The following diagram models an instance of Elasticsearch with the ReadonlyREST plugin installed and configured with SSL encryption and an ACL with at least one "allow" type ACL block.
 
-![readonlyrest request processing diagram](https://i.imgur.com/VX28w1V.png)
+![readonlyrest request processing diagram](.gitbook/assets/request_processing_diagram.png)
 
 1. The User Agent \(i.e. cURL, Kibana\) sends a search request to Elasticsearch using port 9200 and the HTTPS URL schema.
 2. The HTTPS filter in the ReadonlyREST plugin unwraps the SSL layer and hands over the request to the Elasticsearch HTTP stack
@@ -2352,6 +2352,8 @@ There are also plenty of technical settings which can be useful:
 * `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server
 * `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server
 * `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving a whole response from LDAP server
+* `connection_health_check_interval` (Duration, optional, default: `120 sec`) - defines how often the LDAP connection pool should perform health checks on idle connections. Health checks proactively detect and replace stale connections before they cause authentication failures. 
+* `connection_max_age` (Duration, optional, default: `10 min`) - defines the maximum age of a connection in the pool. Connections older than this value are automatically replaced with fresh ones, preventing stale connection issues. This works in conjunction with `connection_health_check_interval` to maintain a healthy connection pool.
 * `ssl_trust_all_certs` (Boolean, optional, default: `false`) - if it is set to `true`, untrusted certificates will be accepted
 * `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default, ROR starts only after it's able to connect to each server
 * `cache_ttl` (Duration, optional, default: `0 sec`) - tells how long LDAP connector should cache queries results (for default see [caching section](#caching))
@@ -2522,6 +2524,8 @@ readonlyrest:
       connection_pool_size: 20
       connection_timeout: 1s
       request_timeout: 2s
+      connection_health_check_interval: 30s
+      connection_max_age: 5min
       cache_ttl: 60s                                            
       circuit_breaker:                                        
         max_retries: 2                                           
@@ -2592,7 +2596,9 @@ readonlyrest:
       unique_member_attribute: "uniqueMember"                   
     connection_pool_size: 20                                  
     connection_timeout: 1s                                   
-    request_timeout: 2s                                      
+    request_timeout: 2s
+    connection_health_check_interval: 30s
+    connection_max_age: 5min                                      
     cache_ttl: 60s                                            
 
   # High availability LDAP settings (using "hosts", rather than "host")
