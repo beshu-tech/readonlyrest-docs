@@ -3,15 +3,15 @@
 ### (2025-11-29) What’s new in **ROR 1.67.3**
 <details>
 <summary><strong>🚀 New</strong> (KBN) 9.2.2, 9.1.8, 8.19.8 support</summary>
-Official support for Kibana versions 9.2.2, 9.1.8, and 8.19.8 is now available. This ensures compatibility with the latest Kibana security patches and features.
+Official support for Kibana versions 9.2.2, 9.1.8, and 8.19.8 ensures compatibility with the latest security patches and features.
 </details>
 <details>
-<summary><strong>🚀 New</strong> (ES) 9.2.2, 9.1.8, 8.19.8 support</summary>
-The plugin now provides official support for Elasticsearch versions 9.2.2, 9.1.8, and 8.19.8, allowing deployment with the latest security updates and performance improvements.
+<summary><strong>🚀 New</strong> (ES) 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support</summary>
+Extended Elasticsearch compatibility to six new versions (9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8), enabling users to leverage the latest security updates and performance improvements.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (ES) Resolved index resolution compatibility issue with Elasticsearch 9.1.7</summary>
-Fixed a compatibility issue where index resolution logic was not working correctly with Elasticsearch 9.1.7, resolving potential problems with index pattern matching and access control rules.
+Fixed an issue where index resolution logic was not working correctly with Elasticsearch 9.1.7, resolving problems with index pattern matching and access control rules for users on that version.
 </details>
 
 ### (2025-11-13) What’s new in **ROR 1.67.2**
