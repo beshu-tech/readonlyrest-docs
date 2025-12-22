@@ -2,16 +2,16 @@
 
 ### (2025-11-29) What’s new in **ROR 1.67.3**
 <details>
-<summary><strong>🚀 New</strong> (KBN) 9.2.2, 9.1.8, 8.19.8 support</summary>
-Official support for Kibana versions 9.2.2, 9.1.8, and 8.19.8 ensures compatibility with the latest security patches and features.
+<summary><strong>🚀 New</strong> (KBN) 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support</summary>
+ReadonlyREST now officially supports the latest Kibana versions including 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, and 8.19.8. This ensures compatibility with recent Kibana security updates and feature releases, allowing users to upgrade their Kibana instances while maintaining ReadonlyREST security functionality.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (ES) 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support</summary>
-Extended Elasticsearch compatibility to six new versions (9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8), enabling users to leverage the latest security updates and performance improvements.
+This release adds official support for Elasticsearch versions 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, and 8.19.8. Users can now deploy ReadonlyREST with these Elasticsearch versions to benefit from the latest security patches, performance improvements, and features while maintaining their existing security configurations.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (ES) Resolved index resolution compatibility issue with Elasticsearch 9.1.7</summary>
-Fixed an issue where index resolution logic was not working correctly with Elasticsearch 9.1.7, resolving problems with index pattern matching and access control rules for users on that version.
+Fixed a compatibility issue where ReadonlyREST's index resolution logic was not working correctly with Elasticsearch 9.1.7. This could have caused problems with index pattern matching, alias resolution, or wildcard index operations in certain scenarios when using this specific Elasticsearch version.
 </details>
 
 ### (2025-11-13) What’s new in **ROR 1.67.2**
