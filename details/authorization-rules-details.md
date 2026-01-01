@@ -4,7 +4,7 @@ In ROR we have plenty of authorization rules:
 1. [Groups rules](../elasticsearch.md#groups-rules)
 2. `ldap_authorization` (and `ldap_auth` which is an authentication and an authorization rule at the same time)
 3. `groups_provider_authorization`
-4. `jwt_auth` 
+4. `jwt_authorization` (and `jwt_auth` which is an authentication and an authorization rule at the same time)
 5. `ror_kbn_authorization` (and `ror_kbn_auth` which is an authentication and an authorization rule at the same time)
 
 They are very similar. The main difference is the source of the user groups. 
@@ -19,7 +19,7 @@ Each authorization rule has a different method of obtaining the users' groups:
 * [Groups rules](../elasticsearch.md#groups-rules) - groups are locally defined
 * `ldap_authorization` (and `ldap_auth`) - groups are fetched from LDAP
 * `groups_provider_authorization` - groups come from an external HTTP service
-* `jwt_auth` - groups are extracted from JWT claims
+* `jwt_authorization` (and `jwt_auth`) - groups are extracted from JWT claims
 * `ror_kbn_authorization` (and `ror_kbn_auth`) - groups are extracted from JWT claims
 
 ### Checking groups logic

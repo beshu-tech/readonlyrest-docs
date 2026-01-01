@@ -1032,6 +1032,59 @@ See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
+#### `jwt_authentication`
+
+See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication rule.
+
+[Impersonation](details/impersonation.md) is not currently supported by this rule.
+
+```yaml
+readonlyrest:
+  access_control_rules:
+  - name: Valid JWT token
+    kibana:
+      access: ro
+    jwt_authentication:
+      name: "jwt_provider_1"
+
+  jwt:
+  - name: jwt_provider_1
+    signature_key: "your_signature_min_256_chars"
+    user_claim: email
+```
+
+#### `jwt_authorization`
+
+See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authorization rule.
+
+[Impersonation](details/impersonation.md) is not currently supported by this rule.
+
+* Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+```yaml
+readonlyrest:
+  access_control_rules:
+  - name: Valid JWT token with a writer group
+    kibana:
+      access: rw
+    jwt_authorization:
+      name: "jwt_provider_1"
+      groups_any_of: ["writer"]
+
+  - name: Valid JWT token with a viewer and writer groups
+    kibana:
+      access: rw
+    jwt_authorization:
+      name: "jwt_provider_1"
+      groups_all_of: ["writer", "viewer"]
+
+  jwt:
+  - name: jwt_provider_1
+    signature_key: "your_signature_min_256_chars"
+    group_ids_claim: resource_access.client_app.group_ids
+```
+
 #### `jwt_auth`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
@@ -1040,6 +1093,43 @@ See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-tok
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+```yaml
+readonlyrest:
+  access_control_rules:
+  - name: Valid JWT token with a viewer and writer groups
+    kibana:
+      access: rw
+    jwt_auth:
+      name: "jwt_provider_1"
+      groups_all_of: ["writer", "viewer"]
+
+  jwt:
+  - name: jwt_provider_1
+    signature_key: "your_signature_min_256_chars"
+    user_claim: email
+    group_ids_claim: resource_access.client_app.group_ids
+```
+
+**⚠️IMPORTANT**
+Before ROR version 1.68.0, there was only a single type of JWT rule - the `jwt_auth` rule.
+The behavior of that rule was determined by:
+* the configuration of the JWT provider ([see more about configuring JWT provider](elasticsearch.md#json-web-token-jwt-auth))
+  * when the `user_claim` was present, then the rule performed authentication
+  * when the `group_ids_claim` was present, then the rule performed authorization
+* the presence or absence of the [groups logic check](details/authorization-rules-details.md#checking-groups-logic) in the rule
+  * if present, then the rule performed authorization
+  * if absent, then the rule performed a check equivalent to `groups_any_of: ["*"]`
+
+Since ROR 1.68.0, there are dedicated `jwt_authentication` and `jwt_authorization` rules. 
+Those usages of the  `jwt_auth` rule, when it was used only for authentication or only for authorization, must be replaced by those new rules:
+
+| **How to replace `jwt_auth` rule**                          | **`jwt_auth` rule with groups logic** | **`jwt_auth` rule without groups logic**      |
+|-------------------------------------------------------------|---------------------------------------|-----------------------------------------------|
+| **JWT provider without `user_claim` and `group_ids_claim`** | always forbidden, nonsensical         | always allowed, nonsensical                   |
+| **JWT provider only with `user_claim`**                     | `jwt_authentication`                  | `jwt_authentication`                          |
+| **JWT provider only with `group_ids_claim`**                | `jwt_authorization`                   | `groups_any_of: ["*"]`                        |
+| **JWT provider with `user_claim` and `group_ids_claim`**    | `jwt_auth`                            | `jwt_authentication` + `groups_any_of: ["*"]` |
 
 #### `external_authentication`
 
@@ -2786,6 +2876,11 @@ To define JWT provider, you need to provide:
 * `signature_key` (string, required) - shared secret between the issuer of the JWT and ReadonlyREST. It is used to verify the cryptographical "paternity" of the message.
 
 * `signature_algo` (string, optional, can be one of `NONE`, `RSA`, `HMAC` (default), and `EC`) - indicates the family of cryptographic algorithms used to validate the JWT.
+
+**⚠️IMPORTANT**: As described above, both claim names (`user_claim` and `group_ids_claim`) are optional, but:
+- `jwt_authentication` rule requires `user_claim` to be defined in the JWT provider
+- `jwt_authorization` rule requires `group_ids_claim` to be defined in the JWT provider
+- `jwt_auth` rule requires both those settings
 
 **Accepted signature\_algo values**
 
