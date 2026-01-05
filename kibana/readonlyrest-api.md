@@ -11,4 +11,4 @@ As an Enterprise user, you can benefit from automating the security configuratio
 
 Every request is **validated against ROR syntax first**, and rejected if syntactically or semantically incorrect. This adds to the safety of each change operation.
 
-[Link to the API documentation](https://api.beshu.tech/docs/swagger/master)
+[Link to the API documentation](https://portal.readonlyrest.com/docs/swagger/master)

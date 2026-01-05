@@ -311,13 +311,13 @@ Resolved a bug in the Elasticsearch patching process specific to Windows systems
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**⚠️Warning** (ES) Acknowledgement needs to be accepted before the Elasticsearch patching process. For scripts, you can [set the flag](https://docs.readonlyrest.com/elasticsearch#id-3.-patch-elasticsearch) to automate the process.
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) Added an endpoint to retrieve all user tenancies via the ReadonlyREST API. See the [ReadonlyREST API Documentation](https://api.beshu.tech/docs/swagger/master#/User's%20tenants/get_api_ror_user_tenants) for usage details.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) Added an endpoint to retrieve all user tenancies via the ReadonlyREST API. See the [ReadonlyREST API Documentation](https://portal.readonlyrest.com/docs/swagger/master#/User's%20tenants/get_api_ror_user_tenants) for usage details.
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) Introduced support for passing `x-ror-tenancy-id` in direct Kibana requests. See the [ReadonlyREST API Documentation](https://api.beshu.tech/docs/swagger/master#/Example%20ReadonlyREST%20headers%20usage%20with%20Kibana%20API/get_api__) for details.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) Introduced support for passing `x-ror-tenancy-id` in direct Kibana requests. See the [ReadonlyREST API Documentation](https://portal.readonlyrest.com/docs/swagger/master#/Example%20ReadonlyREST%20headers%20usage%20with%20Kibana%20API/get_api__) for details.
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) Introduced support for passing `x-ror-impersonating` in direct Kibana requests. See the [ReadonlyREST API Documentation](https://api.beshu.tech/docs/swagger/master#/Example%20ReadonlyREST%20headers%20usage%20with%20Kibana%20API/get_api__) for details.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) Introduced support for passing `x-ror-impersonating` in direct Kibana requests. See the [ReadonlyREST API Documentation](https://portal.readonlyrest.com/docs/swagger/master#/Example%20ReadonlyREST%20headers%20usage%20with%20Kibana%20API/get_api__) for details.
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) Retains the currently selected group information after user logout. This setting is user-configurable and disabled by default.

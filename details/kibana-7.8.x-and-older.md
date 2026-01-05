@@ -63,39 +63,39 @@ Please note that this will always download the latest version of Kibana plugin a
 
 ```bash
 # ReadonlyREST Free edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/kbn?edition=kbn_free&email=<your_email_address>"
 
 # ReadonlyREST PRO (30 days trial) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_pro&email=<your_email_address>"
 
 # ReadonlyREST Enterprise (30 days trial) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_enterprise&email=<your_email_address>"
 ```
 
 If you want to download the latest version of plugin for a specific version of Elasticsearch, then use query parameter esVersion to specify your required Elasticsearch version.
 
 ```bash
 # ReadonlyREST Free edition for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&esVersion=7.6.1&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/kbn?edition=kbn_free&esVersion=7.6.1&email=<your_email_address>"
 
 # ReadonlyREST PRO (30 days trial) edition for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&esVersion=7.6.1&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_pro&esVersion=7.6.1&email=<your_email_address>"
 
 # ReadonlyREST Enterprise (30 days trial) edition for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&esVersion=7.6.1&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_enterprise&esVersion=7.6.1&email=<your_email_address>"
 ```
 
 If you want to download an older version of plugin for a specific version of Elasticsearch, then use query parameter pluginVersion along with esVersion.
 
 ```bash
 # ReadonlyREST Free edition - version 1.22.0 for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/kbn?edition=kbn_free&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/kbn?edition=kbn_free&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
 
 # ReadonlyREST PRO (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_pro&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
 
 # ReadonlyREST Enterprise (30 days trial) edition - version 1.22.0 for Elasticsearch 7.6.1
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_enterprise&esVersion=7.6.1&pluginVersion=1.22.0&email=<your_email_address>"
 ```
 
 If you are a PRO or Enterprise subscriber, the link will include an extra parameter "token" which can only be used in association with the provided email address.
@@ -106,10 +106,10 @@ You can append required plugin version and Elasticsearch version query parameter
 
 ```bash
 # ReadonlyREST PRO (Official) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_pro&email=<your_email_address>&token=<your_secret_token>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_pro&email=<your_email_address>&token=<your_secret_token>"
 
 # ReadonlyREST Enterprise (30 days trial) edition
-$ bin/kibana-plugin install "https://api.beshu.tech/download/trial?edition=kbn_enterprise&email=<your_email_address>&token=<your_secret_token>"
+$ bin/kibana-plugin install "https://portal.readonlyrest.com/download/trial?edition=kbn_enterprise&email=<your_email_address>&token=<your_secret_token>"
 ```
 
 You can obtain official links with personal secret tokens using our self service [download form](https://readonlyrest.com/download/), once your email address has been recognized as active subscriber.
