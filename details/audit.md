@@ -125,6 +125,7 @@ readonlyrest:
 #### Custom audit cluster
 
 It's possible to set up a custom audit cluster responsible for storing audit events. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
+
 **⚠️IMPORTANT**: Since ROR version 1.68.0, audit events have been sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
 
@@ -168,6 +169,7 @@ This creation process includes setting up the following components, each dedicat
 #### Custom audit cluster
 
 It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
+
 **⚠️IMPORTANT**: Since ROR version 1.68.0, audit events have been sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
 
