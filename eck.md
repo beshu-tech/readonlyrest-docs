@@ -167,7 +167,7 @@ ARG ES_VERSION
 ARG ROR_VERSION
 
 USER elasticsearch
-RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch "https://api.beshu.tech/download/es?esVersion=$ES_VERSION&pluginVersion=$ROR_VERSION&email=[YOUR-EMAIL-ADDRESS]"
+RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch "https://portal.readonlyrest.com/download/es?esVersion=$ES_VERSION&pluginVersion=$ROR_VERSION&email=[YOUR-EMAIL-ADDRESS]"
 USER root
 RUN /usr/share/elasticsearch/jdk/bin/java -jar /usr/share/elasticsearch/plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING yes
 USER 1000:0
@@ -245,7 +245,7 @@ FROM docker.elastic.co/kibana/kibana:${KBN_VERSION}
 ARG KBN_VERSION
 ARG ROR_VERSION
 
-RUN /usr/share/kibana/bin/kibana-plugin install "https://api.beshu.tech/download/kbn?esVersion=$KBN_VERSION&pluginVersion=$ROR_VERSION&edition=kbn_universal&email=[YOUR-EMAIL-ADDRESS]"
+RUN /usr/share/kibana/bin/kibana-plugin install "https://portal.readonlyrest.com/download/kbn?esVersion=$KBN_VERSION&pluginVersion=$ROR_VERSION&edition=kbn_universal&email=[YOUR-EMAIL-ADDRESS]"
 USER root
 RUN /usr/share/kibana/node/bin/node plugins/readonlyrestkbn/ror-tools.js patch --I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes && \
     chown -R kibana:kibana /usr/share/kibana/config
