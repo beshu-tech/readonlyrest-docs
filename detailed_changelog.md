@@ -1,85 +1,371 @@
 # Changelog
 
-* **🚀 New** (KBN) 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support
-* **🚀 New** (ES) 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support
-* **🐞 Fix** (ES) Resolved index resolution compatibility issue with Elasticsearch 9.1.7
+### (2026-01-07) What’s new in **ROR 1.68.0**
+<details>
+<summary><strong>🚨 Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-51999">CVE-2024-51999</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-65945">CVE-2025-65945</a></summary>
+CVE-2024-51999 has been marked as 'Rejected' by NVD. CVE-2025-65945 addresses an improper signature verification vulnerability in the auth0/node-jws library affecting HMAC algorithms, which has been patched.
+</details>
+<details>
+<summary><strong>🚨 Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-67735">CVE-2025-67735</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-66453">CVE-2025-66453</a></summary>
+CVE-2025-67735 fixes a CRLF injection vulnerability in Netty that could enable HTTP request smuggling. CVE-2025-66453 addresses a denial-of-service vulnerability in the Rhino JavaScript engine.
+</details>
+<details>
+<summary><strong>⚠️Warning</strong> (ES) Audit outputs now use the round-robin strategy for custom audit clusters. <a href="https://docs.readonlyrest.com/elasticsearch/audit#custom-audit-cluster">Audit nodes must belong to the same Elasticsearch cluster; otherwise, audit events may be incomplete</a>  for configuration guidelines.</summary>
+When using custom audit clusters, ReadonlyREST now employs round-robin distribution. All audit nodes must belong to the same Elasticsearch cluster to ensure complete audit logging, as mixing nodes from different clusters can result in missing events.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (KBN) Added "Remember last picked tenant" feature for external identity providers</summary>
+This feature remembers the last selected tenant when users authenticate through external identity providers, reducing repetitive selection and streamlining the login process.
+</details>
 
-* **🚀 New** (KBN) 9.2.1, 9.1.7, 8.19.7 support
-* **🚀 New** (ES) 9.2.1, 9.1.7, 8.19.7 support
-* **🐞 Fix** (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when `server.rewriteBasePath: false` is set in kibana.yml
-* **🐞 Fix** (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses
 
-* **🚀 New** (KBN) 9.2.0, 9.1.6, 8.19.6 support
-* **🚀 New** (ES) 9.2.0, 9.1.6, 8.19.6 support
-* **🧐 Enhancement** (ES) Allow using the `actions` rule with the `kibana` rule in the same block when `kibana.access: unrestricted`
-* **🐞 Fix** (KBN) Fixed JWT handling for wrong license edition
-* **🐞 Fix** (KBN) Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x
-* **🐞 Fix** (KBN) [Resolved report download failure on Kibana 9.1.x](https://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2)
-* **🐞 Fix** (KBN) Fixed timeout when saving Security settings
-* **🐞 Fix** (KBN) Restored visibility of reports when multiple data streams exist for a reporting index
-* **🐞 Fix** (KBN) Fixed invisible reports for non-tenancy users on Kibana 9.1.x
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (KBN) Introduced support for the Kibana Data Set Quality beta application
+<details>
+<summary><strong>🚀 New</strong> (KBN) Restyled ROR menu featuring searchable tenancy selector</summary>
+The ROR menu has been redesigned with a modern look and includes a searchable tenancy selector, making it easier to find and switch between tenants in environments with many tenants.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) Added new rules: <a href="https://docs.readonlyrest.com/elasticsearch#jwt_authentication"><code>jwt_authentication</code></a> and <a href="https://docs.readonlyrest.com/elasticsearch#jwt_authorization"><code>jwt_authorization</code></a>, as alternatives to the existing <code>jwt_auth</code> rule</summary>
+Two new JWT rules provide more granular control: `jwt_authentication` handles user identity verification, while `jwt_authorization` manages permission assignments, offering greater flexibility.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#using-ecs-serializer">New audit log serializer compliant with Elastic Common Schema (ECS)</a></summary>
+A new ECS-compliant audit log serializer formats events according to Elastic Common Schema standards, enabling better integration with Elastic Security, SIEM solutions, and other tools.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#configuration">The audit can be enabled or disabled on the block level</a></summary>
+Audit logging can now be controlled at the individual rule block level, providing granular control to reduce audit noise while maintaining detailed auditing for sensitive operations.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) Disabled caching in the Login CSRF protection mechanism.</summary>
+Caching has been disabled in the Login CSRF protection to enhance security, preventing potential CSRF token reuse and ensuring each login request uses fresh, unique tokens.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) Made the tenant indicator always visible and improved its dropdown behavior</summary>
+The tenant indicator is now persistently visible, providing constant awareness of the current tenant. The dropdown behavior has been enhanced for smoother navigation.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) Added stack traces to ReadonlyREST KBN plugin error logs for easier debugging</summary>
+Error logs now include full stack traces, making it significantly easier to diagnose and troubleshoot issues by providing detailed information about error origins.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/ldap-connection-timeout-leads-to-authentication-error/2899">Added LDAP connection health checking to prevent stale connection authentication failures</a></summary>
+Improved LDAP connection pool management with health checking prevents authentication failures caused by stale connections, addressing intermittent login issues in environments with proxies.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#using-configurable-serializer">Enable nested field definitions in the configurable audit log serializer for more flexible audit logging</a></summary>
+The configurable audit log serializer now supports nested field definitions, allowing for more complex and structured audit event formatting and hierarchical log structures.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#predefined-serializers">The predefined audit log serializers</a> now include a new <code>logged_user</code> field, which contains a human-readable username</summary>
+Predefined audit log serializers now include a `logged_user` field that displays human-readable usernames, making logs more intuitive for administrators reviewing user activities.
+</details>
 
-* **🚨 Security Fix** (KBN) [CVE-2025-58754](https://nvd.nist.gov/vuln/detail/CVE-2025-58754)
-* **🚨 Security Fix** (ES) [CVE-2025-58057](https://nvd.nist.gov/vuln/detail/CVE-2025-58057), [CVE-2025-58056](https://nvd.nist.gov/vuln/detail/CVE-2025-58056)
-* **🚀 New** (ES) [Added support for defining a custom audit serializer directly in ROR settings (no code required)](https://docs.readonlyrest.com/elasticsearch/audit#using-configurable-serializer)
-* **🚀 New** (ES) [Introduced new predefined audit serializers: `ReportingAllEventsAuditLogSerializer`, `ReportingAllEventsWithQueryAuditLogSerializer`](https://docs.readonlyrest.com/elasticsearch/audit#predefined-serializers)
-* **🚀 New** (ES) Added new rules: [`ror_kbn_authentication`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_authentication) and [`ror_kbn_authorization`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_authorization), as alternatives to the existing `ror_kbn_auth` rule
-* **🧐 Enhancement** (KBN) [Added OIDC `clock-skew-tolerance` configuration option in `kibana.yml`](https://docs.readonlyrest.com/kibana#clock-skew-tolerance)
-* **🧐 Enhancement** (KBN) [Added option to disable Kibana termination on watermark errors in `kibana.yml`](https://docs.readonlyrest.com/kibana#terminate-kibana-on-es-high-watermark)
-* **🐞 Fix** (KBN) Logout did not invalidate the app session when the `ror_kbn_auth` rule was used with local group definitions
-* **🐞 Fix** (KBN) [Restored keyword field value suggestions in Discover/Data View filters](https://forum.readonlyrest.com/t/kibana-data-view-filter-not-working-with-keyword/2843)
-* **🐞 Fix** (KBN) Integration-based options were visible in search results even when the app was marked as hidden
-* **🐞 Fix** (KBN) Index Management appeared in app search results even when the app was declared as hidden
-* **🐞 Fix** (KBN) Resolved an issue with CSRF token override when multiple browser tabs were open
-* **🐞 Fix** (KBN) Fixed OIDC compatibility for Kibana 7.10.2 and earlier
-* **🐞 Fix** (ES) Restored backward compatibility for custom audit log serializer implementations extending the `DefaultAuditLogSerializer` class. Custom serializers compiled against ROR 1.65 or 1.66 that use `DefaultAuditLogSerializer` must be recompiled to work correctly
-* **🐞 Fix** (ES) Fixed a defect that broke the "Snapshot and Restore" functionality in Kibana
 
-* **🚀 New** (KBN) 9.1.5, 9.1.4, 9.0.8, 9.0.7 8.19.5, 8.19.4, 8.18.7 support
-* **🚀 New** (ES) 9.1.5, 9.1.4, 9.0.8, 9.0.7, 8.19.5, 8.19.4, 8.18.8, 8.18.7 support
-* **🐞 Fix** (ES) [Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17](https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Resolved an issue causing the Kibana Search Sessions app to fail on Kibana 8.x
+<details>
+<summary><strong>🐞 Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/errors-after-upgrade-kibana-7-17-29-to-8-19-7/2887">Fixed cluster resolution issues that caused Kibana errors and unexpected logouts in versions 8.19.x and above</a></summary>
+Resolved cluster resolution problems causing Kibana errors and unexpected user logouts in Elasticsearch 8.19.x+. The fix addresses issues where users were logged out when accessing certain Kibana areas.
+</details>
 
-* **🚨Security Fix** (KBN) [CVE-2025-7339](https://nvd.nist.gov/vuln/detail/CVE-2025-7339), [CVE-2025-7783](https://nvd.nist.gov/vuln/detail/CVE-2025-7783), [CVE-2025-54419](https://nvd.nist.gov/vuln/detail/CVE-2025-54419), [CVE-2025-9288](https://nvd.nist.gov/vuln/detail/CVE-2025-9288)
-* **🚨Security Fix** (KBN) [Prevented visibility of hidden functions through Kibana UI search](https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2)
-* **🚨Security Fix** (ES) Removed internal failure details from error responses to prevent unintended information disclosure
-* **🚀New** (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support
-* **🚀New** (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support
-* **🧐Enhancement** (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index
-* **🧐Enhancement** (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration
-* **🐞Fix** (KBN) Resolved issue with index deletion in **Index Management** via Kibana UI
-* **🐞Fix** (KBN) Corrected document display in **Discover** when indices are defined in the user ACL block
-* **🐞Fix** (KBN) Fixed an error preventing **Spaces** from being deleted in Kibana **9.1.0**
-* **🐞Fix** (KBN) Corrected handling of `readonlyrest_kbn.whitelistedPaths` in `kibana.yml` when `xpack.security.enabled: true`
-* **🐞Fix** (KBN) Resolved startup issues for Kibana versions **7.9.0 → 7.10.2**
-* **🐞Fix** (KBN) Fixed report generation when `xpack.security.enabled: true` and `xpack.encryptedSavedObjects.encryptionKey` is set in Kibana **8.19.x** and **9.1.x**
+### (2025-11-29) What’s new in **ROR 1.67.3**
+<details>
+<summary><strong>🚀 New</strong> (KBN) 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support</summary>
+ReadonlyREST now officially supports the latest Kibana versions including 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, and 8.19.8. This ensures compatibility with recent Kibana security updates and feature releases, allowing users to upgrade their Kibana instances while maintaining ReadonlyREST security functionality.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support</summary>
+This release adds official support for Elasticsearch versions 9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, and 8.19.8. Users can now deploy ReadonlyREST with these Elasticsearch versions to benefit from the latest security patches, performance improvements, and features while maintaining their existing security configurations.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Resolved index resolution compatibility issue with Elasticsearch 9.1.7</summary>
+Fixed a compatibility issue where ReadonlyREST's index resolution logic was not working correctly with Elasticsearch 9.1.7. This could have caused problems with index pattern matching, alias resolution, or wildcard index operations in certain scenarios when using this specific Elasticsearch version.
+</details>
 
-* **🚀New** (KBN) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support
-* **🚀New** (ES) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support
-* **🚀New** (ECK) 3.1.0 support 
-* **🐞Fix** (ES) Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set.
+### (2025-11-13) What’s new in **ROR 1.67.2**
+<details>
+<summary><strong>🚀 New</strong> (KBN) 9.2.1, 9.1.7, 8.19.7 support</summary>
+ReadonlyREST now officially supports Kibana versions 9.2.1, 9.1.7, and 8.19.7. These maintenance releases include various bug fixes and stability improvements, ensuring compatibility with the latest Kibana security features and performance enhancements.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) 9.2.1, 9.1.7, 8.19.7 support</summary>
+ReadonlyREST now officially supports Elasticsearch versions 9.2.1, 9.1.7, and 8.19.7. These releases include important bug fixes, security updates, and enhancements across various components including aggregations, authorization, and machine learning features.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when <code>server.rewriteBasePath: false</code> is set in kibana.yml</summary>
+This fix resolves an issue where SAML and OIDC authentication providers would fail when Kibana was deployed behind a reverse proxy with the `server.rewriteBasePath: false` configuration. The plugin now correctly handles authentication flows in this deployment scenario.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses</summary>
+ReadonlyREST now properly delegates specific internal exception handling to Elasticsearch's native error management system. This ensures that error responses maintain their original format and behavior, providing better compatibility with Elasticsearch's standard error handling mechanisms.
+</details>
 
-* **🚨Security Fix** (KBN) [CVE-2025-5889](https://nvd.nist.gov/vuln/detail/CVE-2025-5889)
-* **🚨Security Fix** (ES) [CVE-2024-29857](https://nvd.nist.gov/vuln/detail/cve-2024-29857) (when FIPS SSL is used)
-* **🚀New** (KBN)  Added support for configuring [JSON log format](https://www.elastic.co/docs/troubleshoot/kibana/using-kibana-server-logs) in `kibana.yml`.
-* **🚀New** (ES) [Added support for a new output type: `data_stream` in audit logging](https://docs.readonlyrest.com/elasticsearch/audit#configuration).
-* **🚀New** (ES) Included Elasticsearch node name and cluster name in the audit reports.
-* **🧐Enhancement** (KBN) Logged detailed messages when the CSRF token has expired.
-* **🧐Enhancement** (KBN) [Added `id_token` as a valid option for `userInfoSource`](https://docs.readonlyrest.com/kibana#user-info-source-methods).
-* **🧐Enhancement** (ES) Improved handling of JVM properties related to ROR settings.
-* **🐞Fix** (KBN) Fixed OIDC logout redirection issue by switching `redirect_uri` to `id_token_hint` and using `post_logout_redirect_uri`.
-* **🐞Fix** (KBN) The ReadonlyREST Kibana plugin now accepts custom appender names defined in `kibana.yml`.
-* **🐞Fix** (KBN) When "Remember Group After Logout" is enabled, groups without access are correctly ignored during login.
-* **🐞Fix** (KBN) Fixed issue where the Kibana index template was not applied for Kibana versions ≥ 8.8.0.
-* **🐞Fix** (KBN) Resolved a bug with `readonlyrest_kbn.resetKibanaIndexToTemplate: true` for Kibana 7.x.
-* **🐞Fix** (KBN) Fixed an issue where a custom session index name was not respected after Kibana restart.
-* **🐞Fix** (ES) Fixed an issue preventing snapshots from being restored when no indices were specified.
-* **🐞Fix** (ES) File ownership and permissions are now preserved during `ror-tools` patch and unpatch operations.
+### (2025-11-03) What’s new in **ROR 1.67.1**
+<details>
+<summary><strong>🚀 New</strong> (KBN) 9.2.0, 9.1.6, 8.19.6 support</summary>
+Adds official support for the latest Kibana versions 9.2.0, 9.1.6, and 8.19.6, ensuring compatibility with the newest Kibana releases and their respective features.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) 9.2.0, 9.1.6, 8.19.6 support</summary>
+Provides official support for Elasticsearch versions 9.2.0, 9.1.6, and 8.19.6, maintaining compatibility with the latest Elasticsearch releases and their security features.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (ES) Allow using the <code>actions</code> rule with the <code>kibana</code> rule in the same block when <code>kibana.access: unrestricted</code></summary>
+Enables combining the actions rule with the kibana rule in the same security block when kibana access is set to unrestricted, providing more flexible security configuration options.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed JWT handling for wrong license edition</summary>
+Resolved an issue where JWT authentication was not working correctly when the wrong license edition was detected, ensuring proper JWT functionality across different license types.
+</details>
 
-* **🚀New** (KBN) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support 
-* **🚀New** (ES) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support 
-* **🐞Fix** (ES) [Fixed an issue with Elasticsearch patching process on Windows operating systems](https://forum.readonlyrest.com/t/ror-1-64-0-for-es9-0-1-windows-setup/2778)
 
-* **🐞Fix** (ES) Correct patching verification in ROR Docker image entrypoint
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2">Resolved report download failure on Kibana 9.1.x</a></summary>
+Fixed a critical issue where users were unable to download reports from Kibana 9.1.x, restoring report generation and download functionality.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed timeout when saving Security settings</summary>
+Addressed a timeout issue that occurred when saving Security settings in Kibana, ensuring security configuration changes can be saved reliably.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Restored visibility of reports when multiple data streams exist for a reporting index</summary>
+Fixed an issue where reports were not visible when multiple data streams existed for a reporting index, ensuring all generated reports are properly displayed.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed invisible reports for non-tenancy users on Kibana 9.1.x</summary>
+Resolved a problem where reports were not visible to non-tenancy users in Kibana 9.1.x, ensuring proper report visibility for all user types.
+</details>
+
+### (2025-10-14) What’s new in **ROR 1.67.0**
+<details>
+<summary><strong>🚨 Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58754">CVE-2025-58754</a></summary>
+Fixed a Denial of Service vulnerability in the Axios HTTP client that allowed attackers to bypass memory limits and crash the Node.js process by supplying large data URIs.
+</details>
+<details>
+<summary><strong>🚨 Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58057">CVE-2025-58057</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58056">CVE-2025-58056</a></summary>
+Addressed two Netty framework vulnerabilities: a DoS issue in BrotliDecoder allowing uncontrolled memory allocation, and an HTTP Request Smuggling vulnerability that could bypass security controls.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#using-configurable-serializer">Added support for defining a custom audit serializer directly in ROR settings (no code required)</a></summary>
+Administrators can now configure custom audit serializers directly through ROR settings without requiring custom code, making audit customization more accessible and maintainable.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#predefined-serializers">Introduced new predefined audit serializers: <code>ReportingAllEventsAuditLogSerializer</code>, <code>ReportingAllEventsWithQueryAuditLogSerializer</code></a></summary>
+Two new predefined audit serializers provide comprehensive logging options, with one capturing all audit events and another including the full request body for enhanced security monitoring.
+</details>
+<details>
+<summary><strong>🚀 New</strong> (ES) Added new rules: <a href="https://docs.readonlyrest.com/elasticsearch#ror_kbn_authentication"><code>ror_kbn_authentication</code></a> and <a href="https://docs.readonlyrest.com/elasticsearch#ror_kbn_authorization"><code>ror_kbn_authorization</code></a>, as alternatives to the existing <code>ror_kbn_auth</code> rule</summary>
+These new rules provide granular control over Kibana authentication and authorization processes separately, offering greater flexibility compared to the combined ror_kbn_auth rule.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#clock-skew-tolerance">Added OIDC <code>clock-skew-tolerance</code> configuration option in <code>kibana.yml</code></a></summary>
+Introduces a clock-skew-tolerance option for OIDC authentication, allowing administrators to define tolerance for time synchronization differences with identity providers.
+</details>
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#terminate-kibana-on-es-high-watermark">Added option to disable Kibana termination on watermark errors in <code>kibana.yml</code></a></summary>
+Administrators can now prevent Kibana from automatically terminating when encountering Elasticsearch high watermark errors, improving system resilience during storage issues.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Logout did not invalidate the app session when the <code>ror_kbn_auth</code> rule was used with local group definitions</summary>
+Fixed a security issue where user logout actions did not properly invalidate application sessions when using ror_kbn_auth with local group definitions.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/kibana-data-view-filter-not-working-with-keyword/2843">Restored keyword field value suggestions in Discover/Data View filters</a></summary>
+Restored functionality of keyword field value suggestions in Kibana's Discover and Data View filters, providing the expected filtering experience.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Integration-based options were visible in search results even when the app was marked as hidden</summary>
+Fixed an issue where integration-based application options remained visible in search results despite being configured as hidden.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Index Management appeared in app search results even when the app was declared as hidden</summary>
+Resolved an issue where Index Management application appeared in search results despite being configured as hidden.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Resolved an issue with CSRF token override when multiple browser tabs were open</summary>
+Fixed a CSRF token conflict that occurred when multiple Kibana browser tabs were open, which could cause authentication problems.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed OIDC compatibility for Kibana 7.10.2 and earlier</summary>
+Restored OIDC authentication compatibility for Kibana versions 7.10.2 and earlier, maintaining backward compatibility for legacy deployments.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Restored backward compatibility for custom audit log serializer implementations extending the <code>DefaultAuditLogSerializer</code> class. Custom serializers compiled against ROR 1.65 or 1.66 that use <code>DefaultAuditLogSerializer</code> must be recompiled to work correctly</summary>
+Restored backward compatibility for custom audit log serializers extending DefaultAuditLogSerializer, though custom serializers from ROR 1.65/1.66 need recompilation.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Fixed a defect that broke the "Snapshot and Restore" functionality in Kibana</summary>
+Resolved a defect that prevented Snapshot and Restore functionality from working properly in Kibana, ensuring users can manage Elasticsearch snapshots as expected.
+</details>
+
+### (2025-09-03) What's new in **ROR 1.66.1**
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (KBN) 9.1.5, 9.1.4, 9.0.8, 9.0.7 8.19.5, 8.19.4, 8.18.7 support
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (ES) 9.1.5, 9.1.4, 9.0.8, 9.0.7, 8.19.5, 8.19.4, 8.18.8, 8.18.7 support
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (ES) [Patching issue in Elasticsearch 9.x, 8.19.x, and 8.18.x that caused startup failures on Java 17](https://forum.readonlyrest.com/t/ror-1-65-1-java-17/2841)
+
+### (2025-08-28) What's new in **ROR 1.66.0**
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-7339">CVE-2025-7339</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-7783">CVE-2025-7783</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-54419">CVE-2025-54419</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-9288">CVE-2025-9288</a></summary>
+Fixed multiple critical security vulnerabilities in dependencies including header modification, HTTP parameter pollution, authentication bypass, and input validation flaws. These updates prevent potential security exploits in the Kibana plugin.
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2">Prevented visibility of hidden functions through Kibana UI search</a></summary>
+Addressed a security issue where hidden functions were unintentionally exposed through Kibana's UI search. This fix ensures functions marked as hidden remain properly concealed from user searches.
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) Removed internal failure details from error responses to prevent unintended information disclosure</summary>
+Enhanced security by eliminating internal system details from error responses that could potentially expose sensitive information about the Elasticsearch cluster configuration.
+</details>
+<details>
+<summary><strong>🚀New</strong> (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
+Added official support for the latest Kibana maintenance releases including versions 9.1.3, 9.1.2, 9.0.6, 8.19.3, and 8.18.6, ensuring compatibility with recent security patches.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
+Extended compatibility to include Elasticsearch versions 9.1.3, 9.1.2, 9.0.6, 8.19.3, and 8.18.6, providing the latest security updates and performance improvements.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index</summary>
+Improved the login process by optimizing user metadata selection to prioritize authentication blocks associated with configured Kibana indices for more reliable user sessions.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration</summary>
+Enhanced configuration handling for consent flags specified through environment variables, ensuring consistent application of security settings across deployments.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Resolved issue with index deletion in <strong>Index Management</strong> via Kibana UI</summary>
+Fixed a bug that prevented proper index deletion operations through Kibana's Index Management interface when ReadonlyREST security rules were active.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Corrected document display in <strong>Discover</strong> when indices are defined in the user ACL block</summary>
+Addressed an issue where document visibility in Kibana's Discover tab was incorrectly handled for users with ACL-defined indices.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed an error preventing <strong>Spaces</strong> from being deleted in Kibana <strong>9.1.0</strong></summary>
+Resolved a compatibility issue with Kibana 9.1.0 that was preventing administrators from deleting Spaces through the Kibana UI.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Corrected handling of <code>readonlyrest_kbn.whitelistedPaths</code> in <code>kibana.yml</code> when <code>xpack.security.enabled: true</code></summary>
+Fixed configuration parsing for whitelisted paths when X-Pack security is enabled, ensuring proper path-based access controls in secured environments.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Resolved startup issues for Kibana versions <strong>7.9.0 → 7.10.2</strong></summary>
+Addressed compatibility problems causing startup failures in older Kibana versions 7.9.0 through 7.10.2.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed report generation when <code>xpack.security.enabled: true</code> and <code>xpack.encryptedSavedObjects.encryptionKey</code> is set in Kibana <strong>8.19.x</strong> and <strong>9.1.x</strong></summary>
+Resolved an issue with report generation in secured Kibana environments where encrypted saved objects configuration was interfering with report creation.
+</details>
+
+### (2025-07-15) What's new in **ROR 1.65.1**
+<details>
+<summary><strong>🚀New</strong> (KBN) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support</summary>
+Extended compatibility with Kibana versions 9.1.1 through 8.17.9, ensuring seamless integration and security.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support</summary>
+Added support for Elasticsearch versions 9.1.1 through 8.17.9, enabling ROR's security features across these releases.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ECK) 3.1.0 support</summary>
+Introduced compatibility with Elastic Cloud on Kubernetes (ECK) 3.1.0 for seamless deployment in Kubernetes environments.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Docker images now start correctly when <code>I_UNDERSTAND_AND_ACCEPT_ES_PATCHING</code> is set.</summary>
+Resolved an issue where Elasticsearch Docker images failed to start with the `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` variable enabled.
+</details>
+
+### (2025-07-10) What's new in **ROR 1.65.0**
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-5889">CVE-2025-5889</a></summary>
+This security fix addresses a vulnerability (CVE-2025-5889) in Kibana, ensuring enhanced protection against potential exploits. Users are advised to update immediately to mitigate risks.
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/cve-2024-29857">CVE-2024-29857</a> (when FIPS SSL is used)</summary>
+This update resolves a security issue (CVE-2024-29857) in Elasticsearch when FIPS SSL is enabled, preventing potential vulnerabilities in secure communication. Upgrading is recommended for users relying on FIPS-compliant SSL.
+</details>
+<details>
+<summary><strong>🚀New</strong> (KBN)  Added support for configuring <a href="https://www.elastic.co/docs/troubleshoot/kibana/using-kibana-server-logs">JSON log format</a> in <code>kibana.yml</code>.</summary>
+Users can now configure Kibana logs in JSON format via `kibana.yml`, simplifying log parsing and integration with monitoring tools. This feature enhances log management and troubleshooting capabilities.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#configuration">Added support for a new output type: <code>data_stream</code> in audit logging</a>.</summary>
+Elasticsearch audit logs now support `data_stream` as an output type, enabling more efficient log storage and retrieval. This addition aligns with modern logging practices and improves scalability.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) Included Elasticsearch node name and cluster name in the audit reports.</summary>
+Audit reports now include the Elasticsearch node name and cluster name, providing better context for log analysis and troubleshooting. This enhancement aids in identifying the source of events more accurately.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) Logged detailed messages when the CSRF token has expired.</summary>
+Kibana now logs detailed messages when a CSRF token expires, helping administrators diagnose and resolve authentication issues more efficiently. This improves debugging and user experience.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#user-info-source-methods">Added <code>id_token</code> as a valid option for <code>userInfoSource</code></a>.</summary>
+The `id_token` is now a valid option for `userInfoSource` in Kibana, offering more flexibility in user authentication workflows. This update supports diverse identity provider configurations.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) Improved handling of JVM properties related to ROR settings.</summary>
+This enhancement optimizes the handling of JVM properties tied to ROR settings, ensuring smoother performance and configuration management. It reduces potential conflicts and improves stability.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed OIDC logout redirection issue by switching <code>redirect_uri</code> to <code>id_token_hint</code> and using <code>post_logout_redirect_uri</code>.</summary>
+The OIDC logout process now correctly redirects users by replacing `redirect_uri` with `id_token_hint` and utilizing `post_logout_redirect_uri`. This resolves logout flow issues and enhances security.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) The ReadonlyREST Kibana plugin now accepts custom appender names defined in <code>kibana.yml</code>.</summary>
+The plugin now respects custom appender names specified in `kibana.yml`, ensuring compatibility with user-defined logging configurations. This fix addresses previous limitations in log management.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) When "Remember Group After Logout" is enabled, groups without access are correctly ignored during login.</summary>
+Groups without access are now properly ignored during login when "Remember Group After Logout" is enabled, preventing unauthorized access attempts. This improves security and user experience.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed issue where the Kibana index template was not applied for Kibana versions ≥ 8.8.0.</summary>
+The Kibana index template is now correctly applied for versions 8.8.0 and above, resolving compatibility issues. This ensures consistent behavior across supported Kibana releases.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Resolved a bug with <code>readonlyrest_kbn.resetKibanaIndexToTemplate: true</code> for Kibana 7.x.</summary>
+A bug affecting the `resetKibanaIndexToTemplate` setting in Kibana 7.x has been fixed, restoring expected functionality. This ensures proper index management for older Kibana versions.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed an issue where a custom session index name was not respected after Kibana restart.</summary>
+Custom session index names are now preserved after Kibana restarts, addressing a previous inconsistency. This fix enhances reliability in session management.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Fixed an issue preventing snapshots from being restored when no indices were specified.</summary>
+Snapshots can now be restored even when no indices are explicitly specified, resolving a previous limitation. This improves flexibility in backup and recovery operations.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) File ownership and permissions are now preserved during <code>ror-tools</code> patch and unpatch operations.</summary>
+The `ror-tools` utility now maintains file ownership and permissions during patch and unpatch operations, preventing unintended changes. This ensures system integrity and security.
+</details>
+
+### (2025-05-17) What's new in **ROR 1.64.2**
+<details>
+<summary><strong>🚀New</strong> (KBN) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support</summary>
+This update extends compatibility with Kibana versions 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29, ensuring seamless integration and security for users running these versions.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support</summary>
+This release adds support for Elasticsearch versions 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29, enabling users to leverage ROR's security features across these Elasticsearch distributions.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-1-64-0-for-es9-0-1-windows-setup/2778">Fixed an issue with Elasticsearch patching process on Windows operating systems</a></summary>
+Resolved a bug in the Elasticsearch patching process specific to Windows systems, ensuring smoother updates and installations for users on this platform.
+</details>
+
+### (2025-05-13) What's new in **ROR 1.64.1**
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) Correct patching verification in ROR Docker image entrypoint
 
 ### (2025-05-11) What's new in **ROR 1.64.0**
 
