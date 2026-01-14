@@ -5,6 +5,7 @@
 * **🚨 Security Fix** (ES) [CVE-2025-67735](https://nvd.nist.gov/vuln/detail/CVE-2025-67735), [CVE-2025-66453](https://nvd.nist.gov/vuln/detail/CVE-2025-66453)
 * **⚠️Warning** (ES) Audit outputs now use the round-robin strategy for custom audit clusters. [Audit nodes must belong to the same Elasticsearch cluster; otherwise, audit events may be incomplete](https://docs.readonlyrest.com/elasticsearch/audit#custom-audit-cluster)
  for configuration guidelines.
+* **🚀 New** (ES) 9.2.4, 9.1.10, 8.19.10 support
 * **🚀 New** (KBN) Added "Remember last picked tenant" feature for external identity providers
 * **🚀 New** (KBN) Introduced support for the Kibana Data Set Quality beta application
 * **🚀 New** (KBN) Restyled ROR menu featuring searchable tenancy selector
