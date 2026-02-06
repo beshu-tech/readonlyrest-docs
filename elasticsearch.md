@@ -1881,7 +1881,7 @@ Here is a glossary:
 * `CGR`: String, the request carries a "current group" header \(used for multi-tenancy\).
 * `USR`: String, the user name ReadonlyREST was able to extract from Basic Auth, JWT, LDAP, or other methods as specified in the ACL.
 * `BRS`: Boolean, an heuristic attempt to tell if the request comes from a browser.
-* `ACT`: String, the elasticsearch level action associated with the request. For a list of actions, see our [actions rule docs](elasticsearch.md#action-rule).
+* `ACT`: String, the elasticsearch level action associated with the request. For a list of actions, see our [actions rule docs](elasticsearch.md#actions).
 * `OA`: IP Address, originating address \(source address\) of the TCP connection underlying the http session.
 * `IDX`: Strings array: the list of indices affected by this request.
 * `MET`: String, HTTP Method
