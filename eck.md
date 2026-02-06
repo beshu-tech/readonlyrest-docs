@@ -313,6 +313,111 @@ If you are still interested in this one, please take a look at the examples in o
 
 </details>
 
+## Handling asynchronous ROR startup
+
+ReadonlyREST starts asynchronously during Elasticsearch initialization. In some cases, there may be a brief moment when the pod reports as ready, but ROR is still starting up. During this window, requests may receive error responses (403/401/503, depending on your settings).
+
+If you need to ensure that the pod is only marked as ready after ROR has fully started, you can use the sidecar pattern described below.
+
+{% hint style="info" %}
+**Note:** This is an optional pattern and not required for most deployments. Elastic [does not recommend](https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s/readiness-probe#k8s_elasticsearch_versions_8_2_0_and_later) overriding the default Elasticsearch readiness probe. The sidecar pattern allows you to achieve ROR readiness checking without modifying the main Elasticsearch probe.
+{% endhint %}
+
+### Sidecar pattern for ROR readiness
+
+The following example extends the basic Elasticsearch configuration by adding a sidecar container (`ror-ready-gate`) that includes its own readiness probe. This probe checks if ROR is ready to handle requests by testing the cluster health endpoint with proper authentication:
+
+```yaml
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: quickstart
+spec:
+  version: 8.14.3
+  image: beshultd/elasticsearch-readonlyrest:8.14.3-ror-latest
+  nodeSets:
+  - name: default
+    count: 1
+    config:
+      node.store.allow_mmap: false
+    podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              securityContext:
+                runAsNonRoot: false
+                runAsUser: 0
+                runAsGroup: 0
+              env:
+                - name: I_UNDERSTAND_AND_ACCEPT_ES_PATCHING
+                  value: "yes"
+                - name: INTERNAL_USR_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: quickstart-es-internal-users
+                      key: elastic-internal
+                - name: INTERNAL_PROBE_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: quickstart-es-internal-users
+                      key: elastic-internal-probe
+                - name: KIBANA_SERVICE_ACCOUNT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: quickstart-kibana-user
+                      key: token
+                # Optional: little speed up ROR initialization
+                - name: ES_JAVA_OPTS
+                  value: "-Dcom.readonlyrest.settings.loading.delay=0s -Dcom.readonlyrest.settings.loading.attempts.count=1"
+              volumeMounts:
+                - name: config-ror
+                  mountPath: /usr/share/elasticsearch/config/readonlyrest.yml
+                  subPath: readonlyrest.yml
+
+            # Sidecar container that waits for ROR to be ready
+            - name: ror-ready-gate
+              image: curlimages/curl:8.6.0
+              command: ["sh", "-c", "sleep infinity"]
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 1000
+                runAsGroup: 1000
+                allowPrivilegeEscalation: false
+              readinessProbe:
+                exec:
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      curl -sf -k --max-time 2 \
+                        -u "elastic-internal-probe:$(cat /mnt/probe-user/elastic-internal-probe | tr -d '\n')" \
+                        https://127.0.0.1:9200/_cluster/health > /dev/null
+                periodSeconds: 5
+                timeoutSeconds: 5
+                failureThreshold: 60
+              volumeMounts:
+                - name: probe-user
+                  mountPath: /mnt/probe-user
+                  readOnly: true
+
+          volumes:
+            - name: config-ror
+              configMap:
+                name: config-readonlyrest.yml
+            - name: probe-user
+              secret:
+                secretName: quickstart-es-internal-users
+```
+
+### How it works
+
+1. The `ror-ready-gate` sidecar container runs alongside Elasticsearch
+2. Its readiness probe makes authenticated requests to the cluster health endpoint
+3. The pod is only marked ready when both containers pass their readiness checks
+4. This ensures ROR is fully initialized before the pod receives traffic
+
+The readiness probe will retry for up to 5 minutes (60 failures × 5 second period) before marking the pod as failed.
+
 ## Notes
 
 * [ReadonlyREST SSL](https://docs.readonlyrest.com/elasticsearch#encryption) can be used but it's simpler to leave `xpack.security.enabled: true` and use X-Pack SSL instead
