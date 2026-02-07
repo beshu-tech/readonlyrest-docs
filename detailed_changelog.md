@@ -3,67 +3,66 @@
 ### (2026-01-07) What’s new in **ROR 1.68.0**
 <details>
 <summary><strong>🚨 Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-51999">CVE-2024-51999</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-65945">CVE-2025-65945</a></summary>
-CVE-2025-65945 addresses an improper signature verification vulnerability in the auth0/node-jws library affecting HS256 algorithm usage, which could allow attackers to bypass signature verification when using user-provided data in HMAC secret lookup.
+Patches security vulnerabilities in Kibana, including a critical fix for an improper signature verification flaw in the auth0/node-jws library that could allow attackers to bypass signature verification.
 </details>
 <details>
 <summary><strong>🚨 Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-67735">CVE-2025-67735</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-66453">CVE-2025-66453</a></summary>
-CVE-2025-67735 fixes a CRLF injection vulnerability in Netty's HttpRequestEncoder that could enable HTTP request smuggling attacks. CVE-2025-66453 addresses a Denial-of-Service vulnerability in the Rhino JavaScript engine where crafted floating-point numbers could cause excessive CPU consumption.
+Fixes critical vulnerabilities in Elasticsearch components, addressing a CRLF injection in Netty that could lead to HTTP request smuggling and a denial-of-service issue in the Rhino JavaScript engine.
 </details>
 <details>
 <summary><strong>⚠️Warning</strong> (ES) Audit outputs now use the round-robin strategy for custom audit clusters. <a href="https://docs.readonlyrest.com/elasticsearch/audit#custom-audit-cluster">Audit nodes must belong to the same Elasticsearch cluster; otherwise, audit events may be incomplete</a>  for configuration guidelines.</summary>
-The audit system now uses round-robin distribution for custom audit clusters. It's critical that all audit nodes belong to the same Elasticsearch cluster to ensure complete audit event collection and prevent data loss.
+Audit outputs now use a round-robin strategy. A critical configuration requirement is that all audit nodes must belong to the same Elasticsearch cluster to prevent incomplete audit events.
 </details>
-<details>
-<summary><strong>🚀 New</strong> (KBN) 9.2.4, 9.1.10, 8.19.10 support</summary>
-Added compatibility with the latest Kibana security releases including versions 9.2.4, 9.1.10, and 8.19.10, ensuring users can upgrade to the most recent stable versions with security patches.
-</details>
-<details>
-<summary><strong>🚀 New</strong> (ES) 9.2.4, 9.1.10, 8.19.10 support</summary>
-Extended support to Elasticsearch versions 9.2.4, 9.1.10, and 8.19.10, providing compatibility with the latest security updates and bug fixes from Elastic.
-</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (KBN) 9.3.0, 9.2.5, 9.2.4, 9.1.10, 8.19.11, 8.19.10 support
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (ES) 9.3.0, 9.2.5, 9.2.4, 9.1.10, 8.19.11, 8.19.10 support
 <details>
 <summary><strong>🚀 New</strong> (KBN) Added "Remember last picked tenant" feature for external identity providers</summary>
-When using external identity providers, Kibana now remembers the last selected tenant for each user, improving user experience by reducing repetitive tenant selection during login sessions.
+Remembers the last selected tenant when using external identity providers, improving user convenience by reducing repetitive selections.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (KBN) Introduced support for the Kibana Data Set Quality beta application</summary>
-Added compatibility with Kibana's Data Set Quality beta application, allowing users to leverage this new feature while maintaining ROR security controls and access management.
+Adds compatibility with Kibana's Data Set Quality beta application, enabling proper ROR functionality for this new data monitoring feature.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (KBN) Restyled ROR menu featuring searchable tenancy selector</summary>
-Completely redesigned the ROR menu interface with a modern look and added a searchable tenant selector, making it easier for users to find and switch between tenants in multi-tenant environments.
+Updates the ROR menu with a modern redesign, including a searchable tenant selector to improve navigation in multi-tenant environments.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (ES) Added new rules: <a href="https://docs.readonlyrest.com/elasticsearch#jwt_authentication"><code>jwt_authentication</code></a> and <a href="https://docs.readonlyrest.com/elasticsearch#jwt_authorization"><code>jwt_authorization</code></a>, as alternatives to the existing <code>jwt_auth</code> rule</summary>
-Introduced separate JWT authentication and authorization rules, providing more granular control over JWT-based security. This allows administrators to decouple authentication validation from authorization logic for better flexibility in complex security scenarios.
+Introduces two new JWT rules that separate authentication and authorization, providing more granular control over JWT-based security configurations.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#using-ecs-serializer">New audit log serializer compliant with Elastic Common Schema (ECS)</a></summary>
-Added an ECS-compliant audit log serializer that formats audit events according to Elastic Common Schema standards, enabling better integration with Elastic Security, SIEM solutions, and standardized log analysis tools.
+Adds an ECS-compliant audit log serializer, enabling better integration with Elastic Stack monitoring tools and simplifying log analysis.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#configuration">The audit can be enabled or disabled on the block level</a></summary>
-Audit logging can now be configured at the individual block level, providing granular control over which security rules generate audit events. This allows administrators to reduce noise by auditing only specific security blocks.
+Introduces granular audit control, allowing administrators to enable or disable auditing at the individual rule block level for more flexible logging.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (KBN) Disabled caching in the Login CSRF protection mechanism.</summary>
-Removed caching from the Login CSRF protection to enhance security by ensuring fresh CSRF tokens are always used, preventing potential token reuse attacks and improving protection against cross-site request forgery.
+Improves security by disabling caching in the Login CSRF protection, preventing potential token reuse and enhancing protection against attacks.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (KBN) Made the tenant indicator always visible and improved its dropdown behavior</summary>
-The tenant indicator is now persistently visible in the UI, and the dropdown selector has been enhanced for better usability. This provides constant visibility of the current tenant context and smoother tenant switching.
+Enhances the UI by making the tenant indicator always visible and improving its dropdown for better visibility and navigation.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (KBN) Added stack traces to ReadonlyREST KBN plugin error logs for easier debugging</summary>
-Error logs from the Kibana plugin now include full stack traces, making it significantly easier for administrators and support teams to diagnose and troubleshoot issues by providing complete error context.
+Improves debugging by including stack traces in Kibana plugin error logs, helping administrators quickly identify and resolve issues.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/ldap-connection-timeout-leads-to-authentication-error/2899">Added LDAP connection health checking to prevent stale connection authentication failures</a></summary>
-Implemented LDAP connection health monitoring to detect and recover from stale connections before authentication attempts. This prevents authentication failures caused by timeout issues and improves reliability in LDAP-integrated environments.
+Implements LDAP connection health checking to detect and recover from stale connections, preventing authentication failures due to timeouts.
 </details>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐 Enhancement** (ES) [Enable nested field definitions in the configurable audit log serializer for more flexible audit logging](https://docs.readonlyrest.com/elasticsearch/audit#using-configurable-serializer)
+<details>
+<summary><strong>🧐 Enhancement</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#using-configurable-serializer">Enable nested field definitions in the configurable audit log serializer for more flexible audit logging</a></summary>
+Extends the configurable audit log serializer to support nested field definitions, allowing for more complex and structured audit log formats.
+</details>
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐 Enhancement** (ES) [The predefined audit log serializers](https://docs.readonlyrest.com/elasticsearch/audit#predefined-serializers) now include a new `logged_user` field, which contains a human-readable username
