@@ -408,9 +408,9 @@ You can:
   * Fields included:
     ```
      match — whether the request matched a rule (boolean)  
-     block — reason for blocking, if blocked (string)  
+     block — this field is conditional on the value of 'match'. When 'match' is true, it contains the block that was matched; when 'match' is false, it instead contains a string with a basic description of what occurred (string)  
      id — audit event identifier (string)  
-     final_state — final processing state (string)  
+     final_state — final processing state (ALLOWED/FORBIDDEN/ERRORED/INDEX NOT EXIST) (string)  
      @timestamp — event timestamp (ISO-8601 string)  
      correlation_id — correlation identifier for tracing (string)  
      processingMillis — request processing duration in milliseconds (number)  
