@@ -674,7 +674,7 @@ The provided ECS implementation is equivalent to `configurable` serializer shown
                   ror_involved_indices: "{INVOLVED_INDICES}"
                   ror_acl_history: "{ACL_HISTORY}"
                   ror_final_state: "{FINAL_STATE}"
-                  ror_detailed_reason: "{REASON}"
+                  ror_detailed_reason: "{MATCHED_BLOCK_NAMES}"
 ```
 
 ### Custom audit event serializer
