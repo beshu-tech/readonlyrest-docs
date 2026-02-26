@@ -408,6 +408,7 @@ You can:
   * Fields included:
     ```
      match — whether the request matched a rule (boolean)  
+     matched_block_names - list of names of the blocks, that were matched (both forbidden and allowed) (array of strings)
      block — this field is conditional on the value of 'match'. When 'match' is true, it contains the block that was matched; when 'match' is false, it instead contains a string with a basic description of what occurred (string)  
      id — audit event identifier (string)  
      final_state — final processing state (ALLOWED/FORBIDDEN/ERRORED/INDEX NOT EXIST) (string)  
@@ -521,7 +522,7 @@ The configuration above corresponds to serialized event looking like that:
 Available placeholders:
 ```
   {IS_MATCHED} — whether the request matched a rule (boolean)
-  {REASON} — reason for blocking, if blocked (string)
+  {MATCHED_BLOCK_NAMES} — list of names of the blocks that were matched, both allowed and forbidden (array of strings)
   {ID} — audit event identifier (string)
   {FINAL_STATE} — final processing state (string)
   {ECS_EVENT_OUTCOME} - final processing state, mapped to ECS-compliant values: success/failure/unknown (string)
