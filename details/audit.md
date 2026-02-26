@@ -409,7 +409,6 @@ You can:
     ```
      match — whether the request matched a rule (boolean)  
      matched_block_names - list of names of the blocks, that were matched (both forbidden and allowed) (array of strings)
-     block — this field is conditional on the value of 'match'. When 'match' is true, it contains the block that was matched; when 'match' is false, it instead contains a string with a basic description of what occurred (string)  
      id — audit event identifier (string)  
      final_state — final processing state (ALLOWED/FORBIDDEN/ERRORED/INDEX NOT EXIST) (string)  
      @timestamp — event timestamp (ISO-8601 string)  
@@ -538,7 +537,7 @@ Available placeholders:
   {REMOTE_ADDRESS} — client (remote) address (string)
   {LOCAL_ADDRESS} — server (local) address (string)
   {X_FORWARDED_FOR_HTTP_HEADER} — `X-Forwarded-For` HTTP header value (string)
-  {TASK_ID} — Elasticsearch task ID (number)
+  {TASK_ID} — Elasticsearch task ID (number)"
   {HTTP_METHOD} — HTTP request method (string)
   {HTTP_HEADER_NAMES} — HTTP header names (array of strings)
   {HTTP_PATH} — HTTP request path (string)
