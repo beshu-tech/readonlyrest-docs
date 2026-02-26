@@ -537,7 +537,7 @@ Available placeholders:
   {REMOTE_ADDRESS} — client (remote) address (string)
   {LOCAL_ADDRESS} — server (local) address (string)
   {X_FORWARDED_FOR_HTTP_HEADER} — `X-Forwarded-For` HTTP header value (string)
-  {TASK_ID} — Elasticsearch task ID (number)"
+  {TASK_ID} — Elasticsearch task ID (number)
   {HTTP_METHOD} — HTTP request method (string)
   {HTTP_HEADER_NAMES} — HTTP header names (array of strings)
   {HTTP_PATH} — HTTP request path (string)
