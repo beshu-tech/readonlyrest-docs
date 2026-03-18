@@ -839,6 +839,8 @@ The groups rules use the user definitions from [the `users` section](#users-and-
 | `groups_not_all_of` | `not_all_of` |
 
 Similarly, `headers_and` can be written as `headers`.
+
+These aliases apply only to **ACL rule keys inside access control blocks** — they are unrelated to the `groups` field in the [`users` section](#users-and-groups).
 {% endhint %}
 
 ##### `groups_any_of`
