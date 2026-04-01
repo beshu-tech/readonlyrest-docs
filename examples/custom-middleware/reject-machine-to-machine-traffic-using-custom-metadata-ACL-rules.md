@@ -28,7 +28,7 @@ async function customMiddleware(req, res, next) {
 
   const authorizationHeaders = rorRequest && (await rorRequest.getIdentitySessionHeaders());
 
-  const headerAuth = authorizationHeaders.get('authorization');
+  const headerAuth = authorizationHeaders && authorizationHeaders.get('authorization');
   const isBasicAuth = headerAuth && headerAuth.includes('Basic');
 
   if (metadata && metadata.customMetadata && metadata.customMetadata.rejectBasicAuth && isBasicAuth) {
