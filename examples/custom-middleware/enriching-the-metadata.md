@@ -10,8 +10,9 @@ For example to load a custom logo to the Kibana you can:
 
 ```ts
 async function customMiddleware(req, res, next) {
-  const metadata =
-    req.rorRequest && req.rorRequest.getIdentitySession() && req.rorRequest.getIdentitySession().metadata;
+  const rorRequest = req.rorRequest;
+  const userRequest = rorRequest && (await req.rorRequest.getUserRequestIdentity());
+  const metadata = userRequest && userRequest.metadata;
 
   if (metadata && metadata.username === 'admin') {
     req.rorRequest.enrichIdentitySessionMetadata({

@@ -12,8 +12,8 @@ thanks to the `enrichIdentitySessionMetadata` method.
 ```js
 async function customMiddleware(req, res, next) {
     const rorRequest = req.rorRequest;
-    const metadata =
-        req.rorRequest && req.rorRequest.getIdentitySession() && req.rorRequest.getIdentitySession().metadata;
+    const userRequest = rorRequest && (await req.rorRequest.getUserRequestIdentity());
+    const metadata = userRequest && userRequest.metadata;
     const defaultGroup = 'infosec';
     const X_FORWARDED_USER = 'x-forwarded-user';
     
@@ -43,15 +43,12 @@ async function customMiddleware(req, res, next) {
 
     if (metadata && rorRequest.getPath() === '/pkp/api/info') {
         const availableGroups = metadata.availableGroups;
-        if (availableGroups.some(availableGroup => availableGroup === defaultGroup)) {
-            const index = availableGroups.indexOf(defaultGroup);
-            const groupAvailable = index !== -1;
-            if (groupAvailable) {
-                availableGroups.splice(index, 1);
-                availableGroups.unshift(defaultGroup);
-            }
+        if (availableGroups.some(availableGroup => availableGroup.id === defaultGroup)) {
+            const reorderedGroups = [...availableGroups].sort((a, b) =>
+                a.id === defaultGroup ? -1 : b.id === defaultGroup ? 1 : 0
+            );
 
-            rorRequest.enrichIdentitySessionMetadata({ availableGroups });
+            rorRequest.enrichIdentitySessionMetadata({ availableGroups: reorderedGroups });
         }
     }
 
