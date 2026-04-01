@@ -1,8 +1,8 @@
 ---
-description: User Session identity
+description: User request identity
 ---
 
-# User Session identity
+# User request identity
 
 It's the object which contains the information about the session of the successful logs in Kibana user
 
@@ -15,8 +15,8 @@ It's the object which contains the information about the session of the successf
 | metadata.whitelistedHeaders          | Map\<string, string\>                                                  | Map(1) {'x-custom-header' => 'value'}                                        | The map of whitelisted headers from the session                                      |
 | metadata.username                    | string                                                                 | 'John'                                                                       | User name defined in the ACL                                                         |
 | metadata.kibanaHiddenApps            | string[] or undefined                                                  | [ 'Enterprise Search, Overview', 'Observability' ]                           | List of the hidden Apps defined in the ACL                                           |
-| metadata.group                       | Group or undefined                                                     | `{ id: 'administrators' }`                                                   | Currently selected group by the user                                                 |
-| metadata.availableGroups             | Group[]                                                                | `[ { id: 'administrators' }, { id: 'infosec' } ]`                            | List of all available groups                                                         |
+| metadata.currentGroup                | Group or undefined                                                     | `{ id: 'administrators' }`                                                   | Currently selected group by the user                                                 |
+| metadata.availableGroups             | Group[] or undefined                                                   | `[ { id: 'administrators' }, { id: 'infosec' } ]`                            | List of all available groups                                                         |
 | metadata.kibanaAccess                | 'ro_strict' or 'ro' or 'rw' or 'admin' or 'unrestricted' or 'api_only' | 'admin'                                                                      | User kibana access                                                                   |
 | metadata.kibanaIndex                 | string or undefined                                                    | '.kibana_administrators'                                                     | Currently selected group kibana index defined in the ACL                             |
 | metadata.kibanaTemplateIndex         | string or undefined                                                    | '.kibana_template'                                                           | Kibana template index defined in the kibana.yml readonlyrest_kbn.kibanaTemplateIndex |
