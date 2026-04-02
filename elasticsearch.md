@@ -801,7 +801,7 @@ There are two modes of operation: **static token** and **Elasticsearch-native to
 token_authentication:
    type: "static"
    token: "Bearer abc123XYZ"      # required, expected HTTP header content containing the token
-   username: "john"               # required, the username used after successful authentication
+   username: "john"               # required, the username assigned after successful authentication
    header: x-custom-authorization # optional, defaults to 'Authorization'
 ```
 
