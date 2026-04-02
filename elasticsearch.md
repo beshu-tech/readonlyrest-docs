@@ -791,16 +791,63 @@ For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoE
 
 #### `token_authentication`
 
+An authentication rule that accepts a token sent in the HTTP header (`Authorization` by default).
+
+There are two modes of operation: **static token** and **Elasticsearch-native token** (service token or API key).
+
+**Static token**
+
 ```yaml
 token_authentication:
-   token: "Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu" # required, expected HTTP header content containing the token
-   username: admin                # required, the username used after successful authentication
-   header: x-custom-authorization # optional, defaults to 'Authorization`
+   type: "static"
+   token: "Bearer abc123XYZ"      # required, expected HTTP header content containing the token
+   username: "john"               # required, the username used after successful authentication
+   header: x-custom-authorization # optional, defaults to 'Authorization'
 ```
 
-The authentication rule that accepts token sent in the HTTP header (the `Authorization` header is the default if no custom header name is configured in the `token_authentication.header` field).
+The rule matches when the value of the configured header equals the `token` field exactly. For example, for `Authorization: Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu`, the `token` value is `Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu`.
 
-For the HTTP header in the format `Authorization: Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu`, the `Bearer AAEAAWVsYXN0aWMva2liYW5hL3Rva2Vu` is the token value set in the `token` field.
+**Elasticsearch service token or API key (Fleet support)**
+
+ROR integrates with Elasticsearch's [service token](https://www.elastic.co/guide/en/elasticsearch/reference/current/service-accounts.html) and [API key](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html) APIs to support Elastic Fleet. When `type` is set to `service-token` or `api-key`, ROR delegates token validation to Elasticsearch rather than comparing against a static value.
+
+```yaml
+token_authentication:
+   type: "service-token"          # or "api-key"
+   username: fleet                # required, the username assigned after successful authentication
+   header: x-custom-authorization # optional, defaults to 'Authorization'
+```
+
+- `service-token` — validates against Elasticsearch service accounts (used by Fleet Server).
+- `api-key` — validates against Elasticsearch API keys (used by Fleet-enrolled agents).
+
+**Fleet example**
+
+```yaml
+- name: "Fleet server"
+  type: allow
+  token_authentication:
+    type: "service-token"
+    username: "fleet"
+  indices: [".fleet-servers", ".fleet-agents", ".fleet-actions", ".fleet-policies", ".fleet-policies-leader", ".fleet-enrollment-api-keys"]
+
+- name: "Agents"
+  type: allow
+  token_authentication:
+    type: "api-key"
+    username: "fleet"
+  indices: [".apm-agent-configuration", "metrics-*", "traces-*", "logs-*"]
+```
+
+**Security note:** when using `service-token` or `api-key` authentication, it is strongly recommended to add a dedicated `forbid` block that blocks direct access to the Elasticsearch service account and API key management actions. Without this, authenticated clients could potentially create or revoke tokens themselves.
+
+```yaml
+- name: "Forbid access to service accounts and API keys"
+  type: forbid
+  actions:
+    - "cluster:admin/xpack/security/service_account/*"
+    - "cluster:admin/xpack/security/api_key/*"
+```
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
