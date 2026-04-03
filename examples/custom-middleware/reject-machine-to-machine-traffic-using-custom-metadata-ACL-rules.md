@@ -22,18 +22,22 @@ We can also reject the specific request for example based on the custom metadata
 
 ```js
 async function customMiddleware(req, res, next) {
-   const metadata =
-           req.rorRequest && req.rorRequest.getIdentitySession() && req.rorRequest.getIdentitySession().metadata;
+  const rorRequest = req.rorRequest;
+  const userRequest = rorRequest && (await req.rorRequest.getUserRequestIdentity());
+  const metadata = userRequest && userRequest.metadata;
 
-   const headerAuth = req.rorRequest && req.rorRequest.getAuthorizationHeaders && req.rorRequest.getHeaders().getAuthorizationHeaders().get('authorization');
-   const isBasicAuth = headerAuth && headerAuth.includes('Basic')
-   
-  if (metadata.customMetadata && metadata.customMetadata.rejectBasicAuth && isBasicAuth) {
-     return res.status(401).json({ message: 'Machine to machine communication is not allowed' });
+  const authorizationHeaders = rorRequest && (await rorRequest.getIdentitySessionHeaders());
+
+  const headerAuth = authorizationHeaders && authorizationHeaders.get('authorization');
+  const isBasicAuth = headerAuth && headerAuth.includes('Basic');
+
+  if (metadata && metadata.customMetadata && metadata.customMetadata.rejectBasicAuth && isBasicAuth) {
+    return res.status(401).json({ message: 'Machine to machine communication is not allowed' });
   }
 
-  return next()
+  return next();
 }
+
 ```
 You can pass any custom metadata and based on it accepts or reject the specific request
 

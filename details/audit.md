@@ -408,9 +408,9 @@ You can:
   * Fields included:
     ```
      match — whether the request matched a rule (boolean)  
-     block — reason for blocking, if blocked (string)  
+     matched_block_names - list of names of the blocks, that were matched (both forbidden and allowed) (array of strings)
      id — audit event identifier (string)  
-     final_state — final processing state (string)  
+     final_state — final processing state (ALLOWED/FORBIDDEN/ERRORED/INDEX NOT EXIST) (string)  
      @timestamp — event timestamp (ISO-8601 string)  
      correlation_id — correlation identifier for tracing (string)  
      processingMillis — request processing duration in milliseconds (number)  
@@ -521,7 +521,7 @@ The configuration above corresponds to serialized event looking like that:
 Available placeholders:
 ```
   {IS_MATCHED} — whether the request matched a rule (boolean)
-  {REASON} — reason for blocking, if blocked (string)
+  {MATCHED_BLOCK_NAMES} — list of names of the blocks that were matched, both allowed and forbidden (array of strings)
   {ID} — audit event identifier (string)
   {FINAL_STATE} — final processing state (string)
   {ECS_EVENT_OUTCOME} - final processing state, mapped to ECS-compliant values: success/failure/unknown (string)
@@ -674,7 +674,7 @@ The provided ECS implementation is equivalent to `configurable` serializer shown
                   ror_involved_indices: "{INVOLVED_INDICES}"
                   ror_acl_history: "{ACL_HISTORY}"
                   ror_final_state: "{FINAL_STATE}"
-                  ror_detailed_reason: "{REASON}"
+                  ror_matched_block_names: "{MATCHED_BLOCK_NAMES}"
 ```
 
 ### Custom audit event serializer
