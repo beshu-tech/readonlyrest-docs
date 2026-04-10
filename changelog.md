@@ -1,5 +1,15 @@
 # Changelog
 
+### (2026-04-10) What’s new in **ROR 1.69.1**
+* **🚨 Security Fix** (KBN) Fixed vulnerability [CVE-2026-2950](https://nvd.nist.gov/vuln/detail/CVE-2026-2950)
+* **🚀 New** (KBN) 9.3.3, 9.2.8, 8.19.14 support
+* **🚀 New** (ES) 9.3.3, 9.2.8, 8.19.14 support
+* **🐞 Fix** (KBN) Fixed `jsonwebtoken-ancient` being stripped from Kibana builds earlier than 7.11.0
+* **🐞 Fix** (KBN) Filtered out Fleet-based apps from search results when Management is hidden in Kibana 8.x and 9.x
+* **🐞 Fix** (KBN) Fixed `/pkp/session-probe` requests being blocked by browsers that enforce async-only calls
+* **🐞 Fix** (KBN) Fixed a problem with redirecting to the login form after a 401 error following a session probe check
+* **🐞 Fix** (ES) Fixed a missing Kibana access policy in the metadata response when the matched ACL block has no `kibana` section configured
+
 ### (2026-04-02) What’s new in **ROR 1.69.0**
 * **🚨 Security Fix** (KBN) [CVE-2026-24001](https://nvd.nist.gov/vuln/detail/CVE-2026-24001), [CVE-2025-69873](https://nvd.nist.gov/vuln/detail/CVE-2025-69873), [CVE-2026-2391](https://nvd.nist.gov/vuln/detail/CVE-2026-2391), [CVE-2026-25639](https://nvd.nist.gov/vuln/detail/CVE-2026-25639), [CVE-2026-27904](https://nvd.nist.gov/vuln/detail/CVE-2026-27904), [CVE-2026-3449](https://nvd.nist.gov/vuln/detail/CVE-2026-3449), [CVE-2025-15599](https://nvd.nist.gov/vuln/detail/CVE-2025-15599), [CVE-2026-33750](https://nvd.nist.gov/vuln/detail/CVE-2026-33750), [CVE-2026-4867](https://nvd.nist.gov/vuln/detail/CVE-2026-4867), [CVE-2026-34601](https://www.tenable.com/cve/CVE-2026-34601), [CVE-2022-31129](https://nvd.nist.gov/vuln/detail/cve-2022-31129)
 * **🚀 New** (KBN/ES) Added Fleet support via native API key and service account token authentication (ES 7.14+)
