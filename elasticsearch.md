@@ -475,15 +475,10 @@ The following subsections describe how to configure SSL using ReadonlyREST's own
 #### External REST API
 
 It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.
-**⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and append this one line:
+**⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and add the following settings (example configuration with the most important properties):
 
 ```yaml
 http.type: ssl_netty4
-```
-
-Now in `elasticsearch.yml` add the following settings:
-
-```yaml
 readonlyrest.ssl.keystore_file: "keystore.jks"  # or keystore.p12 for PKCS#12 format
 readonlyrest.ssl.keystore_pass: readonlyrest
 readonlyrest.ssl.key_pass: readonlyrest
@@ -495,15 +490,10 @@ The keystore should be stored in the same directory as `elasticsearch.yml`.
 
 This option encrypts communication between nodes forming Elasticsearch cluster.
 
-**⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and append this one line:
+**⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and add these (example configuration with the most important properties):
 
 ```yaml
 transport.type: ror_ssl_internode
-```
-
-In `elasticsearch.yml` add the following settings (example configuration with the most important properties):
-
-```yaml
 readonlyrest.ssl_internode.keystore_file: "keystore.jks"  # or keystore.p12 for PKCS#12 format
 readonlyrest.ssl_internode.keystore_pass: readonlyrest
 readonlyrest.ssl_internode.key_pass: readonlyrest
