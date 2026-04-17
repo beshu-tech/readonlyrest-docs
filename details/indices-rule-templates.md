@@ -1,4 +1,4 @@
-# indices rule - ES Templates handling
+# Indices rule - ES Templates handling
 
 <details>
 
@@ -23,11 +23,6 @@
 ```
 
 </details>
-
-\
-
-
-
 
 ## Index templates
 
