@@ -435,14 +435,42 @@ The YAML snippet above, like all of this plugin's settings should be saved insid
 
 ### Encryption
 
-An SSL-encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore. 
+An SSL-encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have a certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore.
 
-ReadonlyREST can be configured to encrypt network traffic on two independent levels:
-1. HTTP (port 9200)
+Traffic can be encrypted on two independent levels:
+1. HTTP/REST API (port 9200)
 2. Internode communication - transport module (port 9300)
 
-> An Elasticsearch node with ReadonlyREST can join an existing cluster based on native SSL from `xpack.security` module. This configuration is useful to deploy ReadonlyREST Enterprise for Kibana to an existing large production cluster without disrupting any configuration. More on this in the dedicated paragraph of this section.
+#### Choosing between ROR SSL and XPack Security SSL
 
+There are two ways to configure SSL in an Elasticsearch cluster running ReadonlyREST:
+
+- **ROR SSL** — SSL provided by the ReadonlyREST plugin itself (described in the subsections below).
+- **XPack Security SSL** — SSL provided by Elasticsearch's built-in `xpack.security` module.
+
+The choice depends on whether `xpack.security.enabled` is set to `true` or `false` in `elasticsearch.yml`:
+
+| `xpack.security.enabled` | SSL to use |
+|---|---|
+| `false` | ROR SSL |
+| `true` | XPack Security SSL |
+
+**Why does this matter?** During its patching step, ReadonlyREST deactivates XPack Security's authentication and authorization features — these are replaced by ROR's ACL engine. However, **XPack SSL is not deactivated**. This means that when `xpack.security.enabled: true`, XPack SSL is still fully active and must be configured through Elasticsearch's standard mechanism, not through ROR.
+
+> **Recommendation:** Because `xpack.security` enables features used by Elasticsearch and Kibana (e.g. API keys, token service, certain Kibana integrations), it should not be disabled without a clear reason. If there is no specific requirement to disable it, prefer leaving `xpack.security.enabled: true` and use XPack Security SSL.
+
+#### XPack Security SSL (when `xpack.security.enabled: true`)
+
+When `xpack.security.enabled` is `true`, configure SSL by following the official Elasticsearch documentation:
+
+- [Set up basic security (internode TLS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html)
+- [Set up basic security plus HTTPS (REST API TLS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup-https.html)
+
+ROR's ACL will handle authentication and authorization, while XPack manages the SSL layer transparently.
+
+#### ROR SSL (when `xpack.security.enabled: false`)
+
+The following subsections describe how to configure SSL using ReadonlyREST's own SSL implementation. This applies only when `xpack.security.enabled` is set to `false` in `elasticsearch.yml`.
 
 #### External REST API
 
@@ -489,7 +517,7 @@ Similar to `ssl` for HTTP, the keystore should be stored in the same directory w
 
 ##### Internode communication with XPack nodes
 
-It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.7.07.0.
+It is possible to set up internode SSL between ROR nodes (with `xpack.security.enabled: false`) and XPack nodes. It works only for ES above 6.7.0.
 
 To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates.
 
