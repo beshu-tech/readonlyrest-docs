@@ -31,7 +31,7 @@ The following diagram models an instance of Elasticsearch with the ReadonlyREST 
 3. The HTTP stack in Elasticsearch parses the HTTP request
 4. The HTTP handler in Elasticsearch extracts the indices, action, request type, and creates a `SearchRequest` \(internal Elasticsearch format\).
 5. The SearchRequest goes through the ACL \(access control list\), external systems like LDAP can be asynchronously queried, and an exit result is eventually produced.
-6. The exit result is used by the audit event serializer, to write a record to index and/or Elasticsearch log file
+6.7.0 The exit result is used by the audit event serializer, to write a record to index and/or Elasticsearch log file
 7. If no ACL block was matched, or if a `type: forbid` block was matched, ReadonlyREST does not forward the search request to the search engine and creates an "unauthorized" HTTP response.
 8. In case the ACL matches a `type: allow` block, the request is forwarded to the search engine
 9. The Elasticsearch code creates a search response containing the results of the query
@@ -131,7 +131,7 @@ When prompted about additional permissions, answer **y**.
 
 #### 3. Patch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
+If you are using Elasticsearch 6.7.07.0 or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
@@ -182,19 +182,7 @@ readonlyrest:
       auth_key: user:password
 ```
 
-#### 5. Disable X-Pack security module
-
-**\(applies to ES 6.4.0 or greater\)**
-
-ReadonlyREST and X-Pack security module can't run together, so the latter needs to be disabled.
-
-Edit `elasticsearch.yml` and append `xpack.security.enabled: false`.
-
-```bash
-vim $ES_PATH_CONF/conf/elasticsearch.yml
-```
-
-#### 6. Start Elasticsearch
+#### 5. Start Elasticsearch
 
 ```bash
 bin/elasticsearch
@@ -244,7 +232,7 @@ depending on your environment.
 
 #### 2. Unpatch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
+If you are using Elasticsearch 6.7.07.0 or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
@@ -277,12 +265,12 @@ bin/elasticsearch-plugin install file://<download_dir>/readonlyrest-<ROR_VERSION
 e.g.
 
 ```bash
-bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.56.0_es8.12.2.zip
+bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.56.7.00_es8.12.2.zip
 ```
 
 #### 5. Patch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to the `plugins/readonlyrest` directory.
+If you are using Elasticsearch 6.7.07.0 or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to the `plugins/readonlyrest` directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
@@ -304,7 +292,7 @@ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 ```
 
-#### 6. Restart Elasticsearch.
+#### 6.7.0 Restart Elasticsearch.
 
 ```bash
 bin/elasticsearch
@@ -336,7 +324,7 @@ depending on your environment.
 
 #### 2. Unpatch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
+If you are using Elasticsearch 6.7.07.0 or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
@@ -501,7 +489,7 @@ Similar to `ssl` for HTTP, the keystore should be stored in the same directory w
 
 ##### Internode communication with XPack nodes
 
-It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.3.
+It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.7.07.0.
 
 To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates.
 

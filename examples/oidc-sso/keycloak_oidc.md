@@ -95,25 +95,12 @@ To provide clientSecret value, you need to open ror\_oidc client (or your custom
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our elasticsearch can be run with or without SSL. To make it available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)), so we modify the elasticsearch.yml
+Our elasticsearch can be run with or without SSL. To make it available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)).
 
-**append to elasticsearch.yml**
-
-```yaml
-xpack.security.enabled: false
-http.type: ssl_netty4 # <-- needed for ROR SSL
-```
-
-Write in **readonlyrest.yml**
+Then write in **readonlyrest.yml**
 
 ```yaml
 readonlyrest:
-
-    ssl:
-      enable: true
-      keystore_file: "keystore.jks"
-      keystore_pass: readonlyrest
-      key_pass: readonlyrest
 
     audit:
       enabled: true

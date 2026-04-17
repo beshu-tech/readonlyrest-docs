@@ -48,14 +48,6 @@ For the scope of this guide, we will assume:
 
 If you don't have the ROR [Enterprise](https://readonlyrest.com/enterprise) for Kibana plugin, get yourself a two weeks free trial build!
 
-### IMPORTANT: disable Xpack Security module
-
-Because ReadonlyREST is not compatible with XPack Security module please **make sure you disable xpack.security module from both Kibana and Elasticsearch** by adding the following line to **both** `elasticsearch.yml` and `kibana.yml`:
-
-```yaml
-xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-```
-
 ## Setup: the Elasticsearch side
 
 Right beside your `elasticsearch.yml`, create a file called `readonlyrest.yml` and write the following settings into it.
