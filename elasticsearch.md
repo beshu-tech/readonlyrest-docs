@@ -2933,7 +2933,7 @@ Here is a glossary:
 * `MET`: String, HTTP Method
 * `CNT`: String, HTTP body content. Comes as a summary of its length, full body of the request is available in debug mode.
 * `HDR`: String array, list of HTTP headers, headers' content is available in debug mode.
-* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated, This is super useful for knowing what ACL block/rule is forbidding/allowing this request.
+* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated. When a block is `NOT_MATCHED`, the denial cause appears in parentheses after the block name (e.g. `AUTH_FAIL(...)`, `GROUPS_AUTH_FAIL(...)`, `AUTHZ_FAIL`, `IDX_NOT_FOUND`). See [Denial causes in HIS](#denial-causes-in-his) for a full reference.
 
 In the example, the block `Admins` is allowing the request because all the rules in this block evaluate to `true`.
 
@@ -2956,6 +2956,46 @@ INDEX NOT FOUND req={ ID:5cdbd3ec-2093-426d-85c9-b2d0be7361b5-746941746#8477, TY
 ```
 
 The state above is only possible for read-only ES requests \(ES requests which don't change ES cluster state\) for a block containing an `indices` rule. If all other rules within the block are matched, but only the `indices` rule is mismatched, the final state of the block is forbidden due to an index not found.
+
+##### Denial causes in `HIS`
+
+When a block is `NOT_MATCHED`, a denial cause appears in parentheses after the block name. These causes make it straightforward to distinguish between authentication failures \(wrong credentials\) and authorization failures \(missing permissions\) without additional debugging.
+
+| Cause | Meaning |
+|---|---|
+| `AUTH_FAIL(details)` | Authentication failed. The human-readable `details` string describes the specific reason \(e.g. wrong username, bad password, missing credentials\). |
+| `GROUPS_AUTH_FAIL(details)` | Groups-based authorization failed. The `details` string describes which user definitions were tried and why each one was rejected. |
+| `AUTHZ_FAIL` | A non-authentication rule \(e.g. `indices`, `actions`\) caused the block to be rejected. |
+| `IDX_NOT_FOUND` | All auth rules matched but the requested index does not exist. Applies only to read-only requests. |
+| `ALIAS_NOT_FOUND` | All auth rules matched but the requested alias does not exist. Applies only to read-only requests. |
+| `TPL_NOT_FOUND` | All auth rules matched but the requested index template does not exist. Applies only to read-only requests. |
+| `IMPERSONATION_NOT_SUPPORTED` | The rule being evaluated does not support impersonation, which was attempted by the request. |
+| `IMPERSONATION_NOT_ALLOWED` | Impersonation was attempted but the impersonator is not allowed to impersonate the target user under this block. |
+
+##### `blocks_history` in audit logs
+
+The same per-block information is also available in structured form in the `blocks_history` field of audit log entries. Each element in the array represents one evaluated ACL block:
+
+```json
+"blocks_history": [
+  {
+    "block_name": "KIBANA",
+    "matched": false,
+    "forbidden_cause": "AUTH_FAIL(Username mismatch)"
+  },
+  {
+    "block_name": "Admins",
+    "matched": true,
+    "forbidden_cause": null
+  }
+]
+```
+
+Each entry has three fields:
+
+* `block_name` — the name of the ACL block
+* `matched` — `true` if the block permitted the request, `false` if it was rejected
+* `forbidden_cause` — the denial reason in the same format as `HIS`, or `null` if the block matched
 
 ## Licensing
 ### GPLv3 License
