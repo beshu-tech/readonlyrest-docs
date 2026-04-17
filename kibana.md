@@ -6,7 +6,7 @@ description: User manual for ReadonlyREST Enterprise/PRO/Free
 
 🧙 **Are you using Kibana version 7.8.x or older? Go to the** [**old platform manual page**](details/kibana-7.8.x-and-older.md)**.**
 
-### Kibana Plugin overview
+## Kibana Plugin overview
 
 ReadonlyREST plugin for Kibana is not open source, and it's offered as part of the [ReadonlyREST PRO](https://readonlyrest.com/pro) and [ReadonlyREST ENTERPRISE](https://readonlyrest.com/enterprise), and [ReadonlyREST Free](https://readonlyrest.com/free) packages. See product descriptions and a comparison chart on the official [ReadonlyREST website](https://readonlyrest.com)
 

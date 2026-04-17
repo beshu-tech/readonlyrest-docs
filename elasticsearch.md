@@ -1924,122 +1924,6 @@ These are the most basic rules. It is possible to allow/forbid requests originat
 
 Don't spam elasticsearch log file printing log lines for requests that match this block. Defaults to `info`.
 
-#### Audit & Troubleshooting
-
-The main issues seen in support cases:
-
-* Bad ordering or ACL blocks. Remember that the ACL is evaluated sequentially, block by block. And the first block whose rules all match is accepted.
-* Users don't know how to read the `HIS` field in the logs, which instead is crucial because it contains a trace of the evaluation of rules and blocks.
-* LDAP configuration: LDAP is tricky to configure in any system. Configure ES root logger to `DEBUG` editing `$ES_PATH_CONF/config/log4j2.properties` to see a trace of the LDAP messages.
-
-##### Interpreting logs
-
-ReadonlyREST prints a log line for each incoming request \(this can be selectively avoided on ACL block level using the `verbosity` rule\).
-
-**Allowed requests**
-
-This is an example of a request that matched an ACL block \(allowed\) and has been let through to Elasticsearch.
-
-> ALLOWED by { name: '::PERSONAL\_GRP::', policy: ALLOW} req={ ID:1667655475--1038482600\#1312339, TYP:SearchRequest, CGR:N/A, USR:simone, BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/\_search, CNT:&lt;N/A&gt;, HDR:Accept,Authorization,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:\[::PERSONAL\_GRP::-&gt;\[kibana\_access-&gt;true, kibana\_hide\_apps-&gt;true, auth\_key-&gt;true, kibana\_index-&gt;true\]\], \[::Kafka::-&gt;\[auth\_key-&gt;false\]\], \[::KIBANA-SRV::-&gt;\[auth\_key-&gt;false\]\], \[guest lol-&gt;\[auth\_key-&gt;false\]\], \[::LOGSTASH::-&gt;\[auth\_key-&gt;false\]\] }
-
-**Explanation**
-
-The log line immediately states that this request has been allowed by an ACL block called "::PERSONAL\_GRP::". Immediately follows a summary of the requests' anatomy. The format is semi-structured, and it's intended for humans to read quickly, it's not JSON, or anything else.
-
-Similar information gets logged in JSON format via [audit events](elasticsearch.md#audit) feature described later.
-
-Here is a glossary:
-
-* `ID`: ReadonlyREST-level request id
-* `TYP`: String, the name of the Java class that internally represent the request type \(very useful for debug\)
-* `CGR`: String, the request carries a "current group" header \(used for multi-tenancy\).
-* `USR`: String, the user name ReadonlyREST was able to extract from Basic Auth, JWT, LDAP, or other methods as specified in the ACL.
-* `BRS`: Boolean, an heuristic attempt to tell if the request comes from a browser.
-* `ACT`: String, the elasticsearch level action associated with the request. For a list of actions, see our [actions rule docs](elasticsearch.md#actions).
-* `OA`: IP Address, originating address \(source address\) of the TCP connection underlying the http session.
-* `IDX`: Strings array: the list of indices affected by this request.
-* `MET`: String, HTTP Method
-* `CNT`: String, HTTP body content. Comes as a summary of its length, full body of the request is available in debug mode.
-* `HDR`: String array, list of HTTP headers, headers' content is available in debug mode.
-* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated, This is super useful for knowing what ACL block/rule is forbidding/allowing this request.
-
-In the example, the block `::PERSONAL_GRP::` is allowing the request because all the rules in this block evaluate to `true`.
-
-**Forbidden requests**
-
-This is an example of a request that gets forbidden by ReadonlyREST ACL.
-
-```text
-FORBIDDEN by default req={ ID:747832602--1038482600#1312150, TYP:SearchRequest, CGR:N/A, USR:[no basic auth header], BRS:true, ACT:indices:data/read/search, OA:127.0.0.1, IDX:, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept,content-length,Content-Type,Host,User-Agent,X-Forwarded-For, HIS:[::Infosec::->[groups_any_of->false]], [::KIBANA-SRV::->[auth_key->false]], [guest lol->[auth_key->false]], [::LOGSTASH::->[auth_key->false]], [::Infosec::->[groups->false]], [::ADMIN_GRP::->[groups->false]], [::Kafka::->[auth_key->false]], [::PERSONAL_GRP::->[groups->false]] }
-```
-
-The above rule gets forbidden "by default". This means that no ACL block has matched the request, so ReadonlyREST's default policy of rejection takes effect.
-
-**Requests finished with INDEX NOT FOUND**
-
-This is an example of such request:
-
-```text
-INDEX NOT FOUND req={  ID:501806845-1996085406#74,  TYP:GetIndexRequest,  CGR:N/A,  USR:dev1 (attempted),  BRS:true,  KDX:null,  ACT:indices:admin/get,  OA:172.20.0.1/32,  XFF:null,  DA:172.20.0.2/32,  IDX:nonexistent*,  MET:GET,  PTH:/nonexistent*/_alias/,  CNT:<N/A>,  HDR:Accept-Encoding=gzip,deflate, Authorization=<OMITTED>, Connection=Keep-Alive, Host=localhost:32773, User-Agent=Apache-HttpClient/4.5.2 (Java/1.8.0_162), content-length=0,  HIS:[CONTAINER ADMIN-> RULES:[auth_key->false]], [dev1 indexes-> RULES:[auth_key->true, indices->false], RESOLVED:[user=dev1]], [dev2 aliases-> RULES:[auth_key->false]], [dev3 - no indices rule-> RULES:[auth_key->false]]  }
-```
-
-The state above is only possible for read-only ES requests \(ES requests which don't change ES cluster state\) for a block containing an `indices` rule. If all other rules within the block are matched, but only the `indices` rule is mismatched, the final state of the block is forbidden due to an index not found.
-
-#### Audit
-
-ReadonlyREST can gather audit events that contain information regarding a request and its processing by the system, which can then be forwarded to predefined outputs.
-You can use the available information from the audit events to construct interesting visual representations, such as Kibana dashboards or any other visualization tool.
-For details see [Audit configuration](details/audit.md).
-
-##### Troubleshooting
-
-Follow these approaches until you find the solution to your problem
-
-**Scenario: you can't understand why your requests are being forbidden by ReadonlyREST \(or viceversa\)**
-
-**Step 1: see what block/rule is matching** Take the Elasticsearch log file, and grep the logs for `ACT:`. This will show you the whole request context \(including the action and indices fields\) of the blocked requests. You can now tweak your ACL blocks to include that action.
-
-**Step 2: enable debug logs**
-
-Logs are good for auditing the activity on the REST API. You can configure them by editing `$ES_PATH_CONF/config/logging.yml` \(Elasticsearch 2.x\) or `$ES_PATH_CONF/config/log4j2.properties` [file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#logging) \(Elasticsearch 5.x\)
-
-For example, you can **enable the debug log** globally by setting the `rootLogger`to `debug`.
-
-```properties
-rootLogger.level = debug
-```
-
-This is really useful especially to debug the activity of LDAP and other external connectors.
-
-**Trick: log requests to different files**
-
-Here is a `log4j2.properties` snippet for ES 5.x that logs all the received requests as a new line in a separate file:
-
-```properties
-#Plugin readonly rest separate access logging file definition
-appender.access_log_rolling.type = RollingFile
-appender.access_log_rolling.name = access_log_rolling
-appender.access_log_rolling.fileName = ${sys:es.logs}_access.log
-appender.access_log_rolling.layout.pattern = [%d{ISO8601}][%-5p][%-25c] %marker%.-10000m%n
-appender.access_log_rolling.layout.type = PatternLayout
-appender.access_log_rolling.filePattern = ${sys:es.logs}_access-%d{yyyy-MM-dd}.log
-appender.access_log_rolling.policies.type = Policies
-appender.access_log_rolling.policies.time.type = TimeBasedTriggeringPolicy
-appender.access_log_rolling.policies.time.interval = 1
-appender.access_log_rolling.policies.time.modulate = true
-
-logger.access_log_rolling.name = tech.beshu.ror
-logger.access_log_rolling.level = info
-logger.access_log_rolling.appenderRef.access_log_rolling.ref = access_log_rolling
-logger.access_log_rolling.additivity = false
-
-# exclude kibana, beat and logstash users as they generate too much noise
-logger.access_log_rolling.filter.regex.type = RegexFilter
-logger.access_log_rolling.filter.regex.regex = .*USR:(kibana|beat|logstash),.*
-logger.access_log_rolling.filter.regex.onMatch = DENY
-logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
-```
-
 ### Users and Groups
 
 Sometimes we want to make allow/forbid decisions according to the username associated to a HTTP request. The extraction of the user identity \(username\) can be done via HTTP Basic Auth \(Authorization header\) or delegated to a reverse proxy \(see `proxy_auth` rule\).
@@ -2928,6 +2812,12 @@ The value of this configuration represents the cryptographic family of the JWT p
 | ES384 | **EC** |
 | ES512 | **EC** |
 
+### Audit
+
+ReadonlyREST can gather audit events that contain information regarding a request and its processing by the system, which can then be forwarded to predefined outputs.
+You can use the available information from the audit events to construct interesting visual representations, such as Kibana dashboards or any other visualization tool.
+For details see [Audit configuration](details/audit.md).
+
 ### Other settings
 
 #### Disabling ReadonlyREST ACL
@@ -3005,6 +2895,67 @@ readonlyrest:
     users_section_duplicate_usernames_detection: false
 ```
 
+
+#### ACL Troubleshooting
+
+The main issues seen in support cases:
+
+* Bad ordering or ACL blocks. Remember that the ACL is evaluated sequentially, block by block. And the first block whose rules all match is accepted.
+* Users don't know how to read the `HIS` field in the logs, which instead is crucial because it contains a trace of the evaluation of rules and blocks.
+* LDAP configuration: LDAP is tricky to configure in any system. Configure ES root logger to `DEBUG` editing `$ES_PATH_CONF/config/log4j2.properties` to see a trace of the LDAP messages.
+
+#### Interpreting logs
+
+ReadonlyREST prints a log line for each incoming request \(this can be selectively avoided on ACL block level using the `verbosity` rule\).
+
+**Allowed requests**
+
+This is an example of a request that matched an ACL block \(allowed\) and has been let through to Elasticsearch.
+
+> ALLOWED by { name: 'Admins', policy: ALLOW, rules: [groups_any_of, kibana] } req={ ID:44d12d75-4340-4e3e-9507-5bb439db9d80-1159548962#7510, TYP:SearchRequest, CGR:<N/A>, USR:admin, BRS:true, ACT:indices:data/read/search, OA:192.168.65.1/32, XFF:null, DA:172.19.0.2/32, IDX:*, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept=*/*, User-Agent=curl/8.7.1, Host=localhost:19200, Authorization=<OMITTED>, HIS:[KIBANA: NOT_MATCHED (AUTH_FAIL (Username mismatch)) -> RULES:[auth_key->false]], [Admins: MATCHED -> RULES:[groups_any_of->true, kibana->true] RESOLVED:[user=admin;group=Administrators;av_groups=Administrators;indices=*;kibana_idx=.kibana]], }
+
+**Explanation**
+
+The log line immediately states that this request has been allowed by an ACL block called "Admins". Immediately follows a summary of the requests' anatomy. The format is semi-structured, and it's intended for humans to read quickly, it's not JSON, or anything else.
+
+Similar information gets logged in JSON format via [audit events](elasticsearch.md#audit) feature described ealier.
+
+Here is a glossary:
+
+* `ID`: ReadonlyREST-level request id
+* `TYP`: String, the name of the Java class that internally represent the request type \(very useful for debug\)
+* `CGR`: String, the request carries a "current group" header \(used for multi-tenancy\).
+* `USR`: String, the user name ReadonlyREST was able to extract from Basic Auth, JWT, LDAP, or other methods as specified in the ACL.
+* `BRS`: Boolean, an heuristic attempt to tell if the request comes from a browser.
+* `ACT`: String, the elasticsearch level action associated with the request. For a list of actions, see our [actions rule docs](elasticsearch.md#actions).
+* `OA`: IP Address, originating address \(source address\) of the TCP connection underlying the http session.
+* `IDX`: Strings array: the list of indices affected by this request.
+* `MET`: String, HTTP Method
+* `CNT`: String, HTTP body content. Comes as a summary of its length, full body of the request is available in debug mode.
+* `HDR`: String array, list of HTTP headers, headers' content is available in debug mode.
+* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated, This is super useful for knowing what ACL block/rule is forbidding/allowing this request.
+
+In the example, the block `Admins` is allowing the request because all the rules in this block evaluate to `true`.
+
+**Forbidden requests**
+
+This is an example of a request that gets forbidden by ReadonlyREST ACL.
+
+```text
+FORBIDDEN by default req={ ID:af26efdb-9193-424d-8dc9-d2cda617842a-1466512324#7967, TYP:SearchRequest, CGR:<N/A>, USR:admin (attempted), BRS:true, ACT:indices:data/read/search, OA:192.168.65.1/32, XFF:null, DA:172.19.0.2/32, IDX:*, MET:GET, PTH:/_search, CNT:<N/A>, HDR:Accept=*/*, User-Agent=curl/8.7.1, Host=localhost:19200, Authorization=<OMITTED>, HIS:[KIBANA: NOT_MATCHED (AUTH_FAIL (Username mismatch)) -> RULES:[auth_key->false]], [Admins: NOT_MATCHED (GROUPS_AUTH_FAIL (admin:AUTH_FAIL (Invalid password); {user1,user2}:GROUPS_AUTH_FAIL (No user's groups allowed))) -> RULES:[groups_any_of->false]], [End users: NOT_MATCHED (GROUPS_AUTH_FAIL (admin:AUTH_FAIL (Invalid password); {user1,user2}:AUTH_FAIL (Username mismatch))) -> RULES:[groups_any_of->false]], [Business users: NOT_MATCHED (GROUPS_AUTH_FAIL (admin:AUTH_FAIL (Invalid password); user1:AUTH_FAIL (Username mismatch); user2:GROUPS_AUTH_FAIL (No user's groups allowed))) -> RULES:[groups_any_of->false]] }
+```
+
+The above rule gets forbidden "by default". This means that no ACL block has matched the request, so ReadonlyREST's default policy of rejection takes effect.
+
+**Requests finished with INDEX NOT FOUND**
+
+This is an example of such request:
+
+```text
+INDEX NOT FOUND req={ ID:5cdbd3ec-2093-426d-85c9-b2d0be7361b5-746941746#8477, TYP:GetIndexRequest, CGR:<N/A>, USR:user1 (attempted), BRS:true, ACT:indices:admin/get, OA:192.168.65.1/32, XFF:null, DA:172.19.0.2/32, IDX:nonexistent, MET:GET, PTH:/nonexistent, CNT:<N/A>, HDR:Accept=*/*, User-Agent=curl/8.7.1, Host=localhost:19200, Authorization=<OMITTED>, HIS:[KIBANA: NOT_MATCHED (AUTH_FAIL (Username mismatch)) -> RULES:[auth_key->false]], [Admins: NOT_MATCHED (GROUPS_AUTH_FAIL (admin:AUTH_FAIL (Username mismatch); {user1,user2}:GROUPS_AUTH_FAIL (No user's groups allowed))) -> RULES:[groups_any_of->false]], [End users: NOT_MATCHED (IDX_NOT_FOUND) -> RULES:[groups_any_of->true, kibana->true, indices->false]], [Business users: NOT_MATCHED (IDX_NOT_FOUND) -> RULES:[groups_any_of->true, kibana->true, indices->false]] }
+```
+
+The state above is only possible for read-only ES requests \(ES requests which don't change ES cluster state\) for a block containing an `indices` rule. If all other rules within the block are matched, but only the `indices` rule is mismatched, the final state of the block is forbidden due to an index not found.
 
 ## Licensing
 ### GPLv3 License
