@@ -1,6 +1,6 @@
 # For Elasticsearch
 
-## Overview: The ReadonlyREST Suite
+## Overview
 
 ReadonlyREST is a light-weight Elasticsearch plugin that adds encryption, authentication, authorization and access control capabilities to Elasticsearch embedded REST API. The core of this plugin is an ACL engine that checks each incoming request through a sequence of **rules** a bit like a firewall. There are a dozen rules that can be grouped in sequences of blocks and form a powerful representation of a logic chain.
 
@@ -39,6 +39,8 @@ The following diagram models an instance of Elasticsearch with the ReadonlyREST 
 
 11. The HTTP response flows back to ReadonlyREST's HTTPS filter and to the User agent
 
+
+## Installation and Operations
 ### Running with Docker
 
 The simplest method to run Elasticsearch with the ReadonlyREST plugin is to use one of our docker images which you can find on [Docker Hub](https://hub.docker.com/r/beshultd/elasticsearch-readonlyrest):
@@ -402,37 +404,8 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 **⚠️IMPORTANT** By default when the `fields` [rule](elasticsearch.md#fields) is used, it's required to install the ReadonlyREST plugin in all the data nodes.
 
-### ACL basics
 
-The core of this plugin is an ACL \(access control list\). A logic structure very similar to the one found in firewalls. The ACL is part of the plugin configuration, and it's written in YAML.
-
-* The ACL is composed of an _ordered_ sequence of named **blocks**
-* Each block contains some **rules**, and a policy \(forbid or allow\)
-* HTTP requests run through the blocks, starting from the first,
-* The _first_ block that satisfies _all the rules_ decides if to forbid or allow the request \(according to its policy\).
-* If none of the blocks is matched, the request is rejected
-
-**⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
-
-```yaml
-readonlyrest:
-    access_control_rules:
-
-    - name: "Block 1 - only Logstash indices are accessible"
-      type: allow # <-- default policy type is "allow", so this line could be omitted
-      indices: ["logstash-*"] # <-- This is a rule
-
-    - name: "Block 2 - Blocking everything from a network"
-      type: forbid
-      hosts: ["10.0.0.0/24"] # <-- this is a rule
-```
-
-_An Example of the Access Control List \(ACL\) made of 2 blocks._
-
-The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. Create this file **on the same path where `elasticsearch.yml` is found**.
-
-**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro) or [Enterprise](https://readonlyrest.com/enterprise) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for the ReadonlyREST plugin for Kibana](kibana.md).
-
+## Elasticsearch Configuration
 ### Encryption
 
 SSL/TLS encryption protects data in transit between clients and Elasticsearch. ReadonlyREST supports two independent encryption layers, each covering a different communication channel:
@@ -641,6 +614,38 @@ readonlyrest.failed_to_start_response_code: 503
 
 `readonlyrest.failed_to_start_response_code` - HTTP code returned when the plugin failed to start (e.g. by malformed ACL). Possible values are `403`(default) and `503`.
 
+## ReadonlyREST ACL
+### ACL basics
+
+The core of this plugin is an ACL \(access control list\). A logic structure very similar to the one found in firewalls. The ACL is part of the plugin configuration, and it's written in YAML.
+
+* The ACL is composed of an _ordered_ sequence of named **blocks**
+* Each block contains some **rules**, and a policy \(forbid or allow\)
+* HTTP requests run through the blocks, starting from the first,
+* The _first_ block that satisfies _all the rules_ decides if to forbid or allow the request \(according to its policy\).
+* If none of the blocks is matched, the request is rejected
+
+**⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
+
+```yaml
+readonlyrest:
+    access_control_rules:
+
+    - name: "Block 1 - only Logstash indices are accessible"
+      type: allow # <-- default policy type is "allow", so this line could be omitted
+      indices: ["logstash-*"] # <-- This is a rule
+
+    - name: "Block 2 - Blocking everything from a network"
+      type: forbid
+      hosts: ["10.0.0.0/24"] # <-- this is a rule
+```
+
+_An Example of the Access Control List \(ACL\) made of 2 blocks._
+
+The YAML snippet above, like all of this plugin's settings should be saved inside the `readonlyrest.yml` file. Create this file **on the same path where `elasticsearch.yml` is found**.
+
+**TIP**: If you are a subscriber of the [PRO](https://readonlyrest.com/pro) or [Enterprise](https://readonlyrest.com/enterprise) Kibana plugin, you can edit and refresh the settings through a GUI. For more on this, see the [documentation for the ReadonlyREST plugin for Kibana](kibana.md).
+
 ### Blocks of rules
 
 Every block **must** have at least the `name` field, and optionally a `type` field valued either "allow" or "forbid". If you omit the `type`, your block will be treated as `type: allow` by default.
@@ -658,9 +663,35 @@ Keep in mind that ReadonlyREST ACL is a white list, so by default all request ar
 
 _Example: the simplest example of an allow block._
 
-**⚠️IMPORTANT**: if no blocks are configured, ReadonlyREST rejects all requests.
+#### Unauthorized response configuration
 
-## Rules
+When the request does not match any of the ACL blocks or the request matches the block with the `forbid` policy, the plugin rejects such requests with the `403` response code and `forbidden` content.
+You can change the content of the response as follows:
+
+```yaml
+readonlyrest:
+  
+  global_settings:
+    response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin # custom response for all forbidden requests
+
+  access_control_rules:
+
+    - name: "Block 1"
+      type: # extended format for `type` property
+        policy: allow
+      indices: ["logstash-*"]
+
+    - name: "Block 2"
+      type: # extended format for `type` property
+        policy: forbid
+        # response returned when a request matches 'Block 2' (setting on the block level takes precedence over the global setting)
+        response_message: "You are unauthorized to access this resource"
+      indices: ["templates-*"]
+```
+
+See also [response_if_req_forbidden](#response_if_req_forbidden) section.
+
+### Rules
 
 ReadonlyREST access control rules can be divided into the following categories:
 
@@ -674,11 +705,11 @@ Please refrain from using HTTP level rules to protect certain indices or limit w
 
 The only **clean and exhaustive** way to implement access control is to reason about requests **AFTER ElasticSearch has parsed** them. Only then, the list of affected **indices** and the **action** will be known for sure. See **Elasticsearch level** rules.
 
-### Authentication & Authorization rules
+#### Authentication & Authorization rules
 
 This section contains description of rules that can be used to authenticate and/or authorize users. Most of the following rules use HTTP Basic Auth, so the credentials are passed with the `Authorization` header and they can be easily decoded when the request is intercepted by a malicious third party. Please note that this authentication method is secure only if SSL is enabled.
 
-#### `auth_key` 
+##### `auth_key` 
 
 `auth_key: sales:p455wd`
 
@@ -688,7 +719,7 @@ It's an authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### `auth_key_sha512`
+##### `auth_key_sha512`
 
 `auth_key_sha512: 280ac6f...94bf9`
 
@@ -704,7 +735,7 @@ In the example below `admin` is the username and `280ac6f...94bf9` is the hashed
 
 [Impersonation](details/impersonation.md) is supported by these rules by default.
 
-#### `auth_key_pbkdf2`
+##### `auth_key_pbkdf2`
 
 `auth_key_pbkdf2: "KhIxF5EEYkH5GPX51zTRIR4cHqhpRVALSmTaWE18mZEL2KqCkRMeMU4GR848mGq4SDtNvsybtJ/sZBuX6oFaSg=="` \# logstash:logstash
 
@@ -723,7 +754,7 @@ The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp)
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### `auth_key_unix`
+##### `auth_key_unix`
 
 `auth_key_unix: test:$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0 # Hashed for "test:test"`
 
@@ -785,7 +816,7 @@ For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoE
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### `token_authentication`
+##### `token_authentication`
 
 An authentication rule that accepts a token sent in the HTTP header (`Authorization` by default).
 
@@ -847,7 +878,7 @@ token_authentication:
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### `proxy_auth: "*"`
+##### `proxy_auth: "*"`
 
 `proxy_auth: "*"`
 
@@ -861,7 +892,7 @@ So that Kibana will forward the necessary headers to Elasticsearch.
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
-#### Groups rules
+##### Groups rules
 
 The ACL block will match, when the user belongs to groups matching the specified conditions.
 
@@ -871,7 +902,7 @@ The groups rules use the user definitions from [the `users` section](#users-and-
 - after this step, we have an authorized user with information about the authorized groups to which the user belongs
 - then we check whether the authorized user groups are permitted in context of the rule
 
-##### `groups_any_of`
+###### `groups_any_of`
 
 The ACL block will match when the user belongs to any of the specified groups (boolean OR logic).
 
@@ -886,7 +917,7 @@ Extended syntax:
     any_of: ["group1", "group2"]
 ```
 
-##### `groups_all_of`
+###### `groups_all_of`
 
 This rule is very similar to the above defined `groups_any_of` rule, but this time ALL the groups listed in the array are required (boolean AND logic), as opposed to at least one (boolean OR logic) of the `any_of` rule.
 
@@ -901,7 +932,7 @@ Extended syntax:
     all_of: ["group1", "group2"]
 ```
 
-##### `groups_not_any_of`
+###### `groups_not_any_of`
 
 The ACL block will match when the user belongs to NONE of the specified groups.
 
@@ -923,7 +954,7 @@ Looking at the examples above:
 - ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
 - ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
 
-##### `groups_not_all_of`
+###### `groups_not_all_of`
 
 The ACL block will match when the user does not belong to all the specified groups.
 
@@ -945,7 +976,7 @@ Looking at the example above:
 - ACL block will NOT MATCH for user that belongs to both `group1` and `group2`
 - ACL block will NOT MATCH for user that belongs to `group0`, `group1` and `group2`
 
-##### groups_combined
+###### groups_combined
 
 Logic conditions can be combined inside a single ACL block. It applies only to combining one positive logic (`all_of`/`any_of`) with one negative logic (`not_all_of`/`not_any_of`)
 The ACL block will match, when both conditions are met.
@@ -962,7 +993,7 @@ Looking at the example above:
 - ACL block will MATCH for user that belongs to `group1` and `group3` for the same reason
 - ACL block will NOT MATCH for user that belongs to `group1` and `group2` (the `any_of` logic is satisfied, but `not_all_of` is not)
 
-##### User management
+###### User management
 
 In the `users` section, each entry tells us that:
 
@@ -1002,7 +1033,7 @@ authentication and authorization rules used in `users` section.
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `ldap_authentication`
+##### `ldap_authentication`
 
 simple version:
 `ldap_authentication: ldap1`
@@ -1016,7 +1047,7 @@ ldap_authentication:
 
 It handles LDAP authentication only using the configured LDAP connector (here `ldap1`). Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
-#### `ldap_authorization`
+##### `ldap_authorization`
 
 ```yaml
 ldap_authorization:
@@ -1032,7 +1063,7 @@ Alternatively, `all_of`/`not_any_of`/`not_all_of`/combined logic can be used to 
 - **⚠️IMPORTANT** the negative groups logic (`not_any_of`/`not_all_of`) cannot be used, when `server_side_groups_filtering` is enabled for LDAP. In that case please use the combined logic, for example with `any_of` positive logic.
 - Check the [LDAP connector section](elasticsearch.md#ldap-connector) to see how to configure the connector.
 
-#### `ldap_auth`
+##### `ldap_auth`
 
 Shorthand rule that combines `ldap_authentication` and `ldap_authorization` rules together. It handles both authentication and authorization using the configured LDAP connector (here `ldap1`).
 
@@ -1075,7 +1106,7 @@ See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `jwt_authentication`
+##### `jwt_authentication`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication rule.
 
@@ -1096,7 +1127,7 @@ readonlyrest:
     user_claim: email
 ```
 
-#### `jwt_authorization`
+##### `jwt_authorization`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authorization rule.
 
@@ -1128,7 +1159,7 @@ readonlyrest:
     group_ids_claim: resource_access.client_app.group_ids
 ```
 
-#### `jwt_auth`
+##### `jwt_auth`
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
 
@@ -1154,7 +1185,7 @@ readonlyrest:
     group_ids_claim: resource_access.client_app.group_ids
 ```
 
-#### `external_authentication`
+##### `external_authentication`
 
 Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
 
@@ -1162,7 +1193,7 @@ Used to delegate authentication to another server that supports HTTP Basic Auth.
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `groups_provider_authorization`
+##### `groups_provider_authorization`
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
 
@@ -1171,7 +1202,7 @@ Used to delegate groups resolution for a user to a JSON microservice. See below,
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `ror_kbn_authentication`
+##### `ror_kbn_authentication`
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication. From ROR's perspective it authenticates users.
@@ -1192,7 +1223,7 @@ It handles authentication only using the configured ROR KBN connector (here `kbn
 
 [Impersonation](details/impersonation.md) is currently not supported by this rule.
 
-#### `ror_kbn_authorization`
+##### `ror_kbn_authorization`
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 For [Enterprise](https://readonlyrest.com/enterprise) customers only. From ROR's perspective it authorizes users.
@@ -1226,7 +1257,7 @@ It handles authorization only using the configured ROR KBN connector (here `kbn1
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `ror_kbn_auth`
+##### `ror_kbn_auth`
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 For [Enterprise](https://readonlyrest.com/enterprise) customers only, required for SAML authentication. From ROR's perspective it authenticates and authorize users. 
@@ -1262,7 +1293,7 @@ Continue reading about this in the kibana plugin documentation, in the dedicated
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
-#### `users`
+##### `users`
 
 `users: ["root", "*@mydomain.com"]`
 
@@ -1282,9 +1313,9 @@ readonlyrest:
         groups_any_of: ["viewer"]
 ```
 
-### Kibana-related rules
+#### Kibana-related rules
 
-#### `kibana`
+##### `kibana`
 
 The `kibana` rule underpins all ROR Kibana-related settings that may be needed to provide great user experience.
 
@@ -1305,7 +1336,7 @@ kibana:
 
 The rule consists of several sub-rules:
 
-##### `access`
+###### `access`
 
 Enables the minimum set of Elasticsearch `actions` necessary for browsers to sustain a Kibana session, and rejects any other unrelated actions.
 
@@ -1326,7 +1357,7 @@ Possible access levels:
 
 This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
 
-##### `index` 
+###### `index` 
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 **Default value is `.kibana`**
@@ -1351,14 +1382,14 @@ Example:
   indices: ["r*"] # .kibana, .kibana_8.10.4, .kibana_task_manager, etc are allowed here, because there is the `kibana` rule present in the same block
 ```
 
-##### `template_index` 
+###### `template_index` 
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 Used to pre-populate tenancies with default kibana objects, like dashboards and visualizations. Thus providing a starting point for new tenants that will avoid the bad user experience of logging for the first time and finding a completely empty Kibana.
 
 It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
-##### `hide_apps` 
+###### `hide_apps` 
 ([PRO](https://readonlyrest.com/pro))
 
 Specify which Kibana apps and menu items should be hidden. 
@@ -1366,7 +1397,7 @@ This feature will work in ReadonlyREST PRO and Enterprise.
 
 For more information on the ROR's Kibana Hide Apps feature, see [Hiding Kibana Apps](kibana.md#hiding-kibana-apps).
 
-##### `allowed_api_paths`
+###### `allowed_api_paths`
 
 Used to define which parts of [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) can be used. The sub-rule requires to define a list of [regular expressions](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) which describes the API paths. Additionally, when you would like to restrict only specific HTTP methods of the API, you can use the extended format of the sub-rule:
 
@@ -1378,7 +1409,7 @@ kibana:
       http_path: "^/api/saved_objects/.*$"
 ```
 
-##### `metadata` 
+###### `metadata` 
 ([Enterprise](https://readonlyrest.com/enterprise))
 
 User to define the Custom ROR Kibana Metadata which can be used in [Custom middleware](kibana.md#custom-middleware). The `kibana.metadata` in ReadonlyREST settings is an unstructured YAML object. 
@@ -1406,9 +1437,9 @@ if (alertMessage) {
 }
 ```
 
-### Elasticsearch level rules
+#### Elasticsearch level rules
 
-#### `indices`
+##### `indices`
 
 `indices: ["sales", "logstash-*"]`
 
@@ -1456,7 +1487,7 @@ If a **write request** wants to write to indices they don't have permission for,
 
 Templates are also connected with indices, but rather indirectly. An index template has index patterns and could also have aliases. During an index template creation or modification, ROR checks if index patterns and aliases, defined in a request body, are allowed. When a user tries to remove or get template by name, ROR checks if the template can be considered as allowed for the user, and based on that information, it allows/forbids to remove or see it. See [details](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/indices-rule-templates.md).
 
-#### `actions`
+##### `actions`
 
 `actions: ["indices:data/read/*"]`
 
@@ -1495,25 +1526,25 @@ Example actions \(see above for the full list\):
  many more...
 ```
 
-#### `snapshots`
+##### `snapshots`
 
 `snapshots: ["snap_@{user}_*"]`
 
 Restrict what snapshots names can be saved or restored
 
-#### `repositories`
+##### `repositories`
 
 `repositories: ["repo_@{user}_*"]`
 
 Restrict what repositories can snapshots be saved into
 
-#### `data_streams`
+##### `data_streams`
 
 `data_streams: ["ds_@{user}_*"]`
 
 Restrict what data stream names can be created, deleted, or modified
 
-#### `filter`
+##### `filter`
 
 `filter: '{"query_string":{"query":"user:@{user}"}}'`
 
@@ -1548,7 +1579,7 @@ In this example, we want to avoid that users belonging to group "press" can see 
 
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
 
-#### `fields`
+##### `fields`
 
 This rule enables **Field Level Security \(FLS\)**. That is:
 
@@ -1612,7 +1643,7 @@ Example: hide prices from catalogue indices
 
 If you want to allow write requests \(i.e. for Kibana sessions\), just duplicate the ACL block, have the first one with `filter` and/or `fields` rule, and the second one without.
 
-#### Configuring an ACL with filter/fields rules when using Kibana
+##### Configuring an ACL with filter/fields rules when using Kibana
 
 A normal Kibana session interacts with Elasticsearch using a mix of actions which we can roughly group in two macro categories of "read" and "write" actions. However the `fields` and `filter` rules will **only match read requests**. They will also block ROR internal request used to log in to kibana and reload config. This means that a complete Kibana session cannot anymore be entirely matched by a single ACL block like it normally would.
 
@@ -1685,7 +1716,7 @@ After adding the `filter` rule \(using the block duplication strategy\).
         hide_apps: ["readonlyrest_kbn", "timelion"]
 ```
 
-#### `response_fields`
+##### `response_fields`
 
 This rule allows filtering Elasticsearch responses using a list of fields. It works in very similar way to `fields` rule. In contrast to `fields` rule, which filters out document fields, this rule filters out response fields. It **doesn't make use of Field Level Security \(FLS\)** and can be applied to every response returned by Elasticsearch.
 
@@ -1803,9 +1834,9 @@ response from above will look like:
 
 **NB:** Any response field can be filtered using this rule.
 
-### HTTP Level rules
+#### HTTP Level rules
 
-#### `x_forwarded_for`
+##### `x_forwarded_for`
 
 `x_forwarded_for: ["192.168.1.0/24"]`
 
@@ -1819,13 +1850,13 @@ This is a nice tip if your Elasticsearch is behind a load balancer. If you want 
 
 It's worth to note that resolutions of DNS are going to be cached by JVM. By default successfully resolved IPs will be cached forever \(until Elasticsearch is restarted\) for security reasons. However, this may not always be the desired behaviour, and it can be changed by adding the following JVM options either in the jvm.options file or declaring the ES\_JAVA\_OPTS environment variable: `sun.net.inetaddr.ttl=TTL_VALUE` \(or/and `sun.net.inetaddr.negative.ttl=TTL_VALUE`\). More details about the problem can be found [here](https://www.ibm.com/support/pages/understanding-tuning-and-testing-inetaddress-class-and-cache).
 
-#### `methods`
+##### `methods`
 
 `methods: [GET, DELETE]`
 
 Match requests with HTTP methods specified in the list. N.B. Elasticsearch HTTP stack does not make any difference between HEAD and GET, so all the HEAD request will appear as GET.
 
-#### `headers_and` (or `headers`)
+##### `headers_and` (or `headers`)
 
 `headers: ["h1:x*y","~h2:*xy"]`
 
@@ -1833,13 +1864,13 @@ Match if **all** the HTTP headers in the request match the defined patterns in h
 
 The `~` sign is a pattern negation, so eg. `~h2:*xy` means: match if h2 header's value does not match the pattern \*xy, or `h2` is not present at all.
 
-#### `headers_or`
+##### `headers_or`
 
 `headers_or: ["x-myheader:val*","~header2:*xy"]`
 
 Match if **at least one** the specified HTTP headers `key:value` pairs is matched.
 
-#### `uri_re`
+##### `uri_re`
 
 `uri_re: ["^/secret-index/.*", "^/some-index/.*"]`
 
@@ -1847,7 +1878,7 @@ Match if **at least one** the specified HTTP headers `key:value` pairs is matche
 
 Match if **at least one** specified regular expression matches requested URI.
 
-#### `maxBodyLength`
+##### `maxBodyLength`
 
 `maxBodyLength: 0`
 
@@ -1855,45 +1886,45 @@ Match requests having a request body length less or equal to an integer. Use `0`
 
 **NB**: Elasticsearch HTTP API breaks the specifications, nad GET requests **might** have a body length greater than zero.
 
-#### `api_keys`
+##### `api_keys`
 
 `api_keys: [123456, abcdefg]`
 
 A list of api keys expected in the header `X-Api-Key`
 
-#### `session_max_idle`
+##### `session_max_idle`
 
 `session_max_idle: 1h`
 
 **⚠️DEPRECATED** Browser session timeout \(via cookie\). Example values 1w \(one week\), 10s \(10 seconds\), 7d \(7 days\), etc. NB: not available for Elasticsearch 2.x.
 
-### Transport level rules
+#### Transport level rules
 
 These are the most basic rules. It is possible to allow/forbid requests originating from a list of IP addresses, host names or IP networks \(in slash notation\).
 
-#### `hosts`
+##### `hosts`
 
 `hosts: ["10.0.0.0/24"]` Match a request whose **origin** IP address \(also called origin address, or `OA` in logs\) matches one of the specified IP addresses or subnets.
 
-#### `accept_x-forwarded-for_header`
+##### `accept_x-forwarded-for_header`
 
 `accept_x-forwarded-for_header: false`
 
 **⚠️DEPRECATED \(use `x_forwarded_for instead`\)** A modifier for `hosts` rule: if the origin IP won't match, fallback to check the `X-Forwarded-For` header
 
-#### `hosts_local`
+##### `hosts_local`
 
 `hosts_local: ["127.0.0.1", "127.0.0.2"]` Match a request whose **destination** IP address \(called `DA` in logs\) matches one of the specified IP addresses or subnets. This finds application when Elasticsearch HTTP API is bound to multiple IP addresses.
 
-### Ancillary block settings
+#### Ancillary block settings
 
-#### `verbosity`
+##### `verbosity`
 
 `verbosity: error`
 
 Don't spam elasticsearch log file printing log lines for requests that match this block. Defaults to `info`.
 
-### Audit & Troubleshooting
+#### Audit & Troubleshooting
 
 The main issues seen in support cases:
 
@@ -1901,7 +1932,7 @@ The main issues seen in support cases:
 * Users don't know how to read the `HIS` field in the logs, which instead is crucial because it contains a trace of the evaluation of rules and blocks.
 * LDAP configuration: LDAP is tricky to configure in any system. Configure ES root logger to `DEBUG` editing `$ES_PATH_CONF/config/log4j2.properties` to see a trace of the LDAP messages.
 
-#### Interpreting logs
+##### Interpreting logs
 
 ReadonlyREST prints a log line for each incoming request \(this can be selectively avoided on ACL block level using the `verbosity` rule\).
 
@@ -1954,13 +1985,13 @@ INDEX NOT FOUND req={  ID:501806845-1996085406#74,  TYP:GetIndexRequest,  CGR:N/
 
 The state above is only possible for read-only ES requests \(ES requests which don't change ES cluster state\) for a block containing an `indices` rule. If all other rules within the block are matched, but only the `indices` rule is mismatched, the final state of the block is forbidden due to an index not found.
 
-### Audit
+#### Audit
 
 ReadonlyREST can gather audit events that contain information regarding a request and its processing by the system, which can then be forwarded to predefined outputs.
 You can use the available information from the audit events to construct interesting visual representations, such as Kibana dashboards or any other visualization tool.
 For details see [Audit configuration](details/audit.md).
 
-#### Troubleshooting
+##### Troubleshooting
 
 Follow these approaches until you find the solution to your problem
 
@@ -2009,35 +2040,7 @@ logger.access_log_rolling.filter.regex.onMatch = DENY
 logger.access_log_rolling.filter.regex.onMismatch = ACCEPT
 ```
 
-## Unauthorized response configuration
-
-When the request does not match any of the ACL blocks or the request matches the block with the `forbid` policy, the plugin rejects such requests with the `403` response code and `forbidden` content.
-You can change the content of the response as follows:
-
-```yaml
-readonlyrest:
-  
-  global_settings:
-    response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin # custom response for all forbidden requests
-
-  access_control_rules:
-
-    - name: "Block 1"
-      type: # extended format for `type` property
-        policy: allow
-      indices: ["logstash-*"]
-
-    - name: "Block 2"
-      type: # extended format for `type` property
-        policy: forbid
-        # response returned when a request matches 'Block 2' (setting on the block level takes precedence over the global setting)
-        response_message: "You are unauthorized to access this resource"
-      indices: ["templates-*"]
-```
-
-See also [response_if_req_forbidden](#response_if_req_forbidden) section.
-
-## Users and Groups
+### Users and Groups
 
 Sometimes we want to make allow/forbid decisions according to the username associated to a HTTP request. The extraction of the user identity \(username\) can be done via HTTP Basic Auth \(Authorization header\) or delegated to a reverse proxy \(see `proxy_auth` rule\).
 
@@ -2060,7 +2063,7 @@ Another example:
 
 More examples are shown below together with a sample configuration.
 
-### Local users and groups
+#### Local users and groups
 
 The `groups` rule accepts a list of group IDs. This rule will match if the resolved username \(i.e. via `auth_key`\) is associated with the given groups.
 
@@ -2113,15 +2116,15 @@ The username `bob` is statically associated with [structered groups](details/str
 
 _Example: rules are associated to groups \(instead of users\) and users-group association is declared separately later under `users:`_
 
-### Group mapping
+#### Group mapping
 
 Sometimes we'd like to take advantage of groups (roles) existing in external systems \(like LDAP\). We can do that in `users` section too. It's possible to map external groups to local ones. For details see [External to local groups mapping ](details/groups-rule-mapping.md).
 
-### Username case sensitivity
+#### Username case sensitivity
 
 ReadonlyREST can cooperate with services that operate in a case-insensitive way. For this case, ROR has a toggleable username case sensitivity option. For details, see the [username_case_sensitivity section](#username_case_sensitivity) in Global Settings.
 
-### Static variables
+#### Static variables
 
 Anywhere in `readonlyrest.yml` you can use the expression `${env:MY_ENV_VAR}` to replace in place the environmental variables. This is very useful for injecting credentials like LDAP bind passwords, especially in Docker.
 
@@ -2147,7 +2150,7 @@ ldaps:
 
 And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
 
-### Dynamic variables
+#### Dynamic variables
 
 One of the neatest features in ReadonlyREST is that you can use dynamic variables inside most values of the following rules: `data_streams`, `indices`, `users`, `fields`, `filter`, `repositories`, `hosts`, `hosts_local`, `snapshots`, `response_fields`, `uri_re`, `x_forwarded_for`, `hosts_local`, `hosts`, `kibana.index`, `kibana.template_index`, `kibana.metadata`, [groups rules](#groups-rules). The variables are related to different contexts:
 * `acl` - the context of data collected in authentication and authorization rules of the current block:
@@ -2159,7 +2162,7 @@ One of the neatest features in ReadonlyREST is that you can use dynamic variable
 * `jwt` - the context of JWT header value
     * `@{jwt:<json_path>}` get replaced with value (or values) found in the JWT claim under the given JSON path
 
-#### Dynamic variables exploding
+##### Dynamic variables exploding
 
 A value resolved from a dynamic variable is a string. Some rules, like `indices` one, have multivalue context (you can configure several indices names in it). 
 
@@ -2192,9 +2195,9 @@ which looks more useful!
 
 So, as we've seen, the `explode` attribute of a dynamic variable rule can be used to split a string with comma-separated values into an array of strings. But it can only be used in a rule with multi value context.
 
-#### Usage examples
+##### Usage examples
 
-##### Indices from user name
+###### Indices from user name
 
 You can let users authenticate externally, i.e. via LDAP, and use their user name string inside the `indices` rule.
 
@@ -2210,7 +2213,7 @@ readonlyrest:
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-##### Indices from available groups
+###### Indices from available groups
 
 You can let users authorize externally, i.e. via LDAP, and use their group strings inside the `indices` rule.
 
@@ -2227,7 +2230,7 @@ readonlyrest:
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-##### Filter from available groups
+###### Filter from available groups
 
 You can let users authorize externally, i.e. via LDAP, and use their group strings inside the `filter` rule.
 
@@ -2245,7 +2248,7 @@ readonlyrest:
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-##### Uri regex matching user's current group
+###### Uri regex matching user's current group
 
 You can let users authorize externally, i.e. via LDAP, and use their group inside the `uri_re` rule.
 
@@ -2262,7 +2265,7 @@ readonlyrest:
     # LDAP connector settings omitted, see LDAP section below..
 ```
 
-##### Kibana index from headers
+###### Kibana index from headers
 
 Imagine that we delegate authentication to a reverse proxy, so we know that only authenticated users will ever reach Elasticsearch. We can tell the reverse proxy \(i.e. Nginx\) to inject a header called `x-nginx-user` containing the username.
 
@@ -2276,7 +2279,7 @@ readonlyrest:
         index: ".kibana_@{header:x-nginx-user}"
 ```
 
-##### Dynamic variables from JWT claims
+###### Dynamic variables from JWT claims
 
 The JWT token is an authentication string passed generally as a header or a query parameter to the web browser. If you squint, you can see it's a concatenation of three base64 encoded strings. If you base64 decode the middle string, you can see the "claims object". That is the object containing the current user's metadata.
 
@@ -2315,7 +2318,7 @@ indices: ["logstash_@explode{x-indices_csv_string}*", "idx_other"]
 # -> indices: ["logstash_a*", "logstash_b*", "idx_other"]
 ```
 
-### Variables functions
+#### Variables functions
 
 A value resolved from a variable may not be valid in some contexts.
 Sometimes, the value from the variable needs some preprocessing before usage.
@@ -2336,7 +2339,7 @@ which resolves to:
 indices: [ 'index_james' ]
 ```
 
-#### Syntax
+##### Syntax
 
 In general, functions syntax is as follows:
 
@@ -2360,7 +2363,7 @@ indices: [ "idx_@{jwt:department}#{to_lowercase}", "idx_other" ]
 # -> indices: ["idx_infosec", "idx_other"]
 ```
 
-#### Supported functions
+##### Supported functions
 
 Currently, we support functions like this:
 
@@ -2404,7 +2407,7 @@ Currently, we support functions like this:
 We can easily extend the function list. If you need any new function/mechanism that cannot be obtained using the supported functions,
 let us know about it in our [forum](https://forum.readonlyrest.com/). We will consider adding the proper implementation.
 
-#### Variable function aliases
+##### Variable function aliases
 
 Sometimes, the function chain may be very complex or occur multiple times in ACL.
 In this case, you can use a `function aliases` to simplify configuration management.
@@ -2443,13 +2446,13 @@ readonlyrest:
         auth_key: bob:s3cr37
 ```
 
-### LDAP connector
+#### LDAP connector
 The authentication and authorization rules for LDAP (`ldap_auth`, `ldap_authentication`, `ldap_authorization`) defined in the rules section, always need to contain a reference by name to one LDAP connector. One or more LDAP connectors need to be defined in the section "ldaps" of the ACL.
 
-#### Configuration notes
+##### Configuration notes
 If you would like to experiment with LDAP and need a development server, you can stand up an OpenLDAP server configuring it using our schema file, which can be found in [our tests](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/develop/core/src/test/resources/test_example.ldif)).
 
-##### Technical configuration
+###### Technical configuration
 
 There are also plenty of technical settings which can be useful:
 * an LDAP server address:
@@ -2473,7 +2476,7 @@ There are also plenty of technical settings which can be useful:
 * `circuit_breaker` (YAML object, optional, default: `max_retries: 10`, `reset_duration: 10 sec`) - for details see [circuit breaker section](#circuit-breaker)
 
 
-##### Query configuration
+###### Query configuration
 Usually, we would like to configure three main things for defining the way LDAP users and groups are queried:
 
 1. a way to **authenticate client** (LDAP binding; used by all LDAP rules):
@@ -2515,10 +2518,10 @@ group_search_filter: "(objectClass=group)(cn=application*)"
 group_search_filter: "(cn=*)" # basically no group filtering
 ```
 
-#### Caching
+##### Caching
 Too many calls made by ROR to our LDAP service can sometimes be problematic (eg. when one LDAP connector is used in many rules). The problem can be simply solved by using caching functionality. Caching can be configured per LDAP connector or per LDAP rule (see [`ldap_auth`](#ldap_auth), [`ldap_authentication`](#ldap_authentication), [`ldap_authorization`](#ldap_authorization) rules). By default cache is disabled. We can enable it by setting `cache_ttl` > `0 sec`. In the cache will be stored only results of successful requests - info about authentication results and/or returned LDAP groups for the given credentials. When LDAP connector level cache is used any rule that uses the connector can take advantage of cached results. When we configure `cache_ttl` at the LDAP rule level, the results of LDAP calls made by the rule will be stored in the cache. Other LDAP rules won't have access to this cache. See [caching details](/details/caching.md) for deep explanation.
 
-#### Circuit Breaker
+##### Circuit Breaker
 The LDAP connector is equipped by default with a circuit breaker functionality. The circuit breaker can disable the connector from sending new requests to the server when it doesn't respond properly. After receiving a configurable number of failed responses in a row, the circuit breaker feature disables sending any new requests by terminating them immediately with an exception. After a configurable amount of time, the circuit breaker feature allows one request to pass again. If it succeeds, the connector goes back to normal operation. If not, a test request is sent again after a configurable amount of time. A general description of the concept could be found on [wiki](https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern) and more about specific implementation could be found in [library documentation](https://monix.io/docs/current/catnap/circuit-breaker.html).
 
 The circuit breaker feature can be customized to adapt to specific needs using the following configuration parameters:
@@ -2526,7 +2529,7 @@ The circuit breaker feature can be customized to adapt to specific needs using t
 * `max_retries` is the number of failed responses in a row that will trigger the circuit breaker.
 * `reset_duration` defines how long the circuit breaker feature will block the incoming requests before starting to send one test request. to the LDAP server.
 
-#### LDAP Server discovery
+##### LDAP Server discovery
 
 The LDAP connector can get all LDAP hostnames from the DNS server rather than from the configuration file. By default `_ldap._tcp` SRV records are used for that, but any other SRV record can be configured.
 
@@ -2565,7 +2568,7 @@ Example:
         search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
-#### Nested LDAP groups support
+##### Nested LDAP groups support
 
 Let's imagine we have the following groups in LDAP:
 * `employees`
@@ -2591,7 +2594,7 @@ As you probably noticed, enabling nested groups extraction can be costly. ROR ob
 
 Let's say we configured it like that: `nested_groups_depth: 1`. In the example above ROR asks only once: *tell me which groups `developers` belongs to?*. After the LDAP's response: `it` there won't be any more queries. That's because of the depth equaled 1.
 
-#### ROR with LDAP - examples
+##### ROR with LDAP - examples
 In this example, users' credentials are validated via LDAP. The groups associated with each validated user, are resolved using the same LDAP server.
 
 **Simpler: authentication and authorization in one rule**
@@ -2726,7 +2729,7 @@ readonlyrest:
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
 
-### External Basic Auth
+#### External Basic Auth
 
 ReadonlyREST will forward the received `Authorization` header to a website of choice and evaluate the returned HTTP status code to verify the provided credentials. This is useful if you already have a web server with all the credentials configured and the credentials are passed over the `Authorization` header.
 
@@ -2773,7 +2776,7 @@ To define an external authentication service the user should specify:
 
 Cache can be defined at the service level or/and at the rule level. In the example, both are shown, but you might opt for setting up either.
 
-### Custom groups providers
+#### Custom groups providers
 
 This external authorization connector makes it possible to resolve to what groups a users belong, using an external JSON or XML service.
 
@@ -2845,7 +2848,7 @@ To define user groups provider you should specify:
 
 As usual, the cache behaviour can be defined at service level or/and at rule level.
 
-### JSON Web Token \(JWT\) Auth
+#### JSON Web Token \(JWT\) Auth
 
 The information about the username can be extracted from the "claims" inside a JSON Web Token. Here is an example.
 
@@ -2925,9 +2928,9 @@ The value of this configuration represents the cryptographic family of the JWT p
 | ES384 | **EC** |
 | ES512 | **EC** |
 
-## Other settings
+### Other settings
 
-### Disabling ReadonlyREST ACL
+#### Disabling ReadonlyREST ACL
 
 The ReadonlyREST ACL can be temporarily disabled without uninstalling the plugin by setting `readonlyrest.enable: false` in the configuration. The default value is `true`. When disabled, all requests will bypass the ACL rules.
 
@@ -2938,11 +2941,11 @@ readonlyrest:
   enable: false
 ```
 
-### Global settings
+#### Global settings
 
 The `readonlyrest.global_settings` section contains various settings that affect different parts of the ACL:
 
-#### `prompt_for_basic_auth`
+##### `prompt_for_basic_auth`
 
 When set to `true`, ROR will return HTTP 401 instead of 403 when authentication fails. This prompts browsers to show a basic auth dialog. This is particularly useful when not using ReadonlyREST Kibana plugin and wanting to take advantage of Kibana's default behavior. Defaults to `false`. But we don't recommend to change this default behaviour.
 
@@ -2953,7 +2956,7 @@ readonlyrest:
     prompt_for_basic_auth: true
 ```
 
-#### `response_if_req_forbidden` 
+##### `response_if_req_forbidden` 
 
 Customize the response message returned when a request is forbidden by any ACL block. This can be overridden at the block level using the `type.response_message` setting (see section on [Unauthorized response configuration](#unauthorized-response-configuration)). Defaults to "Forbidden by ReadonlyREST ES plugin".
 
@@ -2964,7 +2967,7 @@ readonlyrest:
     response_if_req_forbidden: "You shall not pass!"
 ```
 
-#### `fls_engine`
+##### `fls_engine`
 
 Specifies which Field Level Security engine to use for document filtering. Can be either "es_with_lucene" (default) or "es". This setting determines how ReadonlyREST handles field-level security with the [`fields` rule](#fields).
 
@@ -2980,7 +2983,7 @@ readonlyrest:
     fls_engine: es
 ```
 
-#### `username_case_sensitivity`
+##### `username_case_sensitivity`
 
 Controls username comparison behavior across all authentication rules. Can be either "case_sensitive" (default) or "case_insensitive". Useful when integrating with case-insensitive systems.
 
@@ -2991,7 +2994,7 @@ readonlyrest:
     username_case_sensitivity: case_insensitive
 ```
 
-#### `users_section_duplicate_usernames_detection`
+##### `users_section_duplicate_usernames_detection`
 
 When enabled, ROR validates the `users` section during startup to ensure there are no duplicate usernames defined. This helps prevent configuration errors. Defaults to `true`. In some scenarios you may want to disable it.
 
@@ -3002,13 +3005,15 @@ readonlyrest:
     users_section_duplicate_usernames_detection: false
 ```
 
-## GPLv3 License
+
+## Licensing
+### GPLv3 License
 
 ReadonlyREST Free \(Elasticsearch plugin\) is released under the GPLv3 license. For what this kind of software concerns, this is identical to GPLv2, that is, you can treat ReadonlyREST as you would treat Linux code. The big difference from Linux is that here you can ask for a commercial license and stop thinking about legal implications.
 
 Here is a practical summary of what dealing with GPLv3 means:
 
-### You CAN
+#### You CAN
 
 * Distribute for free or commercially a version \(partial or total\) of this software \(along with its license and attributions\) as part of a product or solution that is also **released under GPL-compatible license**. Please notify us if you do so.
 * Use a modified version **internally to your company** without making your changes available under the GPLv3 license.
@@ -3016,12 +3021,12 @@ Here is a practical summary of what dealing with GPLv3 means:
 
   the [original project](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin) or publicly made available under the GPLv3 or compatible license.
 
-### You CANNOT
+#### You CANNOT
 
 * Sell or give away a modified version of the plugin \(or parts of it, or any derived work\) without publishing the modified source under GPLv3 compatible licenses.
 * Modify the code for a paying client without immediately contributing your changes back to this project's GitHub as a pull request, or alternatively publicly release said fork under GPLv3 or compatible license.
 
-### GPLv3 license FAQ
+#### GPLv3 license FAQ
 
 **1. Q**: I sell a proprietary software solution that already includes many other OSS components \(i.e. Elasticsearch\). Can I bundle also ReadonlyREST into it?
 
@@ -3035,7 +3040,7 @@ Here is a practical summary of what dealing with GPLv3 means:
 
 > **A**: This is fine with GPLv3.
 
-## Dual-license
+### Dual-license
 
 Please don't hesitate to [contact us](mailto:info@readonlyrest.com) for a re-licensed copy of this source. Your success is what makes this project worthwhile, don't let legal issues slow you down.
 
