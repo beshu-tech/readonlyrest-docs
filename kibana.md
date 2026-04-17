@@ -350,7 +350,6 @@ RoR - just like Kibana itself - is meant to be used either with a proxy or witho
 
 ## Configuration
 
-
 ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsearch configuration. Login credentials, hidden Kibana apps, etc. are all going to be configured from the Elasticearch side via the usual "rules". This means the configuration will be kept all in one place and if you used ReadonlyREST before, it will be also very familiar.
 
 ### ROR Settings in kibana.yml
