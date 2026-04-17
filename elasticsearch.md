@@ -435,7 +435,7 @@ The YAML snippet above, like all of this plugin's settings should be saved insid
 
 ### Encryption
 
-An SSL-encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have a certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore.
+SSL/TLS encryption protects data in transit between clients and Elasticsearch. ReadonlyREST supports two independent encryption layers, each covering a different communication channel:
 
 Traffic can be encrypted on two independent levels:
 1. HTTP/REST API (port 9200)
@@ -568,7 +568,6 @@ ReadonlyREST will log a list of available ciphers and protocols supported by the
 [2018-01-03T10:09:38,684][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Restricting to ciphers: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 [2018-01-03T10:09:38,684][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Available SSL protocols: TLSv1,TLSv1.1,TLSv1.2
 [2018-01-03T10:09:38,685][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Restricting to SSL protocols: TLSv1.2
-[2018-0
 ```
 
 #### Custom truststore
