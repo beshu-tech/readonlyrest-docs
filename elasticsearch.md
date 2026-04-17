@@ -441,18 +441,18 @@ Traffic can be encrypted on two independent levels:
 1. HTTP/REST API (port 9200)
 2. Internode communication - transport module (port 9300)
 
-#### Choosing between ROR SSL and XPack Security SSL
+#### Choosing between ReadonlyREST SSL and XPack Security SSL
 
 There are two ways to configure SSL in an Elasticsearch cluster running ReadonlyREST:
 
-- **ROR SSL** — SSL provided by the ReadonlyREST plugin itself (described in the subsections below).
+- **ReadonlyREST SSL** — SSL provided by the ReadonlyREST plugin itself (described in the subsections below).
 - **XPack Security SSL** — SSL provided by Elasticsearch's built-in `xpack.security` module.
 
 The choice depends on whether `xpack.security.enabled` is set to `true` or `false` in `elasticsearch.yml`:
 
 | `xpack.security.enabled` | SSL to use |
 |---|---|
-| `false` | ROR SSL |
+| `false` | ReadonlyREST SSL |
 | `true` | XPack Security SSL |
 
 **Why does this matter?** During its patching step, ReadonlyREST deactivates XPack Security's authentication and authorization features — these are replaced by ROR's ACL engine. However, **XPack SSL is not deactivated**. This means that when `xpack.security.enabled: true`, XPack SSL is still fully active and must be configured through Elasticsearch's standard mechanism, not through ROR.
