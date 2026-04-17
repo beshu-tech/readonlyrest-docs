@@ -87,6 +87,10 @@ You do not need to put service tokens or API key values into `readonlyrest.yml`.
 - Agents can be enrolled, unenrolled, and re-keyed without touching ReadonlyREST.
 - The only things that must stay in sync with your deployment are the **index patterns** in the `service-token` and `api-key` blocks.
 
+## Setting up Fleet Server and Elastic Agent
+
+Configuring Fleet Server and enrolling Elastic Agents is covered in the [official Elastic Fleet documentation](https://www.elastic.co/guide/en/fleet/current/fleet-server.html). APM agent setup is documented in the [APM quick-start guide](https://www.elastic.co/guide/en/apm/guide/current/apm-quick-start.html).
+
 ## Running the example
 
 A full working example with Elasticsearch, Kibana (both with ReadonlyREST), Fleet Server, an Elastic Agent (APM), a demo Node.js app, and a traffic simulator is available in the [readonlyrest-examples](https://github.com/beshu-tech/readonlyrest-examples/tree/master/examples/fleet) repository:
