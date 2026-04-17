@@ -643,6 +643,16 @@ readonlyrest_kbn.diskThresholdVerificationEnabled: false  # default: true
 
 ## Authentication
 
+ReadonlyREST Kibana supports several methods for authenticating users at the Kibana layer. When a user logs in through one of these methods, Kibana establishes a session and forwards the verified identity to Elasticsearch. On the Elasticsearch side, ReadonlyREST must be configured to trust this forwarded identity using the appropriate rule:
+
+| Kibana authentication method | Required ROR ES rule |
+|---|---|
+| Proxy Auth | [`proxy_auth`](elasticsearch.md#proxy_auth) |
+| SAML / OIDC | [`ror_kbn_authentication`](elasticsearch.md#ror_kbn_authentication), [`ror_kbn_authorization`](elasticsearch.md#ror_kbn_authorization), or [`ror_kbn_auth`](elasticsearch.md#ror_kbn_auth) |
+| Standard login form (Basic auth) | No Kibana-level auth config needed — handled directly in ROR ES via `auth_key`, `ldap_authentication`, etc. |
+
+This is why SAML and OIDC sections below each contain an "Elasticsearch side" configuration step: the two plugins must share a secret so the identity can flow securely between them.
+
 ### Proxy Auth
 
 This feature will work in all ReadonlyREST editions.
