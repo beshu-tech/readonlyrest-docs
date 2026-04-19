@@ -12,7 +12,7 @@
 
 ### (2026-04-02) What’s new in **ROR 1.69.0**
 * **🚨 Security Fix** (KBN) [CVE-2026-24001](https://nvd.nist.gov/vuln/detail/CVE-2026-24001), [CVE-2025-69873](https://nvd.nist.gov/vuln/detail/CVE-2025-69873), [CVE-2026-2391](https://nvd.nist.gov/vuln/detail/CVE-2026-2391), [CVE-2026-25639](https://nvd.nist.gov/vuln/detail/CVE-2026-25639), [CVE-2026-27904](https://nvd.nist.gov/vuln/detail/CVE-2026-27904), [CVE-2026-3449](https://nvd.nist.gov/vuln/detail/CVE-2026-3449), [CVE-2025-15599](https://nvd.nist.gov/vuln/detail/CVE-2025-15599), [CVE-2026-33750](https://nvd.nist.gov/vuln/detail/CVE-2026-33750), [CVE-2026-4867](https://nvd.nist.gov/vuln/detail/CVE-2026-4867), [CVE-2026-34601](https://www.tenable.com/cve/CVE-2026-34601), [CVE-2022-31129](https://nvd.nist.gov/vuln/detail/cve-2022-31129)
-* **🚀 New** (KBN/ES) Added Fleet support via native API key and service account token authentication (ES 7.14+)
+* **🚀 New** (KBN/ES) [Added Fleet support via native API key and service account token authentication (ES 7.14+)](https://docs.readonlyrest.com/elasticsearch/fleet)
 * **🚀 New** (KBN/ES) The ReadonlyREST Audit Dashboard available in the Kibana plugin now supports audit events written to data streams
 * **🚀 New** (KBN/ES) The ReadonlyREST Audit Dashboard provided by the Kibana plugin can now be used with the ECS (Elastic Common Schema) audit index
 * **🚀 New** (KBN) [Added support for opening different tenancies in separate tabs](https://forum.readonlyrest.com/t/multi-tenancy-and-link-sharing/1978/3)
