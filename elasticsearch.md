@@ -849,6 +849,8 @@ token_authentication:
     - "cluster:admin/xpack/security/api_key/*"
 ```
 
+For a complete walkthrough including credential flow, the `forbid` block rationale, and a runnable example, see the [Elastic Fleet guide](examples/fleet/README.md).
+
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
 #### `proxy_auth: "*"`
