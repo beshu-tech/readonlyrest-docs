@@ -104,25 +104,12 @@ Don't forget setting up SAML requires some changes to security settings in `read
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our Elasticsearch needs to be available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)), so we modify the elasticsearch.yml
+Our Elasticsearch needs to be available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)). Configure SSL accoring to this guide.
 
-**append to elasticsearch.yml**
-
-```yaml
-xpack.security.enabled: false
-http.type: ssl_netty4 # <-- needed for ROR SSL
-```
-
-Write in **readonlyrest.yml**
+Then write in **readonlyrest.yml**
 
 ```yaml
 readonlyrest:
-
-    ssl:
-      enable: true
-      keystore_file: "keystore.jks"
-      keystore_pass: readonlyrest
-      key_pass: readonlyrest
 
     audit:
       enabled: true

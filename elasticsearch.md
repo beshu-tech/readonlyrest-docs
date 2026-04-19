@@ -131,7 +131,7 @@ When prompted about additional permissions, answer **y**.
 
 #### 3. Patch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
+If you are using Elasticsearch 6.7.0 or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to `plugins/readonlyrest` directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
@@ -182,19 +182,7 @@ readonlyrest:
       auth_key: user:password
 ```
 
-#### 5. Disable X-Pack security module
-
-**\(applies to ES 6.4.0 or greater\)**
-
-ReadonlyREST and X-Pack security module can't run together, so the latter needs to be disabled.
-
-Edit `elasticsearch.yml` and append `xpack.security.enabled: false`.
-
-```bash
-vim $ES_PATH_CONF/conf/elasticsearch.yml
-```
-
-#### 6. Start Elasticsearch
+#### 5. Start Elasticsearch
 
 ```bash
 bin/elasticsearch
@@ -244,7 +232,7 @@ depending on your environment.
 
 #### 2. Unpatch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
+If you are using Elasticsearch 6.7.0 or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
@@ -282,7 +270,7 @@ bin/elasticsearch-plugin install file:///tmp/readonlyrest-1.56.0_es8.12.2.zip
 
 #### 5. Patch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to the `plugins/readonlyrest` directory.
+If you are using Elasticsearch 6.7.0 or newer, you need **an extra post-installation step**. Depending on the [Elasticsearch version](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/blob/master/ror-tools-core/src/main/scala/tech/beshu/ror/tools/core/patches), this command might tweak the main Elasticsearch installation files and/or copy some jars to the `plugins/readonlyrest` directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_ACCEPT_ES_PATCHING=yes
@@ -304,7 +292,7 @@ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 ```
 
-#### 6. Restart Elasticsearch.
+#### 6 Restart Elasticsearch.
 
 ```bash
 bin/elasticsearch
@@ -336,7 +324,7 @@ depending on your environment.
 
 #### 2. Unpatch Elasticsearch
 
-If you are using Elasticsearch 6.5.x or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
+If you are using Elasticsearch 6.7.0 or newer, you need **an extra pre-uninstallation step**. This will remove all previously copied jars from ROR's installation directory.
 
 ```bash
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar unpatch
@@ -447,121 +435,130 @@ The YAML snippet above, like all of this plugin's settings should be saved insid
 
 ### Encryption
 
-An SSL-encrypted connection is a prerequisite for secure exchange of credentials and data over the network. To make use of it you need to have certificate and private key. [Letsencrypt](https://letsencrypt.org/) certificates work just fine (see tutorial below). Before ReadonlyREST 1.44.0 both files, certificate and private key, had to be placed inside PKCS#12 or JKS keystore. See the tutorial at the end of this section. ReadonlyREST 1.44.0 or newer supports using PEM files directly, without the need to use a keystore. 
+SSL/TLS encryption protects data in transit between clients and Elasticsearch. ReadonlyREST supports two independent encryption layers, each covering a different communication channel:
 
-ReadonlyREST can be configured to encrypt network traffic on two independent levels:
-1. HTTP (port 9200)
+Traffic can be encrypted on two independent levels:
+1. HTTP/REST API (port 9200)
 2. Internode communication - transport module (port 9300)
 
-> An Elasticsearch node with ReadonlyREST can join an existing cluster based on native SSL from `xpack.security` module. This configuration is useful to deploy ReadonlyREST Enterprise for Kibana to an existing large production cluster without disrupting any configuration. More on this in the dedicated paragraph of this section.
+#### Choosing between ReadonlyREST SSL and XPack Security SSL
 
+There are two ways to configure SSL in an Elasticsearch cluster running ReadonlyREST:
 
-#### External REST API
+- **ReadonlyREST SSL** — SSL provided by the ReadonlyREST plugin itself (described in the subsections below).
+- **XPack Security SSL** — SSL provided by Elasticsearch's built-in `xpack.security` module.
+
+The choice depends on whether `xpack.security.enabled` is set to `true` or `false` in `elasticsearch.yml`:
+
+| `xpack.security.enabled` | SSL to use |
+|---|---|
+| `false` | ReadonlyREST SSL |
+| `true` | XPack Security SSL |
+
+**Why does this matter?** During its patching step, ReadonlyREST deactivates XPack Security's authentication and authorization features — these are replaced by ROR's ACL engine. However, **XPack SSL is not deactivated**. This means that when `xpack.security.enabled: true`, XPack SSL is still fully active and must be configured through Elasticsearch's standard mechanism, not through ROR.
+
+> **Recommendation:** Because `xpack.security` enables features used by Elasticsearch and Kibana (e.g. API keys, token service, certain Kibana integrations), it should not be disabled without a clear reason. If there is no specific requirement to disable it, prefer leaving `xpack.security.enabled: true` and use XPack Security SSL.
+
+#### XPack Security SSL (when `xpack.security.enabled: true`)
+
+When `xpack.security.enabled` is `true`, configure SSL by following the official Elasticsearch documentation:
+
+- [Set up basic security (internode TLS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html)
+- [Set up basic security plus HTTPS (REST API TLS)](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup-https.html)
+
+ROR's ACL will handle authentication and authorization, while XPack manages the SSL layer transparently.
+
+#### ReadonlyREST SSL (when `xpack.security.enabled: false`)
+
+The following subsections describe how to configure SSL using ReadonlyREST's own SSL implementation. This applies only when `xpack.security.enabled` is set to `false` in `elasticsearch.yml`.
+
+##### External REST API
 
 It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.
-**⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and append this one line:
+**⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and add the following settings (example configuration with the most important properties):
 
 ```yaml
 http.type: ssl_netty4
+readonlyrest.ssl.keystore_file: "keystore.jks"  # or keystore.p12 for PKCS#12 format
+readonlyrest.ssl.keystore_pass: readonlyrest
+readonlyrest.ssl.key_pass: readonlyrest
 ```
 
-Now in `readonlyrest.yml` add the following settings:
+The keystore should be stored in the same directory as `elasticsearch.yml`.
 
-```yaml
-readonlyrest:
-  ssl:
-    keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
-    keystore_pass: readonlyrest
-    key_pass: readonlyrest
-```
-
-The keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`.
-
-#### Internode communication - transport module
+##### Internode communication - transport module
 
 This option encrypts communication between nodes forming Elasticsearch cluster.
 
-**⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and append this one line:
+**⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and add these (example configuration with the most important properties):
 
 ```yaml
 transport.type: ror_ssl_internode
+readonlyrest.ssl_internode.keystore_file: "keystore.jks"  # or keystore.p12 for PKCS#12 format
+readonlyrest.ssl_internode.keystore_pass: readonlyrest
+readonlyrest.ssl_internode.key_pass: readonlyrest
 ```
 
-In `readonlyrest.yml` following settings must be added \(it's just example configuration presenting most important properties\):
+Similar to `ssl` for HTTP, the keystore should be stored in the same directory as `elasticsearch.yml`. This config must be added to all nodes taking part in encrypted communication within cluster.
 
-```yaml
-readonlyrest:
-  ssl_internode:
-    keystore_file: "keystore.jks" # or keystore.p12 for PKCS#12 format
-    keystore_pass: readonlyrest
-    key_pass: readonlyrest
-```
+###### Internode communication with XPack nodes
 
-Similar to `ssl` for HTTP, the keystore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml`. This config must be added to all nodes taking part in encrypted communication within cluster.
-
-##### Internode communication with XPack nodes
-
-It is possible to set up internode SSL between ROR and XPack nodes. It works only for ES above 6.3.
+It is possible to set up internode SSL between ROR nodes (with `xpack.security.enabled: false`) and XPack nodes. It works only for ES above 6.7.0.
 
 To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates.
 
-Generated `elastic-certificates.p12` could be then used in ROR node with such configuration
+Generated `elastic-certificates.p12` could be then used in ROR node with such configuration in `elasticsearch.yml`:
 ```yaml
-readonlyrest:
-  ssl_internode:
-    enable: true
-    keystore_file: "elastic-certificates.p12"
-    keystore_pass: [ password for generated certificate ]
-    key_pass: [ password for generated certificate ]
-    truststore_file: "elastic-certificates.p12"
-    truststore_pass: [ password for generated certificate ]
-    client_authentication: true # default: false
-    certificate_verification: true # certificate verification is enabled by default on XPack nodes 
-    hostname_verification: false # hostname verification is disabled by default
+readonlyrest.ssl_internode.enable: true
+readonlyrest.ssl_internode.keystore_file: "elastic-certificates.p12"
+readonlyrest.ssl_internode.keystore_pass: [ password for generated certificate ]
+readonlyrest.ssl_internode.key_pass: [ password for generated certificate ]
+readonlyrest.ssl_internode.truststore_file: "elastic-certificates.p12"
+readonlyrest.ssl_internode.truststore_pass: [ password for generated certificate ]
+readonlyrest.ssl_internode.client_authentication: true  # default: false
+readonlyrest.ssl_internode.certificate_verification: true  # certificate verification is enabled by default on XPack nodes
+readonlyrest.ssl_internode.hostname_verification: false  # hostname verification is disabled by default
 ```
 
-#### Certificate verification
+###### Certificate verification
 
 By default the certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.
 It is useful on local/test environment, where security is not the most important concern. On production environment it is advised to enable this option. It can be done by means of:
 
 ```yaml
-certificate_verification: true
+readonlyrest.ssl_internode.certificate_verification: true
 ```
 
-under `ssl_internode` section. This option is applicable only for internode SSL.
+This option is applicable only for internode SSL.
 
-#### Hostname verification
+###### Hostname verification
 
 By default the hostname verification is disabled. This means that hostname or IP address is not verified to match the names in the certificate. To enable hostname verification add the following lines in the `ssl_internode` section:
 
 ```yaml
-hostname_verification: true
+readonlyrest.ssl_internode.hostname_verification: true
 ```
 
-#### Client authentication
+###### Client authentication
 
 By default the client authentication is disabled. When enabled, the server asks the client about its certificate, so ES is able to verify the client's identity. It can be enabled by means of:
 
 ```yaml
-client_authentication: true
+readonlyrest.ssl.client_authentication: true
 ```
 
-under `ssl` section. This option is applicable for REST API external SSL and internode SSL.
+This option is applicable for REST API external SSL and internode SSL (use `readonlyrest.ssl_internode.client_authentication` for internode).
 
-#### Restrict SSL protocols and ciphers
+##### Restrict SSL protocols and ciphers
 
 Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
 
 ```yaml
-readonlyrest:
-  ssl:
-    # put the keystore in the same dir with elasticsearch.yml
-    keystore_file: "keystore.jks"
-    keystore_pass: readonlyrest
-    key_pass: readonlyrest
-    allowed_protocols: [TLSv1.2]
-    allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
+readonlyrest.ssl.keystore_file: "keystore.jks"
+readonlyrest.ssl.keystore_pass: readonlyrest
+readonlyrest.ssl.key_pass: readonlyrest
+readonlyrest.ssl.allowed_protocols: [TLSv1.2]
+readonlyrest.ssl.allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
 ```
 
 ReadonlyREST will log a list of available ciphers and protocols supported by the current JVM at startup.
@@ -571,55 +568,54 @@ ReadonlyREST will log a list of available ciphers and protocols supported by the
 [2018-01-03T10:09:38,684][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Restricting to ciphers: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 [2018-01-03T10:09:38,684][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Available SSL protocols: TLSv1,TLSv1.1,TLSv1.2
 [2018-01-03T10:09:38,685][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Restricting to SSL protocols: TLSv1.2
-[2018-0
 ```
 
-#### Custom truststore
+##### Custom truststore
 
 ReadonlyREST allows using custom truststore, replacing \(provided by JRE\) default one. Custom truststore can be set with:
 
 ```yaml
-truststore_file: "truststore.jks"
-truststore_pass: truststorepass
+readonlyrest.ssl.truststore_file: "truststore.jks"
+readonlyrest.ssl.truststore_pass: truststorepass
 ```
 
-under `ssl` or `ssl_internode` section. This option is applicable for both ssl modes - external ssl and internode ssl. The truststore should be stored in the same directory with `elasticsearch.yml` and `readonlyrest.yml` \(like keystore\). When not specified, ReadonlyREST uses default truststore.
+Use `readonlyrest.ssl_internode.truststore_file` / `readonlyrest.ssl_internode.truststore_pass` for internode SSL. This option is applicable for both ssl modes - external ssl and internode ssl. The truststore should be stored in the same directory as `elasticsearch.yml` (like the keystore). When not specified, ReadonlyREST uses the default truststore.
 
 
-#### PEM files instead of a keystore and/or truststore
+##### PEM files instead of a keystore and/or truststore
 
 If you are using ReadonlyREST 1.44.0 or newer then you are able to use PEM files directly without the need of placing them inside a keystore or truststore.  
 
-To use PEM files instead of keystore file, use such configuration instead of `keystore_file`, `keystore_pass`, `key_pass` fields: 
+To use PEM files instead of keystore file, use such configuration in `elasticsearch.yml` instead of `keystore_file`, `keystore_pass`, `key_pass` fields:
 ```yaml
-server_certificate_key_file: private_key.pem
-server_certificate_file: cert_chain.pem
+readonlyrest.ssl.server_certificate_key_file: private_key.pem
+readonlyrest.ssl.server_certificate_file: cert_chain.pem
 ```
 
-To use PEM file instead of truststore file, use such configuration instead of `truststore_file`, `truststore_pass` fields: 
+To use PEM file instead of truststore file, use such configuration instead of `truststore_file`, `truststore_pass` fields:
 ```yaml
-client_trusted_certificate_file: trusted_certs.pem
+readonlyrest.ssl.client_trusted_certificate_file: trusted_certs.pem
 ```
 
-#### Using Let's encrypt
+##### Using Let's encrypt
 We are  going to show how to first add all the certificates and private key into PKCS#12 keystore, and then (optionally) converting it to JKS keystore. ReadonlyREST supports both formats.
 
 **⚠️IMPORTANT**: if you are using ReadonlyREST in version above 1.44.0 then you don't have to create a keystore. You are able to use PEM files directly using the description above. 
 
 This tutorial can be a useful example on how to use certificates from other providers. 
 
-##### 1. Create keys
+###### 1. Create keys
 ```bash
 ./letsencrypt-auto certonly --standalone -d DOMAIN.TLD -d DOMAIN_2.TLD --email EMAIL@EMAIL.TLD
 ```
 Now change to the directory (probably /etc/letsencrypt/live/DOMAIN.tld) where the certificates were created.
 
-##### 2. Create a PKCS12 keystore with the full chain and private key
+###### 2. Create a PKCS12 keystore with the full chain and private key
 ```bash
 openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out pkcs.p12 -name NAME
 ```
 
-##### 3. Convert PKCS12 to JKS Keystore (Optional)
+###### 3. Convert PKCS12 to JKS Keystore (Optional)
 The STORE_PASS is the password which was entered in step 2) as a password for the pkcs12 file.
 
 ```bash
