@@ -821,33 +821,9 @@ token_authentication:
 - `service-token` — validates against Elasticsearch service accounts (used by Fleet Server).
 - `api-key` — validates against Elasticsearch API keys (used by Fleet-enrolled agents).
 
-**Fleet example**
+For a complete Fleet setup — including the required `forbid` block for token/API-key management actions and the full set of Fleet index patterns — see the [Elastic Fleet with ReadonlyREST](details/fleet.md) guide.
 
-```yaml
-- name: "Fleet server"
-  type: allow
-  token_authentication:
-    type: "service-token"
-    username: "fleet"
-  indices: [".fleet-servers", ".fleet-agents", ".fleet-actions", ".fleet-policies", ".fleet-policies-leader", ".fleet-enrollment-api-keys"]
-
-- name: "Agents"
-  type: allow
-  token_authentication:
-    type: "api-key"
-    username: "fleet"
-  indices: [".apm-agent-configuration", "metrics-*", "traces-*", "logs-*"]
-```
-
-**Security note:** when using `service-token` or `api-key` authentication, it is strongly recommended to add a dedicated `forbid` block that blocks direct access to the Elasticsearch service account and API key management actions. Without this, authenticated clients could potentially create or revoke tokens themselves.
-
-```yaml
-- name: "Forbid access to service accounts and API keys"
-  type: forbid
-  actions:
-    - "cluster:admin/xpack/security/service_account/*"
-    - "cluster:admin/xpack/security/api_key/*"
-```
+For a complete walkthrough including credential flow, the `forbid` block rationale, and a runnable example, see the [Elastic Fleet guide](examples/fleet/README.md).
 
 [Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
 
