@@ -851,6 +851,21 @@ The groups rules use the user definitions from [the `users` section](#users-and-
 - after this step, we have an authorized user with information about the authorized groups to which the user belongs
 - then we check whether the authorized user groups are permitted in context of the rule
 
+{% hint style="info" %}
+**Groups rule aliases**: For backwards compatibility, the following YAML key aliases are recognized and treated identically to their canonical names:
+
+| Canonical Rule | Aliases |
+|---------------|---------|
+| `groups_any_of` | `groups`, `any_of`, `groups_or`, `roles` |
+| `groups_all_of` | `all_of`, `groups_and`, `roles_and` |
+| `groups_not_any_of` | `not_any_of` |
+| `groups_not_all_of` | `not_all_of` |
+
+Similarly, `headers_and` can be written as `headers`.
+
+These aliases apply only to **ACL rule keys inside access control blocks** — they are unrelated to the `groups` field in the [`users` section](#users-and-groups).
+{% endhint %}
+
 ##### `groups_any_of`
 
 The ACL block will match when the user belongs to any of the specified groups (boolean OR logic).
@@ -1143,6 +1158,8 @@ Used to delegate authentication to another server that supports HTTP Basic Auth.
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 #### `groups_provider_authorization`
+
+Also available as the alias `external_authorization`.
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
 
@@ -1827,9 +1844,9 @@ Match if **at least one** the specified HTTP headers `key:value` pairs is matche
 
 Match if **at least one** specified regular expression matches requested URI.
 
-#### `maxBodyLength`
+#### `max_body_length`
 
-`maxBodyLength: 0`
+`max_body_length: 0`
 
 Match requests having a request body length less or equal to an integer. Use `0` to match only requests without body.
 
@@ -1840,6 +1857,12 @@ Match requests having a request body length less or equal to an integer. Use `0`
 `api_keys: [123456, abcdefg]`
 
 A list of api keys expected in the header `X-Api-Key`
+
+#### `response_headers`
+
+`response_headers: ["X-Custom-Header:value", "X-Another:123"]`
+
+Add custom headers to the Elasticsearch HTTP response when this block matches. Useful for passing metadata (e.g. group names, routing hints) back to clients or proxies.
 
 #### `session_max_idle`
 
@@ -2126,6 +2149,23 @@ ldaps:
 ```
 
 And ReadonlyREST ES will load "S3cr3tP4ss" as `bind_password`.
+
+### Incompatible rule combinations
+
+Certain rules cannot be used together within a single ACL block. ReadonlyREST will report a validation error if any of these combinations are detected:
+
+| Rule A | Rule B | Reason |
+|--------|--------|--------|
+| `kibana_access` | `actions` | Kibana access internally manages action filtering |
+| `kibana_access` | `filter` | Kibana access conflicts with Document Level Security |
+| `kibana_access` | `fields` | Kibana access conflicts with Field Level Security |
+| `kibana_access` | `response_fields` | Kibana access conflicts with response field filtering |
+
+{% hint style="info" %}
+The composite `kibana` rule does **not** have these conflicts — it replaces the legacy separate rules (`kibana_access`, `kibana_index`, `kibana_hide_apps`, `kibana_template_index`) and handles these interactions internally.
+{% endhint %}
+
+Additionally, a block with an **authorization-only** rule (e.g. `ldap_authorization`, `jwt_authorization`) must also contain an **authentication** rule in the same block. A block cannot have more than one authentication rule.
 
 ### Dynamic variables
 
