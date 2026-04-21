@@ -347,55 +347,53 @@ Resolved a defect that prevented Snapshot and Restore functionality from working
 ### (2025-08-28) What's new in **ROR 1.66.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-7339">CVE-2025-7339</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-7783">CVE-2025-7783</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-54419">CVE-2025-54419</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-9288">CVE-2025-9288</a></summary>
-Fixed multiple critical security vulnerabilities in dependencies including header modification, HTTP parameter pollution, authentication bypass, and input validation flaws. These updates prevent potential security exploits in the Kibana plugin.
+This release patches four critical vulnerabilities in Kibana dependencies, including issues in the 'on-headers' package (response header manipulation), 'form-data' (HTTP Parameter Pollution), Node-SAML (SAML assertion manipulation), and 'sha.js' (input validation flaw). All dependencies have been updated to their secure versions to eliminate these risks.
 </details>
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2">Prevented visibility of hidden functions through Kibana UI search</a></summary>
-Addressed a security issue where hidden functions were unintentionally exposed through Kibana's UI search. This fix ensures functions marked as hidden remain properly concealed from user searches.
+Fixed a security issue where Kibana functions configured to be hidden from users were still discoverable via the Kibana UI search. This ensures access control rules are correctly enforced and restricted functions remain properly hidden.
 </details>
 <details>
 <summary><strong>🚨Security Fix</strong> (ES) Removed internal failure details from error responses to prevent unintended information disclosure</summary>
-Enhanced security by eliminating internal system details from error responses that could potentially expose sensitive information about the Elasticsearch cluster configuration.
+Enhanced security by stripping detailed internal error information from responses that could expose system implementation details. This prevents potential attackers from gathering intelligence about the cluster's internal state.
 </details>
-<details>
-<summary><strong>🚀New</strong> (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
-Added official support for the latest Kibana maintenance releases including versions 9.1.3, 9.1.2, 9.0.6, 8.19.3, and 8.18.6, ensuring compatibility with recent security patches.
-</details>
-<details>
-<summary><strong>🚀New</strong> (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support</summary>
-Extended compatibility to include Elasticsearch versions 9.1.3, 9.1.2, 9.0.6, 8.19.3, and 8.18.6, providing the latest security updates and performance improvements.
-</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support
 <details>
 <summary><strong>🧐Enhancement</strong> (ES) Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index</summary>
-Improved the login process by optimizing user metadata selection to prioritize authentication blocks associated with configured Kibana indices for more reliable user sessions.
+Improved the algorithm for selecting user metadata during authentication to prioritize access control blocks that have an explicitly defined Kibana index. This leads to more consistent and predictable user session behavior.
 </details>
 <details>
 <summary><strong>🧐Enhancement</strong> (ES) Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration</summary>
-Enhanced configuration handling for consent flags specified through environment variables, ensuring consistent application of security settings across deployments.
+Enhanced the reliability of configuration by improving how consent flags are processed when set via environment variables. This ensures consent settings are correctly applied across different deployment methods.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Resolved issue with index deletion in <strong>Index Management</strong> via Kibana UI</summary>
-Fixed a bug that prevented proper index deletion operations through Kibana's Index Management interface when ReadonlyREST security rules were active.
+Fixed a bug that prevented users from deleting indices through the Kibana Index Management interface, restoring full index lifecycle management capabilities.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Corrected document display in <strong>Discover</strong> when indices are defined in the user ACL block</summary>
-Addressed an issue where document visibility in Kibana's Discover tab was incorrectly handled for users with ACL-defined indices.
+Resolved an issue where documents were not displaying correctly in Kibana's Discover tab for users whose access control lists include index definitions, ensuring consistent data visibility.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed an error preventing <strong>Spaces</strong> from being deleted in Kibana <strong>9.1.0</strong></summary>
-Resolved a compatibility issue with Kibana 9.1.0 that was preventing administrators from deleting Spaces through the Kibana UI.
+Addressed a compatibility issue specific to Kibana 9.1.0 that blocked administrators from deleting Kibana Spaces, restoring full space management functionality.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Corrected handling of <code>readonlyrest_kbn.whitelistedPaths</code> in <code>kibana.yml</code> when <code>xpack.security.enabled: true</code></summary>
-Fixed configuration parsing for whitelisted paths when X-Pack security is enabled, ensuring proper path-based access controls in secured environments.
+Fixed a configuration parsing bug where path whitelisting settings were not being properly recognized when X-Pack security was enabled, ensuring consistent behavior.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Resolved startup issues for Kibana versions <strong>7.9.0 → 7.10.2</strong></summary>
-Addressed compatibility problems causing startup failures in older Kibana versions 7.9.0 through 7.10.2.
+Fixed compatibility problems causing startup failures for Kibana versions 7.9.0 through 7.10.2, ensuring stability for users on these older deployments.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed report generation when <code>xpack.security.enabled: true</code> and <code>xpack.encryptedSavedObjects.encryptionKey</code> is set in Kibana <strong>8.19.x</strong> and <strong>9.1.x</strong></summary>
-Resolved an issue with report generation in secured Kibana environments where encrypted saved objects configuration was interfering with report creation.
+Resolved an issue where report generation was failing in Kibana 8.19.x and 9.1.x when X-Pack security and encrypted saved objects were configured, restoring reporting functionality for secure deployments.
 </details>
 
 ### (2025-07-15) What's new in **ROR 1.65.1**
