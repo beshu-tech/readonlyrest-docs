@@ -401,19 +401,19 @@ Resolved an issue with report generation in secured Kibana environments where en
 ### (2025-07-15) What's new in **ROR 1.65.1**
 <details>
 <summary><strong>🚀New</strong> (KBN) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support</summary>
-Extended compatibility with Kibana versions 9.1.1 through 8.17.9, ensuring seamless integration and security.
+ReadonlyREST now supports the latest Kibana versions including 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, and 8.17.9. This ensures compatibility with recent Kibana releases and their security patches, allowing users to upgrade their Kibana instances while maintaining ReadonlyREST security features.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ES) 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support</summary>
-Added support for Elasticsearch versions 9.1.1 through 8.17.9, enabling ROR's security features across these releases.
+The plugin now supports Elasticsearch versions 9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, and 8.17.9. This update provides compatibility with the latest Elasticsearch releases, including security updates and performance improvements from Elastic.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ECK) 3.1.0 support</summary>
-Introduced compatibility with Elastic Cloud on Kubernetes (ECK) 3.1.0 for seamless deployment in Kubernetes environments.
+ReadonlyREST now supports Elastic Cloud on Kubernetes (ECK) version 3.1.0. This enables users running Elasticsearch on Kubernetes through ECK to leverage ReadonlyREST's security features in their containerized environments with the latest ECK release.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) Docker images now start correctly when <code>I_UNDERSTAND_AND_ACCEPT_ES_PATCHING</code> is set.</summary>
-Resolved an issue where Elasticsearch Docker images failed to start with the `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` variable enabled.
+Fixed an issue where Elasticsearch Docker images with ReadonlyREST would fail to start when the environment variable `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` was set. This variable is commonly used in Elasticsearch Docker deployments to acknowledge patching terms, and the fix ensures smooth container startup.
 </details>
 
 ### (2025-07-10) What's new in **ROR 1.65.0**
