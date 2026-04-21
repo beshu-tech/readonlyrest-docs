@@ -707,7 +707,7 @@ The following will happen:
 
 **Deep linking with JWT**
 
-Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the call on the fly, the JWT authentication can be used in conjunction with the `nextUrl` query parameter for sharing deep links inside Kibana apps.
+Because the identity is embedded in the link, and ReadonlyREST is able to authenticate the request on the fly, the JWT authentication can be used in conjunction with the `nextUrl` query parameter for sharing deep links inside Kibana apps.
 
 **Anatomy of a JWT deep link**
 
