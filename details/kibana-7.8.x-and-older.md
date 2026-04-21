@@ -387,7 +387,6 @@ Open up `conf/kibana.yml` and add the following:
 xpack.graph.enabled: false
 xpack.ml.enabled: false
 xpack.monitoring.enabled: true
-xpack.security.enabled: false # this is fundamental!
 xpack.watcher.enabled: false
 
 # Kibana server use ::KIBANA-SRV:: credentials

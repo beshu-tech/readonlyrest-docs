@@ -57,8 +57,6 @@ readonlyrest:
 **On the Kibana side**, we will now configure our Kibana plugin to speak with Azure AD. Open your `$KBN_HOME/config/kibana.yml`, it should look something like:
 
 ```yaml
-xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-
 elasticsearch.hosts: ["http://localhost:9200"] # <-- consider enabling "https" using the SSL feature in ReadonlyREST Free!
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
