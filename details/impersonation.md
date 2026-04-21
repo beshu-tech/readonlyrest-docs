@@ -36,23 +36,23 @@ When you call Elasticsearch directly or through ROR Kibana, ROR ACL is defined b
 
 ROR Kibana plugin provides a dedicated Test Settings UI. See our [Test Settings management guide](../examples/impersonation/test-settings-ui.md) for more information.
 
-
-
-But copying Main Settings as Test Settings is not enough. We also have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate other users). The list of allowed impersonators and users they can impersonate are defined in the `impersonation` section in ROR Settings:
+But copying Main Settings as Test Settings is not enough. We also have to instruct ROR which users can be considered as impersonators (the ones, who are allowed to impersonate other users):
+1. In the `access_control_rules` section in ROR Settings, there must be a rule that authenticates the impersonator user.
+2. The impersonator user must be defined in the `impersonation` section in ROR Settings
+3. The impersonator's credentials in `impersonation` section must match the credentials, that the impersonator uses to authenticate in Kibana.
 
 ```yaml
 readonlyrest:
-  
   access_control_rules:
-
-    [...]
+    - name: "Authenticate admin1"
+      auth_key: admin1:pass
+    - name: "Authenticate admin2"
+      ldap_authentication: "ldap1"
 
   impersonation:
-
     - impersonator: admin1      // Who can impersonate? (user name or pattern)
       users: ["*"]              // Who can be impersonated? (user names or patterns)
       auth_key: admin1:pass     // Authentication rule required to impersonate (any authentication rule can be used here)
-
     - impersonator: admin2
       users: ["dev2"]
       ldap_authentication: "ldap1"
