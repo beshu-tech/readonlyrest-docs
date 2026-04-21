@@ -219,19 +219,19 @@ Fixed a compatibility issue where ReadonlyREST's index resolution logic was not 
 ### (2025-11-13) What’s new in **ROR 1.67.2**
 <details>
 <summary><strong>🚀 New</strong> (KBN) 9.2.1, 9.1.7, 8.19.7 support</summary>
-ReadonlyREST now officially supports Kibana versions 9.2.1, 9.1.7, and 8.19.7. These maintenance releases include various bug fixes and stability improvements, ensuring compatibility with the latest Kibana security features and performance enhancements.
+ReadonlyREST now officially supports Kibana versions 9.2.1, 9.1.7, and 8.19.7. This ensures compatibility with the latest Kibana security patches and features, allowing users to upgrade their Kibana deployments while maintaining ReadonlyREST security functionality.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (ES) 9.2.1, 9.1.7, 8.19.7 support</summary>
-ReadonlyREST now officially supports Elasticsearch versions 9.2.1, 9.1.7, and 8.19.7. These releases include important bug fixes, security updates, and enhancements across various components including aggregations, authorization, and machine learning features.
+ReadonlyREST now officially supports Elasticsearch versions 9.2.1, 9.1.7, and 8.19.7. This update provides compatibility with the latest Elasticsearch security updates and performance improvements, ensuring seamless integration of ReadonlyREST security features with these Elasticsearch releases.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed SAML/OIDC provider support behind a reverse proxy when <code>server.rewriteBasePath: false</code> is set in kibana.yml</summary>
-This fix resolves an issue where SAML and OIDC authentication providers would fail when Kibana was deployed behind a reverse proxy with the `server.rewriteBasePath: false` configuration. The plugin now correctly handles authentication flows in this deployment scenario.
+This fix resolves an issue where SAML and OpenID Connect authentication providers would fail when Kibana is deployed behind a reverse proxy with `server.rewriteBasePath: false` configuration. The problem occurred because ReadonlyREST was incorrectly handling URL rewriting in this specific deployment scenario, preventing successful authentication through reverse proxy setups.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (ES) Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses</summary>
-ReadonlyREST now properly delegates specific internal exception handling to Elasticsearch's native error management system. This ensures that error responses maintain their original format and behavior, providing better compatibility with Elasticsearch's standard error handling mechanisms.
+This fix improves error handling by allowing Elasticsearch to process certain internal exceptions natively instead of ReadonlyREST intercepting them. This ensures that error responses maintain their original Elasticsearch format and behavior, providing better compatibility with client applications that expect specific error response structures from Elasticsearch.
 </details>
 
 ### (2025-11-03) What’s new in **ROR 1.67.1**
