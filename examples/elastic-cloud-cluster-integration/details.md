@@ -134,8 +134,6 @@ cluster.name: ror-cluster # the same value used in `instances.yml`
 node.name: ror-es01  # the same value used in `instances.yml`
 network.host: 0.0.0.0
 
-xpack.security.enabled: false
-
 transport.type: ror_ssl_internode
 readonlyrest: # we will put in in `elasticsearch.yml` because each node should have different certificate
   ssl_internode: 

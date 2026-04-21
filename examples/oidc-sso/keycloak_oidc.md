@@ -52,8 +52,6 @@ Then, configure the OpenID Connect (OIDC) client
 # More on how to enable SSL on the official documentation of Kibana
 server.ssl.enabled: false
 
-xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-
 elasticsearch:
   hosts: ["https://localhost:9200"] # <-- our Elasticsearch responds to https
   ssl.verificationMode: none
@@ -95,25 +93,12 @@ To provide clientSecret value, you need to open ror\_oidc client (or your custom
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our elasticsearch can be run with or without SSL. To make it available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)), so we modify the elasticsearch.yml
+Our elasticsearch can be run with or without SSL. To make it available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)).
 
-**append to elasticsearch.yml**
-
-```yaml
-xpack.security.enabled: false
-http.type: ssl_netty4 # <-- needed for ROR SSL
-```
-
-Write in **readonlyrest.yml**
+Then write in **readonlyrest.yml**
 
 ```yaml
 readonlyrest:
-
-    ssl:
-      enable: true
-      keystore_file: "keystore.jks"
-      keystore_pass: readonlyrest
-      key_pass: readonlyrest
 
     audit:
       enabled: true

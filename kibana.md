@@ -428,19 +428,7 @@ Now you can restore your settings to `readonlyrest.yml`, remove `readonlyrest.fo
 
 ### Example: multiuser ELK
 
-This configuration will work in PRO and Enterprise editions
-
-Make sure X-Pack is uninstalled or disabled from `elasticsearch.yml` (on the Elasticsearch side) and `kibana.yml` (on the Kibana side): This is how you disable X-pack modules:
-
-```yaml
-# For X-Pack users: you may only leave monitoring on. 
-# Don't add this if X-Pack is not installed at all, or Kibana won't start.
-xpack.monitoring.enabled: true
-xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-xpack.watcher.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-xpack.telemetry.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-```
-
+This configuration will work in PRO and Enterprise editions.
 This is a typical example of a configuration snippet to add at the end of your `readonlyrest.yml` (the settings file of the Elasticsearch plugin), to support ReadonlyREST PRO.
 
 ```yaml
@@ -783,13 +771,6 @@ Activate authentication for the Kibana server: let the Kibana daemon connect to 
 Open up `conf/kibana.yml` and add the following:
 
 ```yaml
-# This is kibana.yml, but copy the exact same in elasticsearch.yml if you have to use some X-pack features.
-xpack.graph.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-xpack.ml.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-xpack.monitoring.enabled: true
-xpack.security.enabled: false # this is fundamental! Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-xpack.watcher.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-
 # Kibana server use the ::KIBANA-SRV:: basic auth credentials
 elasticsearch.username: "kibana"
 elasticsearch.password: "kibana"
