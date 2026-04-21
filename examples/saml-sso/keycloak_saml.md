@@ -67,8 +67,6 @@ server.ssl.enabled: true
 server.ssl.key: /home/xx/selfsigned_ssl_localhost/localhost.key
 server.ssl.certificate: /home/xx/selfsigned_ssl_localhost/localhost.crt
 
-xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-
 server.basePath: /k  # <-- optional, remember to change it in KC
 elasticsearch:
   hosts: ["https://localhost:9200"] # <-- our Elasticsearch responds to https
@@ -104,7 +102,7 @@ Don't forget setting up SAML requires some changes to security settings in `read
 
 ### Setup Elasticsearch with ReadonlyREST
 
-Our Elasticsearch needs to be available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)). Configure SSL accoring to this guide.
+Our Elasticsearch needs to be available on HTTPS (more detailed info in our [documentation](../../elasticsearch.md#encryption)). Configure SSL according to this guide.
 
 Then write in **readonlyrest.yml**
 

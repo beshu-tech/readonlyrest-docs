@@ -292,7 +292,7 @@ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar verify
 jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar --help
 ```
 
-#### 6 Restart Elasticsearch.
+#### 6. Restart Elasticsearch
 
 ```bash
 bin/elasticsearch
@@ -503,7 +503,7 @@ Similar to `ssl` for HTTP, the keystore should be stored in the same directory a
 
 ###### Internode communication with XPack nodes
 
-It is possible to set up internode SSL between ROR nodes (with `xpack.security.enabled: false`) and XPack nodes. It works only for ES above 6.7.0.
+It is possible to set up internode SSL between ROR nodes (with `xpack.security.enabled: false`) and XPack nodes. It works only for ES 6.7.0 or newer.
 
 To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates.
 

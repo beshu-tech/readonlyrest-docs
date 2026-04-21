@@ -52,8 +52,6 @@ Then, configure the OpenID Connect (OIDC) client
 # More on how to enable SSL on the official documentation of Kibana
 server.ssl.enabled: false
 
-xpack.security.enabled: false # Skip this setting in the Kibana configuration for version 8.x, as it has been removed.
-
 elasticsearch:
   hosts: ["https://localhost:9200"] # <-- our Elasticsearch responds to https
   ssl.verificationMode: none
