@@ -237,38 +237,39 @@ ReadonlyREST now properly delegates specific internal exception handling to Elas
 ### (2025-11-03) What’s new in **ROR 1.67.1**
 <details>
 <summary><strong>🚀 New</strong> (KBN) 9.2.0, 9.1.6, 8.19.6 support</summary>
-Adds official support for the latest Kibana versions 9.2.0, 9.1.6, and 8.19.6, ensuring compatibility with the newest Kibana releases and their respective features.
+Ensures compatibility and full security functionality with the latest Kibana releases, allowing safe upgrades to versions 9.2.0, 9.1.6, and 8.19.6.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (ES) 9.2.0, 9.1.6, 8.19.6 support</summary>
-Provides official support for Elasticsearch versions 9.2.0, 9.1.6, and 8.19.6, maintaining compatibility with the latest Elasticsearch releases and their security features.
+Provides official support for Elasticsearch versions 9.2.0, 9.1.6, and 8.19.6, ensuring the plugin's security features work correctly across the latest stack releases.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (ES) Allow using the <code>actions</code> rule with the <code>kibana</code> rule in the same block when <code>kibana.access: unrestricted</code></summary>
-Enables combining the actions rule with the kibana rule in the same security block when kibana access is set to unrestricted, providing more flexible security configuration options.
+Removes a previous restriction, granting administrators greater configuration flexibility to combine fine-grained action controls with Kibana access rules in unrestricted blocks.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed JWT handling for wrong license edition</summary>
-Resolved an issue where JWT authentication was not working correctly when the wrong license edition was detected, ensuring proper JWT functionality across different license types.
+Resolves an authentication failure where JWT validation incorrectly failed based on license type, ensuring reliable JWT authentication regardless of the Elastic license edition.
 </details>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x</summary>
+Eliminates confusing and unnecessary 'Forbidden' pop-up notifications in Kibana's Discover and Dashboard apps when access is correctly denied by ROR rules, improving the user experience.
+</details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2">Resolved report download failure on Kibana 9.1.x</a></summary>
-Fixed a critical issue where users were unable to download reports from Kibana 9.1.x, restoring report generation and download functionality.
+Fixes a critical bug that blocked users from downloading reports (PDF, PNG, CSV) from Kibana 9.1.x dashboards and visualizations, restoring essential reporting functionality.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed timeout when saving Security settings</summary>
-Addressed a timeout issue that occurred when saving Security settings in Kibana, ensuring security configuration changes can be saved reliably.
+Addresses a configuration issue where attempts to save Security settings in Kibana would hang and eventually timeout, preventing administrators from applying critical security changes.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Restored visibility of reports when multiple data streams exist for a reporting index</summary>
-Fixed an issue where reports were not visible when multiple data streams existed for a reporting index, ensuring all generated reports are properly displayed.
+Corrects an issue where generated reports became invisible in the Kibana UI if the reporting index was backed by multiple data streams, ensuring all reports are accessible.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed invisible reports for non-tenancy users on Kibana 9.1.x</summary>
-Resolved a problem where reports were not visible to non-tenancy users in Kibana 9.1.x, ensuring proper report visibility for all user types.
+Resolves a bug specific to Kibana 9.1.x where users not utilizing multi-tenancy features could not see their generated reports, effectively breaking the reporting interface for them.
 </details>
 
 ### (2025-10-14) What’s new in **ROR 1.67.0**
