@@ -3,7 +3,7 @@
 ### (2026-04-10) What’s new in **ROR 1.69.1**
 <details>
 <summary><strong>🚨 Security Fix</strong> (KBN) Fixed vulnerability <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2950">CVE-2026-2950</a></summary>
-This security fix addresses a prototype pollution vulnerability in the Lodash library (versions 4.17.23 and earlier) affecting the `_.unset` and `_.omit` functions. The vulnerability allowed attackers to delete properties from JavaScript prototypes using array-wrapped path segments, bypassing previous fixes. The issue is resolved by upgrading to the patched Lodash version.
+This security fix addresses a prototype pollution vulnerability in the Lodash library (versions 4.17.23 and earlier) affecting the `_.unset` and `_.omit` functions. The vulnerability allowed attackers to delete properties from JavaScript prototypes using array-wrapped path segments, bypassing previous fixes. Upgrading to the patched version 4.18.0 resolves this issue.
 </details>
 
 
@@ -13,23 +13,23 @@ This security fix addresses a prototype pollution vulnerability in the Lodash li
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (ES) 9.3.3, 9.2.8, 8.19.14 support
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed <code>jsonwebtoken-ancient</code> being stripped from Kibana builds earlier than 7.11.0</summary>
-This fix resolves an issue where the `jsonwebtoken-ancient` dependency was incorrectly removed from Kibana builds for versions earlier than 7.11.0. The dependency is essential for JWT token validation in older Kibana versions, and its removal could cause authentication failures in legacy deployments.
+This fix addresses an issue where the `jsonwebtoken-ancient` dependency was incorrectly removed from Kibana builds prior to version 7.11.0. The dependency is essential for JWT token validation in older Kibana versions, and its removal could cause authentication failures in legacy deployments.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Filtered out Fleet-based apps from search results when Management is hidden in Kibana 8.x and 9.x</summary>
-This fix addresses a UI issue where Fleet-based applications (like Fleet itself and related management apps) were appearing in search results even when the Management section was hidden via ACL rules. Now these apps are properly filtered out when Management access is restricted, maintaining consistent security policies across the Kibana interface.
+When the Kibana Management section is hidden via ReadonlyREST configuration, Fleet-based applications were still appearing in search results. This fix ensures that Fleet apps are properly filtered out from search results in Kibana 8.x and 9.x, maintaining consistent access control behavior.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed <code>/pkp/session-probe</code> requests being blocked by browsers that enforce async-only calls</summary>
-This fix resolves compatibility issues with modern browsers that enforce asynchronous-only calls for certain security-sensitive operations. The `/pkp/session-probe` endpoint, used for session validation in Public Key Pinning implementations, was being blocked by browsers that require async execution patterns, potentially causing session validation failures.
+Some modern browsers enforce asynchronous-only calls for certain security features, which was causing `/pkp/session-probe` requests to be blocked. This fix ensures session probe functionality works correctly across all browsers by making the requests compatible with browser security policies.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed a problem with redirecting to the login form after a 401 error following a session probe check</summary>
-This fix corrects an issue where users were not being properly redirected to the login form after receiving a 401 Unauthorized error following a session probe validation. The problem occurred when session validation failed, but the subsequent redirect to the authentication interface wasn't triggered correctly, leaving users stuck on error pages.
+There was an issue where users would not be properly redirected to the login form after receiving a 401 error following a session probe check. This fix ensures that authentication flow works correctly, redirecting users to the login page when their session expires or becomes invalid.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (ES) Fixed a missing Kibana access policy in the metadata response when the matched ACL block has no <code>kibana</code> section configured</summary>
-This fix addresses an issue where the Elasticsearch metadata response was missing Kibana access policy information when the matched ACL block didn't include a `kibana` configuration section. The metadata response now properly handles cases where Kibana-specific rules aren't defined, ensuring consistent API behavior and preventing potential client-side errors.
+When an ACL block in Elasticsearch configuration didn't include a `kibana` section, the metadata response was missing the Kibana access policy information. This fix ensures that the metadata response always includes proper Kibana access policy information, even when the ACL block doesn't explicitly configure Kibana settings.
 </details>
 
 ### (2026-04-02) What’s new in **ROR 1.69.0**
