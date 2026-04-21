@@ -485,15 +485,15 @@ The `ror-tools` utility now maintains file ownership and permissions during patc
 ### (2025-05-17) What's new in **ROR 1.64.2**
 <details>
 <summary><strong>🚀New</strong> (KBN) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support</summary>
-This update extends compatibility with Kibana versions 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29, ensuring seamless integration and security for users running these versions.
+ReadonlyREST now supports the latest Kibana versions including 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29. This ensures compatibility with recent Kibana releases and their security updates.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ES) 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support</summary>
-This release adds support for Elasticsearch versions 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29, enabling users to leverage ROR's security features across these Elasticsearch distributions.
+ReadonlyREST now supports the latest Elasticsearch versions including 9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, and 7.17.29. This provides compatibility with recent Elasticsearch releases and their security patches.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/ror-1-64-0-for-es9-0-1-windows-setup/2778">Fixed an issue with Elasticsearch patching process on Windows operating systems</a></summary>
-Resolved a bug in the Elasticsearch patching process specific to Windows systems, ensuring smoother updates and installations for users on this platform.
+Resolved a Windows-specific error that occurred during the Elasticsearch patching process with ReadonlyREST. The issue was successfully reproduced by the support team and fixed to ensure smooth installation on Windows environments.
 </details>
 
 ### (2025-05-13) What's new in **ROR 1.64.1**
