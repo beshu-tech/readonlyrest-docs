@@ -419,67 +419,63 @@ Resolved an issue where Elasticsearch Docker images failed to start with the `I_
 ### (2025-07-10) What's new in **ROR 1.65.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-5889">CVE-2025-5889</a></summary>
-This security fix addresses a vulnerability (CVE-2025-5889) in Kibana, ensuring enhanced protection against potential exploits. Users are advised to update immediately to mitigate risks.
+This security fix addresses a vulnerability in the `juliangruber brace-expansion` npm package used by Kibana. The issue involves inefficient regular expression complexity in the `expand` function that could potentially lead to denial-of-service attacks. The fix upgrades to patched versions (1.1.12, 2.0.2, 3.0.1, or 4.0.1) to resolve this security concern.
 </details>
 <details>
 <summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/cve-2024-29857">CVE-2024-29857</a> (when FIPS SSL is used)</summary>
-This update resolves a security issue (CVE-2024-29857) in Elasticsearch when FIPS SSL is enabled, preventing potential vulnerabilities in secure communication. Upgrading is recommended for users relying on FIPS-compliant SSL.
+This security fix addresses a vulnerability in Bouncy Castle cryptographic libraries affecting Elasticsearch when FIPS SSL is used. The issue allows maliciously crafted Elliptic Curve certificates with specific `F2m` parameters to cause excessive CPU consumption, potentially leading to denial-of-service attacks. The fix updates to secure versions of the affected libraries.
 </details>
 <details>
 <summary><strong>🚀New</strong> (KBN)  Added support for configuring <a href="https://www.elastic.co/docs/troubleshoot/kibana/using-kibana-server-logs">JSON log format</a> in <code>kibana.yml</code>.</summary>
-Users can now configure Kibana logs in JSON format via `kibana.yml`, simplifying log parsing and integration with monitoring tools. This feature enhances log management and troubleshooting capabilities.
+This enhancement allows administrators to configure Kibana to output logs in ECS JSON format directly from `kibana.yml`. JSON format provides structured logging with metadata like `trace.id` for better log correlation and troubleshooting, enabling more effective debugging and performance monitoring of Kibana operations.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#configuration">Added support for a new output type: <code>data_stream</code> in audit logging</a>.</summary>
-Elasticsearch audit logs now support `data_stream` as an output type, enabling more efficient log storage and retrieval. This addition aligns with modern logging practices and improves scalability.
+ReadonlyREST now supports sending audit logs to Elasticsearch data streams in addition to traditional indices. Data streams provide better lifecycle management and scalability for time-series data like audit logs, allowing for more efficient log storage and management through Kibana's Index Lifecycle Management features.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ES) Included Elasticsearch node name and cluster name in the audit reports.</summary>
-Audit reports now include the Elasticsearch node name and cluster name, providing better context for log analysis and troubleshooting. This enhancement aids in identifying the source of events more accurately.
+Audit logs now include the Elasticsearch node name and cluster name in each audit entry, providing better context for distributed environments. This enhancement helps administrators identify which specific node and cluster generated each audit event, improving troubleshooting and monitoring in multi-node Elasticsearch deployments.
 </details>
 <details>
 <summary><strong>🧐Enhancement</strong> (KBN) Logged detailed messages when the CSRF token has expired.</summary>
-Kibana now logs detailed messages when a CSRF token expires, helping administrators diagnose and resolve authentication issues more efficiently. This improves debugging and user experience.
+This improvement provides more informative logging when CSRF (Cross-Site Request Forgery) tokens expire during user sessions. Instead of generic authentication errors, administrators now receive detailed messages specifically indicating CSRF token expiration, making it easier to diagnose and troubleshoot session-related issues in Kibana.
 </details>
-<details>
-<summary><strong>🧐Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#user-info-source-methods">Added <code>id_token</code> as a valid option for <code>userInfoSource</code></a>.</summary>
-The `id_token` is now a valid option for `userInfoSource` in Kibana, offering more flexibility in user authentication workflows. This update supports diverse identity provider configurations.
-</details>
-<details>
-<summary><strong>🧐Enhancement</strong> (ES) Improved handling of JVM properties related to ROR settings.</summary>
-This enhancement optimizes the handling of JVM properties tied to ROR settings, ensuring smoother performance and configuration management. It reduces potential conflicts and improves stability.
-</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) [Added `id_token` as a valid option for `userInfoSource`](https://docs.readonlyrest.com/kibana#user-info-source-methods).
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (ES) Improved handling of JVM properties related to ROR settings.
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed OIDC logout redirection issue by switching <code>redirect_uri</code> to <code>id_token_hint</code> and using <code>post_logout_redirect_uri</code>.</summary>
-The OIDC logout process now correctly redirects users by replacing `redirect_uri` with `id_token_hint` and utilizing `post_logout_redirect_uri`. This resolves logout flow issues and enhances security.
+This fix resolves logout redirection problems in OIDC (OpenID Connect) authentication flows. The implementation now properly uses `id_token_hint` and `post_logout_redirect_uri` parameters instead of `redirect_uri`, ensuring correct logout behavior and proper redirection back to the application after users log out from identity providers.
 </details>
-<details>
-<summary><strong>🐞Fix</strong> (KBN) The ReadonlyREST Kibana plugin now accepts custom appender names defined in <code>kibana.yml</code>.</summary>
-The plugin now respects custom appender names specified in `kibana.yml`, ensuring compatibility with user-defined logging configurations. This fix addresses previous limitations in log management.
-</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) The ReadonlyREST Kibana plugin now accepts custom appender names defined in `kibana.yml`.
 <details>
 <summary><strong>🐞Fix</strong> (KBN) When "Remember Group After Logout" is enabled, groups without access are correctly ignored during login.</summary>
-Groups without access are now properly ignored during login when "Remember Group After Logout" is enabled, preventing unauthorized access attempts. This improves security and user experience.
+This fix addresses an issue where, with "Remember Group After Logout" enabled, users could encounter problems if they previously belonged to groups they no longer have access to. The system now properly ignores inaccessible groups during login, preventing authentication failures and ensuring smooth user access.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed issue where the Kibana index template was not applied for Kibana versions ≥ 8.8.0.</summary>
-The Kibana index template is now correctly applied for versions 8.8.0 and above, resolving compatibility issues. This ensures consistent behavior across supported Kibana releases.
+This fix resolves a compatibility issue with Kibana versions 8.8.0 and above where the ReadonlyREST index template was not being properly applied. The correction ensures that necessary index mappings and settings are correctly configured for Kibana's internal indices, maintaining proper functionality across all supported Kibana versions.
 </details>
-<details>
-<summary><strong>🐞Fix</strong> (KBN) Resolved a bug with <code>readonlyrest_kbn.resetKibanaIndexToTemplate: true</code> for Kibana 7.x.</summary>
-A bug affecting the `resetKibanaIndexToTemplate` setting in Kibana 7.x has been fixed, restoring expected functionality. This ensures proper index management for older Kibana versions.
-</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Resolved a bug with `readonlyrest_kbn.resetKibanaIndexToTemplate: true` for Kibana 7.x.
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed an issue where a custom session index name was not respected after Kibana restart.</summary>
-Custom session index names are now preserved after Kibana restarts, addressing a previous inconsistency. This fix enhances reliability in session management.
+This fix addresses a problem where custom session index names configured in ReadonlyREST settings were not being properly maintained after Kibana restarts. The correction ensures that custom session index configurations persist across Kibana restarts, maintaining consistent session management and user authentication state.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) Fixed an issue preventing snapshots from being restored when no indices were specified.</summary>
-Snapshots can now be restored even when no indices are explicitly specified, resolving a previous limitation. This improves flexibility in backup and recovery operations.
+This fix resolves a problem where Elasticsearch snapshot restoration would fail when no specific indices were specified in the restore request. The correction ensures that snapshot restoration operations work correctly whether specific indices are named or when restoring all indices from a snapshot, improving data recovery reliability.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) File ownership and permissions are now preserved during <code>ror-tools</code> patch and unpatch operations.</summary>
-The `ror-tools` utility now maintains file ownership and permissions during patch and unpatch operations, preventing unintended changes. This ensures system integrity and security.
+This fix ensures that file ownership and permissions are maintained when using `ror-tools` for patching and unpatching operations. Previously, these operations could inadvertently change file permissions, potentially causing security or functionality issues. The correction preserves original file attributes throughout the patching process.
 </details>
 
 ### (2025-05-17) What's new in **ROR 1.64.2**
