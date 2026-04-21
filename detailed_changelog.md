@@ -497,9 +497,10 @@ Resolved a bug in the Elasticsearch patching process specific to Windows systems
 </details>
 
 ### (2025-05-13) What's new in **ROR 1.64.1**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) Correct patching verification in ROR Docker image entrypoint
+<details>
+<summary><strong>🐞Fix</strong> (ES) Correct patching verification in ROR Docker image entrypoint</summary>
+This fix addresses an issue in the Docker image entrypoint script where patching verification was not functioning correctly. The entrypoint script, which handles the application of security patches and configuration updates, now properly validates that patches are applied successfully before proceeding with container startup, ensuring reliable deployment of ROR-secured Elasticsearch instances.
+</details>
 
 ### (2025-05-11) What's new in **ROR 1.64.0**
 <details>
