@@ -2896,7 +2896,7 @@ readonlyrest:
 ```
 
 
-#### ACL Troubleshooting
+### ACL Troubleshooting
 
 The main issues seen in support cases:
 
@@ -2904,7 +2904,7 @@ The main issues seen in support cases:
 * Users don't know how to read the `HIS` field in the logs, which instead is crucial because it contains a trace of the evaluation of rules and blocks.
 * LDAP configuration: LDAP is tricky to configure in any system. Configure ES root logger to `DEBUG` editing `$ES_PATH_CONF/config/log4j2.properties` to see a trace of the LDAP messages.
 
-#### Interpreting logs
+#### Interpreting ACL logs
 
 ReadonlyREST prints a log line for each incoming request \(this can be selectively avoided on ACL block level using the `verbosity` rule\).
 
@@ -2996,6 +2996,63 @@ Each entry has three fields:
 * `block_name` — the name of the ACL block
 * `matched` — `true` if the block permitted the request, `false` if it was rejected
 * `forbidden_cause` — the denial reason in the same format as `HIS`, or `null` if the block matched
+
+
+#### Enabling debug logs
+
+You can configure Elasticsearch logging by editing the `$ES_PATH_CONF/log4j2.properties` file.
+See [the official Elasticsearch logging documentation](https://www.elastic.co/docs/deploy-manage/deploy/self-managed/configure-elasticsearch#logging) for details. 
+
+##### Global debug mode
+
+To enable debug logging globally, set the root logger level to `debug`:
+
+```
+rootLogger.level = debug
+```
+
+##### Only ReadonlyREST debug mode
+
+To enable debug logging only for ReadonlyREST, append the following to `log4j2.properties`:
+
+```
+logger.ror.name=tech.beshu.ror
+logger.ror.level=debug
+```
+
+##### Trick: log requests to different files
+
+Use the following `log4j2.properties` snippet to write ReadonlyREST ACL/request logs to a dedicated rolling file:
+
+```
+# ReadonlyREST ACL/request log -> separate rolling file
+
+appender.readonlyrest_acl_rolling.type = RollingFile
+appender.readonlyrest_acl_rolling.name = readonlyrest_acl_rolling
+appender.readonlyrest_acl_rolling.fileName = ${sys:es.logs}_readonlyrest_acl.log
+appender.readonlyrest_acl_rolling.filePattern = ${sys:es.logs}_readonlyrest_acl-%d{yyyy-MM-dd}.log.gz
+
+appender.readonlyrest_acl_rolling.layout.type = PatternLayout
+appender.readonlyrest_acl_rolling.layout.pattern = [%d{ISO8601}][%-5p][%-25c] %marker%.-10000m%n
+
+appender.readonlyrest_acl_rolling.policies.type = Policies
+appender.readonlyrest_acl_rolling.policies.time.type = TimeBasedTriggeringPolicy
+appender.readonlyrest_acl_rolling.policies.time.interval = 1
+appender.readonlyrest_acl_rolling.policies.time.modulate = true
+
+logger.readonlyrest_acl.name = tech.beshu.ror
+logger.readonlyrest_acl.level = info
+logger.readonlyrest_acl.appenderRef.readonlyrest_acl_rolling.ref = readonlyrest_acl_rolling
+logger.readonlyrest_acl.additivity = false
+
+# Optional: exclude noisy service users
+logger.readonlyrest_acl.filter.regex.type = RegexFilter
+logger.readonlyrest_acl.filter.regex.regex = .*USR:(kibana|beat|logstash),.*
+logger.readonlyrest_acl.filter.regex.onMatch = DENY
+logger.readonlyrest_acl.filter.regex.onMismatch = ACCEPT
+```
+
+This configuration keeps ReadonlyREST ACL/request entries out of the main Elasticsearch log and writes them to a separate daily-rotated file instead. ReadonlyREST logs one line per incoming request, and the tech.beshu.ror logger is the logger to target for this purpose. 
 
 ## Licensing
 ### GPLv3 License

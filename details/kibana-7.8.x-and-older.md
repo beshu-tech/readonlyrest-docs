@@ -149,7 +149,7 @@ Restart Kibana.
 
 ### Using ROR with a reverse proxy
 
-ROR - just like Kibana itself - is meant to be used either with a proxy or without one, but not both simultaneously. If you decide to set the `server.basePath` property in `kibana.yml` be sure to access RoR via a proxy, as it will not work properly when accessed directly.
+ROR - just like Kibana itself - is meant to be used either with a proxy or without one, but not both simultaneously. If you decide to set the `server.basePath` property in `kibana.yml` be sure to access ROR via a proxy, as it will not work properly when accessed directly.
 
 ## Configuration
 

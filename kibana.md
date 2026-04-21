@@ -97,11 +97,10 @@ docker-compose up
 It will run Kibana container with ReadonlyREST connected with the single ES node (with ReadonlyREST too). 
 You can access Kibana by calling `http://localhost:5601` in the browser (use `admin:admin` credentials to log in).
 
-##### Customizing ROR Kibana settings
+#### Customizing ROR Kibana settings
 
 All config options are described in the [configuration section](#configuration) below. In general, you will use the `kibana.yml` file
 to configure ROR Kibana settings. But in the case, of the ROR Docker image, you can pass any ROR settings as ENV - just remember to replace `.` (dot) with `__` (double underscore). E.g. to configure `readonlyrest_kbn.store_sessions_in_index: true` pass `readonlyrest_kbn__store_sessions_in_index=true` ENV. 
-
 
 ### Installation
 
@@ -201,7 +200,6 @@ Define `I_UNDERSTAND_AND_ACCEPT_KBN_PATCHING=yes` env variable and run patching 
 #### Unpatching Kibana
 
 If you are using Kibana 7.9.x or newer, you need **an extra pre-uninstallation step**. This will restore the core Kibana files to the original state.
-
 
 ##### Before Kibana 8.15.0
 
@@ -340,12 +338,12 @@ For example, after a tenant logs in, before the Kibana session is started, or wh
 
 Now Kibana will have migrated the tenancy index, like it did with the main `.kibana` index.
 
-#### Using RoR with a reverse proxy
+#### Using ROR with a reverse proxy
 
-RoR - just like Kibana itself - is meant to be used either with a proxy or without one.
+ROR - just like Kibana itself - is meant to be used either with a proxy or without one.
 
-* If you decide to set the `server.basePath` property in `kibana.yml` and set `server.rewriteBasePath` into a `true`, RoR will be accessed directly and via a reverse proxy,
-* If you decide to rewrite the base path manually by your reverse proxy and set the `server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access RoR via a proxy, as it will not work properly when accessed directly.
+* If you decide to set the `server.basePath` property in `kibana.yml` and set `server.rewriteBasePath` into a `true`, ROR will be accessed directly and via a reverse proxy,
+* If you decide to rewrite the base path manually by your reverse proxy and set the `server.rewriteBasePath` property in `kibana.yml` into a `false`, be sure to access ROR via a proxy, as it will not work properly when accessed directly.
 
 
 ## Configuration
@@ -1620,7 +1618,7 @@ Visit the [Custom middleware](examples/custom-middleware/) to know more.
 
 This feature will work in all ReadonlyREST editions.
 
-The audit log feature is widely described in [📖docs for the Elasticsearch plugin](elasticsearch.md#audit). The Kibana plugin has a predefined dashboard representing collected audit data.
+The Elasticsearch plugin audit feature is widely described in [📖docs for the Elasticsearch plugin](elasticsearch.md#audit). The Kibana plugin has a predefined dashboard representing collected audit data.
 
 ### Loading visualization
 
