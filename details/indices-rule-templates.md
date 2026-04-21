@@ -24,11 +24,6 @@
 
 </details>
 
-\
-
-
-
-
 ## Index templates
 
 An `indices` rule takes into consideration index patterns and aliases which are a part of a template definition. We should consider four types of template related requests:
@@ -735,8 +730,6 @@ We can see that he is able to see all component templates, but `ctemp2` doesn't 
 
 </details>
 
-
-
 ## Troubleshooting
 
-To figure out why the template is not returned or/and cannot be altered, you should [enable a DEBUG log level](../elasticsearch.md#Troubleshooting) and check your logs. ROR logs each step of template request handling in the `indices` rule, so detailed description should explain the given template is not allowed.
+To figure out why the template is not returned or/and cannot be altered, you should [enable a DEBUG log level](../elasticsearch.md#acl-troubleshooting) and check your logs. ROR logs each step of template request handling in the `indices` rule, so detailed description should explain the given template is not allowed.
