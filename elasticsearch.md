@@ -653,7 +653,7 @@ Default: `false`.
 
 ### Request handling during ES startup
 
-Each incoming request to the Elasticsearch node passes to the installed plugin. During Elasticsearch node startup, the plugin rejects incoming requests until it starts. The plugin rejects such requests with `403` forbidden responses by default.
+Each incoming request to the Elasticsearch node passes to the installed plugin. During Elasticsearch node startup, the plugin rejects incoming requests until it is fully initialized. The plugin rejects such requests with `403` forbidden responses by default.
 
 To change this behavior, add the following to `elasticsearch.yml`:
 
