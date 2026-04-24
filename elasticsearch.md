@@ -406,6 +406,16 @@ Creating a dedicated, lightweight ES node where to install ReadonlyREST:
 
 
 ## Elasticsearch Configuration
+
+ReadonlyREST uses two distinct kinds of settings:
+
+- **ACL settings** — the access control rules defined in `readonlyrest.yml` (or stored in an Elasticsearch index). Every node in the cluster must share the same ACL settings. Subscribers of the [PRO](https://readonlyrest.com/pro) or [Enterprise](https://readonlyrest.com/enterprise) Kibana plugin can also reload ACL settings at runtime through the GUI (see [Cluster-wide Settings VS readonlyrest.yml](kibana.md#cluster-wide-settings-vs-readonlyrestyml)) or via the [ReadonlyREST API](details/readonlyrest-api.md).
+- **Node settings** — settings placed in `elasticsearch.yml` that are specific to each Elasticsearch node. They control how ROR behaves during startup, where to look for ACL settings, and how SSL is configured. These settings are read once at node startup and are not shared between nodes.
+
+The sections below describe the node settings that go into `elasticsearch.yml`.
+
+> **Note:** All ROR node settings described below can also be provided as JVM system properties (e.g. `-Dreadonlyrest.settings.index_name=.my-ror-index`), using the same dot-separated key that appears in the YAML.
+
 ### Encryption
 
 SSL/TLS encryption protects data in transit between clients and Elasticsearch. ReadonlyREST supports two independent encryption layers, each covering a different communication channel:
@@ -600,21 +610,65 @@ If you happen to get a `java.io.IOException: failed to decrypt safe contents ent
 (Credits for the original JKS tutorial to [Maximilian Boehm](https://maximilian-boehm.com))
 
 
-### Request handling during ES startup
+### ACL settings source configuration
 
-Each incoming request to the Elasticsearch node passes to the installed plugin. During Elasticsearch node startup, the plugin rejects incoming requests until it starts. The plugin rejects such requests with the `403` forbidden responses by default.
-To overwrite this behavior, append to  **elasticsearch.yml**
+By default, ROR looks for ACL settings in a `readonlyrest.yml` file located next to `elasticsearch.yml`, and also watches a dedicated Elasticsearch index for settings updates. The following options let you customize this behavior.
+
+#### Settings file and index
 
 ```yaml
-readonlyrest.not_started_response_code: 503
-readonlyrest.failed_to_start_response_code: 503
+readonlyrest:
+  settings:
+    index_name: .my-ror-index              # default: .readonlyrest
+    file_path: /custom/readonlyrest.yml    # default: <ES config dir>/readonlyrest.yml
+    max_size: 10 MB                        # default: 3 MB — maximum allowed size of ACL settings loaded from the index
 ```
 
-`readonlyrest.not_started_response_code` - HTTP code returned when the plugin does not start yet. Possible values are `403`(default) and `503`.
+#### Index loading strategy
 
-`readonlyrest.failed_to_start_response_code` - HTTP code returned when the plugin failed to start (e.g. by malformed ACL). Possible values are `403`(default) and `503`.
+When loading from index (the default), ROR polls the index periodically and retries on failure during startup. Both the poll interval and the startup retry behavior can be tuned:
+
+```yaml
+readonlyrest:
+  load_from_index:
+    poll_interval: 5s                      # how often to check the index for ACL settings changes (default: 5s, set to 0s to disable polling)
+    initial_loading_retry_strategy:
+      initial_delay: 5s                    # delay before the first attempt to load from the index at startup (default: 5s)
+      attempts_interval: 5s               # interval between retry attempts if the index is not yet available (default: 5s)
+      attempts_count: 5                   # maximum number of retry attempts before falling back to file (default: 5)
+```
+
+Setting `poll_interval` to `0s` disables periodic polling — ROR will load ACL settings from the index once at startup and will not check for changes until the node is restarted.
+
+#### Force loading from file
+
+When set to `true`, ROR will only load ACL settings from the file and will never attempt to read from the Elasticsearch index. This is typically used during recovery when in-index settings have become corrupted — see [Malformed in-index settings](kibana.md#malformed-in-index-settings).
+
+```yaml
+readonlyrest:
+  force_load_from_file: true
+```
+
+Default: `false`.
+
+### Request handling during ES startup
+
+Each incoming request to the Elasticsearch node passes to the installed plugin. During Elasticsearch node startup, the plugin rejects incoming requests until it is fully initialized. The plugin rejects such requests with `403` forbidden responses by default.
+
+To change this behavior, add the following to `elasticsearch.yml`:
+
+```yaml
+readonlyrest:
+  not_started_response_code: 503
+  failed_to_start_response_code: 503
+```
+
+`not_started_response_code` — HTTP code returned while the plugin has not yet finished starting. Allowed values: `403` (default), `503`.
+
+`failed_to_start_response_code` — HTTP code returned when the plugin failed to start (e.g. due to a malformed ACL). Allowed values: `403` (default), `503`.
 
 ## ReadonlyREST ACL
+
 ### ACL basics
 
 The core of this plugin is an ACL \(access control list\). A logic structure very similar to the one found in firewalls. The ACL is part of the plugin configuration, and it's written in YAML.
