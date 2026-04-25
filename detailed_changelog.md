@@ -35,89 +35,100 @@ When an ACL block in Elasticsearch configuration didn't include a `kibana` secti
 ### (2026-04-02) What’s new in **ROR 1.69.0**
 <details>
 <summary><strong>🚨 Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-24001">CVE-2026-24001</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-69873">CVE-2025-69873</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2391">CVE-2026-2391</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-25639">CVE-2026-25639</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27904">CVE-2026-27904</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-3449">CVE-2026-3449</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-15599">CVE-2025-15599</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-33750">CVE-2026-33750</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-4867">CVE-2026-4867</a>, <a href="https://www.tenable.com/cve/CVE-2026-34601">CVE-2026-34601</a>, <a href="https://nvd.nist.gov/vuln/detail/cve-2022-31129">CVE-2022-31129</a></summary>
-This release patches multiple security vulnerabilities in JavaScript dependencies, including ReDoS issues in ajv, minimatch, and path-to-regexp, DoS vulnerabilities in jsdiff, qs, and axios, and XSS in DOMPurify. These fixes prevent potential denial-of-service attacks, memory exhaustion, and security bypasses affecting Kibana and Elasticsearch components.
+This release patches 11 CVEs in Kibana's bundled JavaScript dependencies, addressing denial-of-service (ReDoS/infinite loop), XSS, and crash vulnerabilities in libraries such as jsdiff, ajv, qs, axios, minimatch, @tootallnate/once, DOMPurify, brace-expansion, path-to-regexp, xmldom, and moment. All CVEs are fixed by upgrading the affected dependencies to their patched versions.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (KBN/ES) <a href="https://docs.readonlyrest.com/elasticsearch/fleet">Added Fleet support via native API key and service account token authentication (ES 7.14+)</a></summary>
-ReadonlyREST now integrates with Elastic Fleet by supporting dynamic, runtime-generated credentials that Fleet uses. This includes service tokens for Fleet Server and API keys for Elastic Agents, using token_authentication rules that delegate validation to Elasticsearch for automatic credential rotation.
+ReadonlyREST now supports Elastic Fleet by validating the two dynamic credential types Fleet creates: service tokens (for Fleet Server) and API keys (for Elastic Agents). The `token_authentication` rule delegates validation to Elasticsearch, so no token values need to be stored in the ROR configuration, and credential rotation requires no config changes.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (KBN/ES) The ReadonlyREST Audit Dashboard available in the Kibana plugin now supports audit events written to data streams</summary>
-The Audit Dashboard can now properly display and analyze audit events stored in Elasticsearch data streams. This provides better compatibility with modern Elasticsearch data management practices while maintaining full visibility.
+The ReadonlyREST Audit Dashboard can now visualize audit events stored in data streams, in addition to the previously supported regular indices. This ensures compatibility with modern Elasticsearch deployments that use data streams for time-series audit data.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (KBN/ES) The ReadonlyREST Audit Dashboard provided by the Kibana plugin can now be used with the ECS (Elastic Common Schema) audit index</summary>
-Audit Dashboard now supports ECS-formatted audit indices, allowing organizations using Elastic Common Schema standards to visualize and analyze their audit logs for better integration with the Elastic Stack.
+The Audit Dashboard now supports the Elastic Common Schema (ECS) format for audit indices, allowing organizations that standardize on ECS to use the dashboard without requiring a custom audit log serializer.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (KBN) <a href="https://forum.readonlyrest.com/t/multi-tenancy-and-link-sharing/1978/3">Added support for opening different tenancies in separate tabs</a></summary>
-Users can now open multiple tenancies in separate browser tabs simultaneously, improving workflow efficiency for administrators managing multiple tenants without needing to switch contexts in a single tab.
+Users can now open multiple Kibana tenancies in separate browser tabs simultaneously, making it easier to work across different tenants without repeatedly switching contexts.
 </details>
 <details>
 <summary><strong>🚀 New</strong> (KBN) <a href="https://forum.readonlyrest.com/t/multi-tenancy-and-link-sharing/1978/3">Added support for sharing links to Kibana visualizations for the selected tenancy</a></summary>
-Users can now generate and share direct links to Kibana visualizations that preserve the selected tenancy context, enabling easier collaboration and reporting with correct tenant permissions applied.
+Visualization links now respect the active tenancy context, enabling users to share direct links to Kibana dashboards and visualizations that automatically open in the correct tenancy for the recipient.
 </details>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (KBN) Added support for rolling upgrades when upgrading the ROR Elasticsearch plugin and ROR Kibana plugin in a cluster
+<details>
+<summary><strong>🚀 New</strong> (KBN) Added support for rolling upgrades when upgrading the ROR Elasticsearch plugin and ROR Kibana plugin in a cluster</summary>
+Rolling upgrades are now supported for both the ROR Elasticsearch and Kibana plugins, allowing cluster administrators to upgrade nodes one at a time without taking the entire cluster offline.
+</details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (KBN) Removed the need for manual username input in the impersonation mechanism</summary>
-The impersonation feature has been streamlined by eliminating the requirement for manual username entry, simplifying the user experience and reducing potential errors for administrators.
+The impersonation feature no longer requires administrators to manually type the target username, streamlining the workflow and reducing the chance of typos when testing user permissions.
 </details>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐 Enhancement** (KBN) Fixed an error in Kibana caused by empty data streams in Kibana 8.18.0+
+<details>
+<summary><strong>🧐 Enhancement</strong> (KBN) Fixed an error in Kibana caused by empty data streams in Kibana 8.18.0+</summary>
+Resolved an error that occurred in Kibana 8.18.0+ when empty data streams were present, ensuring the Kibana UI remains stable and functional regardless of data stream state.
+</details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (KBN) Added a fallback for an empty <code>indices</code> field in the Audit Dashboard</summary>
-The Audit Dashboard now gracefully handles audit events with empty or missing indices fields, preventing visualization errors and ensuring consistent functionality even with incomplete audit logs.
+The Audit Dashboard now gracefully handles audit events where the `indices` field is empty, preventing visualization errors and ensuring the "Who uses what indices?" view remains functional.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/develop/examples/custom-middleware">Updated custom metadata examples to use the new method. <code>getIdentitySession</code> and <code>getAuthorizationHeaders</code> are now deprecated in favor of <code>getUserRequestIdentity</code>, <code>getIdentitySessionHeaders</code>, and <code>getWhitelistedHeaders</code></a></summary>
-Custom middleware development has been updated with new, more descriptive API methods, replacing deprecated functions for better clarity and functionality in custom implementations.
+The custom middleware API has been updated with new, more clearly named methods. `getIdentitySession` and `getAuthorizationHeaders` are deprecated; users should migrate to `getUserRequestIdentity`, `getIdentitySessionHeaders`, and `getWhitelistedHeaders` for accessing request identity and header information.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch#token_authentication"><code>token_authentication</code> rule extended with <code>api_key</code> and <code>service_token</code> types</a></summary>
-The token_authentication rule now supports explicit validation of API keys and service tokens as separate authentication types, providing more granular control and better integration with Elasticsearch's native mechanisms.
+The `token_authentication` ACL rule now supports `api_key` and `service_token` as token types, enabling fine-grained access control for Elastic Fleet and other service-to-service authentication scenarios.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/distinguish-between-wrong-credentials-and-missing-permissions/2914">Audit log entries and ACL history now include a human-readable reason when a request is denied, making access-control troubleshooting significantly easier</a></summary>
-When access requests are denied, audit logs now include clear, human-readable explanations of why the denial occurred, significantly improving troubleshooting by helping distinguish between authentication failures and missing permissions.
+Denied requests now include a clear, human-readable reason in both audit log entries and ACL history, making it much easier to distinguish between authentication failures (wrong credentials) and authorization failures (missing permissions) during troubleshooting.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (ES) Added the new <code>matched_block_names</code> field to audit entries created by audit log serializers other than ECS and custom serializers. The <code>reason</code> field is now deprecated.</summary>
-Audit log entries now include a `matched_block_names` field that lists which ACL blocks were matched during request processing, replacing the deprecated `reason` field for more detailed audit trail analysis.
+A new `matched_block_names` field has been added to audit entries for non-ECS and non-custom serializers, listing which ACL blocks matched the request. The `reason` field is now deprecated in favor of the more descriptive human-readable reason and `matched_block_names` fields.
 </details>
 <details>
 <summary><strong>🧐 Enhancement</strong> (ES) Users defined with LDAP, external, and <code>ror_kbn</code> authentication are no longer treated as local users by the impersonation mechanism</summary>
-The impersonation feature now correctly distinguishes between local users and users authenticated via external systems, preventing potential security issues and ensuring proper authentication flow for different identity providers.
+The impersonation mechanism now correctly distinguishes between local users and users authenticated via LDAP, external providers, or `ror_kbn`. This prevents impersonation from incorrectly applying local-user-only logic to externally managed users.
 </details>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐 Enhancement** (ES) The ROR Kibana plugin can no longer be used when the `prompt_for_basic_auth: true` setting is configured
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Resolved a memory leak related to direct calls via the Kibana API
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) No longer shows the "Data Set Quality" and "Index management" applications to users with RO or RO_strict access
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Fixed JWT token authorization when using embedded Kibana
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Fixed the styling of the page-not-found screen for Kibana 9.x
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (KBN) Correctly displays the "Who uses what indices?" Audit Dashboard visualization when indices are not specified in the audit events
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (ES) [Improved stability when sending audit logs to another cluster, so temporary remote cluster outages no longer affect the main cluster](https://forum.readonlyrest.com/t/sending-logs-to-another-cluster/2925)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (ES) Fixed Search Profiler being inactive in Kibana 8.18.0+
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞 Fix** (ES) `beshultd/elasticsearch-readonlyrest` images for ES 7.16.x, 7.17.0–7.17.6, and 8.0.x–8.4.x now ship with a patched JDK, replacing bundled JDK 17.0.0–17.0.4 / JDK 18, which crashes on cgroup v2 hosts due to JDK-8287073
+<details>
+<summary><strong>🧐 Enhancement</strong> (ES) The ROR Kibana plugin can no longer be used when the <code>prompt_for_basic_auth: true</code> setting is configured</summary>
+When `prompt_for_basic_auth: true` is set in the Elasticsearch plugin configuration, the ROR Kibana plugin will now refuse to operate, preventing an incompatible and insecure configuration where Kibana's session management conflicts with the browser's basic auth prompt.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Resolved a memory leak related to direct calls via the Kibana API</summary>
+Fixed a memory leak that occurred when making direct API calls to Kibana, improving long-term stability and preventing gradual memory exhaustion in production environments.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) No longer shows the "Data Set Quality" and "Index management" applications to users with RO or RO_strict access</summary>
+The "Data Set Quality" and "Index Management" Kibana applications are now properly hidden from users with read-only (RO) or read-only strict (RO_strict) access, preventing confusion and ensuring the access control model is consistently enforced.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed JWT token authorization when using embedded Kibana</summary>
+Resolved an issue where JWT token authorization failed when Kibana was embedded within another application, ensuring seamless SSO integration in embedded Kibana scenarios.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Fixed the styling of the page-not-found screen for Kibana 9.x</summary>
+The page-not-found (404) screen now renders with correct styling in Kibana 9.x, eliminating visual glitches and maintaining a polished user experience.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (KBN) Correctly displays the "Who uses what indices?" Audit Dashboard visualization when indices are not specified in the audit events</summary>
+The "Who uses what indices?" visualization in the Audit Dashboard now renders correctly even when audit events lack index information, preventing blank or broken visualizations.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/sending-logs-to-another-cluster/2925">Improved stability when sending audit logs to another cluster, so temporary remote cluster outages no longer affect the main cluster</a></summary>
+When audit logs are forwarded to a remote Elasticsearch cluster, temporary outages of that remote cluster no longer impact the stability or performance of the main cluster. The audit log shipping is now resilient to connection interruptions.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) Fixed Search Profiler being inactive in Kibana 8.18.0+</summary>
+The Search Profiler tool in Kibana 8.18.0+ was not functioning correctly with ROR; this has been fixed, restoring the ability to profile and analyze search query performance.
+</details>
+<details>
+<summary><strong>🐞 Fix</strong> (ES) <code>beshultd/elasticsearch-readonlyrest</code> images for ES 7.16.x, 7.17.0–7.17.6, and 8.0.x–8.4.x now ship with a patched JDK, replacing bundled JDK 17.0.0–17.0.4 / JDK 18, which crashes on cgroup v2 hosts due to JDK-8287073</summary>
+Docker images for the affected Elasticsearch versions now include a patched JDK, resolving crashes on cgroup v2 hosts (common in modern Linux distributions and container runtimes) caused by the JDK-8287073 bug in JDK 17.0.0–17.0.4 and JDK 18.
+</details>
 
 ### (2026-01-07) What’s new in **ROR 1.68.0**
 <details>
