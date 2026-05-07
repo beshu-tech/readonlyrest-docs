@@ -3,39 +3,36 @@
 ### (2026-04-10) What’s new in **ROR 1.69.1**
 <details>
 <summary><strong>🚨 Security Fix</strong> (KBN) Fixed vulnerability <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2950">CVE-2026-2950</a></summary>
-🚨 Security Fix (KBN) Fixed vulnerability [CVE-2026-2950](https://nvd.nist.gov/vuln/detail/CVE-2026-2950) — A prototype pollution vulnerability in Lodash (versions ≤4.17.23) affecting the `_.unset` and `_.omit` functions. Attackers could bypass previous fixes by using array-wrapped path segments to delete properties from built-in prototypes. This fix addresses the issue by upgrading or patching the affected Lodash dependency in Kibana.
+Fixed a prototype pollution vulnerability (CVE-2026-2950) in the Lodash library used by Kibana. The issue allowed attackers to bypass a previous fix (CVE-2025-13465) by using array-wrapped path segments in `_.unset` and `_.omit` functions, potentially deleting properties from built-in prototypes. Patched by upgrading Lodash to version 4.18.0.
 </details>
-<details>
-<summary><strong>🚀 New</strong> (KBN) 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support</summary>
-🚀 New (KBN) Added support for Kibana versions 9.3.4, 9.3.3, 9.2.8, 8.19.15, and 8.19.14. Users running these Elastic Stack versions can now install and use ReadonlyREST without compatibility issues.
-</details>
-<details>
-<summary><strong>🚀 New</strong> (ES) 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support</summary>
-🚀 New (ES) Added support for Elasticsearch versions 9.3.4, 9.3.3, 9.2.8, 8.19.15, and 8.19.14. The plugin is now fully compatible with these latest Elasticsearch releases.
-</details>
-<details>
-<summary><strong>🚀 New</strong> (ECK) 3.4.0 support</summary>
-🚀 New (ECK) Added support for Elastic Cloud on Kubernetes (ECK) operator version 3.4.0. Users deploying Elasticsearch via ECK can now use ReadonlyREST with this operator version.
-</details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (KBN) 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (ES) 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀 New** (ECK) 3.4.0 support
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed <code>jsonwebtoken-ancient</code> being stripped from Kibana builds earlier than 7.11.0</summary>
-🐞 Fix (KBN) Fixed an issue where the `jsonwebtoken-ancient` dependency was incorrectly removed during Kibana's build optimization process on versions earlier than 7.11.0. This ensures JWT-based authentication continues to work properly on older Kibana deployments.
+Resolved an issue where the `jsonwebtoken-ancient` library was incorrectly removed from Kibana builds prior to version 7.11.0, which could cause authentication failures in older Kibana deployments.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Filtered out Fleet-based apps from search results when Management is hidden in Kibana 8.x and 9.x</summary>
-🐞 Fix (KBN) Filtered out Fleet-based applications from Kibana's global search results when the Management section is hidden via security rules. This prevents users from seeing Fleet-related entries they shouldn't have access to, improving both security and UX consistency.
+Fixed a Kibana UI issue where Fleet-based applications (e.g., Fleet, APM, Endpoint) would still appear in search results even when the Management section was hidden by ROR security rules. These apps are now properly filtered out.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed <code>/pkp/session-probe</code> requests being blocked by browsers that enforce async-only calls</summary>
-🐞 Fix (KBN) Fixed an issue where session probe requests to the `/pkp/session-probe` endpoint were being blocked by browsers enforcing async-only call restrictions. This resolves login flow disruptions in modern browsers with strict security policies.
+Addressed a browser compatibility issue where session probe requests to `/pkp/session-probe` were blocked by browsers enforcing async-only fetch calls. This fix ensures the session probe works correctly across all modern browsers.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (KBN) Fixed a problem with redirecting to the login form after a 401 error following a session probe check</summary>
-🐞 Fix (KBN) Fixed a redirect loop issue where users were not properly redirected to the login form after receiving a 401 error following a session probe check. This ensures a smooth re-authentication flow when sessions expire.
+Resolved a redirect loop issue where users were not properly redirected to the login form after receiving a 401 error during the session probe check, improving the authentication flow experience.
 </details>
 <details>
 <summary><strong>🐞 Fix</strong> (ES) Fixed a missing Kibana access policy in the metadata response when the matched ACL block has no <code>kibana</code> section configured</summary>
-🐞 Fix (ES) Fixed a bug where the Elasticsearch metadata response was missing the Kibana access policy when the matched ACL rule block did not contain an explicit `kibana` configuration section. This ensures consistent and correct access policy information is returned to Kibana.
+Fixed an issue where the Elasticsearch metadata response was missing the Kibana access policy when the matched ACL rule block did not contain a `kibana` section. This ensures consistent metadata responses regardless of ACL configuration.
 </details>
 
 ### (2026-04-02) What’s new in **ROR 1.69.0**
