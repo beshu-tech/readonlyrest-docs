@@ -1,0 +1,27 @@
+version: "1.35.1"
+release_date: "2021-10-17"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409) & [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)"
+  - type: new
+    components: [kbn]
+    text: "Support Kibana 7.15.1"
+  - type: new
+    components: [es]
+    text: "New Support for 7.15.2"
+  - type: enhancement
+    components: [kbn]
+    text: "Support \"server.ssl.supportedProtocols\" settings"
+  - type: enhancement
+    components: [kbn]
+    text: "Support \"server.ssl.cipherSuites\""
+  - type: enhancement
+    components: [kbn]
+    text: "Always honor SSL cipher order"
+  - type: fix
+    components: [kbn]
+    text: "Don'thide \"Add/Remove field as column\" in Discover app for RO users"
+  - type: fix
+    components: [kbn]
+    text: "More alerting fixes (only for main tenancy)"

@@ -1,0 +1,42 @@
+version: "1.44.0"
+release_date: "2022-10-09"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2022-25857](https://nvd.nist.gov/vuln/detail/CVE-2022-25857)"
+  - type: new
+    components: [kbn]
+    text: "8.5.2, 8.5.1, 8.5.0, 7.17.7 support"
+  - type: new
+    components: [es]
+    text: "8.5.2, 8.5.1, 8.5.0, 7.17.7 support"
+  - type: new
+    components: [kbn]
+    text: "**plugin packages are now [universal](https://docs.readonlyrest.com/universal-builds)**"
+  - type: new
+    components: [kbn]
+    text: "**Manage your activation keys through the [customer portal](https://readonlyrest.com/customer)**"
+  - type: new
+    components: [es]
+    text: "Added support for certificates in PEM format"
+  - type: enhancement
+    components: [kbn]
+    text: "SAML groups list duplication made header size exceed limits"
+  - type: enhancement
+    components: [kbn]
+    text: "kibana_access: admin has now privileges to manage a Kibana cluster"
+  - type: enhancement
+    components: [es]
+    text: "added distributed and persistent Test Settings & Auth Mocks configuration for the Impersonation Feature"
+  - type: enhancement
+    components: [es]
+    text: "handling high load when LDAP rules are used"
+  - type: enhancement
+    components: [es]
+    text: "`client_authentication` settings in internode SSL configuration"
+  - type: enhancement
+    components: [es]
+    text: "`acl:available_groups` dynamic variable can be used in a single value context"
+  - type: fix
+    components: [es]
+    text: "SNI handling (internode SSL)"

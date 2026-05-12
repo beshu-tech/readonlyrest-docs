@@ -1,0 +1,24 @@
+version: "1.37.0"
+release_date: "2021-12-14"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2021-43797](https://nvd.nist.gov/vuln/detail/CVE-2021-43797)"
+  - type: new
+    components: [es]
+    text: "New Support for 7.16.3, 7.16.2, 6.8.23, 6.8.22"
+  - type: new
+    components: [kbn]
+    text: "New Support for 7.16.3, 7.16.2, 7.16.1, 7.16.10, 6.8.23, 6.8.22, 6.8.21"
+  - type: enhancement
+    components: [es]
+    text: "fields rule handling in the context of x-Pack SQL requests"
+  - type: fix
+    components: [es]
+    text: "filter rule handling in the context of x-Pack SQL requests"
+  - type: fix
+    components: [kbn]
+    text: "POST / bulk cause an 400 error in devtools console"
+  - type: fix
+    components: [kbn]
+    text: "More robust Kibana patcher + better logs messages"

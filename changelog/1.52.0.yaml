@@ -1,0 +1,36 @@
+version: "1.52.0"
+release_date: "2023-10-09"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2023-4586](https://access.redhat.com/security/cve/cve-2023-4586)"
+  - type: new
+    components: [kbn]
+    text: "8.10.4, 8.10.3, 7.17.15, 7.17.14 support"
+  - type: new
+    components: [es]
+    text: "8.10.4, 8.10.3, 7.17.15, 7.17.14 support"
+  - type: new
+    components: [es]
+    text: "[New `token_authentication` rule](https://docs.readonlyrest.com/elasticsearch#token_authentication)"
+  - type: enhancement
+    components: [kbn]
+    text: "Permanently hide Kibana|ES features that are impossible to support"
+  - type: enhancement
+    components: [kbn]
+    text: "[License expiration reminder](https://forum.readonlyrest.com/t/license-expiration-reminder/2417)"
+  - type: enhancement
+    components: [kbn]
+    text: "Make `kibana.index` setting from kibana.yml an invalid property for an Enterprise user"
+  - type: fix
+    components: [kbn]
+    text: "Issue with not adding `elasticsearch.customHeaders` setting from kibana.yml to ROR requests"
+  - type: fix
+    components: [kbn]
+    text: "Logout after opening Stack management Upgrading assistant"
+  - type: fix
+    components: [kbn]
+    text: "Problem with logging in of two users in two tabs when two Kibana instances are used"
+  - type: fix
+    components: [kbn]
+    text: "Problem with logging in when multi-tenancy is enabled and the `indices` rule is defined in the ROR settings"

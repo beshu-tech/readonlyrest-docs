@@ -1,0 +1,48 @@
+version: "1.64.0"
+release_date: "2025-05-11"
+entries:
+  - type: security
+    components: [kbn]
+    text: "[CVE-2024-53382](https://nvd.nist.gov/vuln/detail/CVE-2024-53382), [CVE-2025-27789](https://nvd.nist.gov/vuln/detail/CVE-2025-27789), [CVE-2025-29774](https://www.cve.org/CVERecord?id=CVE-2025-29774)"
+  - type: security
+    components: [es]
+    text: "[CVE-2023-3894](https://nvd.nist.gov/vuln/detail/CVE-2023-3894), [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193)"
+  - type: warning
+    components: [es]
+    text: "Acknowledgement needs to be accepted before the Elasticsearch patching process. For scripts, you can [set the flag](https://docs.readonlyrest.com/elasticsearch#id-3.-patch-elasticsearch) to automate the process."
+  - type: new
+    components: [kbn]
+    text: "Added an endpoint to retrieve all user tenancies via the ReadonlyREST API. See the [ReadonlyREST API Documentation](https://portal.readonlyrest.com/docs/swagger/master#/User's%20tenants/get_api_ror_user_tenants) for usage details."
+  - type: new
+    components: [kbn]
+    text: "Introduced support for passing `x-ror-tenancy-id` in direct Kibana requests. See the [ReadonlyREST API Documentation](https://portal.readonlyrest.com/docs/swagger/master#/Example%20ReadonlyREST%20headers%20usage%20with%20Kibana%20API/get_api__) for details."
+  - type: new
+    components: [kbn]
+    text: "Introduced support for passing `x-ror-impersonating` in direct Kibana requests. See the [ReadonlyREST API Documentation](https://portal.readonlyrest.com/docs/swagger/master#/Example%20ReadonlyREST%20headers%20usage%20with%20Kibana%20API/get_api__) for details."
+  - type: enhancement
+    components: [kbn]
+    text: "Retains the currently selected group information after user logout. This setting is user-configurable and disabled by default."
+  - type: enhancement
+    components: [kbn]
+    text: "Displays [detailed \"reason\" messages from the ROR Elasticsearch](https://docs.readonlyrest.com/elasticsearch#unauthorized-response-configuration) response in the login form instead of a generic \"Wrong credentials\" message."
+  - type: enhancement
+    components: [kbn]
+    text: "Added support for passing additional [SAML](https://docs.readonlyrest.com/kibana#additional-parameters) and [OIDC](https://docs.readonlyrest.com/kibana#additional-parameters) config parameters via `kibana.yml`."
+  - type: enhancement
+    components: [kbn]
+    text: "Adjusted ReadonlyREST plugin UI styles for compatibility with Kibana 9.x."
+  - type: enhancement
+    components: [es]
+    text: "Username duplication check in the \"users\" section of ROR ES settings can [be optionally disabled](https://docs.readonlyrest.com/elasticsearch#users_section_duplicate_usernames_detection)."
+  - type: enhancement
+    components: [es]
+    text: "Added support for [`readonlyrest.global_settings`](https://docs.readonlyrest.com/elasticsearch#global-settings) in Elasticsearch ROR settings."
+  - type: fix
+    components: [kbn]
+    text: "Resolved an unhandled error when `logging.root.level` is set to `all` in `kibana.yml`."
+  - type: fix
+    components: [kbn]
+    text: "Fixed an issue with retrieving username and group information in AFDS OIDC."
+  - type: fix
+    components: [kbn]
+    text: "Fixed an issue with passing `x-ror-correlation-id` to the ReadonlyREST API request."

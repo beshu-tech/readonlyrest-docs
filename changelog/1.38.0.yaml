@@ -1,0 +1,18 @@
+version: "1.38.0"
+release_date: "2022-01-17"
+entries:
+  - type: new
+    components: [es]
+    text: "New Support for 7.17.0, 7.17.1"
+  - type: new
+    components: [kbn]
+    text: "New Support for 7.17.0"
+  - type: new
+    components: [es]
+    text: "[Configuration for custom audit cluster](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.38.x/elasticsearch.md#custom-audit-cluster)"
+  - type: enhancement
+    components: [es]
+    text: "Separate \"audit\" section for all audit settings"
+  - type: fix
+    components: [kbn]
+    text: "Editor rendering issue with kibana basePath enabled"

@@ -1,0 +1,12 @@
+version: "1.45.1"
+release_date: "2022-12-05"
+entries:
+  - type: new
+    components: [kbn]
+    text: "8.5.3, 7.17.8 support"
+  - type: new
+    components: [es]
+    text: "8.5.3, 7.17.8 support"
+  - type: fix
+    components: [kbn]
+    text: "ROR KBN patching script"

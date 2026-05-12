@@ -1,0 +1,22 @@
+version: "1.42.0"
+release_date: "2022-07-25"
+entries:
+  - type: new
+    components: [es, kbn]
+    components_raw: "KBN|ES"
+    text: "8.3.3, 8.3.2, 8.3.1, 8.3.0, 7.15.5 support"
+  - type: enhancement
+    components: [kbn]
+    text: "Search box in tenancy switcher (when #tenancies > 5)"
+  - type: enhancement
+    components: [es]
+    text: "added configuration warnings in the Impersonation Feature"
+  - type: fix
+    components: [kbn]
+    text: "Logout didn't delete the SAML session on the IdP"
+  - type: fix
+    components: [kbn]
+    text: "5xx errors from Elasticsearch break Kibana users' session unrecoverably"
+  - type: fix
+    components: [es]
+    text: "ROR node cooperation with X-pack nodes"

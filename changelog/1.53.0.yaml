@@ -1,0 +1,36 @@
+version: "1.53.0"
+release_date: "2023-11-20"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2023-4586](https://nvd.nist.gov/vuln/detail/CVE-2023-4586), [CVE-2023-5072](https://nvd.nist.gov/vuln/detail/CVE-2023-5072)"
+  - type: new
+    components: [kbn]
+    text: "8.11.3, 8.11.2, 8.11.1, 8.11.0, 7.17.16 support"
+  - type: new
+    components: [es]
+    text: "8.11.3, 8.11.2, 8.11.1, 8.11.0, 7.17.16 support"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide Activate license endpoint to the ReadonlyREST API"
+  - type: enhancement
+    components: [es]
+    text: "[when the `kibana` rule and the `indices` rule are defined in the same block](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#index), there is no need to explicitly allow kibana-related indices"
+  - type: fix
+    components: [kbn]
+    text: "problem with reports generation when `kibana.index` in kibana.yml is used"
+  - type: fix
+    components: [kbn]
+    text: "crash loop during license service initialization"
+  - type: fix
+    components: [kbn]
+    text: "problem with logging in in KBN 7.17.13 (and above) and 8.10.4 (and above) when deployed using ECK"
+  - type: fix
+    components: [kbn]
+    text: "[problem with multi-tenancy and ECK](https://forum.readonlyrest.com/t/multi-tanancy-issue/2427)"
+  - type: fix
+    components: [kbn]
+    text: "problem with forbidden `/_create/config` response on Login to the Kibana"
+  - type: fix
+    components: [es]
+    text: "[patching fix, when a non-default ES path is used (e.g. on K8s)](https://forum.readonlyrest.com/t/getting-java-lang-illegalargumentexception-when-initializing-ror-in-es-8-10-4/2441)"

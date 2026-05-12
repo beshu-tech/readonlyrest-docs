@@ -1,0 +1,15 @@
+version: "1.65.1"
+release_date: "2025-07-15"
+entries:
+  - type: new
+    components: [kbn]
+    text: "9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support"
+  - type: new
+    components: [es]
+    text: "9.1.1, 9.1.0, 9.0.5, 9.0.4, 8.19.2, 8.19.1, 8.19.0, 8.18.5, 8.18.4, 8.17.10, 8.17.9 support"
+  - type: new
+    components: [eck]
+    text: "3.1.0 support"
+  - type: fix
+    components: [es]
+    text: "Docker images now start correctly when `I_UNDERSTAND_AND_ACCEPT_ES_PATCHING` is set."

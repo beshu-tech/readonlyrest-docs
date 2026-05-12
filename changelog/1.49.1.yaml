@@ -1,0 +1,27 @@
+version: "1.49.1"
+release_date: "2023-06-27"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2023-2976](https://nvd.nist.gov/vuln/detail/CVE-2023-2976)"
+  - type: security
+    components: [es]
+    text: "[CVE-2023-34462](https://github.com/advisories/GHSA-6mjq-h674-j845)"
+  - type: new
+    components: [kbn]
+    text: "8.8.2, 8.8.1, 8.8.0, 7.17.11 support"
+  - type: new
+    components: [es]
+    text: "8.8.2, 7.17.11 support"
+  - type: new
+    components: [es]
+    text: "[LDAP nested groups support](https://docs.readonlyrest.com/elasticsearch#ldap-connector)"
+  - type: enhancement
+    components: [kbn]
+    text: "[Allow setting default tenancy via `/login?defaultGroup` query param. To be used with \"Custom Middleware\" feature for reordering available tenancies in the ROR menu](https://docs.readonlyrest.com/examples/custom-middleware/reordering-available-tenancies)"
+  - type: fix
+    components: [es]
+    text: "[Fix for ES warnings in logs about custom action names (ROR internal actions)](https://forum.readonlyrest.com/t/invalid-action-name-cluster-ror-audit-event-put/2186)"
+  - type: fix
+    components: [es]
+    text: "[kibana access `rw` and `admin` should allow to manage component templates](https://forum.readonlyrest.com/t/forbidden-for-creating-component-templates/2372)"

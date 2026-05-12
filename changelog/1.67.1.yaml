@@ -1,0 +1,30 @@
+version: "1.67.1"
+release_date: "2025-11-03"
+entries:
+  - type: new
+    components: [kbn]
+    text: "9.2.0, 9.1.6, 8.19.6 support"
+  - type: new
+    components: [es]
+    text: "9.2.0, 9.1.6, 8.19.6 support"
+  - type: enhancement
+    components: [es]
+    text: "Allow using the `actions` rule with the `kibana` rule in the same block when `kibana.access: unrestricted`"
+  - type: fix
+    components: [kbn]
+    text: "Fixed JWT handling for wrong license edition"
+  - type: fix
+    components: [kbn]
+    text: "Suppressed “Forbidden” toast in Discover/Dashboard on Kibana 8.x–9.x"
+  - type: fix
+    components: [kbn]
+    text: "[Resolved report download failure on Kibana 9.1.x](https://forum.readonlyrest.com/t/unable-to-download-reports-from-kibana/2859/2)"
+  - type: fix
+    components: [kbn]
+    text: "Fixed timeout when saving Security settings"
+  - type: fix
+    components: [kbn]
+    text: "Restored visibility of reports when multiple data streams exist for a reporting index"
+  - type: fix
+    components: [kbn]
+    text: "Fixed invisible reports for non-tenancy users on Kibana 9.1.x"

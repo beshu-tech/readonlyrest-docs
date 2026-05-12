@@ -1,0 +1,52 @@
+version: "1.40.0"
+release_date: "2022-05-24"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647) & [CVE-2022-24823](https://nvd.nist.gov/vuln/detail/CVE-2022-24823) & [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) &  [CVE-2020-13956](https://nvd.nist.gov/vuln/detail/CVE-2020-13956) & [CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518)"
+  - type: security
+    components: [kbn]
+    text: "\"Security\" app not entirely hidden in 8.2.x"
+  - type: new
+    components: [es]
+    text: "New Support for 8.2.3, 8.2.2, 8.2.1, 7.17.4"
+  - type: new
+    components: [kbn]
+    text: "New Support for 8.2.2 8.2.1, 7.17.4"
+  - type: new
+    components: [es, kbn]
+    components_raw: "ES & KBN"
+    text: "[The Impersonation feature](https://docs.readonlyrest.com/kibana#impersonation)"
+  - type: new
+    components: [es]
+    text: "[FIPS compliant SSL mode](https://docs.readonlyrest.com/elasticsearch/fips)"
+  - type: enhancement
+    components: [kbn]
+    text: "SAML cert is now required"
+  - type: enhancement
+    components: [kbn]
+    text: "moved OIDC to better library"
+  - type: enhancement
+    components: [kbn]
+    text: "OIDC jwksURL is now required"
+  - type: fix
+    components: [es]
+    text: "`indices: [\"1\"]` interpreted as integer and fails to parse"
+  - type: fix
+    components: [kbn]
+    text: "/login?jwt=xxx authorization now works again"
+  - type: fix
+    components: [kbn]
+    text: "OIDC/SAML assertion claims were not forwarded to ES"
+  - type: fix
+    components: [kbn]
+    text: "include whitelisted headers while logging"
+  - type: fix
+    components: [kbn]
+    text: "basepath handling fixes (too many redirects)"
+  - type: fix
+    components: [kbn]
+    text: "Make ROR default space the actual default one"
+  - type: fix
+    components: [kbn]
+    text: "OIDC connection error"
