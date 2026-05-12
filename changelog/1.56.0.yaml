@@ -1,0 +1,48 @@
+version: "1.56.0"
+release_date: "2024-03-15"
+entries:
+  - type: new
+    components: [kbn]
+    text: "Provide a way to switch light/dark mode per user"
+  - type: new
+    components: [kbn]
+    text: "8.13.2, 8.13.1, 8.13.0, 7.17.20, 7.17.19 support"
+  - type: new
+    components: [es]
+    text: "8.13.2, 8.13.1, 8.13.0, 7.17.20, 7.17.19 support"
+  - type: warning
+    components: [es]
+    text: "[for ES > 6.5 patching is required since this version of ROR](https://docs.readonlyrest.com/elasticsearch#id-5.-patch-elasticsearch)"
+  - type: enhancement
+    components: [kbn]
+    text: "The activation key will be revalidated in the interval"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide a way to define Activation key [retrieval mode](https://docs.readonlyrest.com/v/develop/universal-builds#change-activation-key-retrieval-mode-via-kibana.yml)"
+  - type: fix
+    components: [kbn]
+    text: "Sometimes reports are not generated correctly for Kibana >= 8.0.0 and \"Max attempt reached\" error  appears"
+  - type: fix
+    components: [kbn]
+    text: "The OIDC scope configuration property was not applied and the default configuration was used instead."
+  - type: fix
+    components: [kbn]
+    text: "The OIDC proxy parameter was not handled properly in case of HTTPs connection over HTTP proxy server"
+  - type: fix
+    components: [kbn]
+    text: "Missing information when Kibana is not patched"
+  - type: fix
+    components: [es]
+    text: "[Repositories and Snapshots handling by ES coordinating nodes](https://forum.readonlyrest.com/t/snapshot-status-cannot-modify-incoming-request/2471)"
+  - type: fix
+    components: [es]
+    text: "[Internode SSL `certificate_verification: true` was causing problems with nodes discovery](https://forum.readonlyrest.com/t/upgrade-elasticsearch-8-2-to-8-x-leads-to-ssl-problems/2480)"
+  - type: fix
+    components: [es]
+    text: "Missing `x-elastic-product` header in the response when `fields` and `filter` rules were used"
+  - type: fix
+    components: [es]
+    text: "Proper `forbid` policy handling during processing ROR login request"
+  - type: fix
+    components: [es]
+    text: "`application/nd-json` media type handling (in case of ES `7.x` versions)"

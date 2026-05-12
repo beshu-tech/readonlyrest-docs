@@ -1,0 +1,54 @@
+version: "1.63.0"
+release_date: "2025-03-12"
+entries:
+  - type: security
+    components: [kbn]
+    text: "[CVE-2025-26791](https://www.cve.org/CVERecord?id=CVE-2025-26791), [CWE-772](https://cwe.mitre.org/data/definitions/772.html)"
+  - type: security
+    components: [es]
+    text: "[CVE-2024-57699](https://nvd.nist.gov/vuln/detail/CVE-2024-53990) [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193) [CVE-2025-24970](https://nvd.nist.gov/vuln/detail/CVE-2025-24970)"
+  - type: new
+    components: [kbn]
+    text: "9.0.1, 9.0.0, 9.0.0-rc1, 9.0.0-beta1, 8.18.1, 8.18.0, 8.17.6, 8.17.5, 8.17.4, 8.16.6 support"
+  - type: new
+    components: [es]
+    text: "9.0.1, 9.0.0, 9.0.0-rc1, 9.0.0-beta1, 8.18.1, 8.18.0, 8.17.6, 8.17.5, 8.17.4, 8.16.6 support"
+  - type: new
+    components: [es]
+    text: "[Added `groups_not_any_of` and `groups_not_all_of` rules](https://forum.readonlyrest.com/t/support-kbn-ent-managing-forbidden-messages/2623)"
+  - type: new
+    components: [es]
+    text: "[New unified and simplified syntax for groups rules](https://docs.readonlyrest.com/elasticsearch#groups-rules)"
+  - type: enhancement
+    components: [kbn]
+    text: "For Kibana >= 8.14.0: Added backward compatibility to hide the Dashboard app by declaring Analytics|Dashboard and Analytics|Dashboards in the `kibana.hide_apps` rule"
+  - type: enhancement
+    components: [kbn]
+    text: "Added information about skipping patching confirmation prompt to the patching helper"
+  - type: enhancement
+    components: [kbn]
+    text: "[When Kibana is opened in multiple browser tabs, logging into Kibana in one tab automatically logs in all browser tabs]"
+  - type: fix
+    components: [kbn]
+    text: "Don't terminate Kibana when disk reaches low watermark"
+  - type: fix
+    components: [kbn]
+    text: "For Kibana >= 8.15.0: Added support for reporting data stream multitenancy"
+  - type: fix
+    components: [kbn]
+    text: "Silenced \"Error fetching fields for index pattern\" toast messages due to forbidden response in Kibana Dashboard and Discover page"
+  - type: fix
+    components: [kbn]
+    text: "For Kibana >= 8.17.0: Fixed Elasticsearch navigation header being visible when `kibana.hide_apps: [ \"Elasticsearch\" ]`"
+  - type: fix
+    components: [kbn]
+    text: "[For Kibana >= 8.5.0: Fixed Dev tools play buttons not being visible for RO users](https://forum.readonlyrest.com/t/ldap-multitenancy-with-no-group-name-to-index-name-relation/2742/8)"
+  - type: fix
+    components: [kbn]
+    text: "Fixed an issue with hiding the dashboard app when using regular expressions in the kibana_hide_apps field"
+  - type: fix
+    components: [es]
+    text: "Fixed various issues with restoring snapshot API"
+  - type: fix
+    components: [es]
+    text: "Fixed data streams, index, and component templates being forbidden for RW users in stack management"

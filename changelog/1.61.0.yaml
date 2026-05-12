@@ -1,0 +1,57 @@
+version: "1.61.0"
+release_date: "2024-11-12"
+entries:
+  - type: security
+    components: [kbn]
+    text: "[CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764)"
+  - type: warning
+    components: [kbn]
+    text: "Acknowledgement needs to be accepted before a Kibana patching process. For scripts, you can [set a flag](https://docs.readonlyrest.com/kibana#patching-kibana) to automate a process (edited)"
+  - type: new
+    components: [kbn]
+    text: "8.15.4 support"
+  - type: new
+    components: [es]
+    text: "8.16.0, 8.15.4 support"
+  - type: new
+    components: [es]
+    text: "There is an option to define [a custom response for users in ACL block with the 'forbid' policy](https://docs.readonlyrest.com/elasticsearch#unauthorized-response-configuration)"
+  - type: enhancement
+    components: [kbn]
+    text: "Set-Cookie is not returned with KBN API response"
+  - type: enhancement
+    components: [kbn]
+    text: "Reduce the amount of ReadonlyREST session updates"
+  - type: enhancement
+    components: [kbn]
+    text: "Kibana plugin won't start until the connection with Elasticsearch is established"
+  - type: enhancement
+    components: [kbn]
+    text: "API and activation key tabs in the Security settings are visible only for the admin or unrestricted access users"
+  - type: enhancement
+    components: [kbn]
+    text: "detecting issues related to high disk watermark warning"
+  - type: enhancement
+    components: [kbn]
+    text: "License expiration info only for admin and unrestricted access users"
+  - type: enhancement
+    components: [es]
+    text: "index exclusion (dash) syntax support"
+  - type: fix
+    components: [kbn]
+    text: "Don't stop Kibana when correlationId is not available in the session"
+  - type: fix
+    components: [kbn]
+    text: "Provide additional [SAML configuration options](https://docs.readonlyrest.com/kibana#usage-with-active-directory-federation-services) to handle Active Directory Federation Services (ADFS) properly"
+  - type: fix
+    components: [kbn]
+    text: "login page customization should be a PRO feature instead of an Enterprise"
+  - type: fix
+    components: [kbn]
+    text: "Logging to file doesn't work for Kibana 8.x"
+  - type: fix
+    components: [es]
+    text: "Snapshot Status API - forbidden response while checking the status of all snapshots of the given repository"
+  - type: fix
+    components: [es]
+    text: "Snapshot API - misc issues for ES 6.x"

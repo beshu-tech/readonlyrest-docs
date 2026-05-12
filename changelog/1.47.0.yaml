@@ -1,0 +1,36 @@
+version: "1.47.0"
+release_date: "2023-02-13"
+entries:
+  - type: security
+    components: [es]
+    text: "\"/\" endpoint was not protected for ES 8.x"
+  - type: security
+    components: [es]
+    text: "\"/_cat\" endpoint was not protected for all ES versions"
+  - type: new
+    components: [kbn]
+    text: "8.7.0, 8.6.2 support"
+  - type: new
+    components: [es]
+    text: "8.7.0, 8.6.2 support"
+  - type: new
+    components: [es]
+    text: "[the `data_streams` rule](https://docs.readonlyrest.com/v/develop/elasticsearch#data_streams)"
+  - type: enhancement
+    components: [kbn]
+    text: "optimisation in hidden apps feature"
+  - type: fix
+    components: [kbn]
+    text: "Opening index management mappings tab forces logout"
+  - type: fix
+    components: [kbn]
+    text: "Fix dark mode in the ROR menu"
+  - type: fix
+    components: [kbn]
+    text: "YAML editor updates and fixes"
+  - type: fix
+    components: [es]
+    text: "Data streams support in the `indices` rule"
+  - type: fix
+    components: [es]
+    text: "NPE when `_search` with aggregations (script) and the `fields` rule were used together"

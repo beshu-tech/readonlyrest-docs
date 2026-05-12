@@ -1,0 +1,54 @@
+version: "1.39.0"
+release_date: "2022-03-19"
+entries:
+  - type: security
+    components: [kbn]
+    text: "XSS sanitize path requested"
+  - type: security
+    components: [es]
+    text: "[CVE-2020-36518](https://nvd.nist.gov/vuln/detail/CVE-2020-36518) & [CVE-2022-21653](https://nvd.nist.gov/vuln/detail/CVE-2022-21653)"
+  - type: new
+    components: [kbn]
+    text: "New Support for 8.2.0 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1, 7.17.3, 7.17.2"
+  - type: new
+    components: [es]
+    text: "New Support for 8.2.0, 8.1.3, 8.1.2, 8.1.1, 8.1.0, 8.0.0, 8.0.1 ([required additional patching step](https://docs.readonlyrest.com/elasticsearch#3.-patch-es))"
+  - type: new
+    components: [es]
+    text: "New Support for 7.17.3, 7.17.2"
+  - type: new
+    components: [es]
+    text: "[New `groups_and` ACL rule](https://docs.readonlyrest.com/elasticsearch#groups_and)"
+  - type: enhancement
+    components: [kbn]
+    text: "Stop inlining whitelisted headers into Authorization header"
+  - type: enhancement
+    components: [kbn]
+    text: "Log additional errors and info related to HA"
+  - type: enhancement
+    components: [kbn]
+    text: "Misc internal dependencies upgrades"
+  - type: fix
+    components: [kbn]
+    text: "Mandatory elasticsearch credentials in kibana.yml"
+  - type: fix
+    components: [kbn]
+    text: "[Reporting page redirect on refresh when kibana_hide_apps: [\"Stack Management\"]](https://forum.readonlyrest.com/t/when-hiding-stack-management-a-redirect-appears-with-report/2088)"
+  - type: fix
+    components: [kbn]
+    text: "whitelistedPaths: log errors when 404 occurs"
+  - type: fix
+    components: [kbn]
+    text: "[Issue uploading large payload](https://forum.readonlyrest.com/t/issue-uploading-large-payload/2091)"
+  - type: fix
+    components: [kbn]
+    text: "`elasticsearch.requestHeadersWhitelist` should be case insensitive"
+  - type: fix
+    components: [es]
+    text: "[Issue with handling data streams by `indices` rule](https://forum.readonlyrest.com/t/ror-1-37-0-indices-rule-and-alias-within-kibana/2078)"
+  - type: fix
+    components: [es]
+    text: "X-Pack SSL nodes cooperation with ROR SSL nodes"
+  - type: fix
+    components: [es]
+    text: "_msearch issue when filter rules was used in matched block"

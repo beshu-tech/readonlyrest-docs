@@ -1,0 +1,12 @@
+version: "1.64.2"
+release_date: "2025-05-17"
+entries:
+  - type: new
+    components: [kbn]
+    text: "9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support"
+  - type: new
+    components: [es]
+    text: "9.0.3, 9.0.2, 8.18.3, 8.18.2, 8.17.8, 8.17.7, 7.17.29 support"
+  - type: fix
+    components: [es]
+    text: "[Fixed an issue with Elasticsearch patching process on Windows operating systems](https://forum.readonlyrest.com/t/ror-1-64-0-for-es9-0-1-windows-setup/2778)"

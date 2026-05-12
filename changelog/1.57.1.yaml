@@ -1,0 +1,6 @@
+version: "1.57.1"
+release_date: "2024-04-29"
+entries:
+  - type: fix
+    components: [es]
+    text: "configuration parsing regression: one group definition can be a string"

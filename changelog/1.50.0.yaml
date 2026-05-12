@@ -1,0 +1,25 @@
+version: "1.50.0"
+release_date: "2023-07-25"
+entries:
+  - type: new
+    components: [es, kbn]
+    components_raw: "KBN/ES"
+    text: "ECK support"
+  - type: new
+    components: [kbn]
+    text: "8.9.1, 8.9.0, 7.17.12 support"
+  - type: new
+    components: [es]
+    text: "8.9.1, 8.9.0, 7.17.12 support"
+  - type: new
+    components: [kbn]
+    text: "Introduce the new ReadonlyREST API"
+  - type: enhancement
+    components: [kbn]
+    text: "Remove application item info from URL on the tenant switch to avoid a 404 not found message"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide Reordering available tenancies for proxy auth authentication"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide information about granted/rejected log-in users to debug logs"
