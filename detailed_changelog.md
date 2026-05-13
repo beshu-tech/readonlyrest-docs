@@ -1994,18 +1994,22 @@ Resolved a problem where the `x-ror-correlation-id` header was not being properl
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) bad multipart POST handling leads to saved object import errors
 
 ### (2021-05-26) What's new in **ROR 1.30.1**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚨Security Fix** (ES) [CVE-2021-27568](https://nvd.nist.gov/vuln/detail/CVE-2021-27568)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 7.13.0, 7.13.1 support
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) Regression in multi-tenancy handling
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) Proper handling of \_snapshot/\_status endpoint
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-27568">CVE-2021-27568</a></summary>
+This release addresses CVE-2021-27568, a vulnerability in the json-smart library (used by Elasticsearch) where an uncaught exception (e.g., NumberFormatException) could cause crashes or potentially expose sensitive information. ROR users are advised to update to mitigate this risk.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 7.13.0, 7.13.1 support</summary>
+ReadonlyREST now supports Elasticsearch versions 7.13.0 and 7.13.1, ensuring compatibility with the latest features and improvements in those releases.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Regression in multi-tenancy handling</summary>
+A regression introduced in a previous release that affected multi-tenancy behavior has been resolved. Multi-tenant configurations should now work as expected without unintended access restrictions or errors.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Proper handling of _snapshot/_status endpoint</summary>
+Fixed an issue where the `_snapshot/_status` endpoint was not being handled correctly by the security plugin. This ensures that snapshot status requests are properly authorized and processed.
+</details>
 
 ### (2021-05-16) What's new in **ROR 1.30.0**
 
@@ -2089,9 +2093,10 @@ Resolved a NullPointerException that occurred when fetching template aliases in 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Kibana management app ID changed from "kibana:management" to "kibana:stack\_management"
 
 ### (2021-02-27) What's new in **ROR 1.27.1**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚨Security Fix** (ES) [CVE-2021-21290](https://nvd.nist.gov/vuln/detail/CVE-2021-21290)
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21290">CVE-2021-21290</a></summary>
+This release addresses CVE-2021-21290, a security vulnerability in Netty (versions before 4.1.59.Final) affecting Unix-like systems. The issue involves insecure temporary file creation when multipart decoders store uploads to disk — files created via `File.createTempFile` in shared temporary directories have default permissions (`-rw-r--r--`), making them readable by other local users and potentially leading to local information disclosure. ROR has updated its Netty dependency to the patched version to mitigate this risk.
+</details>
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 7.11.1 support
