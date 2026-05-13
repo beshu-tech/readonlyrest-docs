@@ -20,11 +20,11 @@ entries:
     components: [kbn]
     text: "Support full regex in kibana_hidden_apps rule"
   - # EDGE CASE — manual review needed
-    # reason: regex_no_match
+    # reason: no_component_specified
     # original: "* **🧐Enhancement** Crash if Kibana is not patched"
-    type: <unknown>
-    components_raw: ""
-    text: ""
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Crash if Kibana is not patched"
   - type: enhancement
     components: [kbn]
     text: "Honour kibana setting \"logging.dest\""
