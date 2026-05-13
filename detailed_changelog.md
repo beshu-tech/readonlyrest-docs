@@ -2049,12 +2049,14 @@ Fixed an issue where the `_snapshot/_status` endpoint was not being handled corr
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) logout if the credentials/metadata of the current user change in the ACL
 
 ### (2021-04-01) What's new in **ROR 1.28.2**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚨Security Fix** (ES) [CVE-2021-21295](https://nvd.nist.gov/vuln/detail/CVE-2021-21295)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) prevent SAML/OIDC initiated Kibana sessions from expiring after `session_timeout_minutes` despite continued interaction
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21295">CVE-2021-21295</a></summary>
+This release addresses CVE-2021-21295, an HTTP request smuggling vulnerability in Netty's `netty-codec-http2` module (versions before 4.1.60.Final). The flaw occurs when an HTTP/2 request containing a `Content-Length` header is converted to HTTP/1.1 objects and proxied to a remote peer, potentially allowing an attacker to smuggle requests within the body. The underlying Netty dependency has been updated to the patched version to mitigate this risk.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) prevent SAML/OIDC initiated Kibana sessions from expiring after <code>session_timeout_minutes</code> despite continued interaction</summary>
+Fixed a bug where Kibana sessions authenticated via SAML or OIDC would expire after the configured `session_timeout_minutes` even when the user was actively interacting with the application. The session timeout now properly resets on user activity, ensuring that active users are not unexpectedly logged out.
+</details>
 
 ### (2021-03-24) What's new in **ROR 1.28.1**
 <details>
@@ -2102,24 +2104,30 @@ This release addresses CVE-2021-21290, a security vulnerability in Netty (versio
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 7.11.1 support
 
 ### (2021-02-16) What's new in **ROR 1.27.0**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 7.11.0, 7.10.2, 6.8.14 support
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) X-Forwarded-For copied from incoming request (or filled with source IP) before forwarding to ES
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) Kibana logout event generates a special audit log entry in ROR audit logs index
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) ROR panel shows "reports" button if kibana:management app is hidden
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) [blocks containing filter and/or fields won't match internal kibana requests, so kibana\_\* rules won't have to be placed in such blocks](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#fields)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) SQL API - better handling of invalid query
+<details>
+<summary><strong>🚀New</strong> (ES) 7.11.0, 7.10.2, 6.8.14 support</summary>
+Added support for Elasticsearch versions 7.11.0, 7.10.2, and 6.8.14, ensuring compatibility with the latest patch releases across these major version lines.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) X-Forwarded-For copied from incoming request (or filled with source IP) before forwarding to ES</summary>
+Kibana now properly propagates the X-Forwarded-For header from the incoming request to Elasticsearch. If the header is absent, it is populated with the source IP address, improving audit trail accuracy and enabling proper client IP tracking in multi-tier proxy setups.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) Kibana logout event generates a special audit log entry in ROR audit logs index</summary>
+When a user logs out of Kibana, ROR now generates a dedicated audit log entry in the ROR audit logs index. This provides better visibility into user session lifecycles and helps with security auditing and compliance requirements.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) ROR panel shows "reports" button if kibana:management app is hidden</summary>
+The ROR panel in Kibana now displays a "Reports" button even when the kibana:management application is hidden. This ensures users can still access reporting features regardless of their Kibana management visibility settings.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) <a href="https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md#fields">blocks containing filter and/or fields won't match internal kibana requests, so kibana_* rules won't have to be placed in such blocks</a></summary>
+Fixed an issue where ACL blocks containing `filter` and/or `fields` rules could incorrectly match internal Kibana requests. With this fix, internal Kibana requests bypass such blocks, meaning `kibana_*` rules no longer need to be placed inside blocks that also define field-level or document-level security rules. This simplifies ACL configuration and prevents unintended access restrictions on Kibana's internal operations.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) SQL API - better handling of invalid query</summary>
+Improved error handling for the Elasticsearch SQL API when an invalid query is submitted. Instead of potentially returning unclear or inconsistent responses, ROR now handles malformed SQL queries more gracefully, providing better feedback and stability.
+</details>
 
 ### (2021-01-11) What's new in **ROR 1.26.1**
 
