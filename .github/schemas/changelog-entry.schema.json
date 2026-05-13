@@ -15,7 +15,8 @@
       "format": "date"
     },
     "entries": {
-      "type": ["array", "null"],
+      "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "required": ["type", "text"],
