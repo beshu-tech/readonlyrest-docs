@@ -1,3 +1,15 @@
 version: "1.33.1"
 release_date: "2021-08-14"
 entries:
+  - type: new
+    components: [es]
+    text: "New Support for 7.14.1"
+  - type: fix
+    components: [kbn]
+    text: "Error in patching for 7.14.0"
+  - type: fix
+    components: [kbn]
+    text: "clearSessionOnEvents now works as expected"
+  - type: fix
+    components: [kbn]
+    text: "login form font loads correctly"

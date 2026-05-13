@@ -1,3 +1,27 @@
 version: "1.28.0"
 release_date: "2021-03-14"
 entries:
+  - type: new
+    components: [es]
+    text: "7.12.0, 7.11.2 support"
+  - type: new
+    components: [es]
+    text: "full [Index and Component Templates API](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html) support"
+  - type: enhancement
+    components: [es]
+    text: "[Username case sensitivity settings](https://forum.readonlyrest.com/t/ldap-based-user-authentication/1667)"
+  - type: fix
+    components: [es]
+    text: "[Kibana logout event storing fix](https://forum.readonlyrest.com/t/kibana-plugin-software-licensing-and-expiration/1808/5)"
+  - type: fix
+    components: [es]
+    text: "[Fixed remote reindex operation with \"type\" parameter](https://forum.readonlyrest.com/t/reindex-index-not-found-exception/1708/20)"
+  - type: fix
+    components: [kbn]
+    text: "Prevent cookie expiration deadlock in browsers when using SAML/OIDC"
+  - type: fix
+    components: [kbn]
+    text: "When credentials change in the ACL, make it possible to login again"
+  - type: fix
+    components: [kbn]
+    text: "Kibana management app ID changed from \"kibana:management\" to \"kibana:stack\\_management\""

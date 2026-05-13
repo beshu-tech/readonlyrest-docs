@@ -1,3 +1,27 @@
 version: "1.34.0"
 release_date: "2021-09-24"
 entries:
+  - type: new
+    components: [es]
+    text: "New Support for 7.15.0, 7.14.2"
+  - type: new
+    components: [kbn]
+    text: "VS Code style YAML editor"
+  - type: new
+    components: [kbn]
+    text: "Skip rendering hidden app groups entirely"
+  - type: new
+    components: [kbn]
+    text: "Redesigned ROR Menu"
+  - type: new
+    components: [kbn]
+    text: "Dark theme awareness"
+  - type: fix
+    components: [kbn]
+    text: "Broken Kibana Spaces"
+  - type: fix
+    components: [kbn]
+    text: "Support Kibana's undocumented \"server.ssl.*\" settings"
+  - type: fix
+    components: [kbn]
+    text: "cookiePass config parsing broke load balancing"

@@ -1,3 +1,45 @@
 version: "1.31.0"
 release_date: "2021-06-29"
 entries:
+  - type: security
+    components: [kbn]
+    text: "prevent direct navigation to hidden apps"
+  - type: new
+    components: [es]
+    text: "7.13.4, 7.13.3, 7.13.2, 6.8.17 support"
+  - type: new
+    components: [kbn]
+    text: "new minimal Kibana Management menu when \"Management\" app is hidden"
+  - type: enhancement
+    components: [kbn]
+    text: "logout active Kibana session if key metadata/permissions change in ACL"
+  - type: enhancement
+    components: [kbn]
+    text: "better port number validation"
+  - type: enhancement
+    components: [es]
+    text: "improved cluster indices handling"
+  - type: fix
+    components: [es]
+    text: "[Kibana access rule regression fix](https://forum.readonlyrest.com/t/es7-11-2-1-30-0-enterprise-two-contexts-rw-ro-issue/1855)"
+  - type: fix
+    components: [es]
+    text: "search template API handling with `filter` and `fields` rule"
+  - type: fix
+    components: [es]
+    text: "multi-tenancy issue when groups_provider_authorization is used"
+  - type: fix
+    components: [es]
+    text: "`x_forwarded_for` rule: wrong handling of / request"
+  - type: fix
+    components: [es]
+    text: "Issue with handling ResizeRequest which made it unable to upgrade Kibana to version 7.12.0+"
+  - type: fix
+    components: [kbn]
+    text: "some Kibana requests arrive to ES without credentials"
+  - type: fix
+    components: [kbn]
+    text: "inconsistent read after write in session storage lead to issues with round robin load balancing"
+  - type: fix
+    components: [kbn]
+    text: "bad multipart POST handling leads to saved object import errors"
