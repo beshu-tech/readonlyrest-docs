@@ -1,0 +1,57 @@
+version: "1.35.0"
+release_date: "2021-10-12"
+entries:
+  - type: new
+    components: [kbn]
+    text: "Support Kibana 7.15.0, 7.14.2"
+  - type: new
+    components: [es]
+    text: "New Support for 7.15.1, 6.8.19, 6.8.20"
+  - type: enhancement
+    components: [es]
+    text: "[local->external groups detailed mapping for groups rule](https://github.com/beshu-tech/readonlyrest-docs/blob/master/details/groups-rule-mapping.md)"
+  - type: enhancement
+    components: [es]
+    text: "when ROR is starting any request is going to end up with HTTP 403 response, instead of HTTP 503"
+  - type: enhancement
+    components: [kbn]
+    text: "\"server.basePath\" kibana option implementation"
+  - type: enhancement
+    components: [kbn]
+    text: "Support full regex in kibana_hidden_apps rule"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Crash if Kibana is not patched"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Crash if Kibana is not patched"
+  - type: enhancement
+    components: [kbn]
+    text: "Honour kibana setting \"logging.dest\""
+  - type: enhancement
+    components: [kbn]
+    text: "Confirm before overwriting audit log dashboard"
+  - type: fix
+    components: [es]
+    text: "verbosity: error fix in case of ROR KBN login request"
+  - type: fix
+    components: [kbn]
+    text: "Make alerting work on primary tenancy"
+  - type: fix
+    components: [kbn]
+    text: "OIDC fix sameSite / secure cookie options"
+  - type: fix
+    components: [kbn]
+    text: "Login form is stretched when long error"
+  - type: fix
+    components: [kbn]
+    text: "Login form is stretched when long error"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn-pro
+    # original: "* **🐞Fix** (KBN-PRO) [Don't send x-ror-currentgroup in PRO](https://forum.readonlyrest.com/t/upgrading-6-7-w-1-18-to-7-14-w-1-33-ldap-from-ms-active-directory-no-longer-understands-multiple-ad-group-memberships/1973/6)"
+    type: fix
+    components_raw: "KBN-PRO"
+    text: "[Don't send x-ror-currentgroup in PRO](https://forum.readonlyrest.com/t/upgrading-6-7-w-1-18-to-7-14-w-1-33-ldap-from-ms-active-directory-no-longer-understands-multiple-ad-group-memberships/1973/6)"
+  - type: fix
+    components: [kbn]
+    text: "Resolve browser console errors on a popover close"

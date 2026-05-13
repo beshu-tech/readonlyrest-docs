@@ -1,0 +1,39 @@
+name: Changelog (maintainers only)
+description: Add changelog entries (one or many) — restricted to repo maintainers
+title: "[Changelog] (auto-renamed on submit)"
+labels: ["changelog-entry"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > **🔒 Maintainers only.** Non-maintainer issues are auto-closed within ~30s by the [maintainer gate workflow](../blob/main/.github/workflows/maintainer_gate.yml). If you're not a maintainer, please use [Discussions](../../discussions) or contact the team directly.
+
+        Paste one line per entry — single or whole release, same form.
+
+        **Format:** `<type> (<component>) <text>` — same as `changelog.md` today
+
+        - **types:** `new`, `fix`, `security`, `warning`, `enhancement`
+        - **components:** `es`, `kbn`, `eck` — combinable: `es|kbn`, `kbn|eck`, `es|kbn|eck`
+        - text supports markdown links
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: "1.68.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      placeholder: |
+        new (es) 9.0.2, 8.18.2, 8.17.7 support
+        new (kbn) 9.0.2, 8.18.2, 8.17.7 support
+        fix (eck) Operator handling of TLS rotation
+        fix (es|kbn) tenancy selector with jwt_auth
+        security (es) CVE-2024-53382
+      render: text
+    validations:
+      required: true

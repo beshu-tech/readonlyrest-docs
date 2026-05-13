@@ -1,0 +1,36 @@
+version: "1.58.0"
+release_date: "2024-06-30"
+entries:
+  - type: security
+    components: [kbn]
+    text: "[CVE-2022-39353](https://www.cve.org/CVERecord?id=CVE-2022-39353), [CVE-2020-7753](https://www.cve.org/CVERecord?id=CVE-2020-7753), [CVE-2022-37616](https://www.cve.org/CVERecord?id=CVE-2022-37616), [CVE-2024-29041](https://www.cve.org/CVERecord?id=CVE-2024-29041), [CVE-2022-0691](https://www.cve.org/CVERecord?id=CVE-2022-0691), [CVE-2021-3801](https://www.cve.org/CVERecord?id=CVE-2021-3801), [CVE-2022-25883](https://www.cve.org/CVERecord?id=CVE-2022-25883), [CVE-2022-0512](https://www.cve.org/CVERecord?id=CVE-2022-0512), [CVE-2022-0686](https://www.cve.org/CVERecord?id=CVE-2022-0686), [CVE-2022-0639](https://www.cve.org/CVERecord?id=CVE-2022-0639), [CVE-2022-25881](https://www.cve.org/CVERecord?id=CVE-2022-25881), [CVE-2023-0842](https://www.cve.org/CVERecord?id=CVE-2023-0842), [CVE-2017-16137](https://www.cve.org/CVERecord?id=CVE-2017-16137), [CVE-2022-33987](https://www.cve.org/CVERecord?id=CVE-2022-33987), [CVE-2022-23647](https://www.cve.org/CVERecord?id=CVE-2022-23647), [CVE-2022-36083](https://www.cve.org/CVERecord?id=CVE-2022-36083), [CVE-2024-28176](https://www.cve.org/CVERecord?id=CVE-2024-28176)"
+  - type: new
+    components: [kbn]
+    text: "[Kibana images with preinstalled ReadonlyREST plugin in Docker Hub](https://hub.docker.com/r/beshultd/kibana-readonlyrest)"
+  - type: new
+    components: [kbn]
+    text: "8.14.3, 8.14.2 support"
+  - type: new
+    components: [es]
+    text: "8.14.3, 8.14.2 support"
+  - type: new
+    components: [es]
+    text: "[\"structured groups\" feature](https://github.com/beshu-tech/readonlyrest-docs/blob/develop/details/structured-groups.md) (authorization rules group names and group IDs can be defined separately)"
+  - type: enhancement
+    components: [kbn]
+    text: "New `readonlyrest_kbn.cookies.secure` and `readonlyrest_kbn.cookies.sameSite` cookie settings via kibana.yml"
+  - type: enhancement
+    components: [es]
+    text: "improved error logging on the creation of LDAP connectors"
+  - type: enhancement
+    components: [es]
+    text: "Patcher - invalid state after patching detection improvements"
+  - type: fix
+    components: [kbn]
+    text: "Impersonation and session probe logout issue"
+  - type: fix
+    components: [kbn]
+    text: "[Problem with the number of replicas and index template, where the number of replicas was always set to 1. Now, the default value will be the same, as in the case of the Kibana index](https://forum.readonlyrest.com/t/0-replicas-for-single-node-clusters/2530)"
+  - type: fix
+    components: [kbn]
+    text: "Fix problem with multi-tenancy features when xpack.security.enabled: true"

@@ -1,0 +1,54 @@
+version: "1.45.0"
+release_date: "2022-11-29"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2022-42003](https://nvd.nist.gov/vuln/detail/CVE-2022-42003), [CVE-2022-45146](https://nvd.nist.gov/vuln/detail/CVE-2022-45146)"
+  - type: new
+    components: [kbn]
+    text: "Activation Key API: read AK from ROR_ACTIVATION_KEY.txt"
+  - type: new
+    components: [kbn]
+    text: "Activation Key API: submit AK via POST /pkp/license (Basic auth)"
+  - type: new
+    components: [kbn]
+    text: "Inject CSS/JS files in login page"
+  - type: new
+    components: [kbn]
+    text: "Add user metadata to <body> for extra UI customization"
+  - type: new
+    components: [es]
+    text: "Added groups_and mode to [groups_provider_authorization](https://docs.readonlyrest.com/elasticsearch#groups_provider_authorization) rule"
+  - type: enhancement
+    components: [es]
+    text: "all authorization rules support wildcards in group IDs"
+  - type: enhancement
+    components: [es]
+    text: "connections in the LDAP pool should not be closed unnecessarily"
+  - type: enhancement
+    components: [kbn]
+    text: "Deterministic reporting index detection"
+  - type: enhancement
+    components: [kbn]
+    text: "Move free type impersonation to the local users area"
+  - type: enhancement
+    components: [kbn]
+    text: "don't logout when initial JWT token expires"
+  - type: fix
+    components: [kbn]
+    text: "Direct Kibana API requests not aware of kibana_index"
+  - type: fix
+    components: [kbn]
+    text: "RO and RO_strict kibana accesses"
+  - type: fix
+    components: [es]
+    text: "[when `fls_engine: es` is configured and `fields` rule is used, aggregations should be available only for allowed fields](https://forum.readonlyrest.com/t/field-level-security-and-aggregations/2133)"
+  - type: fix
+    components: [es]
+    text: "[Data streams creation issue fix](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/829)"
+  - type: fix
+    components: [es]
+    text: "Unknown structure of index settings issue fix"
+  - type: fix
+    components: [es]
+    text: "resolving index names with wildcards should take into consideration the current index state and request indices options"

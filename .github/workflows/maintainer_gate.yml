@@ -1,0 +1,53 @@
+name: Maintainer gate
+
+# Closes changelog issues filed by non-maintainers. Required ask from review:
+# "restrict TO maintainers ONLY to create these". GitHub has no native persistent
+# setting for this on public repos — action-based gate is the only durable answer.
+# Race: issue is publicly visible ~10-30s before this fires. Accepted tradeoff.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  gate:
+    if: contains(github.event.issue.labels.*.name, 'changelog-entry')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check author association
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const allowed = ['OWNER', 'MEMBER', 'COLLABORATOR']
+            const assoc = context.payload.issue.author_association
+            const ok = allowed.includes(assoc)
+            core.setOutput('ok', ok ? 'true' : 'false')
+            core.setOutput('assoc', assoc)
+            core.info(`author_association=${assoc} ok=${ok}`)
+
+      - name: Reject non-maintainer
+        if: steps.check.outputs.ok != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const ref = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            }
+            await github.rest.issues.createComment({
+              ...ref,
+              body: [
+                `Thanks for the interest! This issue template is reserved for repo maintainers.`,
+                ``,
+                `If you spotted a bug or have a question, please use [discussions](https://github.com/${context.repo.owner}/${context.repo.repo}/discussions) or contact the team directly.`,
+                ``,
+                `_Auto-closed: \`author_association=${{ steps.check.outputs.assoc }}\`_`,
+              ].join('\n'),
+            })
+            await github.rest.issues.update({ ...ref, state: 'closed', state_reason: 'not_planned' })
+            await github.rest.issues.lock({ ...ref, lock_reason: 'off-topic' })

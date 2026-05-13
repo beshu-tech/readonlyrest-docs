@@ -1,0 +1,42 @@
+version: "1.66.0"
+release_date: "2025-08-28"
+entries:
+  - type: security
+    components: [kbn]
+    text: "[CVE-2025-7339](https://nvd.nist.gov/vuln/detail/CVE-2025-7339), [CVE-2025-7783](https://nvd.nist.gov/vuln/detail/CVE-2025-7783), [CVE-2025-54419](https://nvd.nist.gov/vuln/detail/CVE-2025-54419), [CVE-2025-9288](https://nvd.nist.gov/vuln/detail/CVE-2025-9288)"
+  - type: security
+    components: [kbn]
+    text: "[Prevented visibility of hidden functions through Kibana UI search](https://forum.readonlyrest.com/t/hidden-functions-are-available-through-the-search/2840/2)"
+  - type: security
+    components: [es]
+    text: "Removed internal failure details from error responses to prevent unintended information disclosure"
+  - type: new
+    components: [kbn]
+    text: "9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support"
+  - type: new
+    components: [es]
+    text: "9.1.3, 9.1.2, 9.0.6, 8.19.3, 8.18.6 support"
+  - type: enhancement
+    components: [es]
+    text: "Refined user metadata selection logic during login to prioritize matched blocks associated with a defined Kibana index"
+  - type: enhancement
+    components: [es]
+    text: "Patching: improved handling of the consent flag when provided via environment variables for more reliable configuration"
+  - type: fix
+    components: [kbn]
+    text: "Resolved issue with index deletion in **Index Management** via Kibana UI"
+  - type: fix
+    components: [kbn]
+    text: "Corrected document display in **Discover** when indices are defined in the user ACL block"
+  - type: fix
+    components: [kbn]
+    text: "Fixed an error preventing **Spaces** from being deleted in Kibana **9.1.0**"
+  - type: fix
+    components: [kbn]
+    text: "Corrected handling of `readonlyrest_kbn.whitelistedPaths` in `kibana.yml` when `xpack.security.enabled: true`"
+  - type: fix
+    components: [kbn]
+    text: "Resolved startup issues for Kibana versions **7.9.0 → 7.10.2**"
+  - type: fix
+    components: [kbn]
+    text: "Fixed report generation when `xpack.security.enabled: true` and `xpack.encryptedSavedObjects.encryptionKey` is set in Kibana **8.19.x** and **9.1.x**"

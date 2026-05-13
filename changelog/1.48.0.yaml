@@ -1,0 +1,71 @@
+version: "1.48.0"
+release_date: "2023-04-15"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2022-45688](https://nvd.nist.gov/vuln/detail/CVE-2022-45688)"
+  - type: new
+    components: [kbn]
+    text: "8.7.1, 7.17.10 support"
+  - type: new
+    components: [es]
+    text: "8.8.0, 8.7.1, 7.17.10 support"
+  - type: new
+    components: [es, kbn]
+    components_raw: "KBN/ES"
+    text: "[Introducing \"Custom Middleware\" functionality](https://docs.readonlyrest.com/kibana#custom-middleware)"
+  - type: new
+    components: [es, kbn]
+    components_raw: "KBN/ES"
+    text: "[`allowed_api_paths` support in the `kibana` ACL rule](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules)"
+  - type: new
+    components: [kbn]
+    text: "Add CSRF protection in the login form"
+  - type: new
+    components: [kbn]
+    text: "Restore deprecated \"kibana.index\" support for Kibana > 8.x"
+  - type: new
+    components: [es]
+    text: "[all Kibana-related rules are gathered in one, new `kibana` ACL rule](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules)"
+  - type: new
+    components: [es]
+    text: "[audit supports a new output type: `log`](https://docs.readonlyrest.com/elasticsearch/audit)"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide a way to disable multi-tenancy in ROR Enterprise"
+  - type: enhancement
+    components: [kbn]
+    text: "Realign index templates behaviour to the old platform"
+  - type: enhancement
+    components: [kbn]
+    text: "Error logs when SAML obtains an unusable username from the assertion"
+  - type: enhancement
+    components: [kbn]
+    text: "Test configuration warnings improvement"
+  - type: enhancement
+    components: [es]
+    text: "[Added support to override default response code for not started ROR](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/794)"
+  - type: fix
+    components: [kbn]
+    text: "Security card not hidden by default"
+  - type: fix
+    components: [kbn]
+    text: "Hidden apps regex with two \"or\" operators don't hide all kibana apps"
+  - type: fix
+    components: [kbn]
+    text: "Fix Alerting Rules resulting in logout issue"
+  - type: fix
+    components: [kbn]
+    text: "Fix audit dashboard"
+  - type: fix
+    components: [kbn]
+    text: "Stop handling 500 error from `api/lens/existing_fields`"
+  - type: fix
+    components: [kbn]
+    text: "Fix lens app"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn < 7.9.x
+    # original: "* **🐞Fix** (KBN < 7.9.x) using a custom kibana index in cooperation with ROR Free"
+    type: fix
+    components_raw: "KBN < 7.9.x"
+    text: "using a custom kibana index in cooperation with ROR Free"

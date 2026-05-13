@@ -1,0 +1,27 @@
+version: "1.41.0"
+release_date: "2022-06-21"
+entries:
+  - type: new
+    components: [es]
+    text: "Added `groups_and` mode to [`ror_kbn_auth`](https://docs.readonlyrest.com/elasticsearch#ror_kbn_auth) and [`jwt_auth`](https://docs.readonlyrest.com/elasticsearch#jwt_auth) rules"
+  - type: enhancement
+    components: [kbn]
+    text: "Prevent native credentials dialogue to appear in Kibana when ES responds 401"
+  - type: enhancement
+    components: [kbn]
+    text: "Logging in after logout shows the same page you last visited"
+  - type: enhancement
+    components: [kbn]
+    text: "x-ror-correlation-id header lets you audit a whole Kibana session"
+  - type: fix
+    components: [es, kbn]
+    text: "tenancy selector didn't work well with `jwt_auth` and `ror_kbn_auth` rules"
+  - type: fix
+    components: [kbn]
+    text: "Support for special characters in tenancy names"
+  - type: fix
+    components: [kbn]
+    text: "OIDC logout flow redirecting to bad request error"
+  - type: fix
+    components: [kbn]
+    text: "OIDC connector not working in Kibana < 7.12.0"
