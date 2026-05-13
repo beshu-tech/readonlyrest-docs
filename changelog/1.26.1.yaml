@@ -1,3 +1,6 @@
 version: "1.26.1"
 release_date: "2021-01-11"
 entries:
+  - type: fix
+    components: [es]
+    text: "wrong behaviour of `kibana_access` rule for ROR actions when ADMIN value is set"

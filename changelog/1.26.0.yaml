@@ -1,3 +1,1587 @@
 version: "1.26.0"
 release_date: "2021-01-02"
 entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35490) & [CVE-2020-35490](https://nvd.nist.gov/vuln/detail/CVE-2020-35491) (removed Jackson dependency from ROR core)"
+  - type: new
+    components: [es]
+    text: "[New response\\_fields rule](https://forum.readonlyrest.com/t/ror-1-18-9-enterprise-es-7-2-0-enable-cluster-health-without-authentication/1567)"
+  - type: new
+    components: [es]
+    text: "[Support for LDAP server discovery using \\_ldaps.\\_tcp SRV record](https://forum.readonlyrest.com/t/does-ror-support-dc-locator/1211)"
+  - type: new
+    components: [es]
+    text: "[New configuration option allowing to ignore LDAP connectivity problems](https://forum.readonlyrest.com/t/ror-cannot-start-if-ldap-is-not-available/1748)"
+  - type: enhancement
+    components: [es]
+    text: "Full support for ILM API"
+  - type: enhancement
+    components: [kbn]
+    text: "Enforce read-after-write consistency between kibana nodes"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn ent
+    # original: "* **🧐Enhancement** \\(KBN ENT\\) OIDC custom claims incorporated in \"assertion\" claim"
+    type: enhancement
+    components_raw: "KBN ENT"
+    text: "OIDC custom claims incorporated in \"assertion\" claim"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn ent
+    # original: "* **🧐Enhancement** \\(KBN ENT\\) OIDC support for configurable kibanaExternalHost \\(good for Docker\\)"
+    type: enhancement
+    components_raw: "KBN ENT"
+    text: "OIDC support for configurable kibanaExternalHost (good for Docker)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn ent
+    # original: "* **🧐Enhancement** \\(KBN ENT\\) ROR adds \"ror-user\\_\" class to \"body\" tag for easy per-user CSS/JS"
+    type: enhancement
+    components_raw: "KBN ENT"
+    text: "ROR adds \"ror-user\\_\" class to \"body\" tag for easy per-user CSS/JS"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn ent,pro
+    # original: "* **🧐Enhancement** \\(KBN ENT/PRO\\) ROR adds \"ror-group\\_\" class to \"body\" tag for easy per-group CSS/JS"
+    type: enhancement
+    components_raw: "KBN ENT/PRO"
+    text: "ROR adds \"ror-group\\_\" class to \"body\" tag for easy per-group CSS/JS"
+  - type: fix
+    components: [es]
+    text: "[ROR authentication endpoint action](https://forum.readonlyrest.com/t/es-7-4-2-ror-1-18-9-rradmin-refreshsettings-by-block-default/1388)"
+  - type: fix
+    components: [es]
+    text: "\"username\" in audit entry when request is rejected ### What's new in 1.25.2"
+  - type: fix
+    components: [es]
+    text: "[removed verbose logging](https://forum.readonlyrest.com/t/elastic-message-cannot-extract-fields-for-query-after-readonlyrest-installation/1749) ### What's new in 1.25.1"
+  - type: security
+    components: [es]
+    text: "[CVE-2020-25649](https://nvd.nist.gov/vuln/detail/CVE-2020-25649)"
+  - type: new
+    components: [es]
+    text: "7.10.1 support ### What's new in 1.25.0"
+  - type: security
+    components: [es]
+    text: "[Common Vulnerabilities and Exposures (CVE)](https://forum.readonlyrest.com/t/update-of-jackson-databind-2-9-6-jar/176)"
+  - type: new
+    components: [es]
+    text: "7.10.0 support"
+  - type: new
+    components: [es]
+    text: "[auth\\_key\\_pbkdf2 rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#auth_key_pbkdf2)"
+  - type: new
+    components: [es]
+    text: "[Introduced configuration property defining FLS engine used by fields rule](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.25.x/elasticsearch.md#fields)"
+  - type: enhancement
+    components: [es]
+    text: "Fields rule performance improvement"
+  - type: enhancement
+    components: [es]
+    text: "Resolved index API support"
+  - type: fix
+    components: [es]
+    text: "[\"username\" in audit entry when user is authenticated via proxy\\_auth](https://forum.readonlyrest.com/t/ror-audit-not-logging-user-id)"
+  - type: fix
+    components: [es]
+    text: "index resolve action should be treated as readonly action"
+  - type: fix
+    components: [es]
+    text: "/\\_snapshot and /\\_snapshot/\\_all should behave the same ### What's new in 1.24.0"
+  - type: security
+    components: [es]
+    text: "search template handling fix"
+  - type: new
+    components: [es]
+    text: "7.9.3 & 6.8.13 support"
+  - type: enhancement
+    components: [es]
+    text: "full support for ES Snapshots and Restore APIs"
+  - type: fix
+    components: [kbn]
+    text: "fix crash in error handling"
+  - type: fix
+    components: [es]
+    text: "don't remove ES response warning headers"
+  - type: fix
+    components: [es]
+    text: "issue when entropy of /dev/random could have been exhausted when using JwtToken rule ### What's new in 1.23.1"
+  - type: new
+    components: [es]
+    text: "7.9.2 support"
+  - type: fix
+    components: [kbn]
+    text: "fix code 500 error on login in Kibana ### What's new in 1.23.0"
+  - type: new
+    components: [es]
+    text: "introduced must\\_involve\\_indices option for indices rule"
+  - type: enhancement
+    components: [es]
+    text: "negation support in headers rules"
+  - type: enhancement
+    components: [es]
+    text: "[x-pack rollup API handling](https://forum.readonlyrest.com/t/actions-still-forbidden-to-unrestricted-user/1659)"
+  - type: fix
+    components: [kbn]
+    text: "deep links query parameters are now handled"
+  - type: fix
+    components: [kbn]
+    text: "make sure default kibana index is always discovered (fixes reporting in 6.x)"
+  - type: fix
+    components: [es]
+    text: "[settings file permission issue with JDK 1.8.0 25.262-b10](https://forum.readonlyrest.com/t/readonlyrest-for-elastic-wont-start-1-18-8-es6-8-1/1652)"
+  - type: fix
+    components: [es]
+    text: "/\\_cluster/allocation/explain request should not be forbidden if matched block doesn't have indices rules"
+  - type: fix
+    components: [es]
+    text: "remote address extracting issue"
+  - type: fix
+    components: [es]
+    text: "[fixed TYP audit field for some request types](https://forum.readonlyrest.com/t/match-wrong-index-in-forbid-block/1653/2) ### What's new in 1.22.1"
+  - type: fix
+    components: [es]
+    text: "missing handling of aliases API for ES 7.9.0 ### What's new in 1.22.0"
+  - type: new
+    components: [es]
+    text: "7.9.0 support"
+  - type: enhancement
+    components: [es]
+    text: "aliases API handling"
+  - type: enhancement
+    components: [es]
+    text: "dynamic variables support in fields rule"
+  - type: fix
+    components: [es]
+    text: "[adding aliases issue](https://forum.readonlyrest.com/t/actions-still-forbidden-to-unrestricted-user/1659)"
+  - type: fix
+    components: [es]
+    text: "potential memory leak for ES 7.7.x and above"
+  - type: fix
+    components: [es]
+    text: "cross cluster search issue fix for X-Pack \\_async\\_search action"
+  - type: fix
+    components: [es]
+    text: "XFF entry in audit issue"
+  - type: fix
+    components: [kbn]
+    text: "SAML certificate loading"
+  - type: fix
+    components: [kbn]
+    text: "SAML loading groups from assertion"
+  - type: fix
+    components: [kbn]
+    text: "fix reporting in pre-7.7.0 ### What's new in 1.21.0"
+  - type: enhancement
+    components: [es]
+    text: "[cluster API support improvements](https://forum.readonlyrest.com/t/settings-problems/1616)"
+  - type: fix
+    components: [es]
+    text: "X-Pack \\_async\\_search support"
+  - type: fix
+    components: [es]
+    text: "\\_rollover request handling"
+  - type: fix
+    components: [es]
+    text: "[handling numeric ssl configuration properties](https://forum.readonlyrest.com/t/numeric-passphrases-invalid-ssl-config/1512)"
+  - type: fix
+    components: [kbn]
+    text: "multitenancy+reporting regression fix (for 7.6.x and earlier)"
+  - type: fix
+    components: [kbn]
+    text: "\"x-\" headers should be forwarded in /login route when proxy passthrough is enabled"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** [\\(KBN\\) Logout now redirects to login screen when using proxy](https://forum.readonlyrest.com/t/kibana-ror-1-19-5-issue/1576/24)"
+    type: fix
+    components_raw: "unspecified"
+    text: "[(KBN) Logout now redirects to login screen when using proxy](https://forum.readonlyrest.com/t/kibana-ror-1-19-5-issue/1576/24)"
+  - type: fix
+    components: [kbn]
+    text: "SAML metadata.xml endpoint not responding"
+  - type: fix
+    components: [kbn]
+    text: "NAT/reverse proxy support for SAML"
+  - type: fix
+    components: [kbn]
+    text: "SAML login redirect error"
+  - type: fix
+    components: [es]
+    text: "\\_readonlyrest/metadata/current\\_user should be always allowed by filter/fields rule ### What's new in 1.20.0"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** 7.7.1, 7.8.0 support"
+    type: new
+    components_raw: "unspecified"
+    text: "7.7.1, 7.8.0 support"
+  - type: enhancement
+    components: [kbn]
+    text: "tidy up audit page"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn free
+    # original: "* **🧐Enhancement** \\(KBN FREE\\) clearly inform when features are not available"
+    type: enhancement
+    components_raw: "KBN FREE"
+    text: "clearly inform when features are not available"
+  - type: enhancement
+    components: [kbn]
+    text: "ship license report of libraries"
+  - type: enhancement
+    components: [es]
+    text: "filter rule performance improvement"
+  - type: fix
+    components: [kbn]
+    text: "proxy\\_auth: avoid logout-login loop"
+  - type: fix
+    components: [kbn]
+    text: "404 error on font CSS file"
+  - type: fix
+    components: [es]
+    text: "[wildcard in filter query issue](https://forum.readonlyrest.com/t/wildcard-in-dls-filter-gives-error/1551)"
+  - type: fix
+    components: [es]
+    text: "[forbidden /\\_snapshot issue](https://forum.readonlyrest.com/t/get-snapshot-permission-issue/1594)"
+  - type: fix
+    components: [es]
+    text: "/\\_mget handling by indices rule when no index from a list is found"
+  - type: fix
+    components: [es]
+    text: "available groups order in metadata response should match the order in which groups appear in ACL"
+  - type: fix
+    components: [es]
+    text: ".readonlyrest and audit index - removed usage of explicit index type"
+  - type: fix
+    components: [es]
+    text: "[tasks leak bug](https://forum.readonlyrest.com/t/lots-of-active-tasks-in-cat-tasks/1593) ### What's new in 1.19.5"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** 7.7.0, 7.6.2, 6.8.9, 6.8.8 support"
+    type: new
+    components_raw: "unspecified"
+    text: "7.7.0, 7.6.2, 6.8.9, 6.8.8 support"
+  - type: enhancement
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "kibana\\_access can be explicitly set to unrestricted"
+  - type: enhancement
+    components: [es]
+    text: "[LDAP connection pool improvement](https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485)"
+  - type: fix
+    components: [es]
+    text: "[better LDAP request timeout handling](https://forum.readonlyrest.com/t/losing-connections-to-ldap-servers/1485)"
+  - type: fix
+    components: [es]
+    text: "remote indices searching bug"
+  - type: fix
+    components: [es]
+    text: "cross cluster search support for \\_field\\_caps request"
+  - type: security
+    components: [es]
+    text: "create and delete templates handling"
+  - type: fix
+    components: [kbn]
+    text: "Regression in proxy\\_auth\\_passthrough"
+  - type: enhancement
+    components: [kbn]
+    text: "whitelistedPaths now accepts basic auth credentials"
+  - type: enhancement
+    components: [kbn]
+    text: "Dump logout button, [new ROR Panel](https://forum.readonlyrest.com/t/new-logout-button-design-new-ror-panel/1476)"
+  - type: enhancement
+    components: [kbn]
+    text: "removed ROR from Kibana sidebar. Admins have a link in new panel."
+  - type: enhancement
+    components: [kbn]
+    text: "avoid show login form redirecting from SAML IdP"
+  - type: new
+    components: [kbn]
+    text: "[OpenID Connect (OIDC) authentication connector](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#openid-connect-oidc)"
+  - type: new
+    components: [kbn]
+    text: "[login\\_title, login\\_subtitle enable 2 column login page](https://forum.readonlyrest.com/t/ror-enterprise-show-support-contact-on-login-page/1508/2)"
+  - type: security
+    components: [kbn]
+    text: "server-side navigation prevention to hidden apps ### What's new in 1.19.4"
+  - type: fix
+    components: [es]
+    text: "Interpolating config with environment variables in SSL section"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn ent 6.x
+    # original: "* **🐞Fix** \\(KBN Ent 6.x\\) Fixed default space creation in"
+    type: fix
+    components_raw: "KBN Ent 6.x"
+    text: "Fixed default space creation in"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn 6.x
+    # original: "* **🐞Fix** \\(KBN 6.x\\) Fixed error toast notification not showing"
+    type: fix
+    components_raw: "KBN 6.x"
+    text: "Fixed error toast notification not showing"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn ent
+    # original: "* **🐞Fix** \\(KBN Ent\\) Fixed missing Axios dependency"
+    type: fix
+    components_raw: "KBN Ent"
+    text: "Fixed missing Axios dependency"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn ent
+    # original: "* **🐞Fix** \\(KBN Ent\\) Fixed SAML connector"
+    type: fix
+    components_raw: "KBN Ent"
+    text: "Fixed SAML connector"
+  - type: fix
+    components: [kbn]
+    text: "Toast notification overlap with logout bar"
+  - type: enhancement
+    components: [kbn]
+    text: "Restyled logout bar"
+  - type: enhancement
+    components: [kbn]
+    text: "Configurable periodic session checker ### What's new in 1.19.3"
+  - type: new
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "7.6.1 compatibility"
+  - type: new
+    components: [es]
+    text: "customizable name of settings index"
+  - type: enhancement
+    components: [kbn]
+    text: "configurable ROR cookie name"
+  - type: enhancement
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "handling of encoded ROR headers in Authorization header values"
+  - type: enhancement
+    components: [kbn]
+    text: "user feedback on why login failed"
+  - type: fix
+    components: [es]
+    text: "support for multiple header values"
+  - type: fix
+    components: [es]
+    text: "releasing LDAP connection pool on reloading ROR settings"
+  - type: fix
+    components: [kbn]
+    text: "multitenancy issue with 7.6.0+"
+  - type: fix
+    components: [kbn]
+    text: "creation of default space for new tenant"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn 6.x
+    # original: "* **🐞Fix** \\(KBN 6.x\\) in RO mode, don't hide add/remove over fields in discovery"
+    type: fix
+    components_raw: "KBN 6.x"
+    text: "in RO mode, don't hide add/remove over fields in discovery"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn 6.x
+    # original: "* **🐞Fix** \\(KBN 6.x\\) index template & in-index session manager issues ### What's new in 1.19.2"
+    type: fix
+    components_raw: "KBN 6.x"
+    text: "index template & in-index session manager issues ### What's new in 1.19.2"
+  - type: new
+    components: [kbn]
+    text: "7.6.0 support"
+  - type: enhancement
+    components: [kbn]
+    text: "less verbose info logging"
+  - type: enhancement
+    components: [kbn]
+    text: "start up time semantic check for settings"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn free
+    # original: "* **🐞Fix** \\(KBN Free\\) missing logout button"
+    type: fix
+    components_raw: "KBN Free"
+    text: "missing logout button"
+  - type: fix
+    components: [kbn]
+    text: "error message creating internal proxy"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn 6.x
+    # original: "* **🐞Fix** \\(KBN 6.x\\) add field to filter button invisible in RO mode ### What's new in 1.19.1"
+    type: fix
+    components_raw: "KBN 6.x"
+    text: "add field to filter button invisible in RO mode ### What's new in 1.19.1"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_type
+    # original: "* **🎁Product** \\(KBN\\) [Launched ReadonlyREST Free for Kibana!](https://forum.readonlyrest.com/t/provide-kibana-login-page-for-ror-oss-version/1441/2?u=sscarduzio)"
+    type: <unknown>
+    components_raw: "KBN"
+    text: "[Launched ReadonlyREST Free for Kibana!](https://forum.readonlyrest.com/t/provide-kibana-login-page-for-ror-oss-version/1441/2?u=sscarduzio)"
+  - type: new
+    components: [es]
+    text: "7.6.0 support, Kibana support coming soon"
+  - type: new
+    components: [kbn]
+    text: "Audit log dashboard"
+  - type: new
+    components: [kbn]
+    text: "Template index can now be declared per tenant instead of globally"
+  - type: new
+    components: [es]
+    text: "custom trust store file and password options in ROR settings"
+  - type: enhancement
+    components: [es]
+    text: "When \"prompt\\_for\\_basic\\_auth\" is enabled, ROR is going to return 401 instead of 404 when the index is not found or a user is not allowed to see the index"
+  - type: enhancement
+    components: [es]
+    text: "literal ipv6 with zone Id is acceptable network address"
+  - type: enhancement
+    components: [es]
+    text: "LDAP client cache improvements"
+  - type: fix
+    components: [es]
+    text: "/\\_all/\\_settings API issue"
+  - type: fix
+    components: [es]
+    text: "Index stats API & Index shard stores API issue"
+  - type: fix
+    components: [es]
+    text: "readonlyrest.force\\_load\\_from\\_file setting decoding issue"
+  - type: fix
+    components: [kbn]
+    text: "allowing user to be logged in in two tabs at the same time"
+  - type: fix
+    components: [kbn]
+    text: "logging with JWT parameter issue"
+  - type: fix
+    components: [kbn]
+    text: "parsing of sessions fetched from ES index"
+  - type: fix
+    components: [kbn]
+    text: "logout issue ### What's new in 1.19.0"
+  - type: new
+    components: [kbn]
+    text: "Configurable option to delete docs from tenant index when not present in template"
+  - type: enhancement
+    components: [es]
+    text: "Less verbose logging of blocks history"
+  - type: enhancement
+    components: [es]
+    text: "Enriched logs and audit with attempted username"
+  - type: enhancement
+    components: [es]
+    text: "Better settings validation - only one authentication rule can be used in given block"
+  - type: enhancement
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "Plugin versions printing in logs on launch"
+  - type: enhancement
+    components: [es]
+    text: "When user doesn't have access to given index, ROR pretends that the index doesn't exist and return 404 instead of 403"
+  - type: fix
+    components: [es]
+    text: "Searching for nonexistent/forbidden index with wildcard mirrors default ES behaviour instead of returning 403"
+  - type: fix
+    components: [kbn]
+    text: "Switching groups bug ### What's new in 1.18.10"
+  - type: new
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "Support v6.8.6, v7.5.0, v7.5.1"
+  - type: new
+    components: [kbn]
+    text: "Group IDs can now be mapped to aliases"
+  - type: new
+    components: [es]
+    text: "New, more robust and simple method of creating custom audit log serializers"
+  - type: new
+    components: [es]
+    text: "Example projects with custom audit log serializers"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_type
+    # original: "* 🐞**Fix** \\(KBN\\) Prevent index migration after kibana startup"
+    type: <unknown>
+    components_raw: "KBN"
+    text: "Prevent index migration after kibana startup"
+  - type: enhancement
+    components: [kbn]
+    text: "If default space doesn't exist in kibana index then copy from default one"
+  - type: enhancement
+    components: [kbn]
+    text: "Crypto improvements - store init vector with encrypted data as base64 encoded json."
+  - type: enhancement
+    components: [es]
+    text: "Better settings validation - prevent duplicated keys in readonlyrest.yml ### What's new in 1.18.9"
+  - type: new
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "Support v7.4.1, v7.4.2"
+  - type: new
+    components: [kbn]
+    text: "Kibana sessions stored in ES index"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_type
+    # original: "* 🐞**Fix** \\(ES\\) issue with in-index settings auto-reloading"
+    type: <unknown>
+    components_raw: "ES"
+    text: "issue with in-index settings auto-reloading"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_type
+    # original: "* 🐞**Fix** \\(ES\\) \\_cat/indices empty response when matched block doesn't contain 'indices' rule ### What's new in 1.18.8"
+    type: <unknown>
+    components_raw: "ES"
+    text: "\\_cat/indices empty response when matched block doesn't contain 'indices' rule ### What's new in 1.18.8"
+  - type: new
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "Support v7.4.0"
+  - type: new
+    components: [es]
+    text: "Elasticsearch SQL Support"
+  - type: new
+    components: [es]
+    text: "Internode ssl support for es5x, es60x, es61x and es62x"
+  - type: new
+    components: [es]
+    text: "new runtime variable @{acl:current\\_group}"
+  - type: new
+    components: [es]
+    text: "namespace for user variable and support for both versions: @{user} and @{acl:user}"
+  - type: new
+    components: [es]
+    text: "support for multiple values in uri\\_re rule"
+  - type: enhancement
+    components: [es]
+    text: "more reliable in-index settings loading of ES with ROR startup"
+  - type: enhancement
+    components: [es]
+    text: "less verbose logs in JWT rules"
+  - type: enhancement
+    components: [es]
+    text: "Better response from ROR API when plugin is disabled"
+  - type: enhancement
+    components: [es]
+    text: "Splitting verification ssl property to client\\_authentication and certificate\\_verification"
+  - type: fix
+    components: [es]
+    text: "issue with backward compatibility of proxy\\_auth settings"
+  - type: fix
+    components: [es]
+    text: "/\\_render/template request NPE"
+  - type: fix
+    components: [es]
+    text: "\\_cat/indices API bug fixes"
+  - type: fix
+    components: [es]
+    text: "\\_cat/templates API return empty list instead of FORBIDDEN when no indices are found"
+  - type: fix
+    components: [es]
+    text: "updated regex for kibana access rule to support 7.3 ES"
+  - type: fix
+    components: [es]
+    text: "proper resolving of non-string ENV variables in readonlyrest.yml"
+  - type: fix
+    components: [es]
+    text: "lang-mustache search template handling ### What's new in 1.18.7"
+  - type: new
+    components: [es]
+    text: "Field level security (FLS) supports nested JSON fields"
+  - type: fix
+    components: [es]
+    text: "Authorization headers appeared in clear in logs"
+  - type: enhancement
+    components: [kbn]
+    text: "Don't logout users when they are not allowed to search a index-pattern"
+  - type: enhancement
+    components: [es]
+    text: "Headers obfuscation is now case insensitive ### What's new in 1.18.6"
+  - type: new
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "Support v7.3.1, v7.3.2"
+  - type: new
+    components: [es]
+    text: "Configurable header names whose value should be obfuscated in logs"
+  - type: new
+    components: [kbn]
+    text: "Dynamic variables from user identity available in custom\\_logout\\_link"
+  - type: enhancement
+    components: [es]
+    text: "Richer logs for JWT errors"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🧐Enhancement** \\(ENT\\) nextUrl works also with SAML now"
+    type: enhancement
+    components_raw: "ENT"
+    text: "nextUrl works also with SAML now"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🧐Enhancement** \\(ENT\\) SAML assertion object available in ACL dynamic variables"
+    type: enhancement
+    components_raw: "ENT"
+    text: "SAML assertion object available in ACL dynamic variables"
+  - type: enhancement
+    components: [kbn]
+    text: "Validate LDAP server(s) before accepting new YAML settings"
+  - type: enhancement
+    components: [kbn]
+    text: "Ensure a read-only UX for 'ro' users in older Kibana"
+  - type: fix
+    components: [es]
+    text: "Fix memory leak from dependency (snakeYAML) ### What's new in 1.18.5"
+  - type: fix
+    components: [es]
+    text: "indices rule can now properly handle also the templates API"
+  - type: enhancement
+    components: [es]
+    text: "Array dynamic variables are serialized as CSV wrapped in double quotes"
+  - type: enhancement
+    components: [es]
+    text: "Cleaner debug logs (no stacktraces on forbidden requests)"
+  - type: enhancement
+    components: [es]
+    text: "LDAP debug logs fire also when cache is hit"
+  - type: new
+    components: [es, kbn]
+    components_raw: "ES/KBN"
+    text: "Support v7.2.1, v7.3.0"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro
+    # original: "* **🐞Fix** \\(PRO\\) PRO plugin crashing for some Kibana versions"
+    type: fix
+    components_raw: "PRO"
+    text: "PRO plugin crashing for some Kibana versions"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🐞Fix** \\(ENT\\) SAML library wrote a too large cookie sometimes"
+    type: fix
+    components_raw: "ENT"
+    text: "SAML library wrote a too large cookie sometimes"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🐞Fix** \\(ENT\\) SAML logout not working"
+    type: fix
+    components_raw: "ENT"
+    text: "SAML logout not working"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🐞Fix** \\(ENT\\) JWT fix exception \"cannot set requestHeadersWhitelist\""
+    type: fix
+    components_raw: "ENT"
+    text: "JWT fix exception \"cannot set requestHeadersWhitelist\""
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,ent
+    # original: "* **🐞Fix** \\(PRO/ENT\\) Hide more UI elements for RO users"
+    type: fix
+    components_raw: "PRO/ENT"
+    text: "Hide more UI elements for RO users"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,ent
+    # original: "* **🐞Fix** \\(PRO/ENT\\) Sometimes not all the available groups appear in tenancy selector"
+    type: fix
+    components_raw: "PRO/ENT"
+    text: "Sometimes not all the available groups appear in tenancy selector"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,ent
+    # original: "* **🐞Fix** \\(PRO/ENT\\) Feature \"nextUrl\" broke"
+    type: fix
+    components_raw: "PRO/ENT"
+    text: "Feature \"nextUrl\" broke"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,ent
+    # original: "* **🐞Fix** \\(PRO/ENT\\) prevent user kick-out when APM is not configured and you are not an admin"
+    type: fix
+    components_raw: "PRO/ENT"
+    text: "prevent user kick-out when APM is not configured and you are not an admin"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,ent
+    # original: "* **🚀New** \\(PRO/ENT\\) Kibana request path/method now sent to ES \\(good for policing dev-tools\\) ### What's new in 1.18.4"
+    type: new
+    components_raw: "PRO/ENT"
+    text: "Kibana request path/method now sent to ES (good for policing dev-tools) ### What's new in 1.18.4"
+  - type: new
+    components: [es]
+    text: "User impersonation API"
+  - type: new
+    components: [es]
+    text: "Support latest 6.x and 5.x versions"
+  - type: fix
+    components: [es]
+    text: "filter/fields rules leak"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🐞Fix** \\(KBN/ENT\\) allow more action for kibana\\_access, prevent sudden logout"
+    type: fix
+    components_raw: "KBN/ENT"
+    text: "allow more action for kibana\\_access, prevent sudden logout"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🐞Fix** \\(KBN/ENT\\) temporarily roll back \"support for unlimited tenancies\" ### What's new in 1.18.3"
+    type: fix
+    components_raw: "KBN/ENT"
+    text: "temporarily roll back \"support for unlimited tenancies\" ### What's new in 1.18.3"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** Support added for ES/Kibana 6.8.1"
+    type: new
+    components_raw: "unspecified"
+    text: "Support added for ES/Kibana 6.8.1"
+  - type: enhancement
+    components: [es]
+    text: "Crash ES on invalid settings instead of stalling forever"
+  - type: enhancement
+    components: [es]
+    text: "Better logging on JWT, JSON-paths, LDAP, YAML errors"
+  - type: enhancement
+    components: [es]
+    text: "Block level settings validation to user with precious hints"
+  - type: enhancement
+    components: [es]
+    text: "If force\\_load\\_from\\_file: true, don't poll index settings"
+  - type: enhancement
+    components: [es]
+    text: "Order now counts declaring LDAP Failover HA servers"
+  - type: fix
+    components: [es]
+    text: "\"EsIndexJsonContentProvider\" had a null pointer exception"
+  - type: fix
+    components: [es]
+    text: "\"es.set.netty.runtime.available.processors\" exception"
+  - type: enhancement
+    components: [kbn]
+    text: "Collapsible logout button"
+  - type: enhancement
+    components: [kbn]
+    text: "ROR App now uses a HA http client"
+  - type: enhancement
+    components: [kbn]
+    text: "Automatic logout for inactivity"
+  - type: enhancement
+    components: [kbn]
+    text: "Support unlimited amount of tenancies"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:ent
+    # original: "* **🐞Fix** \\(KBN/ENT\\) concurrent multitenancy bug"
+    type: fix
+    components_raw: "KBN/ENT"
+    text: "concurrent multitenancy bug"
+  - type: fix
+    components: [kbn]
+    text: "Avoid sporadic errors on Save/Load buttons ### What's new in 1.18.2"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** Support for Elasticsearch & Kibana 7.2.0"
+    type: new
+    components_raw: "unspecified"
+    text: "Support for Elasticsearch & Kibana 7.2.0"
+  - type: fix
+    components: [es]
+    text: "restore indices (\"IDX\") in audit logging"
+  - type: enhancement
+    components: [es]
+    text: "New algorithm of setting evaluation order"
+  - type: new
+    components: [es]
+    text: "JWT claims as dynamic variables. I.e. \"@{jwt:claim.json.path}\""
+  - type: new
+    components: [es]
+    text: "\"explode\" dynamic variables. I.e. indices: \\[\"@explode{x-indices}\"\\]"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) preserve comments and formatting in YAML editor"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "preserve comments and formatting in YAML editor"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) Print error message when session is expired"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "Print error message when session is expired"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Regression** \\(PRO/Enterprise\\) Redirect to original link after login"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "Redirect to original link after login"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Regression** \\(PRO/Enterprise\\) Broken CSV reporting"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "Broken CSV reporting"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🧐Enhancement** \\(PRO/Enterprise\\) Prevent navigating away from YAML editor w/ unsaved changes"
+    type: enhancement
+    components_raw: "PRO/Enterprise"
+    text: "Prevent navigating away from YAML editor w/ unsaved changes"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Exception when SAML connectors were all disabled"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Exception when SAML connectors were all disabled"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Concurrent tenants could mix up each other kibana index"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Concurrent tenants could mix up each other kibana index"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Cannot inject custom JS if no custom CSS was also declared"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Cannot inject custom JS if no custom CSS was also declared"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Injected JS had no effect on ROR logout button"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Injected JS had no effect on ROR logout button"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) On narrow screens, the YAML editor showed buttons twice ### What's new in 1.18.1"
+    type: fix
+    components_raw: "Enterprise"
+    text: "On narrow screens, the YAML editor showed buttons twice ### What's new in 1.18.1"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🐞Fix** \\(Elasticsearch\\) Reindex requests failed for a regression in indices extraction"
+    type: fix
+    components_raw: "Elasticsearch"
+    text: "Reindex requests failed for a regression in indices extraction"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🐞Fix** \\(Elasticsearch\\) Groups rule erratically failed"
+    type: fix
+    components_raw: "Elasticsearch"
+    text: "Groups rule erratically failed"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🐞Fix** \\(Elasticsearch\\) JWT claims can now contain special characters"
+    type: fix
+    components_raw: "Elasticsearch"
+    text: "JWT claims can now contain special characters"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🧐Enhancement** \\(Elasticsearch\\) Better ACL History logging"
+    type: enhancement
+    components_raw: "Elasticsearch"
+    text: "Better ACL History logging"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🧐Enhancement** \\(Elasticsearch\\) QueryLogSerializer and old custom log serializers work again"
+    type: enhancement
+    components_raw: "Elasticsearch"
+    text: "QueryLogSerializer and old custom log serializers work again"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) ReadonlyREST icon in Kibana was white on white"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "ReadonlyREST icon in Kibana was white on white"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) SAML connectors could not be disabled"
+    type: fix
+    components_raw: "Enterprise"
+    text: "SAML connectors could not be disabled"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) SAML connector \"buttonName\" didn't work ### What's new in 1.18.0"
+    type: fix
+    components_raw: "Enterprise"
+    text: "SAML connector \"buttonName\" didn't work ### What's new in 1.18.0"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** Support for Elasticsearch & Kibana 7.0.1"
+    type: new
+    components_raw: "unspecified"
+    text: "Support for Elasticsearch & Kibana 7.0.1"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🧐Enhancement** \\(Elasticsearch\\) empty array values in settings are invalid"
+    type: enhancement
+    components_raw: "Elasticsearch"
+    text: "empty array values in settings are invalid"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🐞Security Fix** \\(Elasticsearch\\) arbitrary x-cluster search referencing local cluster"
+    type: fix
+    components_raw: "Elasticsearch"
+    text: "arbitrary x-cluster search referencing local cluster"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🐞Fix** \\(Elasticsearch\\) ArrayOutOfBoundException on snapshot operations"
+    type: fix
+    components_raw: "Elasticsearch"
+    text: "ArrayOutOfBoundException on snapshot operations"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🧐Enhancement** \\(PRO/Enterprise\\) History cleaning can now be disabled \\(\"clearSessionOnEvents\"\\) ### What's new in 1.17.7"
+    type: enhancement
+    components_raw: "PRO/Enterprise"
+    text: "History cleaning can now be disabled (\"clearSessionOnEvents\") ### What's new in 1.17.7"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** Support for Elasticsearch 7.0.0 \\(Kibana is coming soon\\)"
+    type: new
+    components_raw: "unspecified"
+    text: "Support for Elasticsearch 7.0.0 (Kibana is coming soon)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🧐Enhancement** \\(Elasticsearch\\) rewritten LDAP connector"
+    type: enhancement
+    components_raw: "Elasticsearch"
+    text: "rewritten LDAP connector"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🧐Enhancement** \\(Elasticsearch\\) new core written in Scala is now GA"
+    type: enhancement
+    components_raw: "Elasticsearch"
+    text: "new core written in Scala is now GA"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) devtools requests now honor the currently selected tenancy"
+    type: fix
+    components_raw: "Enterprise"
+    text: "devtools requests now honor the currently selected tenancy"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🐞Security Fix** \\(Enterprise/PRO\\) Fix \"connectorsService\" error in installation ### What's new in 1.17.5"
+    type: fix
+    components_raw: "Enterprise/PRO"
+    text: "Fix \"connectorsService\" error in installation ### What's new in 1.17.5"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** Support for Kibana/Elasticsearch 6.7.1"
+    type: new
+    components_raw: "unspecified"
+    text: "Support for Kibana/Elasticsearch 6.7.1"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,gt;= kibana 6.6.0
+    # original: "* **🧐Enhancement** \\(Enterprise &gt;= Kibana 6.6.0\\) Multiple SAML identity provider"
+    type: enhancement
+    components_raw: "Enterprise &gt;= Kibana 6.6.0"
+    text: "Multiple SAML identity provider"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🐞Security Fix** \\(Enterprise/PRO\\) Don't pass auth headers back to the browser"
+    type: fix
+    components_raw: "Enterprise/PRO"
+    text: "Don't pass auth headers back to the browser"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🐞Fix** \\(Enterprise/PRO\\) Missing null check caused error in reporting \\(CSV\\)"
+    type: fix
+    components_raw: "Enterprise/PRO"
+    text: "Missing null check caused error in reporting (CSV)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Don't reject requests if SAML groups are not configured"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Don't reject requests if SAML groups are not configured"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** filter/fields rules not working in msearch \\(in 6.7.x\\)"
+    type: fix
+    components_raw: "unspecified"
+    text: "filter/fields rules not working in msearch (in 6.7.x)"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Print whole LDAP search query in debug log ### What's new in 1.17.4"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Print whole LDAP search query in debug log ### What's new in 1.17.4"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New** Support for Kibana/Elasticsearch 6.7.0"
+    type: new
+    components_raw: "unspecified"
+    text: "Support for Kibana/Elasticsearch 6.7.0"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🧐Enhancement** \\(PRO/Enterprise\\) JWT query param is the preferred credentials provider"
+    type: enhancement
+    components_raw: "PRO/Enterprise"
+    text: "JWT query param is the preferred credentials provider"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🧐Enhancement** \\(PRO/Enterprise\\) admin users can use indices management"
+    type: enhancement
+    components_raw: "PRO/Enterprise"
+    text: "admin users can use indices management"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🧐Enhancement** \\(PRO/Enterprise\\) ro users can dismiss telemetry form"
+    type: enhancement
+    components_raw: "PRO/Enterprise"
+    text: "ro users can dismiss telemetry form"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** Audit logging in 5.1.x now works again"
+    type: fix
+    components_raw: "unspecified"
+    text: "Audit logging in 5.1.x now works again"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** unpredictable behaviour of \"filter\" and \"fields\" when using external auth"
+    type: fix
+    components_raw: "unspecified"
+    text: "unpredictable behaviour of \"filter\" and \"fields\" when using external auth"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** LDAP ConcurrentModificationException"
+    type: fix
+    components_raw: "unspecified"
+    text: "LDAP ConcurrentModificationException"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** Audit logging in 5.1.x now works again"
+    type: fix
+    components_raw: "unspecified"
+    text: "Audit logging in 5.1.x now works again"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) JWT deep-link works again ### What's new in 1.17.3 1.17.2 went unreleased, all changes have been merged in 1.17.3 directly"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "JWT deep-link works again ### What's new in 1.17.3 1.17.2 went unreleased, all changes have been merged in 1.17.3 directly"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Tenancy selector showing if user belonged to one group"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Tenancy selector showing if user belonged to one group"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) RW buttons not hiding for RO users in React Kibana apps"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "RW buttons not hiding for RO users in React Kibana apps"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Tenancy templating now works much more reliably"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Tenancy templating now works much more reliably"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Missing tenancy selector icon after switching tenancy"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Missing tenancy selector icon after switching tenancy"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) barring static files requests caused sudden logout"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "barring static files requests caused sudden logout"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** Numerous fixes to better support Kibana 6.6.x"
+    type: fix
+    components_raw: "unspecified"
+    text: "Numerous fixes to better support Kibana 6.6.x"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** Critical fixes in new Scala core"
+    type: fix
+    components_raw: "unspecified"
+    text: "Critical fixes in new Scala core"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** Exception in reindex requests caused tenancy templating to fail"
+    type: fix
+    components_raw: "unspecified"
+    text: "Exception in reindex requests caused tenancy templating to fail"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Bypass cross-cluster search logic if single cluster ### What's new in 1.17.1"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Bypass cross-cluster search logic if single cluster ### What's new in 1.17.1"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) SAML now works well in 6.6.x"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "SAML now works well in 6.6.x"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) \"undefined\" authentication error before login"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "\"undefined\" authentication error before login"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Default space creation failures for new tenants"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Default space creation failures for new tenants"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Icons/titles CSS misalignment in sidebar \\(Firefox\\)"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Icons/titles CSS misalignment in sidebar (Firefox)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🧐Enhancement**\\(Enterprise\\) UX: Larger tenancy selector"
+    type: enhancement
+    components_raw: "Enterprise"
+    text: "UX: Larger tenancy selector"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Security Fix** \\(Enterprise\\) Privilege escalation when changing tenancies under monitoring"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Privilege escalation when changing tenancies under monitoring"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🐞Fix** \\(Elasticsearch\\) compatibility fixes to support new Kibana features"
+    type: fix
+    components_raw: "Elasticsearch"
+    text: "compatibility fixes to support new Kibana features"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🧐Enhancements** \\(Elasticsearch\\) New core and LDAP connector written in Scala is finished, now under QA. ### What's new in 1.17.0"
+    type: enhancement
+    components_raw: "Elasticsearch"
+    text: "New core and LDAP connector written in Scala is finished, now under QA. ### What's new in 1.17.0"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** Support for Kibana/Elasticsearch 6.6.0, 6.6.1"
+    type: new
+    components_raw: "unspecified"
+    text: "Support for Kibana/Elasticsearch 6.6.0, 6.6.1"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** Internode SSL \\(ES 6.3.x onwards\\)"
+    type: new
+    components_raw: "unspecified"
+    text: "Internode SSL (ES 6.3.x onwards)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🧐Enhancement**\\(PRO/Enterprise\\) UI appearence"
+    type: enhancement
+    components_raw: "PRO/Enterprise"
+    text: "UI appearence"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Made HTTP Connection configurable \\(PR \\#410\\)"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Made HTTP Connection configurable (PR \\#410)"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** slow boot due to SecureRandom waiting for sufficient entropy"
+    type: fix
+    components_raw: "unspecified"
+    text: "slow boot due to SecureRandom waiting for sufficient entropy"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix** Enable kibana\\_access:ro to create short urls in es6.3+ \\(PR \\#408\\) ### What's new in 1.16.34"
+    type: fix
+    components_raw: "unspecified"
+    text: "Enable kibana\\_access:ro to create short urls in es6.3+ (PR \\#408) ### What's new in 1.16.34"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** X-Forwarded-For header in printed es logs \\(\"XFF\"\\)"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "X-Forwarded-For header in printed es logs (\"XFF\")"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** kibana_index: \".kibana_@{user}\" when user is \"John Doe\" becomes .kibana\\_john\\_doe"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "kibana_index: \".kibana_@{user}\" when user is \"John Doe\" becomes .kibana\\_john\\_doe"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enteprise
+    # original: "* **🐞Fix** \\(Enteprise\\) parse SAML groups from assertion as array of strings"
+    type: fix
+    components_raw: "Enteprise"
+    text: "parse SAML groups from assertion as array of strings"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enteprise
+    # original: "* **🐞Fix** \\(Enteprise\\) SAMLRequest in location header was URLEncoded twice, broke on some IdP"
+    type: fix
+    components_raw: "Enteprise"
+    text: "SAMLRequest in location header was URLEncoded twice, broke on some IdP"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enteprise
+    # original: "* **🐞Fix** \\(PRO/Enteprise\\) \"cookiePass\" works again, no more need for sticky cookies in load balancers!"
+    type: fix
+    components_raw: "PRO/Enteprise"
+    text: "\"cookiePass\" works again, no more need for sticky cookies in load balancers!"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enteprise
+    # original: "* **🐞Fix** \\(PRO/Enteprise\\) fix redirect loop with JWT deep linking when JWT token expires"
+    type: fix
+    components_raw: "PRO/Enteprise"
+    text: "fix redirect loop with JWT deep linking when JWT token expires"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enteprise
+    # original: "* **🧐Enhancement** \\(PRO/Enteprise\\) fix audit demo page CSS"
+    type: enhancement
+    components_raw: "PRO/Enteprise"
+    text: "fix audit demo page CSS"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enteprise
+    # original: "* **🧐Enhancement** \\(Enteprise\\) SAML more configuration parameters available"
+    type: enhancement
+    components_raw: "Enteprise"
+    text: "SAML more configuration parameters available"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enteprise
+    # original: "* **🚀New Feature** \\(PRO/Enteprise\\) set ROR to debug mode \\(readonlyrest\\_kbn.logLevel: \"debug\"\\) ### What's new in 1.16.33"
+    type: new
+    components_raw: "PRO/Enteprise"
+    text: "set ROR to debug mode (readonlyrest\\_kbn.logLevel: \"debug\") ### What's new in 1.16.33"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enteprise
+    # original: "* **🐞Fix**\\(PRO/Enteprise\\) compatibility problems with older Kibana versions"
+    type: fix
+    components_raw: "PRO/Enteprise"
+    text: "compatibility problems with older Kibana versions"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enteprise
+    # original: "* **🐞Fix**\\(PRO/Enteprise\\) compatibility problems with OSS Kibana version ### What's new in 1.16.32"
+    type: fix
+    components_raw: "PRO/Enteprise"
+    text: "compatibility problems with OSS Kibana version ### What's new in 1.16.32"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** \"kibanaIndexTemplate\": default dashboards and spaces for new tenants"
+    type: new
+    components_raw: "unspecified"
+    text: "\"kibanaIndexTemplate\": default dashboards and spaces for new tenants"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Support for ES/Kibana 6.5.4"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Support for ES/Kibana 6.5.4"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Upgraded LDAP library"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Upgraded LDAP library"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🧐Enhancement** \\(Enterprise\\) Now tenants save their CSV exports in their own reporting index"
+    type: enhancement
+    components_raw: "Enterprise"
+    text: "Now tenants save their CSV exports in their own reporting index"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enteprise
+    # original: "* **🐞Fix**\\(PRO/Enteprise\\) Support passwords that start and/or end with spaces"
+    type: fix
+    components_raw: "PRO/Enteprise"
+    text: "Support passwords that start and/or end with spaces"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) Now reporting works again ### What's new in 1.16.31"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "Now reporting works again ### What's new in 1.16.31"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Support for ES/Kibana 6.5.2, 6.5.3"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Support for ES/Kibana 6.5.2, 6.5.3"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_type
+    # original: "* **🚧WIP**: Laid out the foundation for LDAP HA support ### What's new in 1.16.29"
+    type: <unknown>
+    components_raw: "unspecified"
+    text: ": Laid out the foundation for LDAP HA support ### What's new in 1.16.29"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Support for ES/Kibana 6.4.3"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Support for ES/Kibana 6.4.3"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🚀New Feature** \\(PRO/Enterprise\\) configurable server side session duration"
+    type: new
+    components_raw: "PRO/Enterprise"
+    text: "configurable server side session duration"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** \\[LDAP\\] High Availability: Round Robin or Failover ### What's new in 1.16.28"
+    type: new
+    components_raw: "unspecified"
+    text: "\\[LDAP\\] High Availability: Round Robin or Failover ### What's new in 1.16.28"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Support for ES/Kibana 6.4.2"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Support for ES/Kibana 6.4.2"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞Fix** \\(Enterprise\\) Multi tenancy: sometimes changing tenancy would not change kibana index"
+    type: fix
+    components_raw: "Enterprise"
+    text: "Multi tenancy: sometimes changing tenancy would not change kibana index"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🐞Security Fix** \\(Enterprise/PRO\\) Avoid echoing Base64 encoded credentials in login form error message"
+    type: fix
+    components_raw: "Enterprise/PRO"
+    text: "Avoid echoing Base64 encoded credentials in login form error message"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🧐Enhancement** \\(Enterprise/PRO\\) Remove latest search/visualization/dashboard history on logout"
+    type: enhancement
+    components_raw: "Enterprise/PRO"
+    text: "Remove latest search/visualization/dashboard history on logout"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🧐Enhancement** \\(Enterprise/PRO\\) Clear transient authentication cookies on login error to avoid authentication deadlocks"
+    type: enhancement
+    components_raw: "Enterprise/PRO"
+    text: "Clear transient authentication cookies on login error to avoid authentication deadlocks"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞Fix**: External JWT verification may throw ArrayOutOfBoundException"
+    type: fix
+    components_raw: "unspecified"
+    text: ": External JWT verification may throw ArrayOutOfBoundException"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_type
+    # original: "* **🚧WIP**: Laid out the foundation for internode SSL transport \\(port 9300\\) ### What's new in 1.16.27"
+    type: <unknown>
+    components_raw: "unspecified"
+    text: ": Laid out the foundation for internode SSL transport (port 9300) ### What's new in 1.16.27"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** \\[JWT\\] external validator: it's now possible to avoid storing the private key in settings"
+    type: new
+    components_raw: "unspecified"
+    text: "\\[JWT\\] external validator: it's now possible to avoid storing the private key in settings"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Support for ES/Kibana 6.4.1"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Support for ES/Kibana 6.4.1"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Rewritten big part of ES plugin [documentation](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md)"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Rewritten big part of ES plugin [documentation](https://github.com/beshu-tech/readonlyrest-docs/blob/master/elasticsearch.md)"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** SAML Single log out flow"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "SAML Single log out flow"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🐞Fix** \\(Enterprise/PRO\\) [cookiePass](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#common-cookie-encryption-secret) works again, but only for Kibana 5.x. Newer Kibana needs sticky sessions in LB."
+    type: fix
+    components_raw: "Enterprise/PRO"
+    text: "[cookiePass](https://github.com/beshu-tech/readonlyrest-docs/blob/master/kibana.md#common-cookie-encryption-secret) works again, but only for Kibana 5.x. Newer Kibana needs sticky sessions in LB."
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🧐Enhancement** \\(Enterprise/PRO\\) much faster logout ### What's new in 1.16.26"
+    type: enhancement
+    components_raw: "Enterprise/PRO"
+    text: "much faster logout ### What's new in 1.16.26"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞 Fix** \\(PRO/Enterprise\\) bugs during plugin packaging and installation process ### What's new in 1.16.25"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "bugs during plugin packaging and installation process ### What's new in 1.16.25"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** Users rule: easily restrict external authentication to a list of users"
+    type: new
+    components_raw: "unspecified"
+    text: "Users rule: easily restrict external authentication to a list of users"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Support for ES 5.6.11"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Support for ES 5.6.11"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise,pro
+    # original: "* **🐞Hot Fix** \\(Enterprise/PRO\\) Error 404 when logging in with older versions of Kibana ### What's new in 1.16.24"
+    type: fix
+    components_raw: "Enterprise/PRO"
+    text: "Error 404 when logging in with older versions of Kibana ### What's new in 1.16.24"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🚀New Feature** \\(Enterprise\\) SAML Authentication"
+    type: new
+    components_raw: "Enterprise"
+    text: "SAML Authentication"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** Support for Elasticsearch and Kibana 6.4.0"
+    type: new
+    components_raw: "unspecified"
+    text: "Support for Elasticsearch and Kibana 6.4.0"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature** Headers rule now split in headers\\_or and headers\\_and"
+    type: new
+    components_raw: "unspecified"
+    text: "Headers rule now split in headers\\_or and headers\\_and"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Headers rule now allows wildcards"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Headers rule now allows wildcards"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🚀New Feature** \\(Enterprise\\) Multi-tenancy now works also with JSON groups provider"
+    type: new
+    components_raw: "Enterprise"
+    text: "Multi-tenancy now works also with JSON groups provider"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞 Fix** Multi-tenancy \\(Enterprise\\) incoherent initial kibana\\_index and current group ### What's new in 1.16.23"
+    type: fix
+    components_raw: "unspecified"
+    text: "Multi-tenancy (Enterprise) incoherent initial kibana\\_index and current group ### What's new in 1.16.23"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement** Support for Elastic Stack 6.3.1 and 5.6.10"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "Support for Elastic Stack 6.3.1 and 5.6.10"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🚀New Feature** \\(Enterprise\\) Custom CSS injection for Kibana"
+    type: new
+    components_raw: "Enterprise"
+    text: "Custom CSS injection for Kibana"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🚀New Feature** \\(Enterprise\\) Custom Javascript injection for Kibana"
+    type: new
+    components_raw: "Enterprise"
+    text: "Custom Javascript injection for Kibana"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🚀New Feature** \\(PRO/Enterprise\\) access paths without need to login \\(i.e. /api/status\\)"
+    type: new
+    components_raw: "PRO/Enterprise"
+    text: "access paths without need to login (i.e. /api/status)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞Fix** \\(PRO/Enterprise\\) Navigating to X-Pack APM caused hidden Kibana apps to reappear ### What's new in 1.16.22"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "Navigating to X-Pack APM caused hidden Kibana apps to reappear ### What's new in 1.16.22"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature:**  map LDAP groups to local groups \\(a.k.a. role mapping\\)"
+    type: new
+    components_raw: "unspecified"
+    text: "map LDAP groups to local groups (a.k.a. role mapping)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:elasticsearch
+    # original: "* **🐞 Fix** \\(Elasticsearch\\) wildcard aliases resolution not working in \"indices\" rule."
+    type: fix
+    components_raw: "Elasticsearch"
+    text: "wildcard aliases resolution not working in \"indices\" rule."
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐Enhancement:** it is now possible now to use JDK 9 and 10"
+    type: enhancement
+    components_raw: "unspecified"
+    text: "it is now possible now to use JDK 9 and 10"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞 Fix** \\(PRO/Enterprise\\) wait forever for login request \\(i.e.  slow LDAP servers\\)"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "wait forever for login request (i.e.  slow LDAP servers)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞 Fix** \\(PRO/Enterprise\\) add spinner and block UI if login request is being sent"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "add spinner and block UI if login request is being sent"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞 Fix** \\(PRO/Enterprise\\) if user is logged out because of LDAP cache expiring + slow authentication, redirect to login."
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "if user is logged out because of LDAP cache expiring + slow authentication, redirect to login."
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:pro,enterprise
+    # original: "* **🐞 Fix** \\(PRO/Enterprise\\) let RO users delete/edit search filters ### What's new in 1.16.21"
+    type: fix
+    components_raw: "PRO/Enterprise"
+    text: "let RO users delete/edit search filters ### What's new in 1.16.21"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature:** Introducing support for Elasticsearch and Kibana v6.3.0"
+    type: new
+    components_raw: "unspecified"
+    text: "Introducing support for Elasticsearch and Kibana v6.3.0"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:enterprise
+    # original: "* **🐞 Fix** \\(Enterprise\\) multi tenancy - switching tenancy does not always switch kibana index ### What's new in 1.16.20 ## ReadonlyREST PRO/Enterprise for Kibana"
+    type: fix
+    components_raw: "Enterprise"
+    text: "multi tenancy - switching tenancy does not always switch kibana index ### What's new in 1.16.20 ## ReadonlyREST PRO/Enterprise for Kibana"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐 Enhancement**: when login, forward \"elasticsearch.requestHeadersWhitelist\" headers. \\(useful for \"headers\" rule  and \"proxy\\_auth\" to work well.\\) ## ReadonlyREST for Elasticsearch"
+    type: enhancement
+    components_raw: "unspecified"
+    text: ": when login, forward \"elasticsearch.requestHeadersWhitelist\" headers. (useful for \"headers\" rule  and \"proxy\\_auth\" to work well.) ## ReadonlyREST for Elasticsearch"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀New Feature**: DLS \\(with dynamic variables suppoort\\) Thanks [DataSweet](http://www.datasweet.fr/)!"
+    type: new
+    components_raw: "unspecified"
+    text: ": DLS (with dynamic variables suppoort) Thanks [DataSweet](http://www.datasweet.fr/)!"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀 New feature**: Field level security"
+    type: new
+    components_raw: "unspecified"
+    text: ": Field level security"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🚀 New rules**: Snapshot, Repositories, Headers"
+    type: new
+    components_raw: "unspecified"
+    text: ": Snapshot, Repositories, Headers"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🧐 Enhancement**: custom audit serializers: the request content is available"
+    type: enhancement
+    components_raw: "unspecified"
+    text: ": custom audit serializers: the request content is available"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞 Fix** readonlyrest.yml path discovery"
+    type: fix
+    components_raw: "unspecified"
+    text: "readonlyrest.yml path discovery"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞 Fix:** LDAP available groups discovery \\(tenancy switcher\\) corner cases"
+    type: fix
+    components_raw: "unspecified"
+    text: "LDAP available groups discovery (tenancy switcher) corner cases"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞 Fix**: auth\\_key\\_sha1, auth\\_key\\_sha256 hashes in settings should be case insensitive"
+    type: fix
+    components_raw: "unspecified"
+    text: ": auth\\_key\\_sha1, auth\\_key\\_sha256 hashes in settings should be case insensitive"
+  - # EDGE CASE — manual review needed
+    # reason: no_component_specified
+    # original: "* **🐞 Fix**: LDAP authentication didn't work with local group"
+    type: fix
+    components_raw: "unspecified"
+    text: ": LDAP authentication didn't work with local group"

@@ -1,3 +1,36 @@
 version: "1.30.0"
 release_date: "2021-05-16"
 entries:
+  - type: new
+    components: [kbn]
+    text: "7.12.x compatibility"
+  - type: new
+    components: [es]
+    text: "[LDAP connector circuit breaker](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#circuit-breaker)"
+  - type: enhancement
+    components: [es]
+    text: "[Username with wildcard support in users section](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#groups) and [groups mapping](https://github.com/beshu-tech/readonlyrest-docs/blob/v1.30.x/elasticsearch.md#group-mapping)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:lt; 7.9.x
+    # original: "* **🧐Enhancement** \\(KBN &lt; 7.9.x\\) OIDC errors visibility"
+    type: enhancement
+    components_raw: "KBN &lt; 7.9.x"
+    text: "OIDC errors visibility"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:lt; 7.9.x
+    # original: "* **🧐Enhancement** \\(KBN &lt; 7.9.x\\) Smarter session probe algorithm"
+    type: enhancement
+    components_raw: "KBN &lt; 7.9.x"
+    text: "Smarter session probe algorithm"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:gt;= 7.9.x
+    # original: "* **🐞Fix** \\(KBN &gt;= 7.9.x\\) [Load CertificateAuthorities as an array if not specified as an array](https://forum.readonlyrest.com/t/kibana-crash-at-startup-with-the-new-7-10-2-version/1840)"
+    type: fix
+    components_raw: "KBN &gt;= 7.9.x"
+    text: "[Load CertificateAuthorities as an array if not specified as an array](https://forum.readonlyrest.com/t/kibana-crash-at-startup-with-the-new-7-10-2-version/1840)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:lt; 7.9.x
+    # original: "* **🐞Fix** \\(KBN &lt; 7.9.x\\) Don't hide visualizations list search box in RO mode"
+    type: fix
+    components_raw: "KBN &lt; 7.9.x"
+    text: "Don't hide visualizations list search box in RO mode"

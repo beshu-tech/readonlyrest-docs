@@ -1,3 +1,54 @@
 version: "1.32.0"
 release_date: "2021-07-25"
 entries:
+  - type: security
+    components: [es]
+    text: "[Apache Commons Codec vulnerability](https://forum.readonlyrest.com/t/security-vulnerability-for-common-codec-1-10/1906)"
+  - type: security
+    components: [kbn]
+    text: "upgraded dependencies due to security fixes"
+  - type: security
+    components: [kbn]
+    text: "disable x-powered-by to avoid fingerprinting"
+  - type: new
+    components: [es]
+    text: "Support for ES 7.14.0 & 6.8.18"
+  - type: new
+    components: [kbn]
+    text: "Support for Kibana 7.13.x series"
+  - type: enhancement
+    components: [kbn]
+    text: "honor configurations coming from ENV and CLI options"
+  - type: enhancement
+    components: [kbn]
+    text: "when metadata has no username, login must be denied"
+  - type: enhancement
+    components: [kbn]
+    text: "audit tab ported to new platform"
+  - type: enhancement
+    components: [es]
+    text: "improved ES resources cleaning when ROR returns FORBIDDEN response"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:lt; 7.9.x
+    # original: "* **🧐Enhancement** \\(KBN &lt; 7.9.x\\) auto clean-up dangling SAML/OIDC cookies"
+    type: enhancement
+    components_raw: "KBN &lt; 7.9.x"
+    text: "auto clean-up dangling SAML/OIDC cookies"
+  - type: fix
+    components: [es]
+    text: "[incomplete response for request GET */_alias](https://forum.readonlyrest.com/t/ror-return-incomplete-response-for-request-get-alias/1872)"
+  - type: fix
+    components: [es]
+    text: "not allowed aliases should not present in a response for a Get Index API request"
+  - type: fix
+    components: [kbn]
+    text: "fix dev-tools and import saved object not working"
+  - type: fix
+    components: [kbn]
+    text: "honor `requestHeadersWhitelist` in user metadata request (login)"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:lt; 7.9.x
+    # original: "* **🐞Fix** \\(KBN &lt; 7.9.x\\) do not crash on invalid metadata  "
+    type: fix
+    components_raw: "KBN &lt; 7.9.x"
+    text: "do not crash on invalid metadata"
