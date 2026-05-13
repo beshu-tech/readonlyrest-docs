@@ -2035,18 +2035,22 @@ Fixed an issue where the `_snapshot/_status` endpoint was not being handled corr
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN &lt; 7.9.x) Don't hide visualizations list search box in RO mode
 
 ### (2021-04-09) What's new in **ROR 1.29.0**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚨Security Fix** (ES) Security Fix (ES) [CVE-2021-21409](https://nvd.nist.gov/vuln/detail/CVE-2021-21409)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 ([with ROR new platform](https://beta.readonlyrest.com/))
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 7.12.1 support
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) logout if the credentials/metadata of the current user change in the ACL
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) Security Fix (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21409">CVE-2021-21409</a></summary>
+This release addresses CVE-2021-21409, a Netty vulnerability (versions before 4.1.61.Final) that allows HTTP request smuggling via improper validation of the content-length header when a single Http2HeaderFrame with endStream set to true is used. The ROR plugin has been updated to use a patched version of Netty, eliminating the risk.
+</details>
+<details>
+<summary><strong>🚀New</strong> (KBN) support 7.9.0, 7.9.1, 7.10.0, 7.10.1, 7.10.2, 7.11.0, 7.11.1, 7.11.2 (<a href="https://beta.readonlyrest.com/">with ROR new platform</a>)</summary>
+ReadonlyREST now supports Kibana versions 7.9.0 through 7.11.2, powered by the new ROR platform. This expands compatibility for teams running older Kibana instances who still need enterprise-grade security for their Elasticsearch stack.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 7.12.1 support</summary>
+ReadonlyREST now supports Elasticsearch 7.12.1, ensuring users on this version can benefit from the plugin's fine-grained access control, field- and document-level security, and YAML-based rule configuration.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) logout if the credentials/metadata of the current user change in the ACL</summary>
+Kibana sessions are now automatically terminated when the authenticated user's credentials or metadata are modified in the ACL configuration. This prevents stale sessions from persisting after access rights have been updated, improving security and ensuring that policy changes take effect immediately.
+</details>
 
 ### (2021-04-01) What's new in **ROR 1.28.2**
 <details>
@@ -2069,30 +2073,38 @@ Resolved a NullPointerException that occurred when fetching template aliases in 
 </details>
 
 ### (2021-03-14) What's new in **ROR 1.28.0**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 7.12.0, 7.11.2 support
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) full [Index and Component Templates API](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html) support
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (ES) [Username case sensitivity settings](https://forum.readonlyrest.com/t/ldap-based-user-authentication/1667)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) [Kibana logout event storing fix](https://forum.readonlyrest.com/t/kibana-plugin-software-licensing-and-expiration/1808/5)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) [Fixed remote reindex operation with "type" parameter](https://forum.readonlyrest.com/t/reindex-index-not-found-exception/1708/20)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Prevent cookie expiration deadlock in browsers when using SAML/OIDC
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) When credentials change in the ACL, make it possible to login again
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Kibana management app ID changed from "kibana:management" to "kibana:stack\_management"
+<details>
+<summary><strong>🚀New</strong> (ES) 7.12.0, 7.11.2 support</summary>
+ReadonlyREST now supports Elasticsearch versions 7.12.0 and 7.11.2, ensuring compatibility with the latest Elasticsearch releases in the 7.x line.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) full <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.9/index-templates.html">Index and Component Templates API</a> support</summary>
+ReadonlyREST now fully supports Elasticsearch's composable index templates and component templates API (introduced in ES 7.8). This allows administrators to define fine-grained access control rules for both index templates (which configure indices/data streams upon creation) and component templates (reusable building blocks for mappings, settings, and aliases), ensuring security policies extend to template management operations.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/ldap-based-user-authentication/1667">Username case sensitivity settings</a></summary>
+Added a configurable flag to handle username case sensitivity in authentication backends like LDAP. When enabled, this setting allows case-insensitive username matching — useful when the LDAP server treats usernames case-insensitively but the ROR configuration requires an exact case match. Administrators can now apply string transformations (e.g., toLower, toUpper) to usernames during authentication.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/kibana-plugin-software-licensing-and-expiration/1808/5">Kibana logout event storing fix</a></summary>
+Fixed an issue where Kibana logout events were not being properly stored or handled, which could interfere with session tracking and audit logging. This ensures that logout actions are correctly recorded and processed.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/reindex-index-not-found-exception/1708/20">Fixed remote reindex operation with "type" parameter</a></summary>
+Resolved an issue where remote reindex operations failed with an "index not found" exception when the request included a "type" parameter. This fix ensures that cross-cluster reindexing works correctly even when legacy type parameters are present in the request.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Prevent cookie expiration deadlock in browsers when using SAML/OIDC</summary>
+Fixed a browser-side deadlock scenario where cookie expiration could cause authentication loops when using SAML or OIDC single sign-on. This ensures a smoother login experience and prevents users from getting stuck in an infinite redirect cycle.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) When credentials change in the ACL, make it possible to login again</summary>
+Fixed an issue where users could not log in again after their credentials were updated in the ACL configuration. Previously, cached or stale authentication states could prevent re-authentication with the new credentials.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana management app ID changed from "kibana:management" to "kibana:stack_management"</summary>
+Updated the Kibana management application identifier from the legacy "kibana:management" to the current "kibana:stack_management" to align with changes in newer Kibana versions. This ensures that access control rules targeting the management section work correctly.
+</details>
 
 ### (2021-02-27) What's new in **ROR 1.27.1**
 <details>
