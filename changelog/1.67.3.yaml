@@ -1,0 +1,12 @@
+version: "1.67.3"
+release_date: "2025-11-29"
+entries:
+  - type: new
+    components: [kbn]
+    text: "9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support"
+  - type: new
+    components: [es]
+    text: "9.2.3, 9.2.2, 9.1.9, 9.1.8, 8.19.9, 8.19.8 support"
+  - type: fix
+    components: [es]
+    text: "Resolved index resolution compatibility issue with Elasticsearch 9.1.7"

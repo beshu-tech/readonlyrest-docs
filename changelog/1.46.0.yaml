@@ -1,0 +1,36 @@
+version: "1.46.0"
+release_date: "2023-01-02"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2022-1471](https://nvd.nist.gov/vuln/detail/CVE-2022-1471), [CVE-2022-41915](https://nvd.nist.gov/vuln/detail/CVE-2022-41915), [CVE-2022-36944](https://nvd.nist.gov/vuln/detail/CVE-2022-36944) in [audit Scala 2.13 jar](https://mvnrepository.com/artifact/tech.beshu.ror/audit)"
+  - type: new
+    components: [kbn]
+    text: "8.6.1, 8.6.0, 7.17.9 support"
+  - type: new
+    components: [es]
+    text: "8.6.1, 8.6.0, 7.17.9 support"
+  - type: enhancement
+    components: [kbn]
+    text: "Activation key management UI"
+  - type: enhancement
+    components: [kbn]
+    text: "Less verbose logging in info mode"
+  - type: enhancement
+    components: [kbn]
+    text: "\"Stack management\" kibana compatibility"
+  - type: fix
+    components: [kbn]
+    text: "Test settings pop up won't show"
+  - type: fix
+    components: [kbn]
+    text: "hide apps behaviour when \"Management\" is hidden"
+  - type: fix
+    components: [kbn]
+    text: "Data view with a \":\" symbol forces logout from a kibana"
+  - type: fix
+    components: [kbn]
+    text: "Session probe causes constant refresh when no `kibana_access` defined"
+  - type: fix
+    components: [es]
+    text: "large report generation using data from a remote cluster with enabled x-pack security"

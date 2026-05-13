@@ -1,0 +1,9 @@
+version: "1.28.1"
+release_date: "2021-03-24"
+entries:
+  - type: fix
+    components: [es]
+    text: "Getting index templates issue when no `indices` rule was used in matched block"
+  - type: fix
+    components: [es]
+    text: "[NPE on getting template aliases](https://forum.readonlyrest.com/t/cannot-put-index-template-template-1/1681/25)"

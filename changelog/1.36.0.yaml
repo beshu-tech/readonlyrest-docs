@@ -1,0 +1,48 @@
+version: "1.36.0"
+release_date: "2021-11-21"
+entries:
+  - type: new
+    components: [es]
+    text: "New Support for 7.16.1, 7.16.0, 6.8.21"
+  - type: new
+    components: [kbn]
+    text: "Support Kibana 7.15.2"
+  - type: new
+    components: [es]
+    text: "[Added support for setting up cluster containing ES with ROR (with disabled XPack security) and ES with XPack security enabled](https://forum.readonlyrest.com/t/ssl-internode-with-elk-cluster/1916)"
+  - type: enhancement
+    components: [kbn]
+    text: "kibana_hide_apps: [ror|kibana] to remove kibana mgmt button"
+  - type: fix
+    components: [es]
+    text: "[/_snapshot/_status should return only running snapshots](https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin/issues/756)"
+  - type: fix
+    components: [es]
+    text: "[Adding policy to index template bug](https://forum.readonlyrest.com/t/forbidden-by-readonlyrest-es-plugin-with-add-policy-to-index-template-action-in-kibana/1969)"
+  - type: fix
+    components: [kbn]
+    text: "Index management tabs result in \"forbidden\" error"
+  - type: fix
+    components: [kbn]
+    text: "[corrupted patch file for Kibana 7.9.x](https://forum.readonlyrest.com/t/ror-1-35-1-kibana-7-9-3-unable-to-patch/2018)"
+  - type: fix
+    components: [kbn]
+    text: "[YAML editor not working in air-gapped environments](https://forum.readonlyrest.com/t/readonlyrest-security-settings-editor-loading/2014/5)"
+  - type: fix
+    components: [kbn]
+    text: "[Devtools not working](https://forum.readonlyrest.com/t/kibana-devtools-error-does-not-support-having-a-body/2027)"
+  - type: fix
+    components: [kbn]
+    text: "[Monitoring not working in multi-tenancy](https://forum.readonlyrest.com/t/kibana-alerting-not-working-with-readonlyrest/1986)"
+  - type: fix
+    components: [kbn]
+    text: "Regression in Kibana < 6.8.x front end crash"
+  - type: fix
+    components: [kbn]
+    text: "Kibana < 7.8.x prevent navigation to hidden apps from home links"
+  - type: fix
+    components: [kbn]
+    text: "Kibana < 7.8.x implicitly hide kibana:dashboard when kibana:dashboards is hidden (and viceversa)"
+  - type: fix
+    components: [kbn]
+    text: "Kibana < 7.8.x broken `clearSessionOnEvents: [tenancyHop]`"

@@ -1,0 +1,249 @@
+name: Changelog form
+
+# Parses Issue Form body. On success: writes changelog/{version}.yaml and opens
+# (or refreshes) a PR via peter-evans/create-pull-request. On error: posts
+# updateable bot comment with parse errors. Title is auto-renamed once parsed.
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  parse:
+    if: contains(github.event.issue.labels.*.name, 'changelog-entry')
+    runs-on: ubuntu-latest
+    outputs:
+      ok: ${{ steps.parse.outputs.ok }}
+      version: ${{ steps.parse.outputs.version }}
+      yaml_path: ${{ steps.parse.outputs.yaml_path }}
+      pr_title: ${{ steps.parse.outputs.pr_title }}
+      commit_msg: ${{ steps.parse.outputs.commit_msg }}
+      branch: ${{ steps.parse.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse form, write YAML or post errors
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs')
+            const path = require('path')
+            const body = context.payload.issue.body || ''
+            const marker = '<!-- changelog-form-bot -->'
+
+            // Issue Forms render: ### <Field>\n\n<value>\n\n### <Next>...
+            const sections = {}
+            let cur = null, buf = []
+            for (const line of body.split(/\r?\n/)) {
+              if (line.startsWith('### ')) {
+                if (cur) sections[cur] = buf.join('\n').trim()
+                cur = line.slice(4).trim()
+                buf = []
+              } else {
+                buf.push(line)
+              }
+            }
+            if (cur) sections[cur] = buf.join('\n').trim()
+
+            const version = (sections['Version'] || '').trim()
+            const stripFence = (s) => {
+              const lines = s.split(/\r?\n/)
+              if (lines[0] && /^```/.test(lines[0].trim())) lines.shift()
+              if (lines.length && /^```/.test((lines[lines.length - 1] || '').trim())) lines.pop()
+              return lines.join('\n')
+            }
+            const notes = stripFence((sections['Notes'] || '').trim()).trim()
+
+            const errors = []
+            if (!/^\d+\.\d+\.\d+(-(rc|beta|alpha)\d*)?$/.test(version)) {
+              errors.push(`Version must match X.Y.Z (optionally -rcN/-betaN/-alphaN) — got: \`${version}\``)
+            }
+            if (!notes) errors.push('Notes is empty')
+
+            const TYPE_MAP = {
+              new: 'new', feat: 'new', feature: 'new',
+              fix: 'fix', bugfix: 'fix',
+              security: 'security', 'security fix': 'security', sec: 'security',
+              warning: 'warning', warn: 'warning',
+              enhancement: 'enhancement', enh: 'enhancement', improve: 'enhancement',
+            }
+            // Components: es, kbn, eck — combinable via any of `|`, `/`, `&`, `,`, ` and `.
+            // Real changelog.md uses mixed separators (`KBN/ES`, `ES & KBN`, etc); we normalize.
+            // Canonical output order: es, kbn, eck (matches dominant pattern in existing changelog.md).
+            // Edge cases (~0.7%: `KBN-PRO`, `KBN < 7.9.x`) are rejected here → user edits YAML directly.
+            const COMP_ORDER = ['es', 'kbn', 'eck']
+            const parseComps = (raw) => {
+              const normalized = raw.toLowerCase().replace(/\s+and\s+/g, '|').replace(/[\/&,]/g, '|')
+              const parts = normalized.replace(/\s+/g, '').split('|').filter(Boolean)
+              if (!parts.length) return null
+              const unknown = parts.filter(p => !COMP_ORDER.includes(p))
+              if (unknown.length) return null
+              return COMP_ORDER.filter(c => parts.includes(c))
+            }
+
+            const entries = []
+            const lineRe = /^\s*(?<type>[\w ]+?)\s*\(\s*(?<comp>[^)]+?)\s*\)\s*:?\s*(?<text>.+?)\s*$/i
+
+            notes.split(/\r?\n/).forEach((raw, i) => {
+              const line = raw.trim()
+              if (!line || line.startsWith('#') || line.startsWith('//')) return
+              const m = line.match(lineRe)
+              if (!m) {
+                errors.push(`Line ${i + 1}: cannot parse \`${line}\` — expected \`<type> (<component>) <text>\``)
+                return
+              }
+              const type = TYPE_MAP[m.groups.type.toLowerCase()]
+              const comp = parseComps(m.groups.comp)
+              if (!type) errors.push(`Line ${i + 1}: unknown type \`${m.groups.type}\` — use one of: new, fix, security, warning, enhancement`)
+              if (!comp) errors.push(`Line ${i + 1}: unknown component \`${m.groups.comp}\` — use one of: es, kbn, eck (combinable with \`|\`, e.g. es|kbn)`)
+              if (type && comp) entries.push({ type, components: comp, text: m.groups.text })
+            })
+
+            const ref = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            }
+            const findExisting = async () => {
+              const { data: comments } = await github.rest.issues.listComments(ref)
+              return comments.find(c => c.body && c.body.includes(marker))
+            }
+            const upsertComment = async (commentBody) => {
+              const existing = await findExisting()
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  owner: ref.owner, repo: ref.repo, comment_id: existing.id, body: commentBody,
+                })
+              } else {
+                await github.rest.issues.createComment({ ...ref, body: commentBody })
+              }
+            }
+
+            if (errors.length) {
+              const errMsg = `${marker}\n**Could not parse** (${errors.length} issue${errors.length > 1 ? 's' : ''}):\n\n` +
+                errors.map(e => `- ${e}`).join('\n') +
+                `\n\n_Edit the issue body to fix — this comment will refresh._`
+              await upsertComment(errMsg)
+              core.setOutput('ok', 'false')
+              return
+            }
+
+            // Today is intentional — release date defaults to filing day; editable in PR.
+            // Dates and versions are ALWAYS quoted: js-yaml parses unquoted dates as Date
+            // objects, breaking ajv's `type: string` check.
+            const today = new Date().toISOString().slice(0, 10)
+            const yamlEsc = (s) => /[:#\[\]{}&*!|>'"%@`]|^\s|\s$/.test(s) ? JSON.stringify(s) : s
+            let yaml = `version: "${version}"\nrelease_date: "${today}"\nentries:\n`
+            for (const e of entries) {
+              yaml += `  - type: ${e.type}\n`
+              yaml += `    components: [${e.components.join(', ')}]\n`
+              yaml += `    text: ${yamlEsc(e.text)}\n`
+            }
+
+            const yamlPath = `changelog/${version}.yaml`
+            fs.mkdirSync(path.dirname(yamlPath), { recursive: true })
+            fs.writeFileSync(yamlPath, yaml)
+
+            const summary = entries.length === 1
+              ? `${entries[0].type} (${entries[0].components.join('|')}): ${entries[0].text}`.slice(0, 80)
+              : `${entries.length} entries`
+            const prTitle = `[Changelog ${version}] ${summary}`
+
+            if (context.payload.issue.title !== prTitle) {
+              await github.rest.issues.update({ ...ref, title: prTitle })
+            }
+
+            core.setOutput('ok', 'true')
+            core.setOutput('version', version)
+            core.setOutput('yaml_path', yamlPath)
+            core.setOutput('pr_title', prTitle)
+            core.setOutput('commit_msg', `Add changelog entry for ${version} (#${context.issue.number})`)
+            core.setOutput('branch', `changelog/v${version}-issue-${context.issue.number}`)
+
+      - name: Create or update PR
+        if: steps.parse.outputs.ok == 'true'
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.parse.outputs.branch }}
+          base: master
+          title: ${{ steps.parse.outputs.pr_title }}
+          commit-message: ${{ steps.parse.outputs.commit_msg }}
+          body: |
+            Auto-opened from issue #${{ github.event.issue.number }}.
+
+            Render workflow will regenerate `changelog.md` on merge to `master`.
+
+            ---
+            _Edit the YAML directly in this PR to fix typos or update the release date._
+          delete-branch: true
+          add-paths: |
+            changelog/*.yaml
+
+      # Read changelog-form config (committed to repo at .github/changelog-config.yml).
+      # Adjusting auto_merge etc. = open a PR against the config file, not a UI flip.
+      - name: Read config
+        id: cfg
+        run: |
+          if [ -f .github/changelog-config.yml ]; then
+            echo "auto_merge=$(yq -r '.auto_merge // false' .github/changelog-config.yml)" >> "$GITHUB_OUTPUT"
+          else
+            echo "auto_merge=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Auto-merge toggle. Enable by setting `auto_merge: true` in .github/changelog-config.yml.
+      # With `--auto`, GitHub waits for required status checks (branch protection) before merging;
+      # if no checks required, merges immediately.
+      # CAVEAT: bot-authored PRs from GITHUB_TOKEN don't trigger CI (recursion guard).
+      # For a true "wait for green CI" gate in prod: use a PAT in the create-pr step above,
+      # AND set branch protection with validate-and-render required.
+      - name: Enable auto-merge
+        if: steps.parse.outputs.ok == 'true' && steps.cpr.outputs.pull-request-url && steps.cfg.outputs.auto_merge == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+        run: gh pr merge --auto --squash --delete-branch "$PR_URL"
+
+      - name: Comment PR link on issue and close
+        if: steps.parse.outputs.ok == 'true' && steps.cpr.outputs.pull-request-url
+        uses: actions/github-script@v7
+        env:
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+          PR_OP: ${{ steps.cpr.outputs.pull-request-operation }}
+          AUTOMERGE: ${{ steps.cfg.outputs.auto_merge }}
+        with:
+          script: |
+            const marker = '<!-- changelog-form-bot -->'
+            const op = process.env.PR_OP
+            const url = process.env.PR_URL
+            const automerge = process.env.AUTOMERGE === 'true'
+            const verb = op === 'created' ? 'Opened' : 'Updated'
+            const automergeNote = automerge
+              ? '\n\n_Auto-merge enabled (`.github/changelog-config.yml`) — will merge once required checks pass._'
+              : '\n\n_Edit the YAML directly in the PR for fixes. Merge will trigger `changelog.md` regen._'
+            const body = `${marker}\n${verb} ${url}${automergeNote}`
+            const ref = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            }
+
+            const { data: comments } = await github.rest.issues.listComments(ref)
+            const existing = comments.find(c => c.body && c.body.includes(marker))
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: ref.owner, repo: ref.repo, comment_id: existing.id, body,
+              })
+            } else {
+              await github.rest.issues.createComment({ ...ref, body })
+            }
+            if (op === 'created' && context.payload.issue.state === 'open') {
+              await github.rest.issues.update({ ...ref, state: 'closed', state_reason: 'completed' })
+            }

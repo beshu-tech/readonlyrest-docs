@@ -1,0 +1,24 @@
+version: "1.33.0"
+release_date: "2021-08-09"
+entries:
+  - type: security
+    components: [kbn]
+    text: "xml-crypto dependency update"
+  - type: new
+    components: [kbn]
+    text: "New Support for 7.14.0, 6.8.18"
+  - type: enhancement
+    components: [kbn]
+    text: "Parse credentials in /api/* requests, no need for valid cookie. Supersedes whitelistedPaths"
+  - type: fix
+    components: [kbn]
+    text: "Caching issues switching tenancies with dark/light theme"
+  - type: fix
+    components: [kbn]
+    text: "Newly created Space shows in all tenancies when using default kibana index"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:lt; 7.9.x
+    # original: "* **🐞Fix** \\(KBN &lt; 7.9.x\\) nextUrl works again with SAML and OIDC"
+    type: fix
+    components_raw: "KBN &lt; 7.9.x"
+    text: "nextUrl works again with SAML and OIDC"

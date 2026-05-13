@@ -1,0 +1,21 @@
+version: "1.51.1"
+release_date: "2023-09-25"
+entries:
+  - type: security
+    components: [es]
+    text: "[`fields` rule didn't work well in the case of ES 7.10.0 and later and more than 10 documents in the response](https://forum.readonlyrest.com/t/field-rule-not-working-when-exceeding-a-certain-no-of-docs/2415)"
+  - type: fix
+    components: [kbn]
+    text: "issue with Observability Overview-based applications hiding"
+  - type: fix
+    components: [kbn]
+    text: "Correct `kibana.index` handling for KBN >= 7.9.0 when multi-tenancy is disabled or unavailable"
+  - type: fix
+    components: [kbn]
+    text: "Unrestricted Kibana Access on the tenancy switch when a selected tenant is not available anymore"
+  - type: fix
+    components: [kbn]
+    text: "Unhandled error during login when `multiTenancyEnabled: false`"
+  - type: fix
+    components: [es]
+    text: "LDAP connectivity improvements"

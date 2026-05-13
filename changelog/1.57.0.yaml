@@ -1,0 +1,55 @@
+version: "1.57.0"
+release_date: "2024-04-28"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2024-29025](https://nvd.nist.gov/vuln/detail/CVE-2024-29025)"
+  - type: new
+    components: [es]
+    text: "[LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: groups server-side filtering"
+  - type: new
+    components: [es]
+    text: "[LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: skip user search option when user attribute is `cn`"
+  - type: warning
+    components: [es, kbn]
+    components_raw: "KBN|ES"
+    text: "Internal API incompatibilities (to take advantage of rolling update capabilities, upgrade ROR KBN first)"
+  - type: warning
+    components: [es]
+    text: "Support for ES < 6.8.0 was dropped"
+  - type: enhancement
+    components: [kbn]
+    text: "User settings available for all access type users"
+  - type: enhancement
+    components: [kbn]
+    text: "Add option to change the Default Route and Time zone in User settings"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide correlation ID to Kibana logs"
+  - type: enhancement
+    components: [es]
+    text: "Rich, context-based debug logging in the LDAP connector and LDAP-related rules"
+  - type: enhancement
+    components: [es]
+    text: "Additional [validations](https://docs.readonlyrest.com/elasticsearch#configuring-an-acl-with-filter-fields-rules-when-using-kibana): `kibana` rule should not be used with some other rules in the same block"
+  - type: fix
+    components: [kbn]
+    text: "Sometimes reports are not generated correctly for Kibana < 8.0.0 and the \"Max attempt reached\" error appears"
+  - type: fix
+    components: [kbn]
+    text: "Adjust interactive API swagger dark mode colors"
+  - type: fix
+    components: [kbn]
+    text: "CSRF problem when multiple ECK Kibana instances"
+  - type: fix
+    components: [kbn]
+    text: "Plugin doesn't run for a version Kibana < 7.11.0 when the OIDC proxy is enabled"
+  - type: fix
+    components: [kbn]
+    text: "Session probe should log out the user when empty metadata was returned from ES ROR"
+  - type: fix
+    components: [es]
+    text: "Misc issues when `xpack.security.enabled: true` is set"
+  - type: fix
+    components: [es]
+    text: "Patched files permission issue"

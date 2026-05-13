@@ -1,0 +1,24 @@
+version: "1.59.0"
+release_date: "2024-08-01"
+entries:
+  - type: new
+    components: [es]
+    text: "8.15.1, 8.15.0, 7.17.24, 7.17.23, 6.7.x support"
+  - type: new
+    components: [kbn]
+    text: "8.15.1, 8.15.0, 7.17.24, 7.17.23 support"
+  - type: enhancement
+    components: [kbn]
+    text: "Replace a broken Alert and Connectors applications with the link to our [new tool](https://anaphora.it) for Reports and alerting for Kibana > 8.6.0 (edited)"
+  - type: fix
+    components: [kbn]
+    text: "Handling reporting URL for report generation"
+  - type: fix
+    components: [kbn]
+    text: "Embedding with inline JWT is a feature available only in ReadonlyREST PRO and Enterprise"
+  - type: fix
+    components: [es]
+    text: "[Patcher `UnsupportedOperationException` issue on Windows](https://forum.readonlyrest.com/t/ror-1-58-0-for-es8-14-3-windows-setup/2577)"
+  - type: fix
+    components: [es]
+    text: "for the problem with `_async_search` on ES 8.14.x"

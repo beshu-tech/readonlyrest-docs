@@ -1,0 +1,36 @@
+version: "1.49.0"
+release_date: "2023-05-28"
+entries:
+  - type: new
+    components: [es]
+    text: "8.8.1 support"
+  - type: enhancement
+    components: [kbn]
+    text: "Handle `elasticsearch.serviceAccountSupport` configuration property"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide a way to Hidden apps Stack management items hiding"
+  - type: enhancement
+    components: [kbn]
+    text: "Provide an automated migration of tenancy indices on major Kibana version upgrade"
+  - type: enhancement
+    components: [es]
+    text: "external group ID patterns support in the external to local groups mapping"
+  - type: fix
+    components: [kbn]
+    text: "the issue with the replica number being set to 0 on tenant index creation"
+  - type: fix
+    components: [kbn]
+    text: "users won't log out from Kibana on the 500 status error"
+  - type: fix
+    components: [kbn]
+    text: "the issue with Kibana keystore not being read by the Kibana plugin"
+  - # EDGE CASE — manual review needed
+    # reason: unknown_component:kbn < 7.9.0
+    # original: "* **🐞Fix** (KBN < 7.9.0) logging issue when two Kibanas are handled by one browser at the same time"
+    type: fix
+    components_raw: "KBN < 7.9.0"
+    text: "logging issue when two Kibanas are handled by one browser at the same time"
+  - type: fix
+    components: [es]
+    text: "resolving ENVs to YAML number in ROR settings"

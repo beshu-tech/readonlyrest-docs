@@ -1,0 +1,15 @@
+version: "1.67.2"
+release_date: "2025-11-13"
+entries:
+  - type: new
+    components: [kbn]
+    text: "9.2.1, 9.1.7, 8.19.7 support"
+  - type: new
+    components: [es]
+    text: "9.2.1, 9.1.7, 8.19.7 support"
+  - type: fix
+    components: [kbn]
+    text: "Fixed SAML/OIDC provider support behind a reverse proxy when `server.rewriteBasePath: false` is set in kibana.yml"
+  - type: fix
+    components: [es]
+    text: "Delegated handling of certain internal exceptions to Elasticsearch, preserving native error responses"
