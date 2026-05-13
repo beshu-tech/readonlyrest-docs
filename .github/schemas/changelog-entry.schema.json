@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Changelog version",
+  "type": "object",
+  "required": ["version", "release_date", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-(rc|beta|alpha)\\d*)?$",
+      "description": "Semver; pre-release suffixes -rcN/-betaN/-alphaN allowed"
+    },
+    "release_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "components", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": ["new", "fix", "security", "warning", "enhancement"]
+          },
+          "components": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "enum": ["es", "kbn", "eck"] }
+          },
+          "components_raw": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Optional. Preserves original separator/order (e.g. 'KBN/ES', 'ES & KBN') for hash parity with ror-api's stored LLM descriptions. Only present on migrated historical entries; new form-driven entries omit it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

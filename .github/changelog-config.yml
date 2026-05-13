@@ -1,0 +1,12 @@
+# Changelog form behavior.
+# Single source of truth — change via PR, never via repo UI.
+# Consumed by .github/workflows/changelog_form.yml.
+
+# When true: form-opened PRs are auto-merged once required status checks pass
+# (or immediately if no branch protection). When false: maintainer reviews + clicks merge.
+#
+# In prod, recommended rollout:
+#   1. Ship with auto_merge: false — team learns the loop by reviewing each PR manually
+#   2. Once trusted, flip to true via PR + add branch protection requiring `validate-and-render`
+#   3. For the gate to actually block on CI: bot needs a PAT (GITHUB_TOKEN-authored PRs skip CI)
+auto_merge: true

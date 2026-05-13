@@ -1,0 +1,115 @@
+name: Render changelog.md
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "changelog/**.yaml"
+      - ".github/workflows/render_changelog.yml"
+      - ".github/schemas/changelog-entry.schema.json"
+  pull_request:
+    paths:
+      - "changelog/**.yaml"
+      - ".github/workflows/render_changelog.yml"
+      - ".github/schemas/changelog-entry.schema.json"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate-and-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate YAML schema (ajv)
+        run: |
+          npm install --no-save ajv@8 ajv-cli@5 ajv-formats@2
+          for f in changelog/*.yaml; do
+            [ -f "$f" ] || continue
+            npx ajv-cli validate \
+              -s .github/schemas/changelog-entry.schema.json \
+              -d "$f" \
+              -c ajv-formats || exit 1
+          done
+
+      - name: Build releases JSON (with filename)
+        run: |
+          echo '[' > all.json
+          first=true
+          for f in changelog/*.yaml; do
+            [ -f "$f" ] || continue
+            $first || echo ',' >> all.json
+            first=false
+            fname=$(basename "$f" .yaml)
+            yq -o json ". + {\"_filename\": \"$fname\"}" "$f" >> all.json
+          done
+          echo ']' >> all.json
+
+      - name: Validate filename matches inner version
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs')
+            const releases = JSON.parse(fs.readFileSync('all.json', 'utf8'))
+            const mismatches = releases.filter(r => r._filename !== r.version)
+            if (mismatches.length) {
+              for (const r of mismatches) {
+                core.error(`filename ${r._filename}.yaml does not match inner version: ${r.version}`)
+              }
+              core.setFailed(`${mismatches.length} file(s) with filename/version mismatch — rename file or fix version field`)
+            }
+
+      - name: Install semver
+        if: github.event_name == 'push'
+        run: npm install --no-save semver@7
+
+      - name: Render changelog.md
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs')
+            const semver = require('semver')
+            const releases = JSON.parse(fs.readFileSync('all.json', 'utf8'))
+
+            // Pre-release-aware sort. semver.rcompare handles 1.64.2 > 1.64.2-rc1 etc.
+            releases.sort((a, b) => semver.rcompare(a.version, b.version))
+
+            const TYPE_EMOJI = {
+              new: '🚀New',
+              fix: '🐞Fix',
+              security: '🚨Security Fix',
+              warning: '⚠️Warning',
+              enhancement: '🧐Enhancement',
+            }
+            // `components_raw` (optional) preserves original separator/order for migrated entries
+            // — required for hash parity with ror-api's stored LLM descriptions. New form-driven
+            // entries omit it; renderer falls back to canonical `ES|KBN` join.
+            const compStr = (e) => e.components_raw || e.components.map(c => c.toUpperCase()).join('|')
+
+            let md = '# Changelog\n\n'
+            md += '<!-- AUTO-GENERATED from changelog/*.yaml — do not edit directly -->\n\n'
+            for (const r of releases) {
+              md += `### (${r.release_date}) What's new in **ROR ${r.version}**\n`
+              for (const e of r.entries) {
+                const label = TYPE_EMOJI[e.type] || e.type
+                md += `* **${label}** (${compStr(e)}) ${e.text}\n`
+              }
+              md += '\n'
+            }
+            fs.writeFileSync('changelog.md', md)
+
+      - name: Commit if changed
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add changelog.md
+          if git diff --cached --quiet; then
+            echo "no change"
+          else
+            git commit -m "regen changelog.md from YAMLs"
+            git push
+          fi

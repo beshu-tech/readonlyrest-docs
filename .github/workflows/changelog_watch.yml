@@ -1,37 +1,55 @@
 name: Watch Changelog
 
+# Phase 3+: fires on changelog/*.yaml changes (single source of truth).
+# Each changed YAML triggers an event-typed webhook to ror-api.
+# The legacy changelog.md push path is gone — changelog.md is now an auto-generated
+# mirror produced by render_changelog.yml. Bot-pushed regens don't trigger this workflow.
+
 on:
   push:
-    branches:  # may need to parameterize this
+    branches:
       - master
     paths:
-      - changelog.md
+      - "changelog/**.yaml"
 
 jobs:
-  on-changelog-update:
+  notify-ror-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # need prev commit for diff
 
-      - name: Get changelog diff
-        id: changelog
+      - name: Detect changed YAMLs + send per-version webhooks
+        env:
+          API_KEY: ${{ secrets.DOCS_REPO_API_SECRET }}
+          WEBHOOK_URL: ${{ secrets.CHANGELOG_WEBHOOK_URL }}
         run: |
-          git fetch --deepen=1
-          PREV_COMMIT=$(git rev-parse HEAD~1 || echo "")
-          if [ -z "$PREV_COMMIT" ]; then
-            DIFF=$(cat changelog.md)
-          else
-            DIFF=$(git diff "$PREV_COMMIT" HEAD -- changelog.md)
-          fi
-          
-          echo "DIFF<<EOF" >> $GITHUB_ENV
-          echo "$DIFF" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - name: Send webhook with changelog diff
-        run: |
-          curl --fail --retry 3 -X POST -H "Content-Type: application/json" \
-            -H "x-api-key: ${{ secrets.DOCS_REPO_API_SECRET }}" \
-            -d "$(jq -nc --arg diff "$DIFF" '{"changelog_diff": $diff}')" \
-            ${{ secrets.CHANGELOG_WEBHOOK_URL }}
+          set -eo pipefail
+          PREV=$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)
+          # Each changed YAML => one event-typed POST. A/M/D classified by git status code.
+          git diff --name-status "$PREV" HEAD -- 'changelog/*.yaml' | while IFS=$'\t' read -r STATUS FILE; do
+            VERSION=$(basename "$FILE" .yaml)
+            case "$STATUS" in
+              A) EVENT="version_added" ;;
+              M) EVENT="version_modified" ;;
+              D) EVENT="version_deleted" ;;
+              *) echo "skip status=$STATUS file=$FILE" && continue ;;
+            esac
+            # Inline YAML content if file exists (skip for deletions)
+            if [ "$EVENT" != "version_deleted" ]; then
+              YAML_CONTENT=$(cat "$FILE")
+              PAYLOAD=$(jq -nc \
+                --arg event "$EVENT" --arg version "$VERSION" --arg yaml "$YAML_CONTENT" \
+                '{event: $event, version: $version, yaml: $yaml}')
+            else
+              PAYLOAD=$(jq -nc \
+                --arg event "$EVENT" --arg version "$VERSION" \
+                '{event: $event, version: $version}')
+            fi
+            echo "POST $EVENT $VERSION"
+            curl --fail --retry 3 -X POST -H "Content-Type: application/json" \
+              -H "x-api-key: $API_KEY" \
+              -d "$PAYLOAD" \
+              "$WEBHOOK_URL"
+          done
