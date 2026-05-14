@@ -5,39 +5,39 @@
 ### (2026-04-10) What's new in **ROR 1.69.1**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) Fixed vulnerability <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2950">CVE-2026-2950</a></summary>
-Fixed a prototype pollution vulnerability (CVE-2026-2950) in the Lodash library used by the Kibana plugin. The issue allowed attackers to bypass a previous fix (CVE-2025-13465) by using array-wrapped path segments in the `_.unset` and `_.omit` functions, potentially enabling deletion of properties from built-in prototypes. The fix upgrades the affected dependency to a patched version.
+Fixed a prototype pollution vulnerability (CVE-2026-2950) in the Lodash dependency used by the Kibana plugin. The flaw allowed attackers to bypass a previous fix (CVE-2025-13465) by using array-wrapped path segments in the `_.unset` and `_.omit` functions, potentially deleting properties from built-in prototypes. The issue is resolved by updating Lodash to the patched version 4.18.0.
 </details>
 <details>
-<summary><strong>🚀New</strong> (KBN) 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support</summary>
-Added compatibility with the latest Kibana versions: 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, and 8.19.14. Users running these Kibana releases can now install and use the ReadonlyREST plugin without compatibility issues.
+<summary><strong>🚀New</strong> (KBN) 9.4.1, 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support</summary>
+Added compatibility with the latest Kibana versions: 9.4.1, 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, and 8.19.14. Users running these Kibana releases can now install and use the ReadonlyREST plugin without compatibility issues.
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support</summary>
-Added compatibility with the latest Elasticsearch versions: 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, and 8.19.14. Users running these Elasticsearch releases can now install and use the ReadonlyREST plugin without compatibility issues.
+<summary><strong>🚀New</strong> (ES) 9.4.1, 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support</summary>
+Added compatibility with the latest Elasticsearch versions: 9.4.1, 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, and 8.19.14. Users running these Elasticsearch releases can now install and use the ReadonlyREST plugin without compatibility issues.
 </details>
 <details>
 <summary><strong>🚀New</strong> (ECK) 3.4.0 support</summary>
-Added support for Elastic Cloud on Kubernetes (ECK) version 3.4.0, allowing users to deploy and manage ReadonlyREST within ECK-managed Elasticsearch clusters running on Kubernetes.
+Added support for Elastic Cloud on Kubernetes (ECK) version 3.4.0, allowing ReadonlyREST to be deployed seamlessly in Kubernetes environments running this ECK release.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed <code>jsonwebtoken-ancient</code> being stripped from Kibana builds earlier than 7.11.0</summary>
-Fixed an issue where the `jsonwebtoken-ancient` dependency was incorrectly removed during the Kibana plugin build process for versions earlier than 7.11.0, which could cause authentication failures in environments relying on legacy JWT token handling.
+Resolved an issue where the `jsonwebtoken-ancient` dependency was incorrectly removed during Kibana's build optimization process on versions earlier than 7.11.0, which could cause JWT authentication to fail on those older Kibana instances.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Filtered out Fleet-based apps from search results when Management is hidden in Kibana 8.x and 9.x</summary>
-Fixed a cosmetic issue where Fleet-based applications (like Fleet, Integrations, etc.) would still appear in Kibana's global search results even when the Management section was hidden by security rules. These apps are now properly filtered out in Kibana 8.x and 9.x.
+Fixed a cosmetic issue where Fleet-based applications (like Agent policies, Fleet settings, etc.) would still appear in Kibana's global search results even when the Management section was hidden by access control rules. These entries are now properly filtered out.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed <code>/pkp/session-probe</code> requests being blocked by browsers that enforce async-only calls</summary>
-Fixed a compatibility issue where session probe requests to the `/pkp/session-probe` endpoint were being blocked by browsers enforcing async-only fetch calls. This ensures the session health check mechanism works correctly across all modern browsers.
+Resolved a compatibility issue where some browsers blocked the session probe requests to `/pkp/session-probe` due to strict enforcement of async-only call policies. The session probe now works correctly across all modern browsers.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) Fixed a problem with redirecting to the login form after a 401 error following a session probe check</summary>
-Fixed a redirect loop issue where users were not properly redirected to the login form after receiving a 401 error during a session probe check. This ensures a smooth re-authentication flow when the session expires.
+Fixed a redirect loop issue where users were not properly redirected to the login form after receiving a 401 (Unauthorized) response following a session probe check. The authentication flow now works as expected.
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (ES) Fixed a missing Kibana access policy in the metadata response when the matched ACL block has no <code>kibana</code> section configured</summary>
-Fixed an issue where the Elasticsearch plugin's metadata response was missing the Kibana access policy when the matched ACL block did not have a `kibana` section explicitly configured. This ensures consistent and correct metadata reporting for all ACL configurations.
+Fixed an issue where the Elasticsearch metadata response was missing the Kibana access policy when the matched ACL rule block did not contain an explicit `kibana` section. The metadata now correctly reflects the effective access policy even when the `kibana` section is absent.
 </details>
 
 ### (2026-04-02) What's new in **ROR 1.69.0**
