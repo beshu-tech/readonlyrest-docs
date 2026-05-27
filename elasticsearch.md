@@ -1355,13 +1355,20 @@ kibana:
   index: ".kibana_custom_index" # optional
   template_index: ".kibana_template" # optional
   hide_apps: [ "Security", "Enterprise Search"] # optional
-  allowed_api_paths: # optional
-    - "^/api/spaces/.*$"
-    - http_method: POST
-      http_path: "^/api/saved_objects/.*$"
   metadata: 
     dept: "@{jwt:tech.beshu.department}"
     alert_message:  "Dear @{acl:current_group} users, you are viewing dashboards for indices @{acl:available_groups}_logstash-*"
+```
+
+When `access: api_only` is used, `allowed_api_paths` can additionally be specified:
+
+```yaml
+kibana:
+  access: api_only # required for allowed_api_paths
+  allowed_api_paths: # optional, only valid with access: api_only
+    - "^/api/spaces/.*$"
+    - http_method: POST
+      http_path: "^/api/saved_objects/.*$"
 ```
 
 The rule consists of several sub-rules:
@@ -1429,11 +1436,13 @@ For more information on the ROR's Kibana Hide Apps feature, see [Hiding Kibana A
 
 ###### `allowed_api_paths`
 
+**Only valid when `access: api_only`.**
+
 Used to define which parts of [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) can be used. The sub-rule requires to define a list of [regular expressions](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) which describes the API paths. Additionally, when you would like to restrict only specific HTTP methods of the API, you can use the extended format of the sub-rule:
 
 ```yaml
 kibana:
-  [...]
+  access: api_only
   allowed_api_paths: # optional
     - http_method: POST
       http_path: "^/api/saved_objects/.*$"
