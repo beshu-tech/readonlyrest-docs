@@ -418,11 +418,10 @@ The sections below describe the node settings that go into `elasticsearch.yml`.
 
 ### Encryption
 
-SSL/TLS encryption protects data in transit between clients and Elasticsearch. ReadonlyREST supports two independent encryption layers, each covering a different communication channel:
+SSL/TLS encryption protects data in transit between clients and Elasticsearch. ReadonlyREST supports two independent encryption layers:
 
-Traffic can be encrypted on two independent levels:
-1. HTTP/REST API (port 9200)
-2. Internode communication - transport module (port 9300)
+1. **External REST API** — client ↔ Elasticsearch traffic (port 9200)
+2. **Internode transport** — node ↔ node traffic (port 9300)
 
 #### Choosing between ReadonlyREST SSL and XPack Security SSL
 
@@ -455,96 +454,152 @@ ROR's ACL will handle authentication and authorization, while XPack manages the 
 
 The following subsections describe how to configure SSL using ReadonlyREST's own SSL implementation. This applies only when `xpack.security.enabled` is set to `false` in `elasticsearch.yml`.
 
+> **Configuration placement:** All SSL settings — including `http.type`, `transport.type`, `readonlyrest.ssl.*`, and `readonlyrest.ssl_internode.*` — must be placed in `elasticsearch.yml`.
+
 ##### External REST API
 
-It wraps connection between client and exposed REST API in SSL context, hence making it encrypted and secure.
-**⚠️IMPORTANT:** To enable SSL for REST API, open `elasticsearch.yml` and add the following settings (example configuration with the most important properties):
+Encrypts traffic between clients and Elasticsearch on port 9200. Add the following to your `elasticsearch.yml`.
 
+**Keystore option (JKS or PKCS#12):**
 ```yaml
 http.type: ssl_netty4
-readonlyrest.ssl.keystore_file: "keystore.jks"  # or keystore.p12 for PKCS#12 format
-readonlyrest.ssl.keystore_pass: readonlyrest
-readonlyrest.ssl.key_pass: readonlyrest
+
+readonlyrest.ssl.keystore_file: "keystore.jks"        # also accepts .p12 (PKCS#12)
+readonlyrest.ssl.keystore_pass: "<keystore-password>"
+readonlyrest.ssl.key_pass: "<key-password>"
+readonlyrest.ssl.key_alias: "my-server-cert"          # optional; if omitted, ROR uses the first alias found in the keystore
+
+# Optional: restrict accepted TLS versions and cipher suites
+readonlyrest.ssl.allowed_protocols: [TLSv1.2, TLSv1.3]
+readonlyrest.ssl.allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
+
+# Optional: mutual TLS — require clients to present a certificate
+readonlyrest.ssl.client_authentication: false          # default
+
+# Optional: custom trust anchor for client certificates (defaults to JVM truststore)
+readonlyrest.ssl.truststore_file: "truststore.jks"
+readonlyrest.ssl.truststore_pass: "<truststore-password>"
 ```
 
-The keystore should be stored in the same directory as `elasticsearch.yml`.
+**PEM option (preferred):**
+```yaml
+http.type: ssl_netty4
 
-##### Internode communication - transport module
+readonlyrest.ssl.server_certificate_key_file: "private_key.pem"
+readonlyrest.ssl.server_certificate_file: "fullchain.pem"
 
-This option encrypts communication between nodes forming Elasticsearch cluster.
+# Optional: custom trust anchor for client certificates
+readonlyrest.ssl.client_trusted_certificate_file: "trusted_certs.pem"
+```
 
-**⚠️IMPORTANT:** To enable SSL for internode communication open `elasticsearch.yml` and add these (example configuration with the most important properties):
+All certificate files must be placed in the same directory as `elasticsearch.yml`.
 
+###### Verify SSL is working
+
+After restarting Elasticsearch, confirm SSL is active by querying the cluster health endpoint:
+
+```bash
+# Full validation with a custom CA (self-signed or internal CA)
+curl --cacert /path/to/ca-chain.pem \
+     https://your-domain:9200/_cluster/health \
+     -u admin:your_password
+```
+
+If your certificate was issued by a public CA (Let's Encrypt or any commercial CA), the system trust store is sufficient and `--cacert` can be omitted:
+
+```bash
+curl https://your-domain:9200/_cluster/health -u admin:your_password
+```
+
+Expected result: HTTP 200 with a JSON body containing `"status":"green"` or `"status":"yellow"`.
+
+##### Internode communication — transport module
+
+Encrypts traffic between nodes in the Elasticsearch cluster on port 9300. This configuration must be added to all nodes in the cluster.
+
+**`elasticsearch.yml`:**
 ```yaml
 transport.type: ror_ssl_internode
-readonlyrest.ssl_internode.keystore_file: "keystore.jks"  # or keystore.p12 for PKCS#12 format
-readonlyrest.ssl_internode.keystore_pass: readonlyrest
-readonlyrest.ssl_internode.key_pass: readonlyrest
+
+readonlyrest.ssl_internode.keystore_file: "keystore.jks"   # also accepts .p12 (PKCS#12)
+readonlyrest.ssl_internode.keystore_pass: "<keystore-password>"
+readonlyrest.ssl_internode.key_pass: "<key-password>"
+readonlyrest.ssl_internode.key_alias: "my-node-cert"        # optional; if omitted, ROR uses the first alias found in the keystore
 ```
 
-Similar to `ssl` for HTTP, the keystore should be stored in the same directory as `elasticsearch.yml`. This config must be added to all nodes taking part in encrypted communication within cluster.
+The keystore file must be placed in the same directory as `elasticsearch.yml`.
 
 ###### Internode communication with XPack nodes
 
-It is possible to set up internode SSL between ROR nodes (with `xpack.security.enabled: false`) and XPack nodes. It works only for ES 6.7.0 or newer.
+It is possible to set up internode SSL between ROR nodes (with `xpack.security.enabled: false`) and XPack nodes. This requires ES 6.7.0 or newer.
 
-To set up cluster in such configuration you have to generate certificate for ROR node according to this description https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates.
+Generate a certificate for the ROR node following the [Elasticsearch certificate generation guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html#generate-certificates).
 
-Generated `elastic-certificates.p12` could be then used in ROR node with such configuration in `elasticsearch.yml`:
+The generated `elastic-certificates.p12` can then be used in the ROR node:
+
 ```yaml
 readonlyrest.ssl_internode.enable: true
 readonlyrest.ssl_internode.keystore_file: "elastic-certificates.p12"
-readonlyrest.ssl_internode.keystore_pass: [ password for generated certificate ]
-readonlyrest.ssl_internode.key_pass: [ password for generated certificate ]
+readonlyrest.ssl_internode.keystore_pass: "<keystore-password>"
+readonlyrest.ssl_internode.key_pass: "<key-password>"
 readonlyrest.ssl_internode.truststore_file: "elastic-certificates.p12"
-readonlyrest.ssl_internode.truststore_pass: [ password for generated certificate ]
-readonlyrest.ssl_internode.client_authentication: true  # default: false
-readonlyrest.ssl_internode.certificate_verification: true  # certificate verification is enabled by default on XPack nodes
-readonlyrest.ssl_internode.hostname_verification: false  # hostname verification is disabled by default
+readonlyrest.ssl_internode.truststore_pass: "<truststore-password>"
+readonlyrest.ssl_internode.client_authentication: true    # default: false
+readonlyrest.ssl_internode.certificate_verification: true
+readonlyrest.ssl_internode.hostname_verification: false   # default: false
 ```
 
 ###### Certificate verification
 
-By default the certificate verification is disabled. It means that certificate is not validated in any way, so all certificates are accepted.
-It is useful on local/test environment, where security is not the most important concern. On production environment it is advised to enable this option. It can be done by means of:
+By default, certificate verification is disabled for internode SSL. This means any certificate is accepted without validation — useful in local or test environments. In production, it is advised to enable this option.
 
 ```yaml
 readonlyrest.ssl_internode.certificate_verification: true
 ```
 
-This option is applicable only for internode SSL.
+This option applies to internode SSL only.
 
 ###### Hostname verification
 
-By default the hostname verification is disabled. This means that hostname or IP address is not verified to match the names in the certificate. To enable hostname verification add the following lines in the `ssl_internode` section:
+By default, hostname verification is disabled. This means the hostname or IP address is not checked against the names in the certificate.
+
+> **Production:** Enable hostname verification alongside certificate verification for full transport security.
 
 ```yaml
 readonlyrest.ssl_internode.hostname_verification: true
 ```
 
-###### Client authentication
+##### Client authentication
 
-By default the client authentication is disabled. When enabled, the server asks the client about its certificate, so ES is able to verify the client's identity. It can be enabled by means of:
+By default, the server does not request a client certificate. When enabled, Elasticsearch verifies the client's identity via mutual TLS.
 
+For external REST API:
 ```yaml
 readonlyrest.ssl.client_authentication: true
 ```
 
-This option is applicable for REST API external SSL and internode SSL (use `readonlyrest.ssl_internode.client_authentication` for internode).
-
-##### Restrict SSL protocols and ciphers
-
-Optionally, it's possible to specify a list allowed SSL protocols and SSL ciphers. Connections from clients that don't support the listed protocols or ciphers will be dropped.
-
+For internode communication:
 ```yaml
-readonlyrest.ssl.keystore_file: "keystore.jks"
-readonlyrest.ssl.keystore_pass: readonlyrest
-readonlyrest.ssl.key_pass: readonlyrest
-readonlyrest.ssl.allowed_protocols: [TLSv1.2]
-readonlyrest.ssl.allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
+readonlyrest.ssl_internode.client_authentication: true
 ```
 
-ReadonlyREST will log a list of available ciphers and protocols supported by the current JVM at startup.
+##### Allowed protocols and ciphers
+
+Optionally, restrict the accepted TLS versions and cipher suites. Connections from clients not supporting the listed values will be dropped.
+
+For external REST API:
+```yaml
+readonlyrest.ssl.allowed_protocols: [TLSv1.2, TLSv1.3]
+readonlyrest.ssl.allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
+```
+
+For internode communication:
+```yaml
+readonlyrest.ssl_internode.allowed_protocols: [TLSv1.2, TLSv1.3]
+readonlyrest.ssl_internode.allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
+```
+
+ReadonlyREST logs available ciphers and protocols supported by the current JVM at startup:
 
 ```text
 [2018-01-03T10:09:38,683][INFO ][t.b.r.e.SSLTransportNetty4] ROR SSL: Available ciphers: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA
@@ -555,60 +610,76 @@ ReadonlyREST will log a list of available ciphers and protocols supported by the
 
 ##### Custom truststore
 
-ReadonlyREST allows using custom truststore, replacing \(provided by JRE\) default one. Custom truststore can be set with:
+Replaces the default JVM truststore. The truststore file must be placed in the same directory as `elasticsearch.yml`.
 
+For external REST API:
 ```yaml
 readonlyrest.ssl.truststore_file: "truststore.jks"
-readonlyrest.ssl.truststore_pass: truststorepass
+readonlyrest.ssl.truststore_pass: "<truststore-password>"
 ```
 
-Use `readonlyrest.ssl_internode.truststore_file` / `readonlyrest.ssl_internode.truststore_pass` for internode SSL. This option is applicable for both ssl modes - external ssl and internode ssl. The truststore should be stored in the same directory as `elasticsearch.yml` (like the keystore). When not specified, ReadonlyREST uses the default truststore.
-
-
-##### PEM files instead of a keystore and/or truststore
-
-If you are using ReadonlyREST 1.44.0 or newer then you are able to use PEM files directly without the need of placing them inside a keystore or truststore.  
-
-To use PEM files instead of keystore file, use such configuration in `elasticsearch.yml` instead of `keystore_file`, `keystore_pass`, `key_pass` fields:
+For internode communication:
 ```yaml
-readonlyrest.ssl.server_certificate_key_file: private_key.pem
-readonlyrest.ssl.server_certificate_file: cert_chain.pem
+readonlyrest.ssl_internode.truststore_file: "truststore.jks"
+readonlyrest.ssl_internode.truststore_pass: "<truststore-password>"
 ```
 
-To use PEM file instead of truststore file, use such configuration instead of `truststore_file`, `truststore_pass` fields:
+When not specified, ReadonlyREST uses the default JVM truststore.
+
+##### Using Let's Encrypt
+
+Shows how to use Let's Encrypt certificates with ReadonlyREST. The same approach applies to certificates from other providers.
+
+You can use PEM files directly without creating a keystore — see the PEM option in the [External REST API](#external-rest-api) section above. In that case, only step 1 below is needed.
+
+###### 1. Obtain certificates
+
+```bash
+certbot certonly --standalone -d DOMAIN.TLD -d DOMAIN_2.TLD --email EMAIL@EMAIL.TLD
+```
+
+Change to the certificate directory (typically `/etc/letsencrypt/live/DOMAIN.TLD`). The files you need are `fullchain.pem` and `privkey.pem`.
+
+###### 2. Create a PKCS#12 keystore
+
+```bash
+openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name ror
+```
+
+You will be prompted to set a password for the `.p12` file. Remember it — you will need it in the next step.
+
+###### 3. Convert to JKS (optional)
+
+Skip this step if you use `keystore.p12` directly — ReadonlyREST supports both PKCS#12 and JKS formats.
+
+```bash
+keytool -importkeystore \
+  -srckeystore keystore.p12 \
+  -srcstoretype PKCS12 \
+  -srcstorepass STORE_PASS \       # password set in step 2
+  -destkeystore keystore.jks \
+  -deststorepass PASSWORD_STORE \  # protects keystore.jks → readonlyrest.ssl.keystore_pass
+  -destkeypass PASSWORD_KEYPASS \  # protects the private key entry → readonlyrest.ssl.key_pass
+  -alias ror
+```
+
+> `PASSWORD_STORE` and `PASSWORD_KEYPASS` can be the same value — most deployments use a single password for simplicity. `STORE_PASS` must match the password set in step 2.
+
+The resulting keystore maps to your ROR configuration as follows:
+
 ```yaml
-readonlyrest.ssl.client_trusted_certificate_file: trusted_certs.pem
+readonlyrest.ssl.keystore_file: "keystore.jks"
+readonlyrest.ssl.keystore_pass: "PASSWORD_STORE"   # -deststorepass from step 3
+readonlyrest.ssl.key_pass: "PASSWORD_KEYPASS"      # -destkeypass from step 3
 ```
 
-##### Using Let's encrypt
-We are  going to show how to first add all the certificates and private key into PKCS#12 keystore, and then (optionally) converting it to JKS keystore. ReadonlyREST supports both formats.
-
-**⚠️IMPORTANT**: if you are using ReadonlyREST in version above 1.44.0 then you don't have to create a keystore. You are able to use PEM files directly using the description above. 
-
-This tutorial can be a useful example on how to use certificates from other providers. 
-
-###### 1. Create keys
-```bash
-./letsencrypt-auto certonly --standalone -d DOMAIN.TLD -d DOMAIN_2.TLD --email EMAIL@EMAIL.TLD
-```
-Now change to the directory (probably /etc/letsencrypt/live/DOMAIN.tld) where the certificates were created.
-
-###### 2. Create a PKCS12 keystore with the full chain and private key
-```bash
-openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out pkcs.p12 -name NAME
-```
-
-###### 3. Convert PKCS12 to JKS Keystore (Optional)
-The STORE_PASS is the password which was entered in step 2) as a password for the pkcs12 file.
-
-```bash
-keytool -importkeystore -deststorepass PASSWORD_STORE -destkeypass PASSWORD_KEYPASS -destkeystore keystore.jks -srckeystore pkcs.p12 -srcstoretype PKCS12 -srcstorepass STORE_PASS -alias NAME
-```
-
-If you happen to get a `java.io.IOException: failed to decrypt safe contents entry: javax.crypto.BadPaddingException: Given final block not properly padded`, you have probably forgotten to enter the correct password from step 2.
+If you get `java.io.IOException: failed to decrypt safe contents entry: javax.crypto.BadPaddingException: Given final block not properly padded`, the `STORE_PASS` value does not match the password set in step 2.
 
 (Credits for the original JKS tutorial to [Maximilian Boehm](https://maximilian-boehm.com))
 
+##### FIPS mode
+
+If you need FIPS 140-2 compliant SSL, ReadonlyREST supports it via the BouncyCastle library and BCFKS keystore format. See [FIPS mode](details/fips.md) for setup instructions.
 
 ### ACL settings source configuration
 
