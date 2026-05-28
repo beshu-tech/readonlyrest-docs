@@ -454,21 +454,16 @@ ROR's ACL will handle authentication and authorization, while XPack manages the 
 
 The following subsections describe how to configure SSL using ReadonlyREST's own SSL implementation. This applies only when `xpack.security.enabled` is set to `false` in `elasticsearch.yml`.
 
-> **Configuration placement:** The `http.type` and `transport.type` directives must be set in `elasticsearch.yml`. All `readonlyrest.ssl.*` and `readonlyrest.ssl_internode.*` settings can be placed in either `elasticsearch.yml` or `readonlyrest.yml`.
+> **Configuration placement:** All SSL settings — including `http.type`, `transport.type`, `readonlyrest.ssl.*`, and `readonlyrest.ssl_internode.*` — must be placed in `elasticsearch.yml`.
 
 ##### External REST API
 
-Encrypts traffic between clients and Elasticsearch on port 9200. Add the following to your configuration files.
+Encrypts traffic between clients and Elasticsearch on port 9200. Add the following to your `elasticsearch.yml`.
 
-> **Note:** If you are using ROR 1.44.0 or newer, you can use PEM files directly — no keystore needed. See the PEM option below.
-
-**`elasticsearch.yml` (required):**
+**Keystore option (JKS or PKCS#12):**
 ```yaml
 http.type: ssl_netty4
-```
 
-**`readonlyrest.yml` or `elasticsearch.yml` — keystore option (JKS or PKCS#12):**
-```yaml
 readonlyrest.ssl.keystore_file: "keystore.jks"        # also accepts .p12 (PKCS#12)
 readonlyrest.ssl.keystore_pass: "<keystore-password>"
 readonlyrest.ssl.key_pass: "<key-password>"
@@ -486,8 +481,10 @@ readonlyrest.ssl.truststore_file: "truststore.jks"
 readonlyrest.ssl.truststore_pass: "<truststore-password>"
 ```
 
-**`readonlyrest.yml` or `elasticsearch.yml` — PEM option (ROR 1.44.0+, preferred):**
+**PEM option (preferred):**
 ```yaml
+http.type: ssl_netty4
+
 readonlyrest.ssl.server_certificate_key_file: "private_key.pem"
 readonlyrest.ssl.server_certificate_file: "fullchain.pem"
 
@@ -528,13 +525,10 @@ keytool -genkeypair -alias ror -keyalg RSA -keysize 2048 \
 
 Encrypts traffic between nodes in the Elasticsearch cluster on port 9300. This configuration must be added to all nodes in the cluster.
 
-**`elasticsearch.yml` (required):**
+**`elasticsearch.yml`:**
 ```yaml
 transport.type: ror_ssl_internode
-```
 
-**`readonlyrest.yml` or `elasticsearch.yml`:**
-```yaml
 readonlyrest.ssl_internode.keystore_file: "keystore.jks"   # also accepts .p12 (PKCS#12)
 readonlyrest.ssl_internode.keystore_pass: "<keystore-password>"
 readonlyrest.ssl_internode.key_pass: "<key-password>"
