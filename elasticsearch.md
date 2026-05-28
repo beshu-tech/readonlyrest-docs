@@ -456,7 +456,7 @@ The following subsections describe how to configure SSL using ReadonlyREST's own
 
 > **Configuration placement:** All SSL settings — including `http.type`, `transport.type`, `readonlyrest.ssl.*`, and `readonlyrest.ssl_internode.*` — must be placed in `elasticsearch.yml`.
 
-##### External REST API
+##### ThisExternal REST API
 
 Encrypts traffic between clients and Elasticsearch on port 9200. Add the following to your `elasticsearch.yml`.
 
@@ -513,14 +513,6 @@ curl https://your-domain:9200/_cluster/health -u admin:your_password
 
 Expected result: HTTP 200 with a JSON body containing `"status":"green"` or `"status":"yellow"`.
 
-###### Generate a self-signed certificate (for testing)
-
-```bash
-keytool -genkeypair -alias ror -keyalg RSA -keysize 2048 \
-  -keystore keystore.jks -storepass <keystore-password> -keypass <key-password> \
-  -dname "CN=localhost"
-```
-
 ##### Internode communication — transport module
 
 Encrypts traffic between nodes in the Elasticsearch cluster on port 9300. This configuration must be added to all nodes in the cluster.
@@ -559,9 +551,7 @@ readonlyrest.ssl_internode.hostname_verification: false   # default: false
 
 ###### Certificate verification
 
-By default, certificate verification is disabled for internode SSL. This means any certificate is accepted without validation — useful in local or test environments.
-
-> **Production:** Always enable certificate verification to prevent man-in-the-middle attacks.
+By default, certificate verification is disabled for internode SSL. This means any certificate is accepted without validation — useful in local or test environments. On production, it is advised to enable this option.
 
 ```yaml
 readonlyrest.ssl_internode.certificate_verification: true
@@ -640,7 +630,7 @@ When not specified, ReadonlyREST uses the default JVM truststore.
 
 Shows how to use Let's Encrypt certificates with ReadonlyREST. The same approach applies to certificates from other providers.
 
-**If you are using ROR 1.44.0 or newer:** you do not need to create a keystore. Copy the PEM files directly and use the PEM configuration shown in the [External REST API](#external-rest-api) section above. You only need step 1 below.
+You can use PEM files directly without creating a keystore — see the PEM option in the [External REST API](#external-rest-api) section above. In that case, only step 1 below is needed.
 
 ###### 1. Obtain certificates
 
