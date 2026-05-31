@@ -9,7 +9,7 @@ entries:
     text: "9.4.1, 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support"
   - type: new
     components: [es]
-    text: "9.4.1, 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support"
+    text: "9.4.2, 9.4.1, 9.4.0, 9.3.5, 9.3.4, 9.3.3, 9.2.8, 8.19.16, 8.19.15, 8.19.14 support"
   - type: new
     components: [eck]
     text: "3.4.0 support"
