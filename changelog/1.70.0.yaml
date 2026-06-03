@@ -1,0 +1,66 @@
+version: "1.70.0"
+release_date: "2026-06-03"
+entries:
+  - type: security
+    components: [kbn]
+    text: "Fixed `kibana.allowed_api_paths` to only check Kibana and ReadonlyREST API calls, and to only be usable when `api_only` user access is configured"
+  - type: security
+    components: [kbn]
+    text: "[CVE-2025-62718](https://nvd.nist.gov/vuln/detail/CVE-2025-62718), [CVE-2026-41673](https://nvd.nist.gov/vuln/detail/cve-2026-41673), [CVE-2026-41907](https://nvd.nist.gov/vuln/detail/CVE-2026-41907), [CVE-2026-42264](https://nvd.nist.gov/vuln/detail/CVE-2026-42264), [CVE-2026-6321](https://nvd.nist.gov/vuln/detail/CVE-2026-6321), [CVE-2026-6322](https://nvd.nist.gov/vuln/detail/CVE-2026-6322), [CVE-2026-8159](https://nvd.nist.gov/vuln/detail/CVE-2026-8159), [CVE-2026-45149](https://nvd.nist.gov/vuln/detail/CVE-2026-45149), [CVE-2026-8723](https://nvd.nist.gov/vuln/detail/CVE-2026-8723), [CVE-2026-46625](https://security.snyk.io/vuln/SNYK-CHAINGUARDLATEST-WAZUHDASHBOARDFIPS-16807878)"
+  - type: security
+    components: [es]
+    text: "[CVE-2026-42582](https://nvd.nist.gov/vuln/detail/CVE-2026-42582), [CVE-2026-42583](https://nvd.nist.gov/vuln/detail/CVE-2026-42583), [CVE-2026-42587](https://nvd.nist.gov/vuln/detail/CVE-2026-42587), [CVE-2026-42584](https://nvd.nist.gov/vuln/detail/CVE-2026-42584), [CVE-2026-42580](https://nvd.nist.gov/vuln/detail/CVE-2026-42580), [CVE-2026-42585](https://nvd.nist.gov/vuln/detail/CVE-2026-42585), [CVE-2026-42581](https://nvd.nist.gov/vuln/detail/CVE-2026-42581), [CVE-2026-41417](https://nvd.nist.gov/vuln/detail/CVE-2026-41417), [CVE-2026-34479](https://nvd.nist.gov/vuln/detail/CVE-2026-34479), [CVE-2026-34480](https://nvd.nist.gov/vuln/detail/CVE-2026-34480), [CVE-2026-40490](https://nvd.nist.gov/vuln/detail/CVE-2026-40490)"
+  - type: enhancement
+    components: [kbn]
+    text: "Cleaned newer builds of ancient libraries to avoid false positive CVE scanner reports"
+  - type: enhancement
+    components: [kbn]
+    text: "[Added support for rolling-file logging](https://forum.readonlyrest.com/t/log-files-rotations/2930/2)"
+  - type: enhancement
+    components: [kbn]
+    text: "ROR initialisation now retries automatically when Elasticsearch is not yet fully ready at Kibana startup"
+  - type: enhancement
+    components: [es]
+    text: "[External SSL now supports EC private keys produced by dehydrated and similar ACME clients](https://forum.readonlyrest.com/t/issues-with-letsencrypt-certs-from-dehydrated-curl-error-60-ssl-certificate-problem-unable-to-get-local-issuer-certificate/2889)"
+  - type: enhancement
+    components: [es]
+    text: "Slashed ACL evaluation overhead for wildcard index patterns: 49x more throughput, 98% lower p99 latency, and 50% less CPU compared to the previous ROR version"
+  - type: enhancement
+    components: [es]
+    text: "ROR bootstrap settings in `elasticsearch.yml` are now configured via proper nested YAML blocks under `readonlyrest.*` keys"
+  - type: enhancement
+    components: [es]
+    text: "Improved consistency of groups rule settings - the `users` section can only be present in the config when there is at least one groups rule that uses it"
+  - type: fix
+    components: [kbn]
+    text: "[Fixed a problem with downloading reports when multitenancy is disabled for Kibana > 8.13.x](https://forum.readonlyrest.com/t/cannot-download-generated-report-for-kibana-8-19-7/2927/38)"
+  - type: fix
+    components: [kbn]
+    text: "Fixed a bug with the `x-ror-tenancy-id` header not being respected in direct Kibana requests"
+  - type: fix
+    components: [kbn]
+    text: "Fixed a problem with the OIDC proxy where the Issuer cert endpoint wasn't passed through a proxy"
+  - type: fix
+    components: [kbn]
+    text: "Fixed a problem with correctly setting `nextUrl` when redirecting from OIDC with an external proxy"
+  - type: fix
+    components: [kbn]
+    text: "Resolved a problem with the relative path for `readonlyrest_kbn.login_custom_logo`"
+  - type: fix
+    components: [kbn]
+    text: "[Fixed a problem with logging in to Kibana when proxy auth is enabled and the `x-forwarded-user` header is set](https://forum.readonlyrest.com/t/authorization-via-proxy-auth-does-not-work-correctly/2969/9)"
+  - type: fix
+    components: [kbn]
+    text: "Resolved a problem with the ROR KBN plugin loading when different plugin versions and non-sticky sessions are used"
+  - type: fix
+    components: [es]
+    text: "Fixed the user metadata response returning the same Kibana index for all of a user's groups when the index uses `@{acl:current_group}`"
+  - type: fix
+    components: [es]
+    text: "Fixed the `expand_wildcards` parameter being ignored during index resolution: ROR now correctly filters indices and aliases by their open/closed state when resolving wildcard patterns, preventing closed indices from leaking into rewritten requests"
+  - type: fix
+    components: [es]
+    text: "Fixed a missing Kibana access policy in the metadata response when a matched ACL block has no `kibana` section configured; the default unrestricted access is now always returned"
+  - type: fix
+    components: [es]
+    text: "[The ES action `indices:admin/seq_no/global_checkpoint_sync` is now treated as an internal action and bypasses ACL evaluation. This action is dispatched by Elasticsearch internally after write operations and should never require explicit user permissions](https://forum.readonlyrest.com/t/global-checkpoint-sync-blocked/2870)"
