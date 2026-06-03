@@ -1,14 +1,12 @@
 # Changelog
 
-<!-- AUTO-GENERATED from changelog/*.yaml — do not edit directly -->
-
 ### (2026-04-10) What's new in **ROR 1.69.1**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) Fixed vulnerability <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2950">CVE-2026-2950</a></summary>
 Fixed a prototype pollution vulnerability (CVE-2026-2950) in the Lodash library used by Kibana. The issue allowed attackers to bypass a previous fix (CVE-2025-13465) by using array-wrapped path segments in `_.unset` and `_.omit` functions, potentially deleting properties from built-in prototypes. The vulnerability is patched by upgrading Lodash to version 4.18.0.
 </details>
 <details>
-<summary><strong>🚀New</strong> (KBN) 9.4.1, 9.4.0, 9.3.4, 9.3.3, 9.2.8, 8.19.15, 8.19.14 support</summary>
+<summary><strong>🚀New</strong> (KBN) 9.4.2, 9.4.1, 9.4.0, 9.3.5, 9.3.4, 9.3.3, 9.2.8, 8.19.16, 8.19.15, 8.19.14 support</summary>
 Added compatibility with the latest Kibana versions, including 9.4.x, 9.3.x, 9.2.8, and multiple 8.19.x releases. Users running these Kibana versions can now install and use ReadonlyREST without compatibility issues.
 </details>
 <details>
