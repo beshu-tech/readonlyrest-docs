@@ -42,4 +42,4 @@
   * [Elastic Fleet](examples/fleet/README.md)
 * [Contribution License Agreement](contributing.md)
 * [Commercial Licenses](commercial.md)
-* [Changelog](detailed_changelog.md)
+* [Changelog](changelog.md)
