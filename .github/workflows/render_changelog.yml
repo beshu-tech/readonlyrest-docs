@@ -1,4 +1,9 @@
-name: Render changelog.md
+name: Validate changelog YAML
+
+# Schema + filename/version-match validation for changelog/*.yaml (the single source of truth).
+# The legacy changelog.md mirror this workflow used to render is RETIRED (#94): changelog.md is now
+# the ror-api-rendered detailed changelog, committed by ror-api — not regenerated here. Validation
+# steps are kept (they run on both push and PR); the render + commit steps are gone.
 
 on:
   push:
@@ -14,10 +19,12 @@ on:
       - ".github/schemas/changelog-entry.schema.json"
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
+  # Job id kept as `validate-and-render` so the status-check context name is unchanged for any
+  # branch protection requiring it (see changelog_form.yml auto-merge caveat). Only the render
+  # half is gone; the id is a stable check name, not a description.
   validate-and-render:
     runs-on: ubuntu-latest
     steps:
@@ -60,56 +67,3 @@ jobs:
               }
               core.setFailed(`${mismatches.length} file(s) with filename/version mismatch — rename file or fix version field`)
             }
-
-      - name: Install semver
-        if: github.event_name == 'push'
-        run: npm install --no-save semver@7
-
-      - name: Render changelog.md
-        if: github.event_name == 'push'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs')
-            const semver = require('semver')
-            const releases = JSON.parse(fs.readFileSync('all.json', 'utf8'))
-
-            // Pre-release-aware sort. semver.rcompare handles 1.64.2 > 1.64.2-rc1 etc.
-            releases.sort((a, b) => semver.rcompare(a.version, b.version))
-
-            const TYPE_EMOJI = {
-              new: '🚀New',
-              fix: '🐞Fix',
-              security: '🚨Security Fix',
-              warning: '⚠️Warning',
-              enhancement: '🧐Enhancement',
-            }
-            // `components_raw` (optional) preserves original separator/order for migrated entries
-            // — required for hash parity with ror-api's stored LLM descriptions. New form-driven
-            // entries omit it; renderer falls back to canonical `ES|KBN` join.
-            const compStr = (e) => e.components_raw || e.components.map(c => c.toUpperCase()).join('|')
-
-            let md = '# Changelog\n\n'
-            md += '<!-- AUTO-GENERATED from changelog/*.yaml — do not edit directly -->\n\n'
-            for (const r of releases) {
-              md += `### (${r.release_date}) What's new in **ROR ${r.version}**\n`
-              for (const e of r.entries) {
-                const label = TYPE_EMOJI[e.type] || e.type
-                md += `* **${label}** (${compStr(e)}) ${e.text}\n`
-              }
-              md += '\n'
-            }
-            fs.writeFileSync('changelog.md', md)
-
-      - name: Commit if changed
-        if: github.event_name == 'push'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add changelog.md
-          if git diff --cached --quiet; then
-            echo "no change"
-          else
-            git commit -m "regen changelog.md from YAMLs"
-            git push
-          fi
