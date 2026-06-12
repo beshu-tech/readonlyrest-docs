@@ -1,5 +1,19 @@
 # Changelog
 
+### (2026-06-12) What's new in **ROR 1.70.1**
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42587">CVE-2026-42587</a></summary>
+This release addresses a critical vulnerability in the Netty library (used by Elasticsearch) where the `HttpContentDecompressor`'s `maxAllocation` limit was silently ignored for Brotli, zstd, and snappy compression encodings. An attacker could exploit this by sending a specially crafted compressed payload, bypassing the decompression bomb protection and causing unbounded memory allocation leading to a denial of service. The fix updates the affected Netty dependency to a patched version.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed tenancy creation after in-place Kibana 8.x→9.x upgrade; stale tenancy indices are repaired automatically (reindex + atomic alias swap)</summary>
+When upgrading Kibana in-place from version 8.x to 9.x, existing tenancy indices could become stale and prevent new tenancy creation. This fix introduces automatic detection and repair of such stale indices by performing a reindex operation followed by an atomic alias swap, ensuring a seamless upgrade path without manual intervention.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Fixed Grok Debugger and Painless Lab in DevTools forbidden error for <code>admin</code>, <code>RW</code>, and <code>RO</code>, <code>RO-strict</code> <code>kibana.access</code> levels</summary>
+Users with `admin`, `RW`, `RO`, or `RO-strict` `kibana.access` levels were incorrectly receiving forbidden errors when trying to use the Grok Debugger and Painless Lab tools in Kibana DevTools. This fix ensures these tools are properly authorized for all standard access levels.
+</details>
+
 ### (2026-06-03) What's new in **ROR 1.70.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) Fixed <code>kibana.allowed_api_paths</code> to only check Kibana and ReadonlyREST API calls, and to only be usable when <code>api_only</code> user access is configured</summary>
