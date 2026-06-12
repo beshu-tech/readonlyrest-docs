@@ -1,4 +1,20 @@
+<!-- AUTO-GENERATED from changelog/*.yaml by ror-api — do not edit by hand; maintainers edit the per-version YAMLs in changelog/. -->
+
 # Changelog
+
+### (2026-06-12) What's new in **ROR 1.70.1**
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42587">CVE-2026-42587</a></summary>
+This release addresses a Netty vulnerability (CVE-2026-42587) where the HttpContentDecompressor's maxAllocation limit was silently ignored for Brotli, Zstd, and Snappy compression encodings, allowing an attacker to trigger unbounded memory allocation and denial of service via a crafted compressed payload. The fix updates the bundled Netty dependency to a patched version that properly enforces the decompression buffer limit for all supported content encodings.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/1-69-1-es9-4-2-unable-to-create-new-tenancy/2989">Fixed tenancy creation after in-place Kibana 8.x→9.x upgrade; stale tenancy indices are repaired automatically (reindex + atomic alias swap)</a></summary>
+When upgrading Kibana in-place from 8.x to 9.x, existing tenancy indices could become stale and block the creation of new tenants. This fix automatically detects and repairs such stale indices by performing a reindex operation followed by an atomic alias swap, ensuring a seamless upgrade path without manual intervention.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Fixed Grok Debugger and Painless Lab in DevTools forbidden error for <code>admin</code>, <code>RW</code>, and <code>RO</code>, <code>RO-strict</code> <code>kibana.access</code> levels</summary>
+Users with admin, RW, RO, or RO-strict kibana.access levels were incorrectly receiving forbidden errors when trying to use the Grok Debugger and Painless Lab tools in DevTools. This fix ensures these built-in Kibana debugging tools are properly authorized for all standard access levels.
+</details>
 
 ### (2026-06-03) What's new in **ROR 1.70.0**
 <details>
