@@ -179,7 +179,7 @@ jobs:
           body: |
             Auto-opened from issue #${{ github.event.issue.number }}.
 
-            Render workflow will regenerate `changelog.md` on merge to `master`.
+            On merge to `master`, ror-api re-renders the published changelog from the YAML.
 
             ---
             _Edit the YAML directly in this PR to fix typos or update the release date._
@@ -227,7 +227,7 @@ jobs:
             const verb = op === 'created' ? 'Opened' : 'Updated'
             const automergeNote = automerge
               ? '\n\n_Auto-merge enabled (`.github/changelog-config.yml`) — will merge once required checks pass._'
-              : '\n\n_Edit the YAML directly in the PR for fixes. Merge will trigger `changelog.md` regen._'
+              : '\n\n_Edit the YAML directly in the PR for fixes. Merge re-renders the published changelog from the YAML._'
             const body = `${marker}\n${verb} ${url}${automergeNote}`
             const ref = {
               owner: context.repo.owner,
