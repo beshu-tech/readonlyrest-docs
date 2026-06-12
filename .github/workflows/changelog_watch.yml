@@ -2,8 +2,9 @@ name: Watch Changelog
 
 # Phase 3+: fires on changelog/*.yaml changes (single source of truth).
 # Each changed YAML triggers an event-typed webhook to ror-api.
-# The legacy changelog.md push path is gone — changelog.md is now an auto-generated
-# mirror produced by render_changelog.yml. Bot-pushed regens don't trigger this workflow.
+# The legacy changelog.md mirror is retired (render_changelog.yml no longer writes it, #94);
+# changelog.md is now the ror-api-rendered detailed changelog, committed by ror-api — not this repo.
+# A migration-scale push (>20 YAMLs) skips the webhook fan-out (guard below).
 
 on:
   push:
@@ -27,6 +28,15 @@ jobs:
         run: |
           set -eo pipefail
           PREV=$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)
+          # #94: a backfill/migration can touch dozens of YAMLs in one push. Skip the per-version
+          # webhook fan-out for migration-scale batches. ror-api's consumer-side idempotency guard
+          # (_webhook_yaml_is_up_to_date) already makes the storm harmless; this stops it being SENT.
+          # Threshold >20: the migration was 66 files; a deliberate multi-release batch is well under.
+          CHANGED_COUNT=$(git diff --name-only "$PREV" HEAD -- 'changelog/*.yaml' | wc -l)
+          if [ "$CHANGED_COUNT" -gt 20 ]; then
+            echo "::warning::bulk YAML change ($CHANGED_COUNT files) — skipping webhooks (likely backfill/migration)"
+            exit 0
+          fi
           # Each changed YAML => one event-typed POST. A/M/D classified by git status code.
           git diff --name-status "$PREV" HEAD -- 'changelog/*.yaml' | while IFS=$'\t' read -r STATUS FILE; do
             VERSION=$(basename "$FILE" .yaml)
