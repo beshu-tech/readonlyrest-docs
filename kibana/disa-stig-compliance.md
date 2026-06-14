@@ -188,7 +188,7 @@ Whether multiple people share the same IdP credentials is outside ReadonlyREST's
 
 ## 4. Authentication
 
-### MFA — Multi-Factor Authentication for privileged accounts *(CAT I)*
+### V-222523 — Multi-Factor Authentication for privileged accounts *(CAT I)*
 
 **Status: Conditionally satisfied — depends on IdP configuration**
 
@@ -198,7 +198,7 @@ Deployments not using SAML or OIDC have no MFA enforcement point at the Readonly
 
 ---
 
-### Plaintext credential transmission *(CAT I)*
+### V-222543 — Plaintext credential transmission *(CAT I)*
 
 **Status: Conditionally satisfied — requires TLS configuration**
 
@@ -231,7 +231,7 @@ server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
 
 ## 5. Transport Security
 
-### TLS protocol version enforcement *(CAT I)*
+### V-222596 — TLS protocol version enforcement *(CAT I)*
 
 **Status: Conditionally satisfied — requires configuration**
 
@@ -248,7 +248,7 @@ ReadonlyREST respects this setting and applies the configured protocol restricti
 
 ---
 
-### Cryptographic algorithms *(CAT I)*
+### V-222571 — Cryptographic algorithms *(CAT I)*
 
 **Status: Fully satisfied**
 
@@ -266,7 +266,7 @@ No deprecated algorithms are present in the ReadonlyREST codebase. MD5, SHA-1, D
 
 ## 6. Audit & Logging
 
-### Failed login attempt logging *(CAT II)*
+### V-222452 — Failed login attempt logging *(CAT II)*
 
 **Status: Conditionally satisfied — requires audit configuration**
 
@@ -286,7 +286,7 @@ The Kibana plugin additionally logs rejected attempts at `INFO` level in the Kib
 
 ---
 
-### Privileged user action logging *(CAT II)*
+### V-222463 — Privileged user action logging *(CAT II)*
 
 **Status: Conditionally satisfied — requires audit configuration**
 
@@ -315,7 +315,7 @@ readonlyrest:
 
 ---
 
-### Audit log integrity *(CAT II)*
+### V-222507 — Audit log integrity *(CAT II)*
 
 **Status: Partially satisfied — access control covered, tamper-detection outside scope**
 
@@ -336,7 +336,7 @@ Tamper detection (log signing, hash chaining) and audit log backup are outside R
 
 ## 7. HTTP Security Headers
 
-### Content-Security-Policy *(CAT II)*
+### V-222602 — Content-Security-Policy *(CAT II)*
 
 **Status: Partially satisfied — architectural limitation in Kibana**
 
@@ -411,16 +411,14 @@ server.customResponseHeaders:
 | V-206355 | RBAC logical access control | II | ✅ Fully satisfied |
 | V-206394 | No anonymous access | II | ✅ Fully satisfied |
 | V-264342 | Individual auth before shared access | II | ✅ Satisfied at plugin level |
-| — | MFA for privileged accounts | I | ⚠️ Depends on IdP — not available without SAML/OIDC |
-| — | Plaintext credential transmission | I | ⚠️ Requires TLS configuration |
-| — | TLS protocol version (min. 1.2) | I | ⚠️ Conditionally satisfied — requires configuration |
-| — | Cryptographic algorithms (no deprecated) | I | ✅ Fully satisfied |
-| — | Failed login attempt logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
-| — | Privileged user action logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
-| — | Audit log integrity | II | ⚠️ Partially satisfied — access control via ACL; tamper-detection outside scope |
-| — | Content-Security-Policy | II | ⚠️ Partially satisfied — style-src 'unsafe-inline' is a Kibana architectural limitation |
-| — | X-Frame-Options | II | ⚠️ Requires explicit Kibana configuration |
-| — | Strict-Transport-Security (HSTS) | II | ⚠️ Requires explicit Kibana configuration |
+| V-222523 | MFA for privileged accounts | I | ⚠️ Depends on IdP — not available without SAML/OIDC |
+| V-222543 | Plaintext credential transmission | I | ⚠️ Requires TLS configuration |
+| V-222596 | TLS protocol version (min. 1.2) | I | ⚠️ Conditionally satisfied — requires configuration |
+| V-222571 | Cryptographic algorithms (no deprecated) | I | ✅ Fully satisfied |
+| V-222452 | Failed login attempt logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
+| V-222463 | Privileged user action logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
+| V-222507 | Audit log integrity | II | ⚠️ Partially satisfied — access control via ACL; tamper-detection outside scope |
+| V-222602 | Content-Security-Policy | II | ⚠️ Partially satisfied — style-src 'unsafe-inline' is a Kibana architectural limitation |
 
 **Legend:**
 - ✅ — satisfied (by default or via documented configuration)
