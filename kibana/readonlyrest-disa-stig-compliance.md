@@ -238,7 +238,7 @@ Every Kibana user action — including actions performed by privileged users —
 
 **Status: Partially satisfied — access control covered, tamper-detection outside scope**
 
-ReadonlyREST writes audit events to a timestamped Elasticsearch index (default: `readonlyrest_audit-YYYY-MM-DD`, configurable via `index_template`). The ACL can be used to prevent unauthorized modification or deletion of those indices. See [Protecting the audit index](../details/audit.md#protecting-the-audit-index) for the required ACL rule.
+ReadonlyREST writes audit events to a timestamped Elasticsearch index or data stream (default name: `readonlyrest_audit-YYYY-MM-DD`, configurable). The ACL can be used to prevent unauthorized modification or deletion of audit data. See [Protecting the audit index](../details/audit.md#protecting-the-audit-index) for the required ACL rule.
 
 Tamper detection (log signing, hash chaining) and audit log backup are outside ReadonlyREST scope and must be addressed at the Elasticsearch/infrastructure layer.
 

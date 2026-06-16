@@ -753,13 +753,16 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
 
 To prevent users from modifying or deleting audit data, add a `forbid` block to your `readonlyrest.yml` that blocks write and delete actions on the audit indices.
 
-Place this block **after** any broad `allow` rules that must remain unaffected (e.g. the Kibana server user block), but **before** any regular user `allow` blocks. ACL blocks are evaluated top-to-bottom and the first matching block wins.
-
 ```yaml
 - name: "Protect audit index"
   type: forbid
   indices: ["readonlyrest_audit-*"]
   actions: ["indices:data/write/*", "indices:admin/delete"]
 ```
+
+**Placement:** ACL blocks are evaluated top-to-bottom and the first matching block wins.
+
+- If no user or service should be able to write to the audit index via the Elasticsearch API, place this block at the **very beginning** of the ACL. Audit events are written internally by the ReadonlyREST plugin and bypass the ACL entirely, so this does not affect audit collection.
+- If some identities (e.g. a dedicated audit reader service) require access that would conflict with this rule, place the `forbid` block after their `allow` blocks but before all other allow rules.
 
 The wildcard pattern `readonlyrest_audit-*` matches the default index name template. If you configured a custom `index_template` prefix, adjust the pattern accordingly.
