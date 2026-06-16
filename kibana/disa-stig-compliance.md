@@ -22,7 +22,7 @@ Two storage backends are available:
 - **In-memory** (default): suitable for single Kibana instance deployments.
 - **Elasticsearch index** (recommended for HA): sessions are persisted in a dedicated index shared across all Kibana nodes.
 
-See [Session management with multiple Kibana instances](https://docs.readonlyrest.com/kibana#session-management-with-multiple-kibana-instances) for configuration details.
+See [Session management with multiple Kibana instances](../kibana.md#session-management-with-multiple-kibana-instances) for configuration details.
 
 ---
 
@@ -40,7 +40,7 @@ For multi-tab browser scenarios, a background probe running in each tab detects 
 
 **Status: Fully satisfied**
 
-ReadonlyREST sets appropriate security flags on every session cookie. See [Cookie settings](https://docs.readonlyrest.com/kibana#cookie-settings) for defaults, behavior, and configurable attributes.
+ReadonlyREST sets appropriate security flags on every session cookie. See [Cookie settings](../kibana.md#cookie-settings) for defaults, behavior, and configurable attributes.
 
 ---
 
@@ -101,7 +101,7 @@ UUID v4 carries 122 bits of random entropy in a 128-bit value — 95% entropy de
 
 **Status: Partially satisfied — requires configuration; note architectural limitation**
 
-ReadonlyREST enforces a configurable session timeout. For STIG compliance this must be set to 480 minutes (8 hours) or less. See [Session timeout](https://docs.readonlyrest.com/kibana#session-timeout) for configuration details.
+ReadonlyREST enforces a configurable session timeout. For STIG compliance this must be set to 480 minutes (8 hours) or less. See [Session timeout](../kibana.md#session-timeout) for configuration details.
 
 **Limitation:** ReadonlyREST's timeout is a sliding inactivity window — each user action resets the clock. There is no hard absolute cap on total session lifetime from the moment of login. A continuously active user will not be forcibly logged out after 8 hours. ReadonlyREST creates and manages its own session independently of the IdP after the initial authentication, so there is no external control point that can enforce an absolute lifetime on an active ReadonlyREST session. Strict absolute session lifetime enforcement is a known limitation of the current ReadonlyREST implementation.
 
@@ -111,7 +111,7 @@ ReadonlyREST enforces a configurable session timeout. For STIG compliance this m
 
 **Status: Fully satisfied — requires configuration**
 
-ReadonlyREST terminates idle sessions and cleans them up automatically. See [Session timeout](https://docs.readonlyrest.com/kibana#session-timeout) for configuration details.
+ReadonlyREST terminates idle sessions and cleans them up automatically. See [Session timeout](../kibana.md#session-timeout) for configuration details.
 
 ---
 
@@ -147,7 +147,7 @@ ReadonlyREST is the RBAC enforcement point for Kibana. Access control is driven 
 
 **Status: Fully satisfied**
 
-Every request passing through ReadonlyREST requires a valid authenticated session. Unauthenticated requests are redirected to the login page before reaching Kibana. The only paths that bypass authentication are health-check endpoints, which expose no user data and allow no modifications. See [Enable health check endpoint](https://docs.readonlyrest.com/kibana#enable-health-check-endpoint) for configuring whitelisted paths.
+Every request passing through ReadonlyREST requires a valid authenticated session. Unauthenticated requests are redirected to the login page before reaching Kibana. The only paths that bypass authentication are health-check endpoints, which expose no user data and allow no modifications. See [Enable health check endpoint](../kibana.md#enable-health-check-endpoint) for configuring whitelisted paths.
 
 ---
 
@@ -182,7 +182,7 @@ The exposure of credentials in transit depends on the authentication method in u
 - **SAML / OIDC deployments:** ReadonlyREST does not handle raw credentials directly — authentication relies on SAML assertions or OIDC token exchanges. Only session tokens are transmitted between the browser and Kibana, and these are exposed if TLS is not configured.
 - **Basic auth deployments (`auth_key`):** Username and password are transmitted from the browser on every request. Without TLS, credentials are exposed in plaintext on every authenticated request.
 
-TLS is mandatory for STIG compliance regardless of the authentication method. See [SSL/TLS server](https://docs.readonlyrest.com/kibana#ssltls-server) for configuration details.
+TLS is mandatory for STIG compliance regardless of the authentication method. See [SSL/TLS server](../kibana.md#ssltls-server) for configuration details.
 
 ---
 
@@ -194,7 +194,7 @@ TLS is mandatory for STIG compliance regardless of the authentication method. Se
 
 When TLS is enabled, ReadonlyREST enforces a minimum protocol baseline: TLSv1.0, SSLv2, and SSLv3 are always disabled. TLSv1.1, TLSv1.2, and TLSv1.3 are permitted by default.
 
-DISA STIG requires a minimum of TLS 1.2. See [SSL/TLS server](https://docs.readonlyrest.com/kibana#ssltls-server) for how to restrict the allowed protocols. ReadonlyREST respects this setting and applies the configured protocol restrictions across all TLS connections.
+DISA STIG requires a minimum of TLS 1.2. See [SSL/TLS server](../kibana.md#ssltls-server) for how to restrict the allowed protocols. ReadonlyREST respects this setting and applies the configured protocol restrictions across all TLS connections.
 
 ---
 
@@ -220,9 +220,9 @@ No deprecated algorithms are present in the ReadonlyREST codebase. MD5, SHA-1, D
 
 **Status: Conditionally satisfied — requires audit configuration**
 
-The ReadonlyREST Elasticsearch plugin provides formal structured audit logging for all access control decisions, including rejected authentication attempts. When enabled, FORBIDDEN events are written to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). See [Audit configuration](https://docs.readonlyrest.com/details/audit#configuration) for the full list of available fields.
+The ReadonlyREST Elasticsearch plugin provides formal structured audit logging for all access control decisions, including rejected authentication attempts. When enabled, FORBIDDEN events are written to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). See [Audit configuration](../details/audit.md#configuration) for the full list of available fields.
 
-See [Audit configuration](https://docs.readonlyrest.com/details/audit#configuration) for how to enable audit logging.
+See [Audit configuration](../details/audit.md#configuration) for how to enable audit logging.
 
 The Kibana plugin additionally logs rejected attempts at `INFO` level in the Kibana application log (e.g. "Could not login in: …"), visible in standard production deployments.
 
@@ -232,7 +232,7 @@ The Kibana plugin additionally logs rejected attempts at `INFO` level in the Kib
 
 **Status: Conditionally satisfied — requires audit configuration**
 
-The ReadonlyREST Elasticsearch plugin routes all requests — including privileged admin API calls — through the same ACL evaluation and audit pipeline. When audit logging is enabled, every request is written to the audit index. See [Audit configuration](https://docs.readonlyrest.com/details/audit#configuration) for how to enable it, and [Predefined serializers](https://docs.readonlyrest.com/details/audit#predefined-serializers) for maximum field coverage (including request path and ACL history) using `FullAuditLogSerializer`.
+The ReadonlyREST Elasticsearch plugin routes all requests — including privileged admin API calls — through the same ACL evaluation and audit pipeline. When audit logging is enabled, every request is written to the audit index. See [Audit configuration](../details/audit.md#configuration) for how to enable it, and [Predefined serializers](../details/audit.md#predefined-serializers) for maximum field coverage (including request path and ACL history) using `FullAuditLogSerializer`.
 
 ---
 
@@ -240,7 +240,7 @@ The ReadonlyREST Elasticsearch plugin routes all requests — including privileg
 
 **Status: Partially satisfied — access control covered, tamper-detection outside scope**
 
-ReadonlyREST writes audit events to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). The ACL can be used to prevent unauthorized modification or deletion of those indices. See [Protecting the audit index](https://docs.readonlyrest.com/details/audit#protecting-the-audit-index) for the required ACL rule.
+ReadonlyREST writes audit events to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). The ACL can be used to prevent unauthorized modification or deletion of those indices. See [Protecting the audit index](../details/audit.md#protecting-the-audit-index) for the required ACL rule.
 
 Tamper detection (log signing, hash chaining) and audit log backup are outside ReadonlyREST scope and must be addressed at the Elasticsearch/infrastructure layer.
 
