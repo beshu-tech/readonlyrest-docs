@@ -4,7 +4,7 @@ description: >-
   plugin as the authentication and authorization enforcement point.
 ---
 
-# DISA STIG Compliance — ReadonlyREST Kibana Plugin
+# DISA STIG Compliance — ReadonlyREST Plugin
 
 This document answers DISA STIG (Web Server Security Requirements Guide) compliance questions for deployments where the ReadonlyREST Kibana plugin serves as the authentication and authorization enforcement point.
 
