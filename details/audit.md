@@ -757,7 +757,18 @@ To prevent users from modifying or deleting audit data, add a `forbid` block to 
 - name: "Protect audit index"
   type: forbid
   indices: ["readonlyrest_audit-*"]
-  actions: ["indices:data/write/*", "indices:admin/delete"]
+  actions:
+    - "indices:data/write/*"      # index, update, delete, bulk, *_by_query, reindex-into
+    - "indices:admin/delete"      # delete the index
+    - "indices:admin/close"       # close (then could be re-opened writable)
+    - "indices:admin/open"
+    - "indices:admin/settings/*"  # change settings (e.g. flip read-only / replicas)
+    - "indices:admin/mapping/*"   # mapping/put + mapping/auto_put (NOT mappings/get — that's read)
+    - "indices:admin/aliases"     # re-point / drop the audit aliases
+    - "indices:admin/rollover"
+    - "indices:admin/resize"      # shrink / split / clone
+    - "indices:admin/forcemerge"
+    - "indices:admin/freeze"
 ```
 
 **Placement:** ACL blocks are evaluated top-to-bottom and the first matching block wins.
