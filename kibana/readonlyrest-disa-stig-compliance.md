@@ -134,7 +134,7 @@ IP session binding is a known limitation of the current ReadonlyREST implementat
 
 **Status: Fully satisfied**
 
-ReadonlyREST is the RBAC enforcement point for Kibana. Access control is driven by the ReadonlyREST ACL configuration, which maps authenticated identities (users, SAML attributes, OIDC claims, group memberships) to permissions. The following are enforced per session:
+ReadonlyREST is the RBAC enforcement point for Kibana. Access control is driven by the [ReadonlyREST ACL](../elasticsearch.md#readonlyrest-acl) — configured in the Elasticsearch plugin's `readonlyrest.yml` — which maps authenticated identities (users, SAML attributes, OIDC claims, group memberships) to permissions. The following are enforced per session:
 
 - **Kibana tenants / spaces:** each user or group is confined to a specific Kibana space, isolating dashboards and saved objects.
 - **Elasticsearch index access:** users can only query the indices permitted by their ACL block.
