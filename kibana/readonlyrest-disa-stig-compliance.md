@@ -230,7 +230,7 @@ The Kibana plugin additionally logs rejected attempts at `INFO` level in the Kib
 
 **Status: Conditionally satisfied — requires audit configuration**
 
-The ReadonlyREST Elasticsearch plugin routes all requests — including privileged admin API calls — through the same ACL evaluation and audit pipeline. When audit logging is enabled, every request is written to the audit index. See [Audit configuration](../details/audit.md#configuration) for how to enable it, and [Predefined serializers](../details/audit.md#predefined-serializers) for maximum field coverage (including request path and ACL history) using `FullAuditLogSerializer`.
+Every Kibana user action — including actions performed by privileged users — translates into one or more Elasticsearch REST API calls. When audit logging is enabled in the ReadonlyREST Elasticsearch plugin, every such request is audited with no exceptions based on privilege level. See [Audit configuration](../details/audit.md#configuration) for how to enable it. For additional field coverage (request path, ACL history), see [Predefined serializers](../details/audit.md#predefined-serializers).
 
 ---
 
