@@ -220,9 +220,7 @@ No deprecated algorithms are present in the ReadonlyREST codebase. MD5, SHA-1, D
 
 **Status: Conditionally satisfied — requires audit configuration**
 
-The ReadonlyREST Elasticsearch plugin provides formal structured audit logging for all access control decisions, including rejected authentication attempts. When enabled, FORBIDDEN events are written to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). See [Audit configuration](../details/audit.md#configuration) for the full list of available fields.
-
-See [Audit configuration](../details/audit.md#configuration) for how to enable audit logging.
+The ReadonlyREST Elasticsearch plugin provides formal structured audit logging for all access control decisions, including rejected authentication attempts. When enabled, FORBIDDEN events are written to a timestamped Elasticsearch index (default: `readonlyrest_audit-YYYY-MM-DD`, configurable via `index_template`). The output format is structured by default and can be customized via [serializers](../details/audit.md#predefined-serializers), including support for [ECS (Elastic Common Schema)](../details/audit.md#using-ecs-serializer). See [Audit configuration](../details/audit.md#configuration) for how to enable audit logging.
 
 The Kibana plugin additionally logs rejected attempts at `INFO` level in the Kibana application log (e.g. "Could not login in: …"), visible in standard production deployments.
 
@@ -240,7 +238,7 @@ The ReadonlyREST Elasticsearch plugin routes all requests — including privileg
 
 **Status: Partially satisfied — access control covered, tamper-detection outside scope**
 
-ReadonlyREST writes audit events to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). The ACL can be used to prevent unauthorized modification or deletion of those indices. See [Protecting the audit index](../details/audit.md#protecting-the-audit-index) for the required ACL rule.
+ReadonlyREST writes audit events to a timestamped Elasticsearch index (default: `readonlyrest_audit-YYYY-MM-DD`, configurable via `index_template`). The ACL can be used to prevent unauthorized modification or deletion of those indices. See [Protecting the audit index](../details/audit.md#protecting-the-audit-index) for the required ACL rule.
 
 Tamper detection (log signing, hash chaining) and audit log backup are outside ReadonlyREST scope and must be addressed at the Elasticsearch/infrastructure layer.
 
