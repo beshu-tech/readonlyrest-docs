@@ -20,7 +20,9 @@ ReadonlyREST stores all session state on the server side. The client-side cookie
 
 Two storage backends are available:
 - **In-memory** (default): suitable for single Kibana instance deployments.
-- **Elasticsearch index** (recommended for HA): sessions are persisted in a dedicated index shared across all Kibana nodes. Enabled via `readonlyrest_kbn.store_sessions_in_index: true`.
+- **Elasticsearch index** (recommended for HA): sessions are persisted in a dedicated index shared across all Kibana nodes.
+
+See [Session management with multiple Kibana instances](https://docs.readonlyrest.com/kibana#session-management-with-multiple-kibana-instances) for configuration details.
 
 ---
 
@@ -38,24 +40,7 @@ For multi-tab browser scenarios, a background probe running in each tab detects 
 
 **Status: Fully satisfied**
 
-ReadonlyREST sets the following flags on every session cookie:
-
-| Flag | Default | Notes |
-|------|---------|-------|
-| `HttpOnly` | `true` (always) | Cannot be disabled. |
-| `Secure` | `true` when TLS is active | Automatically enabled when Kibana is configured with SSL, or when `readonlyrest_kbn.cookies.secure: true` is set explicitly (required for NGINX SSL termination). |
-| `SameSite` | `Lax` | Configurable to `Strict` (recommended for management interfaces) or `None`. |
-
-All cookie attributes are configurable in `kibana.yml`:
-
-```yaml
-readonlyrest_kbn.cookieName: rorCookie
-readonlyrest_kbn.cookiePass: <minimum-32-character-secret>
-readonlyrest_kbn.cookies.sameSite: strict   # lax | strict | none
-readonlyrest_kbn.cookies.secure: true       # explicit override
-```
-
-For NGINX reverse-proxy deployments where SSL is terminated at the proxy, set `readonlyrest_kbn.cookies.secure: true` to ensure the `Secure` flag is applied to cookies even though Kibana runs over plain HTTP internally.
+ReadonlyREST sets appropriate security flags on every session cookie. See [Cookie settings](https://docs.readonlyrest.com/kibana#cookie-settings) for defaults, behavior, and configurable attributes.
 
 ---
 
@@ -116,11 +101,7 @@ UUID v4 carries 122 bits of random entropy in a 128-bit value — 95% entropy de
 
 **Status: Partially satisfied — requires configuration; note architectural limitation**
 
-ReadonlyREST enforces a configurable session timeout via `readonlyrest_kbn.session_timeout_minutes` (default: 4320 minutes / 3 days). For STIG compliance this must be set to 480 minutes (8 hours) or less:
-
-```yaml
-readonlyrest_kbn.session_timeout_minutes: 480
-```
+ReadonlyREST enforces a configurable session timeout. For STIG compliance this must be set to 480 minutes (8 hours) or less. See [Session timeout](https://docs.readonlyrest.com/kibana#session-timeout) for configuration details.
 
 **Limitation:** ReadonlyREST's timeout is a sliding inactivity window — each user action resets the clock. There is no hard absolute cap on total session lifetime from the moment of login. A continuously active user will not be forcibly logged out after 8 hours. ReadonlyREST creates and manages its own session independently of the IdP after the initial authentication, so there is no external control point that can enforce an absolute lifetime on an active ReadonlyREST session. Strict absolute session lifetime enforcement is a known limitation of the current ReadonlyREST implementation.
 
@@ -130,13 +111,7 @@ readonlyrest_kbn.session_timeout_minutes: 480
 
 **Status: Fully satisfied — requires configuration**
 
-ReadonlyREST terminates sessions that have been idle for longer than the configured timeout. The same `session_timeout_minutes` setting controls the idle window. Background cleanup runs automatically and removes expired sessions from the store. A client-side probe (every 30 seconds) independently detects session expiry in the browser and triggers immediate logout.
-
-Recommended configuration:
-
-```yaml
-readonlyrest_kbn.session_timeout_minutes: 30   # example: 30-minute idle timeout
-```
+ReadonlyREST terminates idle sessions and cleans them up automatically. See [Session timeout](https://docs.readonlyrest.com/kibana#session-timeout) for configuration details.
 
 ---
 
@@ -172,7 +147,7 @@ ReadonlyREST is the RBAC enforcement point for Kibana. Access control is driven 
 
 **Status: Fully satisfied**
 
-Every request passing through ReadonlyREST requires a valid authenticated session. Unauthenticated requests are redirected to the login page before reaching Kibana. The only paths that bypass authentication are health-check endpoints (`/status`, `/api/status` by default), which expose no user data and allow no modifications. These whitelisted paths are configurable.
+Every request passing through ReadonlyREST requires a valid authenticated session. Unauthenticated requests are redirected to the login page before reaching Kibana. The only paths that bypass authentication are health-check endpoints, which expose no user data and allow no modifications. See [Enable health check endpoint](https://docs.readonlyrest.com/kibana#enable-health-check-endpoint) for configuring whitelisted paths.
 
 ---
 
@@ -207,25 +182,7 @@ The exposure of credentials in transit depends on the authentication method in u
 - **SAML / OIDC deployments:** ReadonlyREST does not handle raw credentials directly — authentication relies on SAML assertions or OIDC token exchanges. Only session tokens are transmitted between the browser and Kibana, and these are exposed if TLS is not configured.
 - **Basic auth deployments (`auth_key`):** Username and password are transmitted from the browser on every request. Without TLS, credentials are exposed in plaintext on every authenticated request.
 
-TLS is mandatory for STIG compliance regardless of the authentication method.
-
-TLS is enabled in `kibana.yml`:
-
-```yaml
-server.ssl.enabled: true
-server.ssl.key: /path/to/server.key
-server.ssl.certificate: /path/to/server.crt
-server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
-```
-
-Or using a PKCS#12 keystore:
-
-```yaml
-server.ssl.enabled: true
-server.ssl.keystore.path: /path/to/server.p12
-server.ssl.keystore.password: <keystore-password>
-server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
-```
+TLS is mandatory for STIG compliance regardless of the authentication method. See [SSL/TLS server](https://docs.readonlyrest.com/kibana#ssltls-server) for configuration details.
 
 ---
 
@@ -237,14 +194,7 @@ server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
 
 When TLS is enabled, ReadonlyREST enforces a minimum protocol baseline: TLSv1.0, SSLv2, and SSLv3 are always disabled. TLSv1.1, TLSv1.2, and TLSv1.3 are permitted by default.
 
-DISA STIG requires a minimum of TLS 1.2. Restrict the allowed protocols via the standard Kibana SSL setting in `kibana.yml`:
-
-```yaml
-server.ssl.enabled: true
-server.ssl.supportedProtocols: ["TLSv1.2", "TLSv1.3"]
-```
-
-ReadonlyREST respects this setting and applies the configured protocol restrictions across all TLS connections.
+DISA STIG requires a minimum of TLS 1.2. See [SSL/TLS server](https://docs.readonlyrest.com/kibana#ssltls-server) for how to restrict the allowed protocols. ReadonlyREST respects this setting and applies the configured protocol restrictions across all TLS connections.
 
 ---
 
@@ -270,17 +220,9 @@ No deprecated algorithms are present in the ReadonlyREST codebase. MD5, SHA-1, D
 
 **Status: Conditionally satisfied — requires audit configuration**
 
-The ReadonlyREST Elasticsearch plugin provides formal structured audit logging for all access control decisions, including rejected authentication attempts. When enabled, FORBIDDEN events are written to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`) with structured fields including `final_state`, `logged_user`, `presented_identity`, `error_type`, and `error_message`.
+The ReadonlyREST Elasticsearch plugin provides formal structured audit logging for all access control decisions, including rejected authentication attempts. When enabled, FORBIDDEN events are written to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). See [Audit configuration](https://docs.readonlyrest.com/details/audit#configuration) for the full list of available fields.
 
-Enable audit logging in `readonlyrest.yml`:
-
-```yaml
-readonlyrest:
-  audit:
-    enabled: true
-    outputs:
-      - type: index
-```
+See [Audit configuration](https://docs.readonlyrest.com/details/audit#configuration) for how to enable audit logging.
 
 The Kibana plugin additionally logs rejected attempts at `INFO` level in the Kibana application log (e.g. "Could not login in: …"), visible in standard production deployments.
 
@@ -290,28 +232,7 @@ The Kibana plugin additionally logs rejected attempts at `INFO` level in the Kib
 
 **Status: Conditionally satisfied — requires audit configuration**
 
-The ReadonlyREST Elasticsearch plugin routes all requests — including privileged admin API calls — through the same ACL evaluation and audit pipeline. When audit logging is enabled, every request is written to the audit index. See the [audit log documentation](https://docs.readonlyrest.com/elasticsearch/audit) for the full list of available fields.
-
-Enable audit logging in `readonlyrest.yml`:
-
-```yaml
-readonlyrest:
-  audit:
-    enabled: true
-    outputs:
-      - type: index
-```
-
-For maximum field coverage including the request path and ACL history, use `FullAuditLogSerializer`:
-
-```yaml
-readonlyrest:
-  audit:
-    enabled: true
-    outputs:
-      - type: index
-        serializer: tech.beshu.ror.audit.instances.FullAuditLogSerializer
-```
+The ReadonlyREST Elasticsearch plugin routes all requests — including privileged admin API calls — through the same ACL evaluation and audit pipeline. When audit logging is enabled, every request is written to the audit index. See [Audit configuration](https://docs.readonlyrest.com/details/audit#configuration) for how to enable it, and [Predefined serializers](https://docs.readonlyrest.com/details/audit#predefined-serializers) for maximum field coverage (including request path and ACL history) using `FullAuditLogSerializer`.
 
 ---
 
@@ -319,16 +240,7 @@ readonlyrest:
 
 **Status: Partially satisfied — access control covered, tamper-detection outside scope**
 
-ReadonlyREST writes audit events to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). The ACL can be used to prevent unauthorized modification or deletion of those indices. Add the following rule to `readonlyrest.yml`, placed **after** any existing allow rules for the Kibana server user (ACL blocks are evaluated top-to-bottom; the first matching rule wins):
-
-```yaml
-- name: "Protect audit index"
-  type: forbid
-  indices: ["readonlyrest_audit-*"]
-  actions: ["indices:data/write/*", "indices:admin/delete"]
-```
-
-This satisfies the separation-of-privilege aspect of AU-9: no regular user can alter or delete audit data, while the Kibana server user — already permitted by its own allow rule above — retains the access it requires.
+ReadonlyREST writes audit events to a timestamped Elasticsearch index (`readonlyrest_audit-YYYY-MM-DD`). The ACL can be used to prevent unauthorized modification or deletion of those indices. See [Protecting the audit index](https://docs.readonlyrest.com/details/audit#protecting-the-audit-index) for the required ACL rule.
 
 Tamper detection (log signing, hash chaining) and audit log backup are outside ReadonlyREST scope and must be addressed at the Elasticsearch/infrastructure layer.
 
@@ -395,30 +307,30 @@ server.customResponseHeaders:
 
 | STIG Control | Requirement | CAT | Status |
 |---|---|---|---|
-| V-206351 | Server-side session state | II | ✅ Fully satisfied |
-| V-206396 | Invalidate on logout | II | ✅ Fully satisfied |
-| V-206397 | HttpOnly, Secure, SameSite | II | ✅ Fully satisfied |
-| V-206398 | Only system-generated SIDs | II | ✅ Fully satisfied |
-| V-206399 | FIPS 140-2 RNG | I | ⚠️ Depends on Node.js FIPS mode |
-| V-206400 | Non-reproducible SIDs | II | ✅ Fully satisfied |
-| V-206401 | SID ≥ 128 bits | II | ✅ Fully satisfied |
-| V-206402 | SID charset A–Z, a–z, 0–9 | II | ✅ Fully satisfied |
-| V-206403 | Entropy ≥ 50% of SID length | II | ✅ Fully satisfied |
-| V-206414 | Absolute timeout ≤ 8 hours | II | ⚠️ Sliding timeout only; requires configuration |
-| V-206415 | Idle/inactivity timeout | II | ✅ Satisfied — requires configuration |
-| V-264360 | IP binding — management sessions | II | 🔴 Not implemented |
-| V-264361 | IP binding — user sessions | II | 🔴 Not implemented |
-| V-206355 | RBAC logical access control | II | ✅ Fully satisfied |
-| V-206394 | No anonymous access | II | ✅ Fully satisfied |
-| V-264342 | Individual auth before shared access | II | ✅ Satisfied at plugin level |
-| V-222523 | MFA for privileged accounts | I | ⚠️ Depends on IdP — not available without SAML/OIDC |
-| V-222543 | Plaintext credential transmission | I | ⚠️ Requires TLS configuration |
-| V-222596 | TLS protocol version (min. 1.2) | I | ⚠️ Conditionally satisfied — requires configuration |
-| V-222571 | Cryptographic algorithms (no deprecated) | I | ✅ Fully satisfied |
-| V-222452 | Failed login attempt logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
-| V-222463 | Privileged user action logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
-| V-222507 | Audit log integrity | II | ⚠️ Partially satisfied — access control via ACL; tamper-detection outside scope |
-| V-222602 | Content-Security-Policy | II | ⚠️ Partially satisfied — style-src 'unsafe-inline' is a Kibana architectural limitation |
+| [V-206351](#v-206351-server-side-session-management) | Server-side session state | II | ✅ Fully satisfied |
+| [V-206396](#v-206396-invalidate-session-identifiers-upon-logout-or-session-termination) | Invalidate on logout | II | ✅ Fully satisfied |
+| [V-206397](#v-206397-cookie-security-settings-httponly-secure-flags-samesite) | HttpOnly, Secure, SameSite | II | ✅ Fully satisfied |
+| [V-206398](#v-206398-accept-only-system-generated-session-identifiers) | Only system-generated SIDs | II | ✅ Fully satisfied |
+| [V-206399](#v-206399-session-id-generation-using-fips-140-2-approved-rng-high) | FIPS 140-2 RNG | I | ⚠️ Depends on Node.js FIPS mode |
+| [V-206400](#v-206400-non-reproducible-session-identifiers) | Non-reproducible SIDs | II | ✅ Fully satisfied |
+| [V-206401](#v-206401-session-id-length-128-bits) | SID ≥ 128 bits | II | ✅ Fully satisfied |
+| [V-206402](#v-206402-session-id-character-set-az-az-09-minimum) | SID charset A–Z, a–z, 0–9 | II | ✅ Fully satisfied |
+| [V-206403](#v-206403-session-id-entropy-50-of-id-length) | Entropy ≥ 50% of SID length | II | ✅ Fully satisfied |
+| [V-206414](#v-206414-absolute-session-timeout-8-hours) | Absolute timeout ≤ 8 hours | II | ⚠️ Sliding timeout only; requires configuration |
+| [V-206415](#v-206415-inactiveidle-session-timeout) | Idle/inactivity timeout | II | ✅ Satisfied — requires configuration |
+| [V-264360](#v-264360-restrict-management-sessions-to-consistent-inbound-source-ip) | IP binding — management sessions | II | 🔴 Not implemented |
+| [V-264361](#v-264361-restrict-user-sessions-to-consistent-inbound-source-ip) | IP binding — user sessions | II | 🔴 Not implemented |
+| [V-206355](#v-206355-enforce-approved-authorizations-for-logical-access-rbac) | RBAC logical access control | II | ✅ Fully satisfied |
+| [V-206394](#v-206394-prohibit-anonymous-user-access--prevent-unauthorized-changes) | No anonymous access | II | ✅ Fully satisfied |
+| [V-264342](#v-264342-individual-authentication-before-shared-account-access) | Individual auth before shared access | II | ✅ Satisfied at plugin level |
+| [V-222523](#v-222523-multi-factor-authentication-for-privileged-accounts-cat-i) | MFA for privileged accounts | I | ⚠️ Depends on IdP — not available without SAML/OIDC |
+| [V-222543](#v-222543-plaintext-credential-transmission-cat-i) | Plaintext credential transmission | I | ⚠️ Requires TLS configuration |
+| [V-222596](#v-222596-tls-protocol-version-enforcement-cat-i) | TLS protocol version (min. 1.2) | I | ⚠️ Conditionally satisfied — requires configuration |
+| [V-222571](#v-222571-cryptographic-algorithms-cat-i) | Cryptographic algorithms (no deprecated) | I | ✅ Fully satisfied |
+| [V-222452](#v-222452-failed-login-attempt-logging-cat-ii) | Failed login attempt logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
+| [V-222463](#v-222463-privileged-user-action-logging-cat-ii) | Privileged user action logging | II | ⚠️ Conditionally satisfied — requires audit configuration |
+| [V-222507](#v-222507-audit-log-integrity-cat-ii) | Audit log integrity | II | ⚠️ Partially satisfied — access control via ACL; tamper-detection outside scope |
+| [V-222602](#v-222602-content-security-policy-cat-ii) | Content-Security-Policy | II | ⚠️ Partially satisfied — style-src 'unsafe-inline' is a Kibana architectural limitation |
 
 **Legend:**
 - ✅ — satisfied (by default or via documented configuration)

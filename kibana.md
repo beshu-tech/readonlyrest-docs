@@ -354,7 +354,7 @@ ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsea
 
 * `readonlyrest_kbn.logLevel: <trace|debug|info|error|warn>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
 * `readonlyrest_kbn.logPrettyPrintEnabled: true|false`: if you want to see pretty-printed or compact logs.
-* [session configuration](#session-management-with-multiple-kibana-instances)
+* [session configuration](#session-configuration)
 * [UI customisation](#login-screen-tweaking)
 * [custom middleware](#custom-middleware)
 
@@ -609,6 +609,78 @@ Each Kibana node stores user sessions in memory. This will cause problems when u
 From ReadonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter.
 {% endhint %}
 
+
+### Session Configuration
+
+#### Session timeout
+
+When a user logs in, ReadonlyREST writes an encrypted cookie in the browser. The session lifetime can be configured with the following key in `kibana.yml`:
+
+```yaml
+readonlyrest_kbn.session_timeout_minutes: 480 # defaults to 4320 (3 days)
+```
+
+This is a sliding inactivity window — each user action resets the clock.
+
+#### Automatic Session cleanup
+
+All expired Index or In-memory sessions, determined by an `expiresAt` date that falls prior to the current time and date, will be systematically cleaned. The parameters for this automated session cleanup procedure can be adjusted within the `kibana.yml` configuration file.
+
+```yaml
+readonlyrest_kbn.sessions_cleanup_interval: '1h' # Default to 1d 
+```
+##### Automatic Session cleanup options
+
+You can  defines interval as: 
+
+| Value | Description | Example |
+|-------|-------------|---------|
+| s     | seconds     | "1s"    |
+| m     | minutes     | "1m"    |
+| h     | hours       | "1h"    |
+| d     | days        | "1d"    |
+
+#### Clearing session history
+
+By default, all session data (search history, dev tool command history, etc.) is wiped from the browser whenever a new user logs in or a user changes tenancy. To override this behavior:
+
+```yaml
+readonlyrest_kbn.clearSessionOnEvents: ["never"]
+```
+
+Possible values: `"login"`, `"tenancyHop"`, `"never"`.
+
+#### Cookie settings
+
+ReadonlyREST sets the following security flags on every session cookie:
+
+| Flag | Default | Notes |
+|------|---------|-------|
+| `HttpOnly` | `true` (always) | Cannot be disabled. |
+| `Secure` | `true` when TLS is active | Automatically enabled when Kibana is configured with SSL, or when `readonlyrest_kbn.cookies.secure: true` is set explicitly (required for NGINX SSL termination). |
+| `SameSite` | `Lax` | Configurable to `Strict` (recommended for management interfaces) or `None`. |
+
+The following cookie attributes are configurable in `kibana.yml`:
+
+| Setting | Default | Notes |
+|---|---|---|
+| `readonlyrest_kbn.cookieName` | `rorCookie` | Name of the session cookie. |
+| `readonlyrest_kbn.cookiePass` | _(required)_ | Minimum 32-character secret used to encrypt the cookie. Required since ROR 1.51.0. |
+| `readonlyrest_kbn.cookies.secure` | auto | Set to `true` to force the `Secure` flag when SSL is terminated at a reverse proxy (i.e. Kibana runs over plain HTTP internally). |
+| `readonlyrest_kbn.cookies.sameSite` | `Lax` | Controls the `SameSite` attribute. Accepted values: `strict`, `lax`, `none`. Use `none` together with `secure: true` for cross-domain iframe embedding. |
+
+Example `kibana.yml`:
+
+```yaml
+readonlyrest_kbn.cookieName: rorCookie
+readonlyrest_kbn.cookiePass: <minimum-32-character-secret>
+readonlyrest_kbn.cookies.sameSite: strict   # lax | strict | none
+readonlyrest_kbn.cookies.secure: true       # explicit override for reverse-proxy setups
+```
+
+The `HttpOnly` flag is always set and cannot be disabled. The `Secure` flag is set automatically when Kibana is configured with SSL.
+
+---
 
 ### Terminate Kibana on ES high-watermark
 
@@ -1133,41 +1205,6 @@ curl -X GET "http://localhost:5601/api/saved_objects/_find?type=dashboard" \
   -H "kbn-xsrf: true" \
   -H "x-ror-tenancy-id: marketing-team"
 ```
-
-#### Session cookie expiration
-
-When a user logs in, ReadonlyREST will write an encrypted cookie in the browser. This cookie has an time to live that can be tweaked with the following configuration key in `kibana.yml`.
-
-```yaml
-readonlyrest_kbn.session_timeout_minutes: 600 # defaults to 4320 (3 days)
-```
-
-#### Automatic Session cleanup
-All expired Index or In-memory sessions, determined by an `expiresAt` date that falls prior to the current time and date, will be systematically cleaned. The parameters for this automated session cleanup procedure can be adjusted within the `kibana.yml` configuration file.
-
-```yaml
-readonlyrest_kbn.sessions_cleanup_interval: '1h' # Default to 1d 
-```
-##### Automatic Session cleanup options
-
-You can  defines interval as: 
-
-| Value | Description | Example |
-|-------|-------------|---------|
-| s     | seconds     | "1s"    |
-| m     | minutes     | "1m"    |
-| h     | hours       | "1h"    |
-| d     | days        | "1d"    |
-
-#### Clearing Session History
-
-By default, all the session data like search history, dev tool commands history, etc, will be wiped out from the browser whenever a new user is logged in, or a user changes tenancy. To override this behaviour, use this setting:
-
-```yaml
-readonlyrest_kbn.clearSessionOnEvents: ["never"]
-```
-
-Possible values: `"login", "tenancyHop", "never"`.
 
 #### No authentication rule defined
 

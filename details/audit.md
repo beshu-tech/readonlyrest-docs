@@ -748,3 +748,18 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
    ```text
     [2023-03-26T16:28:40,471][INFO ][t.b.r.a.f.d.AuditingSettingsDecoder$] Using custom serializer: JavaCustomAuditLogSerializer
    ```
+
+## Protecting the audit index
+
+To prevent users from modifying or deleting audit data, add a `forbid` block to your `readonlyrest.yml` that blocks write and delete actions on the audit indices.
+
+Place this block **after** any broad `allow` rules that must remain unaffected (e.g. the Kibana server user block), but **before** any regular user `allow` blocks. ACL blocks are evaluated top-to-bottom and the first matching block wins.
+
+```yaml
+- name: "Protect audit index"
+  type: forbid
+  indices: ["readonlyrest_audit-*"]
+  actions: ["indices:data/write/*", "indices:admin/delete"]
+```
+
+The wildcard pattern `readonlyrest_audit-*` matches the default index name template. If you configured a custom `index_template` prefix, adjust the pattern accordingly.
