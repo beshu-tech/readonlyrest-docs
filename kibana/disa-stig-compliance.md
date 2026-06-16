@@ -55,7 +55,7 @@ ReadonlyREST rejects any session identifier it did not create through two indepe
 
 ---
 
-### V-206399 — Session ID generation using FIPS 140-2 approved RNG *(HIGH)*
+### V-206399 — Session ID generation using FIPS 140-2 approved RNG
 
 **Status: Conditionally satisfied — depends on the Node.js runtime**
 
