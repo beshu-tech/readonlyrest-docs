@@ -13,6 +13,7 @@
   * [Impersonation (Enterprise)](details/impersonation.md) 
   * [Kibana 7.8.x and older](details/kibana-7.8.x-and-older.md)
   * [ReadonlyREST API](kibana/readonlyrest-api.md)
+  * [ReadonlyREST DISA STIG Compliance](kibana/readonlyrest-disa-stig-compliance.md)
 * [For ECK](eck.md)
 * [Universal Builds](universal-builds/universal-builds.md)
 * [Examples](examples/README.md)

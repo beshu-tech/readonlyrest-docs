@@ -748,3 +748,32 @@ We provided 2 project examples with custom serializers \(in Scala and Java\). Yo
    ```text
     [2023-03-26T16:28:40,471][INFO ][t.b.r.a.f.d.AuditingSettingsDecoder$] Using custom serializer: JavaCustomAuditLogSerializer
    ```
+
+## Protecting the audit index
+
+To prevent users from modifying or deleting audit data, add a `forbid` block to your `readonlyrest.yml` that blocks write and delete actions on the audit indices.
+
+```yaml
+- name: "Protect audit index"
+  type: forbid
+  indices: ["readonlyrest_audit-*"]
+  actions:
+    - "indices:data/write/*"      # index, update, delete, bulk, *_by_query, reindex-into
+    - "indices:admin/delete"      # delete the index
+    - "indices:admin/close"       # close (then could be re-opened writable)
+    - "indices:admin/open"
+    - "indices:admin/settings/*"  # change settings (e.g. flip read-only / replicas)
+    - "indices:admin/mapping/*"   # mapping/put + mapping/auto_put (NOT mappings/get — that's read)
+    - "indices:admin/aliases"     # re-point / drop the audit aliases
+    - "indices:admin/rollover"
+    - "indices:admin/resize"      # shrink / split / clone
+    - "indices:admin/forcemerge"
+    - "indices:admin/freeze"
+```
+
+**Placement:** ACL blocks are evaluated top-to-bottom and the first matching block wins.
+
+- If no user or service should be able to write to the audit index via the Elasticsearch API, place this block at the **very beginning** of the ACL. Audit events are written internally by the ReadonlyREST plugin and bypass the ACL entirely, so this does not affect audit collection.
+- If some identities (e.g. a dedicated audit reader service) require access that would conflict with this rule, place the `forbid` block after their `allow` blocks but before all other allow rules.
+
+The wildcard pattern `readonlyrest_audit-*` matches the default index name template. If you configured a custom `index_template` prefix, adjust the pattern accordingly.
