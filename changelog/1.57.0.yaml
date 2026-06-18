@@ -13,7 +13,7 @@ entries:
   - type: warning
     components: [es, kbn]
     components_raw: "KBN|ES"
-    text: "Internal API incompatibilities (to take advantage of rolling update capabilities, upgrade ROR KBN first)"
+    text: "Internal API incompatibilities (to take advantage of rolling update capabilities, upgrade ROR ES first)"
   - type: warning
     components: [es]
     text: "Support for ES < 6.8.0 was dropped"
