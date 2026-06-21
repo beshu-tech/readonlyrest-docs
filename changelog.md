@@ -998,57 +998,74 @@ Resolved a problem where the `x-ror-correlation-id` header was not being properl
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) configuration parsing regression: one group definition can be a string
 
 ### (2024-04-28) What's new in **ROR 1.57.0**
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚨Security Fix** (ES) [CVE-2024-29025](https://nvd.nist.gov/vuln/detail/CVE-2024-29025)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) [LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: groups server-side filtering
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) [LDAP Connector](https://docs.readonlyrest.com/elasticsearch#configuration-notes) feature: skip user search option when user attribute is `cn`
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**⚠️Warning** (KBN|ES) Internal API incompatibilities (to take advantage of rolling update capabilities, upgrade ROR KBN first)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**⚠️Warning** (ES) Support for ES < 6.8.0 was dropped
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) User settings available for all access type users
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) Add option to change the Default Route and Time zone in User settings
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (KBN) Provide correlation ID to Kibana logs
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (ES) Rich, context-based debug logging in the LDAP connector and LDAP-related rules
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🧐Enhancement** (ES) Additional [validations](https://docs.readonlyrest.com/elasticsearch#configuring-an-acl-with-filter-fields-rules-when-using-kibana): `kibana` rule should not be used with some other rules in the same block
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Sometimes reports are not generated correctly for Kibana < 8.0.0 and the "Max attempt reached" error appears
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Adjust interactive API swagger dark mode colors
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) CSRF problem when multiple ECK Kibana instances
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Plugin doesn't run for a version Kibana < 7.11.0 when the OIDC proxy is enabled
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) Session probe should log out the user when empty metadata was returned from ES ROR
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) Misc issues when `xpack.security.enabled: true` is set
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) Patched files permission issue
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-29025">CVE-2024-29025</a></summary>
+This vulnerability affects the Netty `HttpPostRequestDecoder`, which could be exploited to accumulate unlimited data from chunked POST requests containing many small fields, potentially leading to a denial of service. The fix addresses this by properly limiting the accumulated data in the decoder.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch#configuration-notes">LDAP Connector</a> feature: groups server-side filtering</summary>
+The LDAP connector now supports filtering groups directly on the LDAP server side, reducing the amount of data transferred and improving performance when dealing with large directories.
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch#configuration-notes">LDAP Connector</a> feature: skip user search option when user attribute is <code>cn</code></summary>
+A new configuration option allows skipping the user search phase when the user attribute is set to `cn` (Common Name), streamlining authentication for LDAP setups where the bind DN directly matches the user's CN.
+</details>
+<details>
+<summary><strong>⚠️Warning</strong> (KBN|ES) Internal API incompatibilities (to take advantage of rolling update capabilities, upgrade ROR ES first)</summary>
+Due to internal API changes, it is recommended to upgrade the ROR Elasticsearch plugin first before upgrading the Kibana plugin. This order allows you to leverage rolling update capabilities and minimize downtime during the upgrade process.
+</details>
+<details>
+<summary><strong>⚠️Warning</strong> (ES) Support for ES &lt; 6.8.0 was dropped</summary>
+This release no longer supports Elasticsearch versions older than 6.8.0. Users running older versions should plan an upgrade to a supported Elasticsearch version before updating ROR.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) User settings available for all access type users</summary>
+User settings in the Kibana plugin are now accessible to all user access types, not just administrators, giving end users more control over their experience.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) Add option to change the Default Route and Time zone in User settings</summary>
+Users can now configure their default landing page (route) and time zone directly from the user settings interface in Kibana, improving personalization.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) Provide correlation ID to Kibana logs</summary>
+A correlation ID is now included in Kibana logs, making it easier to trace requests across the system and troubleshoot issues by correlating log entries.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) Rich, context-based debug logging in the LDAP connector and LDAP-related rules</summary>
+Debug logging has been significantly improved for the LDAP connector and related authentication/authorization rules, providing more detailed and contextual information to help administrators diagnose LDAP integration issues.
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) Additional <a href="https://docs.readonlyrest.com/elasticsearch#configuring-an-acl-with-filter-fields-rules-when-using-kibana">validations</a>: <code>kibana</code> rule should not be used with some other rules in the same block</summary>
+New configuration validations have been added to warn when the `kibana` rule is combined with incompatible rules (such as `fields` or `filter`) in the same ACL block, helping prevent misconfigurations that could lead to unexpected behavior.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Sometimes reports are not generated correctly for Kibana &lt; 8.0.0 and the "Max attempt reached" error appears</summary>
+A bug causing report generation failures in Kibana versions prior to 8.0.0 has been fixed. The issue previously resulted in a "Max attempt reached" error, preventing successful report creation.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Adjust interactive API swagger dark mode colors</summary>
+The color scheme for the interactive Swagger API documentation in dark mode has been adjusted to improve readability and visual consistency.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) CSRF problem when multiple ECK Kibana instances</summary>
+A Cross-Site Request Forgery (CSRF) issue that occurred when running multiple Kibana instances managed by ECK (Elastic Cloud on Kubernetes) has been resolved, ensuring secure communication between instances.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Plugin doesn't run for a version Kibana &lt; 7.11.0 when the OIDC proxy is enabled</summary>
+A compatibility issue has been fixed where the ROR Kibana plugin would fail to start on Kibana versions older than 7.11.0 when an OIDC proxy was enabled.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Session probe should log out the user when empty metadata was returned from ES ROR</summary>
+The session probe now properly logs out the user when the Elasticsearch ROR plugin returns empty metadata, preventing stale or invalid sessions from persisting.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Misc issues when <code>xpack.security.enabled: true</code> is set</summary>
+Various miscellaneous issues that occurred when X-Pack security was enabled alongside ReadonlyREST have been resolved, improving interoperability between the two security layers.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Patched files permission issue</summary>
+A file permission issue affecting patched Elasticsearch files has been fixed, ensuring that the patching process correctly sets the appropriate permissions for all modified files.
+</details>
 
 ### (2024-03-15) What's new in **ROR 1.56.0**
 
