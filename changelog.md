@@ -2,6 +2,16 @@
 
 # Changelog
 
+### (2026-06-21) What's new in **ROR 1.70.2**
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-12143">CVE-2026-12143</a>, <a href="https://security.snyk.io/vuln/SNYK-JS-DOMPURIFY-17344526">CVE-2026-49458</a>, <a href="https://github.com/advisories/GHSA-76mc-f452-cxcm">GHSA-76mc-f452-cxcm</a>, <a href="https://github.com/advisories/GHSA-gvmj-g25r-r7wr">GHSA-gvmj-g25r-r7wr</a></summary>
+🚨Security Fix (KBN) — This release addresses four security vulnerabilities affecting Kibana's bundled dependencies: CVE-2026-12143 (CRLF injection in the `form-data` library, allowing header injection via crafted field names), CVE-2026-49458 (Trust Boundary Violation in DOMPurify < 3.4.6, enabling malicious markup injection via cross-realm DOM nodes), GHSA-76mc-f452-cxcm (DOMPurify < 3.4.7 — hooks mutating `allowedTags`/`allowedAttributes` permanently pollute default constants, bypassing sanitization), and GHSA-gvmj-g25r-r7wr (DOMPurify < 3.4.8 — template expressions bypass sanitization inside `<template>` elements when using DOM output modes). All dependencies have been updated to patched versions.
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/ror-ent-1-70-1-9-4-2-lens-visualization-from-library-in-ro-mode-broken/2995">Visualizations not rendering for <code>kibana.access``:</code>ro<code>/</code>ro_strict`` users on KBN 9.x</a></summary>
+🐞Fix (KBN) — Resolved an issue where read-only (`ro`/`ro_strict`) Kibana users on KBN 9.x received a 403 Forbidden error when viewing Lens visualizations saved to the Visualization Library and added to dashboards. The error was caused by ROR incorrectly blocking the `/_bulk` endpoint for these users. The fix ensures Lens visualizations render correctly for read-only users.
+</details>
+
 ### (2026-06-12) What's new in **ROR 1.70.1**
 <details>
 <summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42587">CVE-2026-42587</a></summary>
