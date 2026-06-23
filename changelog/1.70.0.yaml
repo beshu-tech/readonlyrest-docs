@@ -10,6 +10,9 @@ entries:
   - type: security
     components: [es]
     text: "[CVE-2026-42582](https://nvd.nist.gov/vuln/detail/CVE-2026-42582), [CVE-2026-42583](https://nvd.nist.gov/vuln/detail/CVE-2026-42583), [CVE-2026-42587](https://nvd.nist.gov/vuln/detail/CVE-2026-42587), [CVE-2026-42584](https://nvd.nist.gov/vuln/detail/CVE-2026-42584), [CVE-2026-42580](https://nvd.nist.gov/vuln/detail/CVE-2026-42580), [CVE-2026-42585](https://nvd.nist.gov/vuln/detail/CVE-2026-42585), [CVE-2026-42581](https://nvd.nist.gov/vuln/detail/CVE-2026-42581), [CVE-2026-41417](https://nvd.nist.gov/vuln/detail/CVE-2026-41417), [CVE-2026-34479](https://nvd.nist.gov/vuln/detail/CVE-2026-34479), [CVE-2026-34480](https://nvd.nist.gov/vuln/detail/CVE-2026-34480), [CVE-2026-40490](https://nvd.nist.gov/vuln/detail/CVE-2026-40490)"
+  - type: new
+    components: [eck]
+    text: "3.4.1 support"  
   - type: enhancement
     components: [kbn]
     text: "Cleaned newer builds of ancient libraries to avoid false positive CVE scanner reports"
