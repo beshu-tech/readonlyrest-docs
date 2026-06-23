@@ -5,14 +5,11 @@
 ### (2026-06-21) What's new in **ROR 1.70.2**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-12143">CVE-2026-12143</a>, <a href="https://security.snyk.io/vuln/SNYK-JS-DOMPURIFY-17344526">CVE-2026-49458</a>, <a href="https://github.com/advisories/GHSA-76mc-f452-cxcm">GHSA-76mc-f452-cxcm</a>, <a href="https://github.com/advisories/GHSA-gvmj-g25r-r7wr">GHSA-gvmj-g25r-r7wr</a></summary>
-This release addresses multiple security vulnerabilities affecting Kibana's dependencies. CVE-2026-12143 is a CRLF injection in the `form-data` library (up to v4.0.5) that could allow header smuggling via multipart form fields. CVE-2026-49458 (GHSA-76mc-f452-cxcm) is a Trust Boundary Violation in DOMPurify (≤3.4.5) where hooks mutating allow-lists permanently pollute global defaults, enabling sanitization bypass. GHSA-gvmj-g25r-r7wr affects DOMPurify (3.0.0–3.4.7) where template expressions inside `<template>` elements evade sanitization when using `SAFE_FOR_TEMPLATES` with DOM return modes, leading to potential XSS. All dependencies have been updated to patched versions.
+This release addresses multiple CVEs and advisories affecting Kibana's dependencies: CVE-2026-12143 (CRLF injection in `form-data` library up to v4.0.5, allowing header smuggling via unsanitized field names/filenames), CVE-2026-49458 (DOMPurify vulnerability), GHSA-76mc-f452-cxcm (DOMPurify ≤3.4.5 — hooks mutating `allowedTags`/`allowedAttributes` can permanently widen defaults, bypassing sanitization), and GHSA-gvmj-g25r-r7wr (DOMPurify 3.0.0–3.4.7 — template expressions bypassing sanitization inside `<template>` elements in DOM output modes, leading to XSS). All dependencies have been updated to patched versions.
 </details>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ECK) 3.4.1 support
 <details>
 <summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/ror-ent-1-70-1-9-4-2-lens-visualization-from-library-in-ro-mode-broken/2995">Visualizations not rendering for <code>kibana.access</code>: <code>ro</code>/<code>ro_strict</code> users on KBN 9.x</a></summary>
-Resolves an issue where Lens visualizations from the library failed to render for read-only (`ro`) and strict read-only (`ro_strict`) users on Kibana 9.x. This fix restores proper visualization display for users with restricted access roles.
+Resolves an issue where users with `kibana.access: ro` or `ro_strict` permissions on Kibana 9.x received a 403 Forbidden error when viewing dashboards containing Lens visualizations saved to the Visualization Library. The error was caused by ROR blocking an internal `_bulk` request triggered by the Lens endpoint. The fix is applied on the ROR Kibana side, restoring full read-only access to library-based visualizations.
 </details>
 
 ### (2026-06-12) What's new in **ROR 1.70.1**
@@ -43,77 +40,80 @@ This release patches 10 CVEs affecting third-party JavaScript dependencies bundl
 This release patches 11 CVEs affecting third-party Java dependencies bundled with the Elasticsearch plugin. The fixes address multiple Netty vulnerabilities (HTTP request smuggling, unbounded memory allocation in decompressors, QpackDecoder DoS, HTTP/1.0 chunked parsing issues, and setUri() validation bypass), Apache Log4j XML sanitization flaws, and an AsyncHttpClient credential leakage on redirect. All CVEs are resolved by updating the affected libraries to their patched versions.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (KBN) Cleaned newer builds of ancient libraries to avoid false positive CVE scanner reports</summary>
+<summary><strong>🚀New</strong> (ECK) 3.4.1 support</summary>
 Removed outdated and unused library artifacts from the Kibana plugin build to eliminate false positive security scanner alerts. This cleanup ensures that CVE scanners no longer flag vulnerabilities in libraries that were bundled but never actually used at runtime.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (KBN) <a href="https://forum.readonlyrest.com/t/log-files-rotations/2930/2">Added support for rolling-file logging</a></summary>
+<summary><strong>🧐Enhancement</strong> (KBN) Cleaned newer builds of ancient libraries to avoid false positive CVE scanner reports</summary>
 ROR Kibana plugin now supports rolling-file appender logging, allowing log files to be automatically rotated based on file size or time. This addresses community requests for better log management and prevents individual log files from growing unboundedly.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (KBN) ROR initialisation now retries automatically when Elasticsearch is not yet fully ready at Kibana startup</summary>
+<summary><strong>🧐Enhancement</strong> (KBN) <a href="https://forum.readonlyrest.com/t/log-files-rotations/2930/2">Added support for rolling-file logging</a></summary>
 ROR's Kibana plugin initialization now includes automatic retry logic when Elasticsearch is not yet fully available during Kibana startup. This eliminates the need for manual restarts in containerized or orchestrated environments where services may start in an unpredictable order.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/issues-with-letsencrypt-certs-from-dehydrated-curl-error-60-ssl-certificate-problem-unable-to-get-local-issuer-certificate/2889">External SSL now supports EC private keys produced by dehydrated and similar ACME clients</a></summary>
+<summary><strong>🧐Enhancement</strong> (KBN) ROR initialisation now retries automatically when Elasticsearch is not yet fully ready at Kibana startup</summary>
 ROR's external SSL layer now correctly handles EC (Elliptic Curve) private keys generated by dehydrated and other ACME clients. This resolves SSL certificate issues reported by users who encountered "unable to get local issuer certificate" errors when using Let's Encrypt certificates from these tools.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) Slashed ACL evaluation overhead for wildcard index patterns: 49x more throughput, 98% lower p99 latency, and 50% less CPU compared to the previous ROR version</summary>
+<summary><strong>🧐Enhancement</strong> (ES) <a href="https://forum.readonlyrest.com/t/issues-with-letsencrypt-certs-from-dehydrated-curl-error-60-ssl-certificate-problem-unable-to-get-local-issuer-certificate/2889">External SSL now supports EC private keys produced by dehydrated and similar ACME clients</a></summary>
 Major performance optimization for ACL evaluation when using wildcard index patterns. Benchmarks show 49x higher throughput, 98% reduction in p99 latency, and 50% less CPU usage compared to the previous ROR version, making wildcard-based access control rules dramatically faster.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) ROR bootstrap settings in <code>elasticsearch.yml</code> are now configured via proper nested YAML blocks under <code>readonlyrest.*</code> keys</summary>
+<summary><strong>🧐Enhancement</strong> (ES) Slashed ACL evaluation overhead for wildcard index patterns: 49x more throughput, 98% lower p99 latency, and 50% less CPU compared to the previous ROR version</summary>
 ROR bootstrap settings in `elasticsearch.yml` can now be configured using proper nested YAML blocks under the `readonlyrest` namespace (e.g., `readonlyrest.ssl: ...`). This provides a cleaner, more intuitive configuration structure compared to the previous flat key format.
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) Improved consistency of groups rule settings - the <code>users</code> section can only be present in the config when there is at least one groups rule that uses it</summary>
+<summary><strong>🧐Enhancement</strong> (ES) ROR bootstrap settings in <code>elasticsearch.yml</code> are now configured via proper nested YAML blocks under <code>readonlyrest.*</code> keys</summary>
 Improved validation for groups rule configuration: the `users` section in the ACL is now only permitted when at least one groups rule actually references it. This prevents configuration errors where a `users` block is defined but never used, making the intent of the security policy clearer and more consistent.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/cannot-download-generated-report-for-kibana-8-19-7/2927/38">Fixed a problem with downloading reports when multitenancy is disabled for Kibana &gt; 8.13.x</a></summary>
+<summary><strong>🧐Enhancement</strong> (ES) Improved consistency of groups rule settings - the <code>users</code> section can only be present in the config when there is at least one groups rule that uses it</summary>
 Resolved an issue where generated report downloads in Kibana versions above 8.13.x would fail when multitenancy was disabled. This fix restores the ability to export and download reports in single-tenant Kibana deployments.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Fixed a bug with the <code>x-ror-tenancy-id</code> header not being respected in direct Kibana requests</summary>
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/cannot-download-generated-report-for-kibana-8-19-7/2927/38">Fixed a problem with downloading reports when multitenancy is disabled for Kibana &gt; 8.13.x</a></summary>
 Fixed an issue where the `x-ror-tenancy-id` header was ignored when making direct requests to Kibana. The header is now properly respected, ensuring correct tenant routing for direct API calls.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Fixed a problem with the OIDC proxy where the Issuer cert endpoint wasn't passed through a proxy</summary>
+<summary><strong>🐞Fix</strong> (KBN) Fixed a bug with the <code>x-ror-tenancy-id</code> header not being respected in direct Kibana requests</summary>
 Resolved an issue in the OIDC proxy authentication flow where the Issuer certificate endpoint URL was not being routed through the configured proxy. This caused certificate retrieval failures in environments where all outbound traffic must go through a corporate proxy.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Fixed a problem with correctly setting <code>nextUrl</code> when redirecting from OIDC with an external proxy</summary>
+<summary><strong>🐞Fix</strong> (KBN) Fixed a problem with the OIDC proxy where the Issuer cert endpoint wasn't passed through a proxy</summary>
 Fixed a bug where the `nextUrl` redirect parameter was incorrectly constructed during OIDC authentication when an external proxy was in use. This ensures users are redirected to the correct page after successful OIDC login in proxied environments.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Resolved a problem with the relative path for <code>readonlyrest_kbn.login_custom_logo</code></summary>
+<summary><strong>🐞Fix</strong> (KBN) Fixed a problem with correctly setting <code>nextUrl</code> when redirecting from OIDC with an external proxy</summary>
 Fixed an issue where the custom login logo path (`readonlyrest_kbn.login_custom_logo`) was not resolved correctly when using relative paths. The logo image now loads properly regardless of whether an absolute or relative path is specified.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/authorization-via-proxy-auth-does-not-work-correctly/2969/9">Fixed a problem with logging in to Kibana when proxy auth is enabled and the <code>x-forwarded-user</code> header is set</a></summary>
+<summary><strong>🐞Fix</strong> (KBN) Resolved a problem with the relative path for <code>readonlyrest_kbn.login_custom_logo</code></summary>
 Resolved a login failure that occurred when proxy authentication was enabled and the `x-forwarded-user` header was present. This fix ensures that proxy-authenticated users can successfully log in to Kibana when their identity is conveyed via the `x-forwarded-user` header.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Resolved a problem with the ROR KBN plugin loading when different plugin versions and non-sticky sessions are used</summary>
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/authorization-via-proxy-auth-does-not-work-correctly/2969/9">Fixed a problem with logging in to Kibana when proxy auth is enabled and the <code>x-forwarded-user</code> header is set</a></summary>
 Fixed a plugin loading issue that occurred in environments with multiple Kibana instances running different ROR plugin versions and non-sticky (round-robin) session distribution. The plugin now correctly handles version mismatches across Kibana nodes.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (ES) Fixed the user metadata response returning the same Kibana index for all of a user's groups when the index uses <code>@{acl:current_group}</code></summary>
+<summary><strong>🐞Fix</strong> (KBN) Resolved a problem with the ROR KBN plugin loading when different plugin versions and non-sticky sessions are used</summary>
 Fixed a bug where the user metadata response would return the same Kibana index name for all of a user's groups when the index pattern used the `@{acl:current_group}` variable. Each group now correctly receives its own Kibana index as defined by the ACL configuration.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (ES) Fixed the <code>expand_wildcards</code> parameter being ignored during index resolution: ROR now correctly filters indices and aliases by their open/closed state when resolving wildcard patterns, preventing closed indices from leaking into rewritten requests</summary>
+<summary><strong>🐞Fix</strong> (ES) Fixed the user metadata response returning the same Kibana index for all of a user's groups when the index uses <code>@{acl:current_group}</code></summary>
 Fixed a critical issue where the `expand_wildcards` parameter was ignored during index resolution. ROR now correctly respects the open/closed state of indices and aliases when expanding wildcard patterns, preventing closed indices from being inadvertently included in rewritten requests.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (ES) Fixed a missing Kibana access policy in the metadata response when a matched ACL block has no <code>kibana</code> section configured; the default unrestricted access is now always returned</summary>
+<summary><strong>🐞Fix</strong> (ES) Fixed the <code>expand_wildcards</code> parameter being ignored during index resolution: ROR now correctly filters indices and aliases by their open/closed state when resolving wildcard patterns, preventing closed indices from leaking into rewritten requests</summary>
 Fixed an issue where the metadata response was missing the Kibana access policy when a matched ACL block did not explicitly define a `kibana` section. The default unrestricted Kibana access is now always returned in the metadata, ensuring proper Kibana functionality even when the `kibana` rule is omitted from an ACL block.
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/global-checkpoint-sync-blocked/2870">The ES action <code>indices:admin/seq_no/global_checkpoint_sync</code> is now treated as an internal action and bypasses ACL evaluation. This action is dispatched by Elasticsearch internally after write operations and should never require explicit user permissions</a></summary>
+<summary><strong>🐞Fix</strong> (ES) Fixed a missing Kibana access policy in the metadata response when a matched ACL block has no <code>kibana</code> section configured; the default unrestricted access is now always returned</summary>
 The `indices:admin/seq_no/global_checkpoint_sync` action is now classified as an internal Elasticsearch action and bypasses ACL evaluation entirely. This action is triggered internally by Elasticsearch after write operations (e.g., `_bulk`) and should never require explicit user permissions. Previously, users had to manually add this action to their allowed actions list as a workaround.
 </details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) [The ES action `indices:admin/seq_no/global_checkpoint_sync` is now treated as an internal action and bypasses ACL evaluation. This action is dispatched by Elasticsearch internally after write operations and should never require explicit user permissions](https://forum.readonlyrest.com/t/global-checkpoint-sync-blocked/2870)
 
 ### (2026-04-10) What's new in **ROR 1.69.1**
 <details>
