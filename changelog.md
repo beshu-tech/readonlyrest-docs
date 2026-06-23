@@ -5,11 +5,14 @@
 ### (2026-06-21) What's new in **ROR 1.70.2**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-12143">CVE-2026-12143</a>, <a href="https://security.snyk.io/vuln/SNYK-JS-DOMPURIFY-17344526">CVE-2026-49458</a>, <a href="https://github.com/advisories/GHSA-76mc-f452-cxcm">GHSA-76mc-f452-cxcm</a>, <a href="https://github.com/advisories/GHSA-gvmj-g25r-r7wr">GHSA-gvmj-g25r-r7wr</a></summary>
-🚨Security Fix (KBN) — This release addresses four security vulnerabilities affecting Kibana's bundled dependencies: CVE-2026-12143 (CRLF injection in the `form-data` library, allowing header injection via crafted field names), CVE-2026-49458 (Trust Boundary Violation in DOMPurify < 3.4.6, enabling malicious markup injection via cross-realm DOM nodes), GHSA-76mc-f452-cxcm (DOMPurify < 3.4.7 — hooks mutating `allowedTags`/`allowedAttributes` permanently pollute default constants, bypassing sanitization), and GHSA-gvmj-g25r-r7wr (DOMPurify < 3.4.8 — template expressions bypass sanitization inside `<template>` elements when using DOM output modes). All dependencies have been updated to patched versions.
+This release addresses multiple security vulnerabilities affecting Kibana's dependencies. CVE-2026-12143 is a CRLF injection in the `form-data` library (up to v4.0.5) that could allow header smuggling via multipart form fields. CVE-2026-49458 (GHSA-76mc-f452-cxcm) is a Trust Boundary Violation in DOMPurify (≤3.4.5) where hooks mutating allow-lists permanently pollute global defaults, enabling sanitization bypass. GHSA-gvmj-g25r-r7wr affects DOMPurify (3.0.0–3.4.7) where template expressions inside `<template>` elements evade sanitization when using `SAFE_FOR_TEMPLATES` with DOM return modes, leading to potential XSS. All dependencies have been updated to patched versions.
 </details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ECK) 3.4.1 support
 <details>
-<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/ror-ent-1-70-1-9-4-2-lens-visualization-from-library-in-ro-mode-broken/2995">Visualizations not rendering for <code>kibana.access``:</code>ro<code>/</code>ro_strict`` users on KBN 9.x</a></summary>
-🐞Fix (KBN) — Resolved an issue where read-only (`ro`/`ro_strict`) Kibana users on KBN 9.x received a 403 Forbidden error when viewing Lens visualizations saved to the Visualization Library and added to dashboards. The error was caused by ROR incorrectly blocking the `/_bulk` endpoint for these users. The fix ensures Lens visualizations render correctly for read-only users.
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/ror-ent-1-70-1-9-4-2-lens-visualization-from-library-in-ro-mode-broken/2995">Visualizations not rendering for <code>kibana.access</code>: <code>ro</code>/<code>ro_strict</code> users on KBN 9.x</a></summary>
+Resolves an issue where Lens visualizations from the library failed to render for read-only (`ro`) and strict read-only (`ro_strict`) users on Kibana 9.x. This fix restores proper visualization display for users with restricted access roles.
 </details>
 
 ### (2026-06-12) What's new in **ROR 1.70.1**
