@@ -4,6 +4,9 @@ entries:
   - type: security
     components: [kbn]
     text: "[CVE-2026-12143](https://nvd.nist.gov/vuln/detail/CVE-2026-12143), [CVE-2026-49458](https://security.snyk.io/vuln/SNYK-JS-DOMPURIFY-17344526), [GHSA-76mc-f452-cxcm](https://github.com/advisories/GHSA-76mc-f452-cxcm), [GHSA-gvmj-g25r-r7wr](https://github.com/advisories/GHSA-gvmj-g25r-r7wr)"
+  - type: new
+    components: [es]
+    text: "9.3.6, 8.19.17 support"
   - type: fix
     components: [kbn]
     text: "[Visualizations not rendering for `kibana.access`: `ro`/`ro_strict` users on KBN 9.x](https://forum.readonlyrest.com/t/ror-ent-1-70-1-9-4-2-lens-visualization-from-library-in-ro-mode-broken/2995)"
