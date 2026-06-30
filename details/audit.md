@@ -41,6 +41,15 @@ The audit outputs are disabled by default. To enable them, add `audit.enabled: t
 
 **Note**: Even when `audit.enabled` is `false` or not set, the built-in ACL log is a special case — it writes a human-readable decision line to Elasticsearch logs for every request by default. See [The default ACL log](#the-default-acl-log) below.
 
+The following is the explicit equivalent of the default behaviour when no `audit` section is configured at all:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: false                 # audit outputs disabled
+    default_acl_log_enabled: true  # ACL log still fires for every request
+```
+
 When `audit.enabled: true` and no `outputs` are specified, ROR defaults to storing events in a local Elasticsearch index.
 
 ### Global audit settings
@@ -58,14 +67,16 @@ readonlyrest:
 | Setting | Default | Description |
 |---|---|---|
 | `enabled` | `false` | Master switch for the audit subsystem |
-| `default_acl_log_enabled` | `true` | Controls the built-in ACL log sink (see below) |
-| `outputs` | default index sink | List of audit output sinks |
+| `default_acl_log_enabled` | `true` | Controls the built-in ACL log output (see below) |
+| `outputs` | default `index` output | List of audit outputs |
+
+Each entry in `outputs` accepts an optional `name` field. Names are only needed for per-block routing: when you want a specific block to send events to only a subset of outputs, you reference them by name using `enabled_audit_sinks` or `disabled_audit_sinks` (see [Block-level audit control](#block-level-audit-control)). If you do not need per-block routing, you can omit `name` from all outputs.
 
 ### The default ACL log
 
 When `default_acl_log_enabled: true` (the default), ROR writes a human-readable ACL decision line to Elasticsearch logs for every request, using the logger named `tech.beshu.ror.accesscontrol.logging.AccessControlListLoggingDecorator`. This happens regardless of whether any `outputs` are configured.
 
-The default ACL log is exposed as a named sink with the reserved name `default_acl_log`. You can use this name in block-level `enabled_audit_sinks` and `disabled_audit_sinks` to include or exclude it from per-block routing:
+The default ACL log is exposed as a named output with the reserved name `default_acl_log`. You can use this name in block-level `enabled_audit_sinks` and `disabled_audit_sinks` to include or exclude it from per-block routing:
 
 ```yaml
 readonlyrest:
@@ -86,8 +97,7 @@ readonlyrest:
 
   - name: Admin users
     auth_key: admin:admin
-    audit:
-      # keep both sinks active (default behaviour)
+    # No audit section — all outputs active with default settings
 ```
 
 To replace the default ACL log with a custom one — for example to send it to a different file — disable it globally and add a `log` output with the `acl` serializer:
@@ -104,6 +114,10 @@ readonlyrest:
       serializer:
         type: acl                    # reproduces the built-in ACL log format
 ```
+
+`logger_name` is the log4j2 logger name that ROR uses when writing to this output (default: `readonlyrest_audit`). Setting a custom value lets you route these log lines to a dedicated appender in `log4j2.properties` — for example to write them to a separate file. See [Custom logging settings via log4j2](#custom-logging-settings-via-log4j2) for an example appender configuration.
+
+The `acl` serializer produces exactly the same single-line human-readable format as the built-in ACL log: a concise decision summary that includes the request identity, matched block, final state, and key request details. The format is unchanged compared to previous versions.
 
 ### Block-level audit control
 
