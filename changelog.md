@@ -6,25 +6,25 @@
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-12143">CVE-2026-12143</a>, <a href="https://security.snyk.io/vuln/SNYK-JS-DOMPURIFY-17344526">CVE-2026-49458</a>, <a href="https://github.com/advisories/GHSA-76mc-f452-cxcm">GHSA-76mc-f452-cxcm</a>, <a href="https://github.com/advisories/GHSA-gvmj-g25r-r7wr">GHSA-gvmj-g25r-r7wr</a></summary>
 
-🚨Security Fix (KBN) — Multiple CVEs patched: **CVE-2026-12143** (CRLF injection in `form-data` library allowing header injection via field names/filenames), **CVE-2026-49458** (Trust Boundary Violation in DOMPurify allowing XSS bypass via cross-realm DOM nodes), **GHSA-76mc-f452-cxcm** (DOMPurify hook mutation permanently polluting default allowed tags/attributes), and **GHSA-gvmj-g25r-r7wr** (DOMPurify template expression bypass inside `<template>` elements in DOM output modes). All dependencies have been updated to their patched versions.
+🚨Security Fix (KBN) — Multiple CVEs patched in bundled Kibana dependencies: CVE-2026-12143 (CRLF injection in `form-data` library allowing header smuggling), CVE-2026-49458 (Trust Boundary Violation in DOMPurify allowing XSS bypass via foreign-realm DOM nodes), GHSA-76mc-f452-cxcm (DOMPurify hooks mutating global allow-lists permanently), and GHSA-gvmj-g25r-r7wr (template expression bypass in DOMPurify's DOM output modes). All resolved by upgrading the affected dependencies.
 
 </details>
 <details>
 <summary><strong>🚀New</strong> (KBN) 9.3.6, 8.19.17 support</summary>
 
-🚀New (KBN) — Added support for Kibana versions 9.3.6 and 8.19.17.
+🚀New (KBN) — Added support for Kibana versions 9.3.6 and 8.19.17, ensuring compatibility with the latest Elastic Stack releases.
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) 9.3.6, 8.19.17 support</summary>
+<summary><strong>🚀New</strong> (ES) 9.4.3, 9.3.7, 9.3.6, 8.19.18, 8.19.17 support</summary>
 
-🚀New (ES) — Added support for Elasticsearch versions 9.3.6 and 8.19.17.
+🚀New (ES) — Added support for Elasticsearch versions 9.4.3, 9.3.7, 9.3.6, 8.19.18, and 8.19.17, keeping ROR compatible with the newest Elasticsearch releases.
 
 </details>
 <details>
 <summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/ror-ent-1-70-1-9-4-2-lens-visualization-from-library-in-ro-mode-broken/2995">Visualizations not rendering for <code>kibana.access</code>: <code>ro</code>/<code>ro_strict</code> users on KBN 9.x</a></summary>
 
-🐞Fix (KBN) — Resolved an issue where Kibana read-only (`ro`/`ro_strict`) users on KBN 9.x received a 403 Forbidden error when viewing dashboards containing Lens visualizations saved in the Visualization Library. The error was caused by a blocked `/_bulk` request triggered by an internal Lens endpoint. The fix ensures Lens visualizations from the Library render correctly for read-only users.
+🐞Fix (KBN) — Resolved an issue where Lens visualizations from the library failed to render for users with `kibana.access: ro` or `ro_strict` roles on Kibana 9.x. Read-only users can now view saved visualizations correctly.
 
 </details>
 
