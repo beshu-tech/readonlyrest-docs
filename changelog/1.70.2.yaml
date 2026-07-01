@@ -9,7 +9,7 @@ entries:
     text: "9.3.6, 8.19.17 support"
   - type: new
     components: [es]
-    text: "9.3.6, 8.19.17 support"
+    text: "9.4.3, 9.3.7, 9.3.6, 8.19.18, 8.19.17 support"
   - type: fix
     components: [kbn]
     text: "[Visualizations not rendering for `kibana.access`: `ro`/`ro_strict` users on KBN 9.x](https://forum.readonlyrest.com/t/ror-ent-1-70-1-9-4-2-lens-visualization-from-library-in-ro-mode-broken/2995)"
