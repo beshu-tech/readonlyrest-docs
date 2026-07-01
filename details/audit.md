@@ -37,70 +37,172 @@ Here is an example of the data points contained in each audit event. We can leve
 
 ## Configuration
 
-The audit collecting by default is disabled. To enable it, you need to add `audit.enabled: true` and optionally configure the `audit.outputs`.
-In the `outputs` array, you can define i.a. where the audit events should be sent.
-The currently supported output types are:
-* `index` - similarly to Logstash it writes audit events in the documents stored in the ReadonlyREST audit index
-* `data_stream` - similar to index type, but the audit events are stored in the ES data stream
-* `log` - it allows you to collect audit events using the Elasticsearch logs and format them with the help of features that `log4j2` enables.
+The audit outputs are disabled by default. To enable them, add `audit.enabled: true` and optionally configure `audit.outputs`.
 
-You can configure multiple outputs for audit events. When the audit is enabled, at least one output has to be defined.
-If you omit `outputs` definition, the default `index` output will be used.
+**Note**: Even when `audit.enabled` is `false` or not set, the built-in ACL log is a special case — it writes a human-readable decision line to Elasticsearch logs for every request by default. See [The default ACL log](#the-default-acl-log) below.
 
-Audit can also be controlled at the block level:
-- if audit is globally enabled, it is applied to all `access_control_rules` blocks by default — audit events will be generated for events pertaining to all blocks
-- the audit can be optionally disabled for individual blocks, as shown in the example below for the `Kibana` block
-- if audit is globally disabled, then it is disabled for all blocks, regardless of individual block settings
+The following is the explicit equivalent of the default behaviour when no `audit` section is configured at all:
 
-**⚠️IMPORTANT**: When audit is disabled for a specific block, then there will be no audit events when that block is matched.
-
-Here is an example of how to enable audit events collecting with all defaults:
 ```yaml
 readonlyrest:
-
   audit:
-    enabled: true 
+    enabled: false                 # audit outputs disabled
+    default_acl_log_enabled: true  # ACL log still fires for every request
+```
+
+When `audit.enabled: true` and no `outputs` are specified, ROR defaults to storing events in a local Elasticsearch index.
+
+### Global audit settings
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true                   # enable/disable the entire audit subsystem
+    default_acl_log_enabled: true   # enable/disable the built-in ACL log (default: true)
+    outputs:
+    - type: index
+      name: my-index-sink           # optional name, used for per-block sink routing
+```
+
+| Setting | Default | Description |
+|---|---|---|
+| `enabled` | `false` | Master switch for the audit subsystem |
+| `default_acl_log_enabled` | `true` | Controls the built-in ACL log output (see below) |
+| `outputs` | default `index` output | List of audit outputs |
+
+Each entry in `outputs` accepts an optional `name` field. Names are only needed for per-block routing: when you want a specific block to send events to only a subset of outputs, you reference them by name using `enabled_audit_sinks` or `disabled_audit_sinks` (see [Block-level audit control](#block-level-audit-control)). If you do not need per-block routing, you can omit `name` from all outputs.
+
+### The default ACL log
+
+When `default_acl_log_enabled: true` (the default), ROR writes a human-readable ACL decision line to Elasticsearch logs for every request, using the logger named `tech.beshu.ror.accesscontrol.logging.AccessControlListLoggingDecorator`. This happens regardless of whether any `outputs` are configured.
+
+The default ACL log is exposed as a named output with the reserved name `default_acl_log`. You can use this name in block-level `enabled_audit_sinks` and `disabled_audit_sinks` to include or exclude it from per-block routing:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    default_acl_log_enabled: true
+    outputs:
+    - type: index
+      name: my-index-sink
 
   access_control_rules:
 
-   - name: Kibana
-     type: allow
-     auth_key: kibana:kibana
-     verbosity: error
-     audit: # the `audit` section is optional, by default audit is enabled for each block
-       enabled: false  
+  - name: High-volume service account
+    auth_key: svc:secret
+    audit:
+      # send events only to the index, skip the ACL log line for this noisy block
+      enabled_audit_sinks: [my-index-sink]
 
-   - name: "::RO::"
-     auth_key: simone:ro
-     kibaba:
-       access: ro
+  - name: Admin users
+    auth_key: admin:admin
+    # No audit section — all outputs active with default settings
 ```
 
-You can also use multiple audit outputs, e.g.
+To replace the default ACL log with a custom one — for example to send it to a different file — disable it globally and add a `log` output with the `acl` serializer:
 
 ```yaml
 readonlyrest:
   audit:
     enabled: true
-    outputs: [ index, data_stream, log ]
-
-    ...
-```
-
-When you want to have more control over the audit outputs, the extended `outputs` format is for you.
-For example, you can disable given output by adding `enabled: false` to the output config:
-```yaml
-readonlyrest:
-  audit:
-    enabled: true
-    outputs: 
-    - type: index
+    default_acl_log_enabled: false   # turn off the built-in ACL log
+    outputs:
     - type: log
-      enabled: false # by default is true
-    ...
+      name: custom-acl-log
+      logger_name: my.custom.acl.logger
+      serializer:
+        type: acl                    # reproduces the built-in ACL log format
 ```
 
-The other settings, specific to the type of audit outputs, are mentioned in the next sections.
+`logger_name` is the log4j2 logger name that ROR uses when writing to this output (default: `readonlyrest_audit`). Setting a custom value lets you route these log lines to a dedicated appender in `log4j2.properties` — for example to write them to a separate file. See [Custom logging settings via log4j2](#custom-logging-settings-via-log4j2) for an example appender configuration.
+
+The `acl` serializer produces exactly the same single-line human-readable format as the built-in ACL log: a concise decision summary that includes the request identity, matched block, final state, and key request details. The format is unchanged compared to previous versions.
+
+### Block-level audit control
+
+The `audit` section inside each `access_control_rules` block lets you tune audit behaviour per block.
+
+```yaml
+access_control_rules:
+- name: Example block
+  auth_key: user:pass
+  audit:
+    enabled: true               # default: true — set to false to suppress all audit for this block
+    log_allowed_events: true    # default: true — set to false to suppress allowed-request events
+    enabled_audit_sinks: []     # whitelist: only these named sinks receive events from this block
+    disabled_audit_sinks: []    # blacklist: all sinks except these receive events from this block
+```
+
+| Setting | Default | Description |
+|---|---|---|
+| `enabled` | `true` | When `false`, no audit events are emitted when this block is matched, regardless of global settings |
+| `log_allowed_events` | `true` | When `false`, allowed requests matched by this block are not written to audit. Denied requests, errors, and index-not-found responses are always written |
+| `enabled_audit_sinks` | (all sinks) | Whitelist of sink names. Only the listed sinks receive events from this block. Use sink `name` values from `audit.outputs`, plus `default_acl_log` for the built-in ACL log |
+| `disabled_audit_sinks` | (none) | Blacklist of sink names. All sinks except the listed ones receive events from this block |
+
+`enabled_audit_sinks` and `disabled_audit_sinks` are mutually exclusive — you cannot specify both on the same block.
+
+**⚠️IMPORTANT**: When `audit.enabled: false` for a specific block, there will be no audit events at all when that block is matched — this suppresses both custom outputs and the default ACL log. **This is a change in behaviour from previous versions**, where block-level `audit: {enabled: false}` only suppressed the ES audit sinks while the ACL log continued to write.
+
+#### Per-sink routing example
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      name: security-index
+    - type: log
+      name: ops-log
+
+  access_control_rules:
+
+  - name: Security-sensitive block
+    auth_key: admin:admin
+    audit:
+      # Only write to the security index, skip the ops log and default ACL log
+      enabled_audit_sinks: [security-index]
+
+  - name: Noisy read-only block
+    auth_key: reader:pass
+    audit:
+      # Skip allowed events entirely, errors still get written
+      log_allowed_events: false
+      # Write to ops log only, skip security index for this block
+      enabled_audit_sinks: [ops-log]
+
+  - name: Regular block
+    auth_key: user:pass
+    # No audit section = all sinks active with default settings
+```
+
+### Multiple outputs
+
+You can configure multiple audit outputs, including mixing output types:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      name: audit-index
+    - type: log
+      name: audit-log
+    - type: data_stream
+      name: audit-stream
+      enabled: false   # this output is defined but currently disabled
+```
+
+Each output can be individually toggled with `enabled: true/false` (default: `true`).
+
+### Backward compatibility
+
+The `verbosity: error` and `verbosity: info` block-level settings from earlier versions are still accepted. They are treated as aliases for `audit: {log_allowed_events: false}` and `audit: {log_allowed_events: true}` respectively.
+
+All other global audit settings (`audit.enabled`, `audit.outputs` and their sub-settings) are unchanged. Existing configurations that do not use the new settings will continue to work without modification. The `default_acl_log_enabled` setting defaults to `true`, so the ACL log continues to fire exactly as before for configurations that do not set it explicitly.
 
 ### The 'index' output specific configurations
 
@@ -115,7 +217,7 @@ Example: tell ROR to write on the monthly index.
 readonlyrest:
   audit:
     enabled: true
-    outputs: 
+    outputs:
     - type: index
       index_template: "'custom-prefix'-yyyy-MM"  # <--monthly pattern
   ...
@@ -126,14 +228,14 @@ readonlyrest:
 
 It's possible to set up a custom audit cluster responsible for storing audit events. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
-**⚠️IMPORTANT**: Since ROR version 1.68.0, audit events have been sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
+**⚠️IMPORTANT**: Audit events are sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
 
 ```yaml
 readonlyrest:
   audit:
     enabled: true
-    outputs: 
+    outputs:
     - type: index
       cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
   ...
@@ -142,11 +244,12 @@ readonlyrest:
 Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
 
 ### The 'data_stream' output specific configurations
+
 #### Custom audit data stream name
+
 To change the default data stream name `readonlyrest_audit`, add the following configuration to your `readonlyrest.yml` config:
 
 ```yaml
-
 readonlyrest:
   audit:
     enabled: true
@@ -170,14 +273,14 @@ This creation process includes setting up the following components, each dedicat
 
 It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
-**⚠️IMPORTANT**: Since ROR version 1.68.0, audit events have been sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
+**⚠️IMPORTANT**: Audit events are sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
 
 ```yaml
 readonlyrest:
   audit:
     enabled: true
-    outputs: 
+    outputs:
     - type: data_stream
       cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
   ...
@@ -232,13 +335,13 @@ You can manage and update settings related to your audit data stream directly fr
    * To change index settings or mappings for new backing indices:
      * Go to **Index Templates** in Stack Management.
      * Locate the template associated with your audit data stream (usually matching the data stream name or pattern).
-     * Edit the template’s settings or mappings as needed.
+     * Edit the template's settings or mappings as needed.
      * Save the updated template; new indices created for the data stream will use these settings.
 
 5. **Verify Changes**
 
    * After updating policies or templates, monitor your data stream to ensure rollover and retention behave as expected.
-   * You can also query audit events via Kibana’s Discover tab or using the Elasticsearch API.
+   * You can also query audit events via Kibana's Discover tab or using the Elasticsearch API.
 
 ###### Important Notes
 
@@ -261,7 +364,7 @@ readonlyrest:
     outputs:
       - type: index
       - type: data_stream # add data stream output type to your config
-        data_stream: "custom_audit_data_stream" 
+        data_stream: "custom_audit_data_stream"
 ```
 
 > ✅ This ensures no audit logs are lost during the transition.
@@ -321,21 +424,56 @@ Use Kibana dashboards, metrics, or direct queries to confirm that new audit even
 
 ### The 'log' output specific configurations
 
-The `log` output uses a dedicated logger to write the audit events to the Elasticsearch log at INFO level.
+The `log` output writes audit events to Elasticsearch log at INFO level using a dedicated logger.
 
-To make ReadonlyREST start adding the audit events to the Elasticsearch log, all you have to do is add "log" as one of the outputs, e.g:
 ```yaml
 readonlyrest:
   audit:
     enabled: true
-    outputs:      # you can use also 'outputs: [ log ]'
-    - type: log  
+    outputs:
+    - type: log
   ...
 ```
 
-#### Custom logging settings
-If you want to control the logging process of audit events, you can do it via the `$ES_PATH_CONF/config/log4j2.properties`.
-Here is an example config with the default logger name, with a separate log file, and configured rolling:
+#### Built-in rolling file appender
+
+For a self-contained rolling file output — without editing `log4j2.properties` — use the `file_appender` sub-section:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: log
+      name: rolling-audit
+      file_appender:
+        file_path: /var/log/elasticsearch/ror_audit.log   # absolute path; directory must be writable
+        max_file_size: "100MB"                            # accepted units: B, KB, MB, GB, TB
+        max_files: 10                                     # number of rotated files to keep
+```
+
+When `file_appender` is present, ROR creates and manages the rolling appender internally, bypassing the default Elasticsearch log routing for this output. The `logger_name` setting is still accepted and used as the appender name.
+
+#### Custom logger name
+
+If you want to route log output through a specific log4j2 logger:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: log
+      logger_name: custom-logger-name
+  ...
+```
+
+The default logger name is `readonlyrest_audit`.
+
+#### Custom logging settings via log4j2
+
+For advanced log configuration — custom patterns, external syslog appenders, etc. — configure the logger in `$ES_PATH_CONF/config/log4j2.properties`. The logger name must match the `logger_name` value in the output config (or the default `readonlyrest_audit`):
+
 ```text
 appender.readonlyrest_audit_rolling.type = RollingFile
 appender.readonlyrest_audit_rolling.name = readonlyrest_audit_rolling
@@ -349,26 +487,31 @@ appender.readonlyrest_audit_rolling.policies.size.size = 1GB
 appender.readonlyrest_audit_rolling.strategy.type = DefaultRolloverStrategy
 appender.readonlyrest_audit_rolling.strategy.max = 4
 
-# Logger name, required, must be the same as the one defined in `readonlyrest.yml` audit configuration.
-# If a custom logger name is not defined there, then the default logger name is "readonlyrest_audit"
+# Logger name must match the one configured in readonlyrest.yml (or the default "readonlyrest_audit")
 logger.readonlyrest_audit.name = readonlyrest_audit
 logger.readonlyrest_audit.appenderRef.readonlyrest_audit_rolling.ref = readonlyrest_audit_rolling
 # set to false to use only desired appenders
 logger.readonlyrest_audit.additivity = false
 ```
-All settings are up to you. The only required entry is the logger name `logger.{your-logger-name}.name = {your-logger-name}`.
-The default logger name is the `readonlyrest_audit`.
 
-If you want to set a custom logger name for the `log` output, add the `logger_name` setting for the given output:
+#### ACL serializer
+
+The `log` output type supports a special `acl` serializer that reproduces the human-readable format written by the default ACL log. This is useful when you want to disable the built-in ACL log (`default_acl_log_enabled: false`) and replace it with a custom log sink that you can route per-block:
+
 ```yaml
 readonlyrest:
   audit:
     enabled: true
-    outputs: 
+    default_acl_log_enabled: false
+    outputs:
     - type: log
-      logger_name: custom-logger-name
-  ...
+      name: custom-acl-log
+      logger_name: my.acl.logger
+      serializer:
+        type: acl
 ```
+
+The `acl` serializer type is only valid for `log` outputs. Attempting to use it with `index` or `data_stream` outputs will produce a configuration error.
 
 ## Extending audit events
 
@@ -403,7 +546,7 @@ You can:
 ### Predefined serializers:
 * `tech.beshu.ror.audit.instances.BlockVerbosityAwareAuditLogSerializer`
   * Serializes all non-`Allowed` events.
-  * Serializes `Allowed` events only when the corresponding rule specifies, that they should be logged at `INFO` verbosity level.
+  * Serializes `Allowed` events only when the matched block has `log_allowed_events: true` (the default).
   * Recommended for standard audit logging, where full request body capture is not required.
   * Fields included:
     ```
@@ -441,11 +584,11 @@ You can:
   * Additionally, captures the full request body (`content` field)
   * Recommended for standard audit logging, where full request body capture is required.
 * `tech.beshu.ror.audit.instances.FullAuditLogSerializer`
-  * Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
+  * Serializes all events of all types, including all `Allowed` events, regardless of the block's `log_allowed_events` setting.
   * Included fields are the same as for `BlockVerbosityAwareAuditLogSerializer`
   * Use this serializer, when you need complete coverage of all events.
 * `tech.beshu.ror.audit.instances.FullAuditLogWithQuerySerializer`
-  * Serializes all events of all types, including all `Allowed` events, regardless of the rule verbosity.
+  * Serializes all events of all types, including all `Allowed` events, regardless of the block's `log_allowed_events` setting.
   * Included fields are the same as for `QueryAuditLogSerializer` (includes `content` field - full request body)
   * Use this serializer, when you need complete coverage of all events with full request body.
 
@@ -460,7 +603,7 @@ Configuration should look like that:
         - type: index
           serializer:
             type: "configurable"
-            verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+            allowed_events_serialization_mode: "based_on_block_settings" # serialize Allowed events only from blocks with log_allowed_events: true (default); use "always" to serialize all Allowed events
             fields: # list of fields in the resulting JSON; placeholders (like {ES_NODE_NAME}) will be replaced with their corresponding values
               node_details: "{ES_CLUSTER_NAME}/{ES_NODE_NAME}"
               http_request: "{HTTP_METHOD} {HTTP_PATH}"
@@ -563,7 +706,7 @@ Configuration should look like that:
         - type: index
           serializer:
             type: "ecs"
-            verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+            allowed_events_serialization_mode: "based_on_block_settings" # serialize Allowed events only from blocks with log_allowed_events: true (default); use "always" to serialize all Allowed events
             include_full_request_content: false # controls whether the full HTTP request body is included in the ECS audit log (http.request.body field), disabled by default
 ```
 
@@ -633,7 +776,7 @@ The provided ECS implementation is equivalent to `configurable` serializer shown
           - type: index
             serializer:
               type: "configurable"
-              verbosity_level_serialization_mode: [INFO, ERROR] # define which Allowed events will be serialized based on the rule verbosity level
+              allowed_events_serialization_mode: "based_on_block_settings"
               fields: 
                 ecs:
                   version: "1.6.0"
