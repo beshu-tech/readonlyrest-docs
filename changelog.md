@@ -2,6 +2,38 @@
 
 # Changelog
 
+### (2026-07-12) What's new in **ROR 1.70.3**
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54399">CVE-2026-54399</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54428">CVE-2026-54428</a></summary>
+
+This release addresses two high-severity (CVSS 7.5) denial-of-service vulnerabilities in Apache HttpComponents Core, a dependency used by Elasticsearch. CVE-2026-54399 affects the HTTP/1.1 message parser — a remote attacker can send messages with an excessive number of headers or header length, causing memory exhaustion. CVE-2026-54428 affects the HTTP/2 HPACK decoder — a remote attacker can send oversized compressed header blocks, also leading to memory exhaustion before the header size limit is applied. Both vulnerabilities are fixed by updating the affected dependency.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed CSV report generation failing for users with <code>kibana.access</code>: <code>ro</code> or <code>ro_strict</code></summary>
+
+Users with read-only (`ro`) or strict read-only (`ro_strict`) Kibana access roles were unable to generate CSV reports from saved searches or visualizations. This fix ensures that CSV report generation works correctly for these restricted roles, allowing read-only users to export data without requiring write permissions.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Fixed the Kibana usage counter, which is now stored per tenancy index instead of being shared across tenancies</summary>
+
+Previously, the Kibana usage counter was stored in a shared index, causing usage statistics to be mixed across different tenancies. This fix ensures that each tenancy maintains its own separate usage counter, providing accurate per-tenancy usage tracking and preventing data leakage between tenants.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Fixed a node rejecting all requests until restarted when ROR settings could not be read at startup. ROR now keeps retrying until they are available</summary>
+
+When ROR settings (stored in the cluster's system index) were temporarily unavailable at node startup — for example, during cluster initialization or network delays — the node would reject all requests indefinitely until manually restarted. ROR now implements a retry mechanism that continuously attempts to read the settings until they become available, eliminating the need for a manual restart and improving cluster resilience during startup scenarios.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) ROR no longer falls back to the local <code>readonlyrest.yml</code> when the in-index settings exist but cannot be read, which could start a node with different rules than the rest of the cluster</summary>
+
+If the in-index ROR settings existed but were temporarily unreadable (e.g., due to a transient error), ROR would silently fall back to the local `readonlyrest.yml` file. This could cause a node to start with a completely different set of security rules than the rest of the cluster, creating a dangerous security gap. ROR now refuses to start with the local file when in-index settings are present but unreadable, ensuring consistent security policy enforcement across all cluster nodes.
+
+</details>
+
 ### (2026-06-21) What's new in **ROR 1.70.2**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-12143">CVE-2026-12143</a>, <a href="https://security.snyk.io/vuln/SNYK-JS-DOMPURIFY-17344526">CVE-2026-49458</a>, <a href="https://github.com/advisories/GHSA-76mc-f452-cxcm">GHSA-76mc-f452-cxcm</a>, <a href="https://github.com/advisories/GHSA-gvmj-g25r-r7wr">GHSA-gvmj-g25r-r7wr</a></summary>
