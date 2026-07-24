@@ -1,0 +1,24 @@
+version: "1.70.3"
+release_date: "2026-07-12"
+entries:
+  - type: security
+    components: [es]
+    text: "[CVE-2026-54399](https://nvd.nist.gov/vuln/detail/CVE-2026-54399), [CVE-2026-54428](https://nvd.nist.gov/vuln/detail/CVE-2026-54428)"
+  - type: new
+    components: [kbn]
+    text: "9.4.4, 9.3.8, 8.19.19 support"
+  - type: new
+    components: [es]
+    text: "9.4.4, 9.3.8, 8.19.19 support"
+  - type: fix
+    components: [kbn]
+    text: "Fixed CSV report generation failing for users with `kibana.access`: `ro` or `ro_strict`"
+  - type: fix
+    components: [kbn]
+    text: "Fixed the Kibana usage counter, which is now stored per tenancy index instead of being shared across tenancies"
+  - type: fix
+    components: [es]
+    text: "Fixed a node rejecting all requests until restarted when ROR settings could not be read at startup. ROR now keeps retrying until they are available"
+  - type: fix
+    components: [es]
+    text: "ROR no longer falls back to the local `readonlyrest.yml` when the in-index settings exist but cannot be read, which could start a node with different rules than the rest of the cluster"
