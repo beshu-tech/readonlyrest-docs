@@ -473,13 +473,28 @@ readonlyrest.ssl.key_alias: "my-server-cert"          # optional; if omitted, RO
 readonlyrest.ssl.allowed_protocols: [TLSv1.2, TLSv1.3]
 readonlyrest.ssl.allowed_ciphers: [TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
 
-# Optional: mutual TLS — require clients to present a certificate
-readonlyrest.ssl.client_authentication: false          # default
+# Optional: mutual TLS — ask clients to present a certificate
+readonlyrest.ssl.client_authentication: none           # none (default) | optional | required
 
 # Optional: custom trust anchor for client certificates (defaults to JVM truststore)
 readonlyrest.ssl.truststore_file: "truststore.jks"
 readonlyrest.ssl.truststore_pass: "<truststore-password>"
 ```
+
+`client_authentication` accepts:
+
+| Value | Meaning |
+| --- | --- |
+| `none` | No certificate is requested. The default. |
+| `optional` | A certificate is requested and verified if presented; clients without one still connect. |
+| `required` | A certificate is mandatory; the TLS handshake fails without a valid one. |
+
+Use `optional` when certificate-bearing services and password-bearing users share the same port. Use
+`required` when every client holds a certificate — it moves the rejection from the ACL to the handshake,
+so a client without one sees a TLS error rather than an HTTP response.
+
+Once clients present certificates, the [`pkis` connector](elasticsearch.md#pki-connector) can turn them
+into ReadonlyREST users, so a service authenticates with nothing but its certificate.
 
 **PEM option (preferred):**
 ```yaml
@@ -1205,6 +1220,89 @@ See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 [Impersonation](details/impersonation.md) support by LDAP rules requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+* For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
+
+##### `pki_authentication`
+
+Authenticates a client by the TLS client certificate its connection was established with, using the
+configured PKI provider (here `corporate_pki`). See the [PKI connector section](elasticsearch.md#pki-connector)
+to learn how to configure the provider.
+
+simple version:
+`pki_authentication: corporate_pki`
+
+extended version:
+```yaml
+pki_authentication:
+  name: corporate_pki
+  users: ["svc-logstash", "beats-*"]   # optional: only accept these usernames
+```
+
+- The certificate is the only credential. No password, token or header is involved.
+- The certificate has already been verified by whichever component terminated TLS, so this rule never
+  decides whether a certificate is trustworthy — only who it identifies.
+- A request that arrives **without** a certificate does not match, and evaluation moves on to the next
+  block. That is what lets certificate-bearing services and password-bearing users share one port.
+
+##### `pki_authorization`
+
+```yaml
+pki_authorization:
+  name: "corporate_pki"
+  groups_any_of: ["ingest_services"]
+```
+
+- It reads the groups out of the client certificate, using the `groups` section of the configured PKI
+  provider. The provider must define one, or the settings are rejected at startup.
+- The groups are *external* groups, so they flow into the usual
+  [external to local groups mapping](details/groups-rule-mapping.md). Values that no mapping matches
+  are simply discarded, which is how you keep certificate attributes that are not roles (`OU=Warsaw`,
+  `OU=IT`) out of ReadonlyREST.
+- Groups logic syntax can be used as part of this rule, as described in the
+  [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
+
+##### `pki_auth`
+
+Shorthand rule that combines `pki_authentication` and `pki_authorization` together.
+
+```yaml
+pki_auth:
+  name: "corporate_pki"
+  groups_any_of: ["ingest_services"]
+```
+
+The same can be written as:
+
+```yaml
+pki_authentication: corporate_pki
+pki_authorization:
+  name: "corporate_pki"
+  groups_any_of: ["ingest_services"]
+```
+
+The most common enterprise arrangement, however, takes the identity from the certificate and the groups
+from the corporate directory:
+
+```yaml
+- name: "Platform services"
+  pki_authentication:
+    name: "corporate_pki"
+  ldap_authorization:
+    name: "corporate_ldap"
+    groups_any_of: ["platform_services"]
+  indices: ["logs-*"]
+```
+
+**⚠️IMPORTANT** for this to work, the username the certificate yields has to be the one the directory
+can look up. If your CA puts a display name in the `CN` but LDAP keys on `uid` or `sAMAccountName`, the
+LDAP search fails with a confusing "user not found". See
+[reading the identity](elasticsearch.md#reading-the-identity) for how to extract the right value without
+re-issuing certificates.
+
+* [Impersonation](details/impersonation.md) works as it does for `proxy_auth`: when the rule declares a
+  `users` list the impersonated user is checked against it, and without one impersonation is refused for
+  that rule. Certificate-derived groups can never be impersonated, because an impersonator presents no
+  certificate belonging to the impersonated user.
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
 ##### `jwt_authentication`
@@ -2722,6 +2820,186 @@ readonlyrest:
     groups:
       search_groups_base_DN: "ou=Groups,dc=example2,dc=com"
 ```
+
+#### PKI connector
+
+A PKI provider turns a TLS client certificate into a ReadonlyREST user. It is how a service
+authenticates with nothing but the certificate it already holds — no password in a `logstash.yml`, no
+token on disk.
+
+Providers are declared in the `pkis` section and referenced by name from the
+[`pki_authentication`](elasticsearch.md#pki_authentication),
+[`pki_authorization`](elasticsearch.md#pki_authorization) and
+[`pki_auth`](elasticsearch.md#pki_auth) rules.
+
+```yaml
+readonlyrest:
+
+  access_control_rules:
+
+  - name: "Logstash ingest"
+    pki_authentication:
+      name: "corporate_pki"
+      users: ["logstash-*"]
+    actions: ["indices:data/write/*"]
+    indices: ["ingest-*"]
+
+  pkis:
+  - name: corporate_pki
+    users:
+      user_id_attribute: "CN"     # the default; shown for clarity
+```
+
+##### Before you start
+
+ReadonlyREST can only read a certificate that was presented to **this** Elasticsearch node, so:
+
+- **TLS has to terminate at Elasticsearch.** If a load balancer, ingress or service mesh terminates it
+  upstream, no certificate reaches ReadonlyREST and PKI rules never match. This is the single most common
+  reason PKI "does not work". Such deployments have to move TLS termination, or keep using `proxy_auth`.
+- **Client authentication has to be on.** Either `readonlyrest.ssl.client_authentication` (see
+  [Encryption](elasticsearch.md#encryption)) or `xpack.security.http.ssl.client_authentication`, set to
+  `optional` or `required`. With `none` the node never asks for a certificate, so PKI rules never match.
+  ReadonlyREST cannot detect this for you: the ACL has no view of your TLS configuration.
+- **Elasticsearch 7.0 or newer.** On 6.7 a request cannot be traced back to the connection it arrived on.
+
+**⚠️IMPORTANT** PKI is only as strong as the verification your TLS layer performs. A setting such as
+`xpack.security.http.ssl.verification_mode: none` makes Elasticsearch request a certificate and then
+validate nothing, so a certificate from *any* CA is accepted — and anyone able to run a CA can issue one
+carrying `CN=svc-logstash` and be authenticated as that service. ReadonlyREST cannot tell the difference:
+by the time a rule sees the certificate it looks legitimate. Always verify chains, and consider pinning
+`issuer_dn` (below), which is the one constraint a forged subject cannot satisfy.
+
+##### Reading the identity
+
+The `users` section says how to get a username out of a certificate. It follows the same shape as the
+LDAP connector: an optional `mode` selecting a variant, and a default that needs no `mode` at all.
+
+| `mode` | Keys | What it does |
+| --- | --- | --- |
+| `subject_dn_attribute` *(default)* | `user_id_attribute` | Reads a named attribute out of the subject DN. Defaults to `CN`. |
+| `subject_dn_pattern` | `pattern` | Applies a regular expression to the subject DN. |
+| `san` | `san_type`, optional `pattern` | Reads a Subject Alternative Name entry. |
+
+Attribute names are matched case-insensitively, and the DN is parsed structurally rather than as a
+string, so escaping and multi-valued RDNs are handled for you: `CN=Smith\, John` yields `Smith, John`.
+
+**Active Directory.** In AD the login identity is the userPrincipalName, not the `CN` — a certificate
+with `CN=John Smith` and UPN `jsmith@corp.example.com` gives an unusable username under `CN`, and the
+login name is not in the DN at all. Read the UPN instead:
+
+```yaml
+  pkis:
+  - name: ad_pki
+    users:
+      mode: san
+      san_type: upn      # the otherName entry with OID 1.3.6.1.4.1.311.20.2.3
+```
+
+`san_type` accepts `dns`, `email`, `uri`, `ip` and `upn`. Where a certificate carries several entries of
+the requested type — routine for host certificates, which often hold an FQDN, a short name and aliases —
+the first is used, and an optional `pattern` selects among them:
+
+```yaml
+  pkis:
+  - name: host_pki
+    users:
+      mode: san
+      san_type: dns
+      pattern: "^(.+)\\.corp\\.example\\.com$"
+```
+
+For a DN your CA lays out unusually, the regular expression escape hatch applies to the RFC 2253
+rendering of the subject, and captured values are unescaped for you:
+
+```yaml
+  pkis:
+  - name: legacy_pki
+    users:
+      mode: subject_dn_pattern
+      pattern: "^CN=([^,]+),OU=Service Accounts,.*$"
+```
+
+A pattern has to compile, define exactly one capture group, and be unable to match an empty value —
+all checked when the settings load, not when a request arrives.
+
+##### Reading groups
+
+An optional `groups` section makes the certificate carry authorization too, which suits clusters with no
+directory to consult:
+
+```yaml
+  pkis:
+  - name: internal_pki
+    users:
+      user_id_attribute: "CN"
+    groups:
+      group_id_attribute: "OU"
+```
+
+The same three modes are available. Where a username takes the first value found, groups take all of
+them — so one `subject_dn_pattern` serves both, and `pattern: "OU=grp-([^,]+)"` yields a group per match.
+
+Note that a DN's OUs are frequently a position in an org tree rather than a set of roles:
+
+```
+CN=beats-01,OU=ingest,O=Corp                    ->  ["ingest"]
+CN=jsmith,OU=Engineering,OU=EMEA,OU=Employees   ->  ["Engineering", "EMEA", "Employees"]
+```
+
+ReadonlyREST does not interpret their order or hierarchy, and offers no filter — mapping only the
+role-bearing ones is your decision, expressed in the
+[groups mapping](details/groups-rule-mapping.md). Anything you do not map is discarded.
+
+Group *names* are not supported: a certificate carries a single value per attribute, so there is no
+second attribute to read a display name from. `group_name_attribute` is rejected at startup rather than
+silently ignored.
+
+##### Restricting which certificates a provider speaks for
+
+One corporate CA usually issues to more than one population:
+
+```
+CN=svc-logstash,OU=Services,DC=corp,DC=example,DC=com     <- machine
+CN=John Smith,OU=People,DC=corp,DC=example,DC=com         <- human
+```
+
+Both chain to the same CA, so TLS trusts them equally and a plain `CN` extractor would authenticate
+both. Two optional constraints keep them apart. They are checked before anything is extracted, so a
+certificate out of scope yields neither a username nor groups.
+
+```yaml
+  pkis:
+  - name: services_pki
+    subject_dn_base: "OU=Services,DC=corp,DC=example,DC=com"    # subject must end with this
+    issuer_dn: "CN=Corp Issuing CA,DC=corp,DC=example,DC=com"   # issuer must match exactly
+    users:
+      user_id_attribute: "CN"
+
+  - name: employees_pki
+    subject_dn_base: "OU=People,DC=corp,DC=example,DC=com"
+    users:
+      user_id_attribute: "CN"
+```
+
+`issuer_dn` covers what `subject_dn_base` cannot: any CA your node trusts can mint any name, so where a
+truststore holds more than one CA, pinning the issuer is what stops one CA impersonating identities from
+another.
+
+##### Migrating from the X-Pack PKI realm
+
+The concepts line up. X-Pack derives a username from the subject DN with `username_pattern` and resolves
+roles through role mappings; ReadonlyREST derives one with `mode`/`user_id_attribute`/`pattern` and
+resolves groups from the `users` section, LDAP, or the certificate itself. An X-Pack `username_pattern`
+regex can be carried over as-is under `mode: subject_dn_pattern`.
+
+##### Notes
+
+- Certificate revocation (CRL/OCSP) is not consulted — Elasticsearch does not support it either. To
+  deprovision a compromised identity, remove it from the `users` section or from a rule's `users` list
+  and reload the settings.
+- The certificate belongs to the connection, so every request multiplexed over one keep-alive connection
+  carries the same identity. Settings reloads apply to new connections.
 
 #### External Basic Auth
 
