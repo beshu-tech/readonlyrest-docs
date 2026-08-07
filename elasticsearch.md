@@ -588,12 +588,13 @@ readonlyrest.ssl_internode.hostname_verification: true
 
 By default, the server does not request a client certificate. When enabled, Elasticsearch verifies the client's identity via mutual TLS.
 
-For external REST API:
+For the external REST API, the setting takes `none`, `optional` or `required` — see the value table under
+[External REST API](elasticsearch.md#external-rest-api):
 ```yaml
-readonlyrest.ssl.client_authentication: true
+readonlyrest.ssl.client_authentication: required
 ```
 
-For internode communication:
+For internode communication it is a boolean:
 ```yaml
 readonlyrest.ssl_internode.client_authentication: true
 ```
@@ -1242,7 +1243,9 @@ pki_authentication:
 - The certificate has already been verified by whichever component terminated TLS, so this rule never
   decides whether a certificate is trustworthy — only who it identifies.
 - A request that arrives **without** a certificate does not match, and evaluation moves on to the next
-  block. That is what lets certificate-bearing services and password-bearing users share one port.
+  block. That is what lets certificate-bearing services and password-bearing users share one port —
+  but only where client authentication is `optional`. With `required`, a client holding no certificate
+  is rejected during the TLS handshake and never reaches the ACL at all.
 
 ##### `pki_authorization`
 
@@ -2867,8 +2870,10 @@ ReadonlyREST can only read a certificate that was presented to **this** Elastics
 `xpack.security.http.ssl.verification_mode: none` makes Elasticsearch request a certificate and then
 validate nothing, so a certificate from *any* CA is accepted — and anyone able to run a CA can issue one
 carrying `CN=svc-logstash` and be authenticated as that service. ReadonlyREST cannot tell the difference:
-by the time a rule sees the certificate it looks legitimate. Always verify chains, and consider pinning
-`issuer_dn` (below), which is the one constraint a forged subject cannot satisfy.
+by the time a rule sees the certificate it looks legitimate. Always verify chains. Pinning `issuer_dn`
+(below) is defence in depth, not a replacement: the issuer is a field *inside* the presented certificate,
+so with chain validation disabled a forged certificate simply carries a matching one. It constrains
+certificates your TLS layer has already verified — it cannot make an unverified one trustworthy.
 
 ##### Reading the identity
 
@@ -2942,7 +2947,7 @@ them — so one `subject_dn_pattern` serves both, and `pattern: "OU=grp-([^,]+)"
 
 Note that a DN's OUs are frequently a position in an org tree rather than a set of roles:
 
-```
+```text
 CN=beats-01,OU=ingest,O=Corp                    ->  ["ingest"]
 CN=jsmith,OU=Engineering,OU=EMEA,OU=Employees   ->  ["Engineering", "EMEA", "Employees"]
 ```
@@ -2959,7 +2964,7 @@ silently ignored.
 
 One corporate CA usually issues to more than one population:
 
-```
+```text
 CN=svc-logstash,OU=Services,DC=corp,DC=example,DC=com     <- machine
 CN=John Smith,OU=People,DC=corp,DC=example,DC=com         <- human
 ```
@@ -2996,10 +3001,14 @@ regex can be carried over as-is under `mode: subject_dn_pattern`.
 ##### Notes
 
 - Certificate revocation (CRL/OCSP) is not consulted — Elasticsearch does not support it either. To
-  deprovision a compromised identity, remove it from the `users` section or from a rule's `users` list
-  and reload the settings.
+  deprovision a compromised identity, remove it from the rule's `users` allowlist, or from the top-level
+  `users` definitions section so that it resolves no groups, and reload the settings. The provider's own
+  `users` section only says how to read a username out of a certificate — it grants nothing, so editing
+  it deprovisions nobody.
 - The certificate belongs to the connection, so every request multiplexed over one keep-alive connection
-  carries the same identity. Settings reloads apply to new connections.
+  carries the same identity. The ACL is still evaluated per request against the settings in force at that
+  moment, so a reload takes effect on the next request, existing connections included — there is no need
+  to close them.
 
 #### External Basic Auth
 
