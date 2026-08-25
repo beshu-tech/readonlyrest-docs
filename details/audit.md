@@ -128,20 +128,22 @@ access_control_rules:
 - name: Example block
   auth_key: user:pass
   audit:
-    enabled: true               # default: true — set to false to suppress all audit for this block
-    log_allowed_events: true    # default: true — set to false to suppress allowed-request events
-    enabled_audit_outputs: []   # whitelist: only these named outputs receive events from this block
-    disabled_audit_outputs: []  # blacklist: all outputs except these receive events from this block
+    enabled: true                             # default: true — set to false to suppress all audit for this block
+    log_allowed_events: true                  # default: true — set to false to suppress allowed-request events
+    enabled_audit_outputs: [my-index-output]  # whitelist: only these named outputs receive events from this block
+    # disabled_audit_outputs: [ops-log]       # blacklist: all outputs except these. Use one key or the other, never both
 ```
 
 | Setting | Default | Description |
 |---|---|---|
 | `enabled` | `true` | When `false`, no audit events are emitted when this block is matched, regardless of global settings |
 | `log_allowed_events` | `true` | When `false`, allowed requests matched by this block are not written to audit. Denied requests, errors, and index-not-found responses are always written |
-| `enabled_audit_outputs` | (all outputs) | Whitelist of output names. Only the listed outputs receive events from this block. Use output `name` values from `audit.outputs`, plus `default_acl_log` for the built-in ACL log |
-| `disabled_audit_outputs` | (none) | Blacklist of output names. All outputs except the listed ones receive events from this block |
+| `enabled_audit_outputs` | (all outputs) | Whitelist of output names. Only the listed outputs receive events from this block. Use output `name` values from `audit.outputs`, plus `default_acl_log` for the built-in ACL log. The list must name at least one output |
+| `disabled_audit_outputs` | (none) | Blacklist of output names. All outputs except the listed ones receive events from this block. The list must name at least one output |
 
 `enabled_audit_outputs` and `disabled_audit_outputs` are mutually exclusive — you cannot specify both on the same block.
+
+Neither list can be empty. ROR refuses to load settings that contain `enabled_audit_outputs: []` or `disabled_audit_outputs: []`. Omit the key to send events to every output. To send no events at all from a block, use `audit: {enabled: false}`.
 
 **⚠️IMPORTANT**: When `audit.enabled: false` for a specific block, there will be no audit events at all when that block is matched — this suppresses both custom outputs and the default ACL log. **This is a change in behaviour from previous versions**, where block-level `audit: {enabled: false}` only suppressed the ES audit outputs while the ACL log continued to write.
 
