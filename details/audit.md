@@ -61,7 +61,7 @@ readonlyrest:
     default_acl_log_enabled: true   # enable/disable the built-in ACL log (default: true)
     outputs:
     - type: index
-      name: my-index-sink           # optional name, used for per-block sink routing
+      name: my-index-output         # optional name, used for per-block output routing
 ```
 
 | Setting | Default | Description |
@@ -70,13 +70,13 @@ readonlyrest:
 | `default_acl_log_enabled` | `true` | Controls the built-in ACL log output (see below) |
 | `outputs` | default `index` output | List of audit outputs |
 
-Each entry in `outputs` accepts an optional `name` field. Names are only needed for per-block routing: when you want a specific block to send events to only a subset of outputs, you reference them by name using `enabled_audit_sinks` or `disabled_audit_sinks` (see [Block-level audit control](#block-level-audit-control)). If you do not need per-block routing, you can omit `name` from all outputs.
+Each entry in `outputs` accepts an optional `name` field. Names are only needed for per-block routing: when you want a specific block to send events to only a subset of outputs, you reference them by name using `enabled_audit_outputs` or `disabled_audit_outputs` (see [Block-level audit control](#block-level-audit-control)). If you do not need per-block routing, you can omit `name` from all outputs.
 
 ### The default ACL log
 
 When `default_acl_log_enabled: true` (the default), ROR writes a human-readable ACL decision line to Elasticsearch logs for every request, using the logger named `tech.beshu.ror.accesscontrol.logging.AccessControlListLoggingDecorator`. This happens regardless of whether any `outputs` are configured.
 
-The default ACL log is exposed as a named output with the reserved name `default_acl_log`. You can use this name in block-level `enabled_audit_sinks` and `disabled_audit_sinks` to include or exclude it from per-block routing:
+The default ACL log is exposed as a named output with the reserved name `default_acl_log`. You can use this name in block-level `enabled_audit_outputs` and `disabled_audit_outputs` to include or exclude it from per-block routing:
 
 ```yaml
 readonlyrest:
@@ -85,7 +85,7 @@ readonlyrest:
     default_acl_log_enabled: true
     outputs:
     - type: index
-      name: my-index-sink
+      name: my-index-output
 
   access_control_rules:
 
@@ -93,7 +93,7 @@ readonlyrest:
     auth_key: svc:secret
     audit:
       # send events only to the index, skip the ACL log line for this noisy block
-      enabled_audit_sinks: [my-index-sink]
+      enabled_audit_outputs: [my-index-output]
 
   - name: Admin users
     auth_key: admin:admin
@@ -130,22 +130,22 @@ access_control_rules:
   audit:
     enabled: true               # default: true — set to false to suppress all audit for this block
     log_allowed_events: true    # default: true — set to false to suppress allowed-request events
-    enabled_audit_sinks: []     # whitelist: only these named sinks receive events from this block
-    disabled_audit_sinks: []    # blacklist: all sinks except these receive events from this block
+    enabled_audit_outputs: []   # whitelist: only these named outputs receive events from this block
+    disabled_audit_outputs: []  # blacklist: all outputs except these receive events from this block
 ```
 
 | Setting | Default | Description |
 |---|---|---|
 | `enabled` | `true` | When `false`, no audit events are emitted when this block is matched, regardless of global settings |
 | `log_allowed_events` | `true` | When `false`, allowed requests matched by this block are not written to audit. Denied requests, errors, and index-not-found responses are always written |
-| `enabled_audit_sinks` | (all sinks) | Whitelist of sink names. Only the listed sinks receive events from this block. Use sink `name` values from `audit.outputs`, plus `default_acl_log` for the built-in ACL log |
-| `disabled_audit_sinks` | (none) | Blacklist of sink names. All sinks except the listed ones receive events from this block |
+| `enabled_audit_outputs` | (all outputs) | Whitelist of output names. Only the listed outputs receive events from this block. Use output `name` values from `audit.outputs`, plus `default_acl_log` for the built-in ACL log |
+| `disabled_audit_outputs` | (none) | Blacklist of output names. All outputs except the listed ones receive events from this block |
 
-`enabled_audit_sinks` and `disabled_audit_sinks` are mutually exclusive — you cannot specify both on the same block.
+`enabled_audit_outputs` and `disabled_audit_outputs` are mutually exclusive — you cannot specify both on the same block.
 
-**⚠️IMPORTANT**: When `audit.enabled: false` for a specific block, there will be no audit events at all when that block is matched — this suppresses both custom outputs and the default ACL log. **This is a change in behaviour from previous versions**, where block-level `audit: {enabled: false}` only suppressed the ES audit sinks while the ACL log continued to write.
+**⚠️IMPORTANT**: When `audit.enabled: false` for a specific block, there will be no audit events at all when that block is matched — this suppresses both custom outputs and the default ACL log. **This is a change in behaviour from previous versions**, where block-level `audit: {enabled: false}` only suppressed the ES audit outputs while the ACL log continued to write.
 
-#### Per-sink routing example
+#### Per-output routing example
 
 ```yaml
 readonlyrest:
@@ -163,7 +163,7 @@ readonlyrest:
     auth_key: admin:admin
     audit:
       # Only write to the security index, skip the ops log and default ACL log
-      enabled_audit_sinks: [security-index]
+      enabled_audit_outputs: [security-index]
 
   - name: Noisy read-only block
     auth_key: reader:pass
@@ -171,11 +171,11 @@ readonlyrest:
       # Skip allowed events entirely, errors still get written
       log_allowed_events: false
       # Write to ops log only, skip security index for this block
-      enabled_audit_sinks: [ops-log]
+      enabled_audit_outputs: [ops-log]
 
   - name: Regular block
     auth_key: user:pass
-    # No audit section = all sinks active with default settings
+    # No audit section = all outputs active with default settings
 ```
 
 ### Multiple outputs
@@ -496,7 +496,7 @@ logger.readonlyrest_audit.additivity = false
 
 #### ACL serializer
 
-The `log` output type supports a special `acl` serializer that reproduces the human-readable format written by the default ACL log. This is useful when you want to disable the built-in ACL log (`default_acl_log_enabled: false`) and replace it with a custom log sink that you can route per-block:
+The `log` output type supports a special `acl` serializer that reproduces the human-readable format written by the default ACL log. This is useful when you want to disable the built-in ACL log (`default_acl_log_enabled: false`) and replace it with a custom log output that you can route per-block:
 
 ```yaml
 readonlyrest:
