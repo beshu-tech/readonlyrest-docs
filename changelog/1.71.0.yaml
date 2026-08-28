@@ -1,0 +1,102 @@
+version: "1.71.0"
+release_date: "2026-08-28"
+entries:
+  - type: security
+    components: [kbn]
+    text: "[CVE-2026-12590](https://nvd.nist.gov/vuln/detail/CVE-2026-12590), [CVE-2026-16221](https://nvd.nist.gov/vuln/detail/CVE-2026-16221), [CVE-2026-13149](https://nvd.nist.gov/vuln/detail/CVE-2026-13149), [CVE-2026-59869](https://nvd.nist.gov/vuln/detail/CVE-2026-59869), [CVE-2026-59879](https://nvd.nist.gov/vuln/detail/CVE-2026-59879), [CVE-2026-59880](https://nvd.nist.gov/vuln/detail/CVE-2026-59880), [CVE-2026-14257](https://nvd.nist.gov/vuln/detail/CVE-2026-14257), [GHSA-r292-9mhp-454m](https://github.com/advisories/GHSA-r292-9mhp-454m), [CVE-2026-18446](https://nvd.nist.gov/vuln/detail/CVE-2026-18446), [CVE-2026-69152](https://nvd.nist.gov/vuln/detail/CVE-2026-69152), [CVE-2026-16728](https://nvd.nist.gov/vuln/detail/CVE-2026-16728), [CVE-2026-13697](https://nvd.nist.gov/vuln/detail/CVE-2026-13697), [CVE-2026-15157](https://nvd.nist.gov/vuln/detail/CVE-2026-15157), [CVE-2026-14643](https://nvd.nist.gov/vuln/detail/CVE-2026-14643), [CVE-2026-16729](https://nvd.nist.gov/vuln/detail/CVE-2026-16729), [CVE-2026-67314](https://nvd.nist.gov/vuln/detail/CVE-2026-67314), [CVE-2026-5078](https://nvd.nist.gov/vuln/detail/CVE-2026-5078), [GHSA-cmwh-pvxp-8882](https://github.com/advisories/GHSA-cmwh-pvxp-8882)"
+  - type: security
+    components: [es]
+    text: "[CVE-2026-59903](https://nvd.nist.gov/vuln/detail/CVE-2026-59903), [CVE-2026-54512](https://nvd.nist.gov/vuln/detail/CVE-2026-54512), [CVE-2026-54513](https://nvd.nist.gov/vuln/detail/CVE-2026-54513), [CVE-2026-54514](https://nvd.nist.gov/vuln/detail/CVE-2026-54514), [CVE-2026-54515](https://nvd.nist.gov/vuln/detail/CVE-2026-54515), [CVE-2026-56819](https://nvd.nist.gov/vuln/detail/CVE-2026-56819), [CVE-2026-59901](https://nvd.nist.gov/vuln/detail/CVE-2026-59901), [CVE-2026-8763](https://nvd.nist.gov/vuln/detail/CVE-2026-8763), [CVE-2026-13506](https://nvd.nist.gov/vuln/detail/CVE-2026-13506), [CVE-2026-14682](https://nvd.nist.gov/vuln/detail/CVE-2026-14682), [CVE-2026-58059](https://nvd.nist.gov/vuln/detail/CVE-2026-58059), [CVE-2026-58060](https://nvd.nist.gov/vuln/detail/CVE-2026-58060), [CVE-2026-13586](https://nvd.nist.gov/vuln/detail/CVE-2026-13586), [CVE-2026-58063](https://nvd.nist.gov/vuln/detail/CVE-2026-58063), [CVE-2026-12802](https://nvd.nist.gov/vuln/detail/CVE-2026-12802), [CVE-2026-59639](https://nvd.nist.gov/vuln/detail/CVE-2026-59639), [CVE-2026-64607](https://nvd.nist.gov/vuln/detail/CVE-2026-64607)"
+  - type: security
+    components: [es]
+    text: "ROR now applies the ACL to the indices in an ESQL `LOOKUP JOIN`. Before, a user could read an index that the ACL does not permit."
+  - type: security
+    components: [es]
+    text: "The `_terms_enum` API now applies the `fields` rule. ROR rejects a `_terms_enum` request from a block that has a `filter` rule, because it cannot apply document-level security to this API."
+  - type: new
+    components: [es]
+    text: "[Give each audit output a name. A block can then send its events only to the outputs that you select, with `enabled_audit_outputs` or `disabled_audit_outputs`](https://docs.readonlyrest.com/elasticsearch/audit#block-level-audit-control)"
+  - type: new
+    components: [es]
+    text: "[The built-in ACL log is now an audit output with the name `default_acl_log`. The new `audit.default_acl_log_enabled` setting turns it on and off](https://docs.readonlyrest.com/elasticsearch/audit#the-default-acl-log)"
+  - type: new
+    components: [es]
+    text: "[A `log` audit output can now write to its own file and rotate it. Use the `file_appender` settings. You do not have to change `log4j2.properties`](https://docs.readonlyrest.com/elasticsearch/audit#built-in-rolling-file-appender)"
+  - type: new
+    components: [es]
+    text: "[A `log` audit output can now use the `acl` serializer. It writes the events in the format of the built-in ACL log](https://docs.readonlyrest.com/elasticsearch/audit#acl-serializer)"
+  - type: warning
+    components: [es]
+    text: "In a block, `audit: {enabled: false}` now also stops the default ACL log. Before, it stopped only the audit outputs. To keep the ACL log for that block, write `audit: {enabled_audit_outputs: [default_acl_log]}`."
+  - type: enhancement
+    components: [kbn]
+    text: "[ROR now writes a warning to the log when a value in the `hidden_apps` rule matches no Kibana application](https://docs.readonlyrest.com/elasticsearch#kibana-related-rules)"
+  - type: enhancement
+    components: [es]
+    text: "[In a block, `log_allowed_events` replaces `verbosity`. In a serializer, `allowed_events_serialization_mode` replaces `verbosity_level_serialization_mode`. The old keys still work](https://docs.readonlyrest.com/elasticsearch/audit#backward-compatibility)"
+  - type: enhancement
+    components: [es]
+    text: "ROR evaluates the ACL faster. The gain is largest for configurations with many blocks, static rule values, header rules, and JWT authentication."
+  - type: enhancement
+    components: [es]
+    text: "The Docker images of Elasticsearch with ReadonlyREST are smaller."
+  - type: enhancement
+    components: [es]
+    text: "A Docker image pull is faster when you use more than one Elasticsearch version."
+  - type: enhancement
+    components: [es]
+    text: "The plugin ZIP is smaller, so a download and an installation take less time."
+  - type: fix
+    components: [kbn]
+    text: "Kibana now shows the ROR main settings when the test settings are active, and after you deactivate them."
+  - type: fix
+    components: [kbn]
+    text: "TSVB visualizations now show for a user with `kibana_access: ro` on Elasticsearch and Kibana 9.x."
+  - type: fix
+    components: [kbn]
+    text: "A user who has a default Kibana index can now log in when `xpack.spaces.enabled` is set in `kibana.yml`."
+  - type: fix
+    components: [kbn]
+    text: "You can now log out from Kibana with an SSO provider when you use high availability without sticky sessions."
+  - type: fix
+    components: [kbn]
+    text: "The OIDC login session now works when you use high availability without sticky sessions."
+  - type: fix
+    components: [kbn]
+    text: "An SSO logout now writes an audit event. A usual logout already did."
+  - type: fix
+    components: [kbn]
+    text: "[Kibana now opens the correct page when `nextUrl` contains a space. Before, it opened the home page](https://forum.readonlyrest.com/t/redirect-to-default-space-selector-after-login-via-external-link/3004)"
+  - type: fix
+    components: [kbn]
+    text: "Kibana no longer shows a page-not-found error when you log in as a user with different groups and `rememberGroupAfterLogout` is on."
+  - type: fix
+    components: [kbn]
+    text: "ROR now enforces the `server.ssl.supportedProtocols` setting."
+  - type: fix
+    components: [kbn]
+    text: "The static assets of the ROR Kibana plugin now carry the security headers from `server.securityResponseHeaders` in `kibana.yml`."
+  - type: fix
+    components: [kbn]
+    text: "ROR now filters out the Kibana security API calls that it does not support. They caused errors in the browser console, in the network tab, and in the Kibana log."
+  - type: fix
+    components: [kbn]
+    text: "Kibana no longer shows the delete report button to a user with the `ro` access type."
+  - type: fix
+    components: [kbn]
+    text: "Kibana no longer shows the `security` option in `solution view` when you create a space."
+  - type: fix
+    components: [kbn]
+    text: "A high watermark message from Elasticsearch no longer stops Kibana."
+  - type: fix
+    components: [kbn]
+    text: "Direct Kibana and ReadonlyREST API requests now work when `xpack.reporting.queue.timeout` holds a Kibana duration, for example `2m`."
+  - type: fix
+    components: [kbn]
+    text: "ROR now rejects a damaged or forged session as invalid. Before, the session caused an unhandled error."
+  - type: fix
+    components: [kbn]
+    text: "The Kibana navigation customization no longer causes errors in the browser console and in the Kibana log. ROR cannot supply the user profile that this Kibana function needs, so ROR stops the call."
+  - type: fix
+    components: [es]
+    text: "ROR no longer denies a user at random when it calls an external authentication service or a groups provider service on a busy node."
