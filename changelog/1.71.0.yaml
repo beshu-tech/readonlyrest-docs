@@ -90,7 +90,7 @@ entries:
     text: "A high watermark message from Elasticsearch no longer stops Kibana."
   - type: fix
     components: [kbn]
-    text: "Direct Kibana and ReadonlyREST API requests now work when `xpack.reporting.queue.timeout` holds a Kibana duration, for example `2m`."
+    text: "[Direct Kibana and ReadonlyREST API requests now work when `xpack.reporting.queue.timeout` holds a Kibana duration, for example `2m`.](https://forum.readonlyrest.com/t/after-upgrade-some-curl-commands-does-not-work/3007)"
   - type: fix
     components: [kbn]
     text: "ROR now rejects a damaged or forged session as invalid. Before, the session caused an unhandled error."
