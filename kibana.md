@@ -1164,7 +1164,7 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/Impersonator):
 
 So, an impersonation can be understood as imitating behaviors or actions. In the context of ReadonlyREST: one user could imitate an action of another user. Why would we want it? Let's suppose the first user is an admin, who has just configured access for a new user. They would like to know if the rule(s) are configured correctly. And here comes the impersonation feature. The admin can impersonate the given user in Kibana and see what the user would see if they logged in themselves.
 
-ROR plugins support impersonation and provide UI for configuring a cluster before using it. Visit the [impersonation details page](details/impersonation.md) to know more.
+The ROR Kibana plugin drives the whole workflow, from preparing a safe copy of the settings to switching in and out of an impersonation session. See the [impersonation guide](examples/impersonation/README.md) for how to use and configure it.
 
 
 ## Multi-tenancy
