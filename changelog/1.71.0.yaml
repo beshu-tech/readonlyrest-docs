@@ -14,6 +14,12 @@ entries:
     components: [es]
     text: "The `_terms_enum` API now applies the `fields` rule. ROR rejects a `_terms_enum` request from a block that has a `filter` rule, because it cannot apply document-level security to this API."
   - type: new
+    components: [kbn]
+    text: "9.5.2, 9.4.6, 8.19.21 support"
+  - type: new
+    components: [es]
+    text: "9.5.2, 9.4.6, 8.19.21 support"
+  - type: new
     components: [es]
     text: "[Give each audit output a name. A block can then send its events only to the outputs that you select, with `enabled_audit_outputs` or `disabled_audit_outputs`](https://docs.readonlyrest.com/elasticsearch/audit#block-level-audit-control)"
   - type: new
