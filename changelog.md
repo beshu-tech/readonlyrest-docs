@@ -28,179 +28,185 @@ The `_terms_enum` API now honors the `fields` rule. Because document-level secur
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#block-level-audit-control">Give each audit output a name. A block can then send its events only to the outputs that you select, with <code>enabled_audit_outputs</code> or <code>disabled_audit_outputs</code></a></summary>
+<summary><strong>🚀New</strong> (KBN) 9.5.2, 9.4.6, 8.19.21 support</summary>
 
 Audit outputs can now be given names, and each ACL block can route its audit events only to the outputs you select via `enabled_audit_outputs` or `disabled_audit_outputs`. This gives you fine-grained, block-level control over which destinations receive which audit events.
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#the-default-acl-log">The built-in ACL log is now an audit output with the name <code>default_acl_log</code>. The new <code>audit.default_acl_log_enabled</code> setting turns it on and off</a></summary>
+<summary><strong>🚀New</strong> (ES) 9.5.2, 9.4.6, 8.19.21 support</summary>
 
 The built-in ACL log is now exposed as a named audit output called `default_acl_log`, and can be toggled independently with the new `audit.default_acl_log_enabled` setting. This makes the ACL log a first-class, controllable audit output.
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#built-in-rolling-file-appender">A <code>log</code> audit output can now write to its own file and rotate it. Use the <code>file_appender</code> settings. You do not have to change <code>log4j2.properties</code></a></summary>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#block-level-audit-control">Give each audit output a name. A block can then send its events only to the outputs that you select, with <code>enabled_audit_outputs</code> or <code>disabled_audit_outputs</code></a></summary>
 
 A `log` audit output can now write to its own dedicated file with built-in rotation, configured through the `file_appender` settings. This removes the need to manually edit `log4j2.properties` to get file-based audit logging.
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#acl-serializer">A <code>log</code> audit output can now use the <code>acl</code> serializer. It writes the events in the format of the built-in ACL log</a></summary>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#the-default-acl-log">The built-in ACL log is now an audit output with the name <code>default_acl_log</code>. The new <code>audit.default_acl_log_enabled</code> setting turns it on and off</a></summary>
 
 A `log` audit output can now use the new `acl` serializer, which writes audit events in the same human-readable format as the built-in ACL log. This lets you reproduce the familiar ACL log format through a custom log output.
 
 </details>
 <details>
-<summary><strong>⚠️Warning</strong> (ES) In a block, <code>audit: {enabled: false}</code> now also stops the default ACL log. Before, it stopped only the audit outputs. To keep the ACL log for that block, write <code>audit: {enabled_audit_outputs: [default_acl_log]}</code>.</summary>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#built-in-rolling-file-appender">A <code>log</code> audit output can now write to its own file and rotate it. Use the <code>file_appender</code> settings. You do not have to change <code>log4j2.properties</code></a></summary>
 
 Behavior change: setting `audit: {enabled: false}` in a block now also disables the default ACL log for that block, whereas previously it only stopped the audit outputs. To keep the ACL log for a block, use `audit: {enabled_audit_outputs: [default_acl_log]}` instead.
 
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/elasticsearch#kibana-related-rules">ROR now writes a warning to the log when a value in the <code>hidden_apps</code> rule matches no Kibana application</a></summary>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#acl-serializer">A <code>log</code> audit output can now use the <code>acl</code> serializer. It writes the events in the format of the built-in ACL log</a></summary>
 
 ROR now logs a warning when a value in the `hidden_apps` rule does not match any Kibana application. This helps you catch typos or stale application IDs in your configuration.
 
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#backward-compatibility">In a block, <code>log_allowed_events</code> replaces <code>verbosity</code>. In a serializer, <code>allowed_events_serialization_mode</code> replaces <code>verbosity_level_serialization_mode</code>. The old keys still work</a></summary>
+<summary><strong>⚠️Warning</strong> (ES) In a block, <code>audit: {enabled: false}</code> now also stops the default ACL log. Before, it stopped only the audit outputs. To keep the ACL log for that block, write <code>audit: {enabled_audit_outputs: [default_acl_log]}</code>.</summary>
 
 The audit configuration keys have been renamed for clarity: `log_allowed_events` replaces `verbosity` in a block, and `allowed_events_serialization_mode` replaces `verbosity_level_serialization_mode` in a serializer. The old keys still work for backward compatibility.
 
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) ROR evaluates the ACL faster. The gain is largest for configurations with many blocks, static rule values, header rules, and JWT authentication.</summary>
+<summary><strong>🧐Enhancement</strong> (KBN) <a href="https://docs.readonlyrest.com/elasticsearch#kibana-related-rules">ROR now writes a warning to the log when a value in the <code>hidden_apps</code> rule matches no Kibana application</a></summary>
 
 ACL evaluation has been optimized for better performance. The speedup is most noticeable in configurations with many blocks, static rule values, header rules, and JWT authentication.
 
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) The Docker images of Elasticsearch with ReadonlyREST are smaller.</summary>
+<summary><strong>🧐Enhancement</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#backward-compatibility">In a block, <code>log_allowed_events</code> replaces <code>verbosity</code>. In a serializer, <code>allowed_events_serialization_mode</code> replaces <code>verbosity_level_serialization_mode</code>. The old keys still work</a></summary>
 
 The Docker images of Elasticsearch bundled with ReadonlyREST are now smaller, reducing storage footprint and pull times.
 
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) A Docker image pull is faster when you use more than one Elasticsearch version.</summary>
+<summary><strong>🧐Enhancement</strong> (ES) ROR evaluates the ACL faster. The gain is largest for configurations with many blocks, static rule values, header rules, and JWT authentication.</summary>
 
 Pulling Docker images is now faster when you work with more than one Elasticsearch version, thanks to improved image layering and reuse.
 
 </details>
 <details>
-<summary><strong>🧐Enhancement</strong> (ES) The plugin ZIP is smaller, so a download and an installation take less time.</summary>
+<summary><strong>🧐Enhancement</strong> (ES) The Docker images of Elasticsearch with ReadonlyREST are smaller.</summary>
 
 The ReadonlyREST plugin ZIP is now smaller, making downloads and installations faster.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Kibana now shows the ROR main settings when the test settings are active, and after you deactivate them.</summary>
+<summary><strong>🧐Enhancement</strong> (ES) A Docker image pull is faster when you use more than one Elasticsearch version.</summary>
 
 Fixed an issue where the ROR main settings were not displayed in Kibana while test settings were active or after deactivating them. The main settings now render correctly in both cases.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) TSVB visualizations now show for a user with <code>kibana_access: ro</code> on Elasticsearch and Kibana 9.x.</summary>
+<summary><strong>🧐Enhancement</strong> (ES) The plugin ZIP is smaller, so a download and an installation take less time.</summary>
 
 Fixed an issue where TSVB visualizations did not render for users with `kibana_access: ro` on Elasticsearch and Kibana 9.x. These visualizations now display correctly for read-only users.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) A user who has a default Kibana index can now log in when <code>xpack.spaces.enabled</code> is set in <code>kibana.yml</code>.</summary>
+<summary><strong>🐞Fix</strong> (KBN) Kibana now shows the ROR main settings when the test settings are active, and after you deactivate them.</summary>
 
 Fixed a login failure for users with a default Kibana index when `xpack.spaces.enabled` is set in `kibana.yml`. These users can now log in successfully.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) You can now log out from Kibana with an SSO provider when you use high availability without sticky sessions.</summary>
+<summary><strong>🐞Fix</strong> (KBN) TSVB visualizations now show for a user with <code>kibana_access: ro</code> on Elasticsearch and Kibana 9.x.</summary>
 
 Fixed an issue where logging out from Kibana with an SSO provider failed in high-availability setups without sticky sessions. Logout now works correctly in this configuration.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) The OIDC login session now works when you use high availability without sticky sessions.</summary>
+<summary><strong>🐞Fix</strong> (KBN) A user who has a default Kibana index can now log in when <code>xpack.spaces.enabled</code> is set in <code>kibana.yml</code>.</summary>
 
 Fixed an issue where the OIDC login session did not work in high-availability setups without sticky sessions. OIDC sessions now function correctly in this configuration.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) An SSO logout now writes an audit event. A usual logout already did.</summary>
+<summary><strong>🐞Fix</strong> (KBN) You can now log out from Kibana with an SSO provider when you use high availability without sticky sessions.</summary>
 
 SSO logouts now write an audit event, matching the behavior of regular logouts which already did. This ensures complete audit coverage of logout activity.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/redirect-to-default-space-selector-after-login-via-external-link/3004">Kibana now opens the correct page when <code>nextUrl</code> contains a space. Before, it opened the home page</a></summary>
+<summary><strong>🐞Fix</strong> (KBN) The OIDC login session now works when you use high availability without sticky sessions.</summary>
 
 Fixed an issue where Kibana opened the home page instead of the intended destination when `nextUrl` contained a space. The correct page is now opened after login via an external link.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Kibana no longer shows a page-not-found error when you log in as a user with different groups and <code>rememberGroupAfterLogout</code> is on.</summary>
+<summary><strong>🐞Fix</strong> (KBN) An SSO logout now writes an audit event. A usual logout already did.</summary>
 
 Fixed a page-not-found error that appeared when logging in as a user with different groups while `rememberGroupAfterLogout` is enabled. The login now completes without the error.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) ROR now enforces the <code>server.ssl.supportedProtocols</code> setting.</summary>
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/redirect-to-default-space-selector-after-login-via-external-link/3004">Kibana now opens the correct page when <code>nextUrl</code> contains a space. Before, it opened the home page</a></summary>
 
 ROR now correctly enforces the `server.ssl.supportedProtocols` setting from `kibana.yml`, ensuring only the configured TLS protocols are accepted.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) The static assets of the ROR Kibana plugin now carry the security headers from <code>server.securityResponseHeaders</code> in <code>kibana.yml</code>.</summary>
+<summary><strong>🐞Fix</strong> (KBN) Kibana no longer shows a page-not-found error when you log in as a user with different groups and <code>rememberGroupAfterLogout</code> is on.</summary>
 
 The static assets served by the ROR Kibana plugin now include the security headers configured via `server.securityResponseHeaders` in `kibana.yml`, improving browser-side security.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) ROR now filters out the Kibana security API calls that it does not support. They caused errors in the browser console, in the network tab, and in the Kibana log.</summary>
+<summary><strong>🐞Fix</strong> (KBN) ROR now enforces the <code>server.ssl.supportedProtocols</code> setting.</summary>
 
 ROR now filters out Kibana security API calls it does not support, eliminating the errors that previously appeared in the browser console, the network tab, and the Kibana log.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Kibana no longer shows the delete report button to a user with the <code>ro</code> access type.</summary>
+<summary><strong>🐞Fix</strong> (KBN) The static assets of the ROR Kibana plugin now carry the security headers from <code>server.securityResponseHeaders</code> in <code>kibana.yml</code>.</summary>
 
 Fixed an issue where the delete report button was shown to users with the `ro` (read-only) access type. The button is now hidden for read-only users.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) Kibana no longer shows the <code>security</code> option in <code>solution view</code> when you create a space.</summary>
+<summary><strong>🐞Fix</strong> (KBN) ROR now filters out the Kibana security API calls that it does not support. They caused errors in the browser console, in the network tab, and in the Kibana log.</summary>
 
 Fixed an issue where the `security` option appeared in `solution view` when creating a space. It is no longer shown.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) A high watermark message from Elasticsearch no longer stops Kibana.</summary>
+<summary><strong>🐞Fix</strong> (KBN) Kibana no longer shows the delete report button to a user with the <code>ro</code> access type.</summary>
 
 Fixed an issue where a high watermark message from Elasticsearch caused Kibana to stop. Kibana now continues to operate normally when such a message is received.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/after-upgrade-some-curl-commands-does-not-work/3007">Direct Kibana and ReadonlyREST API requests now work when <code>xpack.reporting.queue.timeout</code> holds a Kibana duration, for example <code>2m</code>.</a></summary>
+<summary><strong>🐞Fix</strong> (KBN) Kibana no longer shows the <code>security</code> option in <code>solution view</code> when you create a space.</summary>
 
 Fixed an issue where direct Kibana and ReadonlyREST API requests failed when `xpack.reporting.queue.timeout` was set to a Kibana duration format such as `2m`. These requests now work correctly.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) ROR now rejects a damaged or forged session as invalid. Before, the session caused an unhandled error.</summary>
+<summary><strong>🐞Fix</strong> (KBN) A high watermark message from Elasticsearch no longer stops Kibana.</summary>
 
 ROR now rejects damaged or forged sessions as invalid instead of throwing an unhandled error. This improves robustness and security when handling malformed session data.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) The Kibana navigation customization no longer causes errors in the browser console and in the Kibana log. ROR cannot supply the user profile that this Kibana function needs, so ROR stops the call.</summary>
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://forum.readonlyrest.com/t/after-upgrade-some-curl-commands-does-not-work/3007">Direct Kibana and ReadonlyREST API requests now work when <code>xpack.reporting.queue.timeout</code> holds a Kibana duration, for example <code>2m</code>.</a></summary>
 
 Fixed errors in the browser console and Kibana log caused by Kibana navigation customization. Since ROR cannot supply the user profile this Kibana function requires, ROR now stops the call cleanly instead of producing errors.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (ES) ROR no longer denies a user at random when it calls an external authentication service or a groups provider service on a busy node.</summary>
+<summary><strong>🐞Fix</strong> (KBN) ROR now rejects a damaged or forged session as invalid. Before, the session caused an unhandled error.</summary>
 
 Fixed an issue where ROR could randomly deny a user when calling an external authentication service or groups provider service on a busy node. Authentication and group resolution now behave reliably under load.
 
 </details>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (KBN) The Kibana navigation customization no longer causes errors in the browser console and in the Kibana log. ROR cannot supply the user profile that this Kibana function needs, so ROR stops the call.
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🐞Fix** (ES) ROR no longer denies a user at random when it calls an external authentication service or a groups provider service on a busy node.
 
 ### (2026-07-12) What's new in **ROR 1.70.3**
 <details>
