@@ -19,4 +19,4 @@ For impersonation to work, some valid Test Settings should be created and saved.
 
     ![test settings tab](<../../.gitbook/assets/test_settings_tab.png>)
 
-Read more about [configuring impersonation in the ROR settings](../../details/impersonation.md#creating-rors-test-settings).
+Read more about [configuring impersonation in the ROR settings](README.md#creating-rors-test-settings).
