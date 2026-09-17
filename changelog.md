@@ -28,13 +28,13 @@ The `_terms_enum` API now respects the `fields` rule for field-level access cont
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (KBN) 9.5.3, 9.5.2, 9.4.6, 8.19.21 support</summary>
+<summary><strong>🚀New</strong> (KBN) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.21 support</summary>
 
 ReadonlyREST now supports Kibana versions 9.5.3, 9.5.2, 9.4.6, and 8.19.21.
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (ES) 9.5.3, 9.5.2, 9.4.6, 8.19.21 support</summary>
+<summary><strong>🚀New</strong> (ES) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.21 support</summary>
 
 ReadonlyREST now supports Elasticsearch versions 9.5.3, 9.5.2, 9.4.6, and 8.19.21.
 
