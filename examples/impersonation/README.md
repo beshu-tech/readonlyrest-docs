@@ -217,7 +217,7 @@ Rules differ in how they support impersonation. When Test Settings are applied, 
 | `ldap_authentication`, `ldap_authorization`, `ldap_auth` | An LDAP mock | See [Defining mocks of the external services](#defining-mocks-of-the-external-services-optional) |
 | `external_authentication` | A mock of the external authentication service | As above |
 | `groups_provider_authorization` | A mock of the external authorization service | As above |
-| `auth_key_sha1`, `auth_key_sha256`, `auth_key_sha512`, `auth_key_pbkdf2_hmac_sha512` | The `USER_NAME:hash(PASSWORD)` form: the username in plain text and only the password hashed, for example `alice:280ac6f...94bf9` | In the `hash(USER_NAME:PASSWORD)` form, where the whole `username:password` string is hashed, the rule doesn't support impersonation. See the table below |
+| `auth_key_sha1`, `auth_key_sha256`, `auth_key_sha512`, `auth_key_pbkdf2` | The `USER_NAME:hash(PASSWORD)` form: the username in plain text and only the password hashed, for example `alice:280ac6f...94bf9` | In the `hash(USER_NAME:PASSWORD)` form, where the whole `username:password` string is hashed, the rule doesn't support impersonation. See the table below |
 
 Rules that don't identify users - `indices`, `actions`, `kibana_*`, `fields`, `filter`, `hosts`, `uri_re` and so on - are in neither table. They work the same way for an impersonated user as for a regular one.
 
@@ -229,7 +229,7 @@ The reason differs from rule to rule.
 |------|-----|--------------|
 | `jwt_auth`, `jwt_authentication`, `jwt_authorization` | The rule takes the username from a JWT. An impersonation request carries the impersonator's Basic Auth credentials instead, and the rule has no other way to learn who is impersonated | The rule fails as it would for any request without a token. The block doesn't match, and ROR moves on to the next one. ROR shows a Test Settings warning for the block |
 | `ror_kbn_auth`, `ror_kbn_authentication`, `ror_kbn_authorization` | The same, with the token issued by the ROR Kibana plugin | The same as above |
-| `auth_key_sha1`, `auth_key_sha256`, `auth_key_sha512`, `auth_key_pbkdf2_hmac_sha512` in the `hash(USER_NAME:PASSWORD)` form | The username is part of the hash, so ROR can't read it and can't tell whether the rule knows the impersonated user | The block doesn't match. If no other block matches, ROR reports that impersonation is not supported. ROR shows a Test Settings warning |
+| `auth_key_sha1`, `auth_key_sha256`, `auth_key_sha512`, `auth_key_pbkdf2` in the `hash(USER_NAME:PASSWORD)` form | The username is part of the hash, so ROR can't read it and can't tell whether the rule knows the impersonated user | The block doesn't match. If no other block matches, ROR reports that impersonation is not supported. ROR shows a Test Settings warning |
 | Any rule from the table above whose mock is missing | Without the mock, the rule has no way to check whether the impersonated user exists | The block doesn't match. If no other block matches, ROR reports that impersonation is not supported. ROR shows a Test Settings warning naming the service |
 
 Only blocks for users you want to impersonate need to support impersonation. A block that relies on an unsupported rule can't be tested with impersonation. Requests that would match it go on to the next blocks, as they would if the block didn't match for any other reason.
