@@ -842,7 +842,7 @@ It's an authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.
 
 **⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
 
-[Impersonation](examples/impersonation/README.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### `auth_key_sha512`
 
@@ -858,7 +858,7 @@ The rules support also alternative syntax, where only password is hashed, eg:
 
 In the example below `admin` is the username and `280ac6f...94bf9` is the hashed secret.
 
-[Impersonation](examples/impersonation/README.md) is supported by these rules by default.
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) is supported by these rules only in the alternative syntax, where the username is written in plain text and only the password is hashed. When the whole `username:password` string is hashed, ROR can't read the username, so the rule doesn't support impersonation.
 
 ##### `auth_key_pbkdf2`
 
@@ -877,7 +877,7 @@ The authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.org/
 
 The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
 
-[Impersonation](examples/impersonation/README.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) is supported by this rule only when the username is written in plain text and only the password is hashed, like in the second example above. When the whole `username:password` string is hashed, ROR can't read the username, so the rule doesn't support impersonation.
 
 ##### `auth_key_unix`
 
@@ -939,7 +939,7 @@ if __name__ == '__main__':
 
 For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
 
-[Impersonation](examples/impersonation/README.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### `token_authentication`
 
@@ -977,7 +977,7 @@ For a complete Fleet setup — including the required `forbid` block for token/A
 
 For a complete walkthrough including credential flow, the `forbid` block rationale, and a runnable example, see the [Elastic Fleet guide](examples/fleet/README.md).
 
-[Impersonation](examples/impersonation/README.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### `proxy_auth: "*"`
 
@@ -991,7 +991,7 @@ If you are using this technique for authentication using our **Kibana** plugins,
 
 So that Kibana will forward the necessary headers to Elasticsearch.
 
-[Impersonation](examples/impersonation/README.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### Groups rules
 
@@ -1129,7 +1129,7 @@ In general it looks like this:
 
 For details see [User management](elasticsearch.md#users-and-groups).
 
-[Impersonation](examples/impersonation/README.md) support depends on
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) support depends on
 authentication and authorization rules used in `users` section.
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1202,7 +1202,7 @@ ldap_authorization:
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
-[Impersonation](examples/impersonation/README.md) support by LDAP rules requires to add [an extra configuration](examples/impersonation/README.md#defining-mocks-of-the-external-services-optional).
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) support by LDAP rules requires to add [an extra configuration](examples/impersonation/README.md#defining-mocks-of-the-external-services-optional).
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1211,7 +1211,7 @@ See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication rule.
 
-[Impersonation](examples/impersonation/README.md) is not currently supported by this rule.
+[Impersonation](examples/impersonation/README.md#rules-that-dont-support-impersonation) is not currently supported by this rule.
 
 ```yaml
 readonlyrest:
@@ -1232,7 +1232,7 @@ readonlyrest:
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authorization rule.
 
-[Impersonation](examples/impersonation/README.md) is not currently supported by this rule.
+[Impersonation](examples/impersonation/README.md#rules-that-dont-support-impersonation) is not currently supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1264,7 +1264,7 @@ readonlyrest:
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
 
-[Impersonation](examples/impersonation/README.md) is not currently supported by this rule.
+[Impersonation](examples/impersonation/README.md#rules-that-dont-support-impersonation) is not currently supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1290,7 +1290,7 @@ readonlyrest:
 
 Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
 
-[Impersonation](examples/impersonation/README.md) support by this rule requires to add [an extra configuration](examples/impersonation/README.md#defining-mocks-of-the-external-services-optional).
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) support by this rule requires to add [an extra configuration](examples/impersonation/README.md#defining-mocks-of-the-external-services-optional).
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
@@ -1298,7 +1298,7 @@ For more information on the ROR's authorization rules, see [Authorization rules 
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
 
-[Impersonation](examples/impersonation/README.md) support by this rule requires to add [an extra configuration](examples/impersonation/README.md#defining-mocks-of-the-external-services-optional).
+[Impersonation](examples/impersonation/README.md#which-rules-support-impersonation) support by this rule requires to add [an extra configuration](examples/impersonation/README.md#defining-mocks-of-the-external-services-optional).
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1322,7 +1322,7 @@ readonlyrest:
 
 It handles authentication only using the configured ROR KBN connector (here `kbn1`). Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
-[Impersonation](examples/impersonation/README.md) is currently not supported by this rule.
+[Impersonation](examples/impersonation/README.md#rules-that-dont-support-impersonation) is currently not supported by this rule.
 
 ##### `ror_kbn_authorization`
 ([Enterprise](https://readonlyrest.com/enterprise))
@@ -1353,7 +1353,7 @@ readonlyrest:
 
 It handles authorization only using the configured ROR KBN connector (here `kbn1` and `kbn2`). Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
-[Impersonation](examples/impersonation/README.md) is currently not supported by this rule.
+[Impersonation](examples/impersonation/README.md#rules-that-dont-support-impersonation) is currently not supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1389,7 +1389,7 @@ This authentication and authorization connector represents the secure channel \(
 
 Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
-[Impersonation](examples/impersonation/README.md) is currently not supported by this rule.
+[Impersonation](examples/impersonation/README.md#rules-that-dont-support-impersonation) is currently not supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
