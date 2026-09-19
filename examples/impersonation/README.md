@@ -11,7 +11,7 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/Impersonator):
 
 In ReadonlyREST, impersonation means that one user acts as another user. For example, an admin who has just configured access for a new user can impersonate that user and see what the user would see after logging in.
 
-Impersonation is mainly a Kibana feature, and this page describes it from the Kibana point of view. The ROR Kibana plugin handles the whole workflow in the ROR menu: it prepares a copy of the settings for testing, lets you mock external services, and starts and ends impersonation sessions. The plugin relies on ROR for Elasticsearch, so impersonating users with the Elasticsearch REST API alone is technically possible. That means calling ROR's internal APIs directly, which we don't support and don't describe here.
+Impersonation is a Kibana feature, and this page describes it from the Kibana point of view. The ROR Kibana plugin handles the whole workflow in the ROR menu: it prepares a copy of the settings for testing, lets you mock external services, and starts and ends impersonation sessions. The ACL that decides what an impersonated user can see is evaluated by ROR for Elasticsearch, which is what the rest of this page explains.
 
 ## Use cases
 
