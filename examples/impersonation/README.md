@@ -11,7 +11,7 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/Impersonator):
 
 In ReadonlyREST, impersonation means that one user acts as another user. For example, an admin who has just configured access for a new user can impersonate that user and see what the user would see after logging in.
 
-Impersonation is mainly a Kibana feature, and this page describes it from the Kibana point of view. The ROR Kibana plugin handles the whole workflow in the ROR menu: it prepares a copy of the settings for testing, lets you mock external services, and starts and ends impersonation sessions. The plugin relies on ROR for Elasticsearch, so you can also impersonate users with the Elasticsearch REST API alone. That requires calling ROR's internal APIs directly and is not described here.
+Impersonation is mainly a Kibana feature, and this page describes it from the Kibana point of view. The ROR Kibana plugin handles the whole workflow in the ROR menu: it prepares a copy of the settings for testing, lets you mock external services, and starts and ends impersonation sessions. The plugin relies on ROR for Elasticsearch, so impersonating users with the Elasticsearch REST API alone is technically possible. That means calling ROR's internal APIs directly, which we don't support and don't describe here.
 
 ## Use cases
 
@@ -34,26 +34,22 @@ Impersonation answers both. It always uses its own Test Settings, which are sepa
 
 The workflow is available in the ROR menu, under **Edit security settings**. It has three steps:
 
-1. **Create Test Settings.** Impersonation doesn't use your production settings. It uses Test Settings: a separate, temporary ACL that you can edit freely and later promote to Main Settings. See [Creating Test Settings](test-settings-ui.md) for the UI, and [Creating ROR's Test Settings](#creating-rors-test-settings) for how Test Settings work.
-2. **Define mocks of external services (optional).** This step is needed only if the users you want to impersonate come from LDAP or another external service. During impersonation, ROR doesn't connect to that service. Instead, it asks a mock which users exist and which groups they belong to, so you don't need a real account or password. See [Defining external services mock configurations](external-services-mocks-ui.md) and [Defining mocks of the external services](#defining-mocks-of-the-external-services-optional).
+1. **Create Test Settings.** Impersonation never uses your production settings. It uses Test Settings: a separate ACL that ROR applies to impersonation requests only. Regular users keep working with the production settings, so you can edit the Test Settings freely and promote them to Main Settings when they are ready. See [Creating ROR's Test Settings](#creating-rors-test-settings).
+2. **Define mocks of external services (optional).** This step is needed only if the users you want to impersonate come from LDAP or another external service. A mock is a stand-in for such a service: a list of users, and the groups they belong to, that you write yourself. During impersonation, ROR asks the mock instead of the real service, so no real account or password is needed. See [Defining mocks of the external services](#defining-mocks-of-the-external-services-optional).
 3. **Start impersonating.** Pick a user from the list, or type the username if it isn't listed. Kibana reloads as that user. See [Impersonating users](impersonate-user-ui.md).
 
-The list of users contains:
-
-* users defined statically in the settings,
-* users defined in the mocks of external services, such as LDAP.
-
-Users that come from upstream systems, for example through HTTP headers, aren't known in advance. To impersonate such a user, type their username.
-
-The settings must also define who can impersonate whom. See [The impersonation section](#the-impersonation-section).
+    The list contains users defined statically in the settings, and users defined in the mocks of external services. Some users aren't known in advance and never appear on the list: with `proxy_auth`, for example, the username comes from a header set by a reverse proxy, so the settings only say which header to read, not who can appear in it. To impersonate such a user, type their username.
 
 ## How ROR processes an impersonation request
 
-ROR handles an impersonation request almost the same way as a request sent by the impersonated user. It checks the request against the same ACL, block by block, in the same order. Rules such as `indices`, `kibana_*`, `fields`, `filter` or `hosts` work the same way as in that user's own session. This is what makes impersonation useful for testing settings.
+At this point you are logged into Kibana as yourself and impersonating another user. Kibana doesn't stop talking to Elasticsearch: it keeps sending requests on your behalf, now marked as impersonation requests.
 
-There are two differences:
+Elasticsearch with the ReadonlyREST plugin handles such a request almost the same way as a request sent by the impersonated user. It checks the request against an ACL, [block by block](../../elasticsearch.md#acl-basics), in the same order. Rules such as `indices`, `kibana_*`, `fields`, `filter` or `hosts` work the same way as in that user's own session. This is what makes impersonation useful for testing the ReadonlyREST ACL.
 
-* The credentials in the request belong to the impersonator, for example `alice`. The name of the impersonated user, for example `bob`, is sent separately, in an internal header set by ROR and the ROR Kibana plugin.
+There are three differences:
+
+* The ACL is not the production one.
+* The credentials in the request belong to the impersonator, for example `alice`. Which user is impersonated, for example `bob`, travels with the request as impersonation context that ROR and the ROR Kibana plugin set internally.
 * Authentication and authorization rules behave differently.
 
 The sections below explain how.
@@ -62,10 +58,10 @@ The sections below explain how.
 
 ROR has two separate sets of settings:
 
-* **Main Settings**: the ACL used for regular requests.
+* **Main Settings**: the production settings, with the ACL used for regular requests.
 * **Test Settings**: a separate ACL used only for impersonation. You can change Test Settings without affecting users who work with Main Settings, and promote them to Main Settings when you're done.
 
-ROR always checks impersonation requests against Test Settings, never against Main Settings. Test Settings are active only for a limited time and can be invalidated at any moment (see [Creating ROR's Test Settings](#creating-rors-test-settings)). When no Test Settings are active, impersonation doesn't work.
+ROR always checks impersonation requests against Test Settings, never against Main Settings. Test Settings are active only for a limited time and can be invalidated at any moment (see [Creating ROR's Test Settings](#creating-rors-test-settings)). When no Test Settings are active, impersonation is not available in Kibana.
 
 ### The impersonator and the impersonated user are authorized differently
 
@@ -76,16 +72,16 @@ ROR always checks impersonation requests against Test Settings, never against Ma
 
 One role doesn't require the other:
 
-* An impersonator who never logs into Kibana needs only an entry in the `impersonation` section. They can still impersonate users through the Elasticsearch REST API.
+* An impersonator who never logs into Kibana needs only an entry in the `impersonation` section. Impersonation is technically possible outside Kibana too, through ROR's internal Elasticsearch APIs, but we don't support calling them directly.
 * If `alice` should also be able to log into Kibana as herself, an ACL block must authenticate her as a regular user. The `impersonation` section doesn't give her any access of her own.
 
-When `alice` sends a request as herself, the ACL handles it like any other request. When she sends a request as `bob`, the authentication rules in the ACL blocks no longer check who the caller is. The `impersonation` section does that instead. This is why each entry in the `impersonation` section needs its own authentication rule: it is the only place in the settings that verifies the impersonator.
+During an impersonation session, the authentication rules in the ACL blocks no longer check who the caller is. The `impersonation` section does that instead. This is why each entry in the `impersonation` section needs its own authentication rule: it is the only place in the settings that verifies the impersonator. When `alice` works as herself, none of this applies, and the ACL handles her requests like any other.
 
 ### Not every authentication rule supports impersonation
 
-When an authentication rule receives an impersonation request, what happens next depends on whether the rule supports impersonation. The full list is in [Which rules support impersonation](#which-rules-support-impersonation).
+When an authentication rule processes an impersonation request, what happens next depends on whether the rule supports impersonation.
 
-**Rules that don't support impersonation** (`jwt_*`, `ror_kbn_*`) handle the request as usual. They look for a JWT or a ROR Kibana token, don't find one (the request contains the impersonator's Basic Auth credentials instead), and fail. The block doesn't match, and ROR moves on to the next block. Such blocks can't be tested with impersonation, and ROR shows a warning about them when Test Settings are applied.
+**Rules that don't support impersonation** fail, and their block doesn't match. ROR moves on to the next block, and it shows a warning about such blocks when Test Settings are applied. They can't be tested with impersonation. Why a rule doesn't support impersonation, and what you see as a result, differs from rule to rule. See [Rules that don't support impersonation](#rules-that-dont-support-impersonation).
 
 **Rules that support impersonation** skip their normal authentication. Instead, ROR answers three questions, in this order:
 
@@ -103,17 +99,31 @@ A negative answer to any of the questions affects only the current block. ROR mo
 
 ## Impersonation configuration
 
-This part describes the settings that the [Kibana workflow](#impersonating-a-user-in-kibana) depends on: Test Settings, the `impersonation` section, and mocks of external services such as [LDAP](../../elasticsearch.md#ldap-connector), [External Basic Auth](../../elasticsearch.md#external-basic-auth) or [Custom groups provider](../../elasticsearch.md#custom-groups-providers).
+This part describes the settings that the [Kibana workflow](#impersonating-a-user-in-kibana) depends on: Test Settings, the `impersonation` section, which defines who can impersonate whom and without which ROR refuses impersonation, and mocks of external services such as [LDAP](../../elasticsearch.md#ldap-connector), [External Basic Auth](../../elasticsearch.md#external-basic-auth) or [Custom groups provider](../../elasticsearch.md#custom-groups-providers).
 
 ### Creating ROR's Test Settings
 
-When you call Elasticsearch directly or through Kibana, ROR uses the ACL from Main Settings. Test Settings define a second ACL, which ROR for Elasticsearch uses only for requests that carry the impersonation header. ROR manages this header internally.
+When you call Elasticsearch directly or through Kibana, ROR uses the ACL from Main Settings. Test Settings define a second ACL, which ROR for Elasticsearch uses only for requests with impersonation context. ROR adds that context internally.
 
-Test Settings are active only for a limited time: 30 minutes by default, but you can set a different time before you apply them. When the time runs out, ROR invalidates the Test Settings automatically, for security reasons. You can also invalidate them yourself at any time. Only one set of Test Settings can be active at a time.
-
-The ROR Kibana plugin has a dedicated UI for Test Settings. See the [Test Settings management guide](test-settings-ui.md).
+Test Settings are active only for a limited time: 30 minutes by default, but you can set a different time to live (TTL) before you apply them. When the time runs out, ROR invalidates the Test Settings automatically, for security reasons. You can also invalidate them yourself at any time. Only one set of Test Settings can be active at a time.
 
 When Test Settings expire or are invalidated, impersonation stops working immediately, whatever the `impersonation` section contains. If impersonation suddenly stops working, check this first: apply the Test Settings again and retry.
+
+#### Creating Test Settings in Kibana
+
+1. Open the ROR menu.
+1. Click the **Edit security settings** button.
+
+    ![Test settings ror menu](<../../.gitbook/assets/test_settings_ror_menu.png>)
+
+1. Go to the **Test settings** tab, where you can:
+
+    * load the current Main Settings as Test Settings, and edit them,
+    * set the TTL, after which the Test Settings are deactivated and the impersonation session ends,
+    * deactivate the Test Settings yourself,
+    * save the Test Settings as Main Settings.
+
+    ![test settings tab](<../../.gitbook/assets/test_settings_tab.png>)
 
 ### The impersonation section
 
@@ -157,9 +167,12 @@ If any of these checks fails, ROR doesn't load the settings.
 
 ### Defining mocks of the external services (optional)
 
-Some ROR authentication and authorization methods rely on external systems such as LDAP. These systems usually don't support impersonation, and when they do, it's complex to configure.
+Some ROR authentication and authorization methods rely on external systems such as LDAP. During impersonation, ROR can't use them:
 
-ROR solves this with mocks. [Wiktionary](https://en.wiktionary.org/wiki/mock) defines a mock as "an imitation, usually of lesser quality". A mock of an external authentication service tells ROR which users exist. A mock of an authorization service also tells ROR which groups each user belongs to. This is enough for ROR to support impersonation.
+* ROR doesn't have the impersonated user's password, and it shouldn't need one - that is the point of impersonation. Without it, ROR can't authenticate the user against the service.
+* ROR can't ask the service who its users are, either. LDAP and the HTTP services behind `external_authentication` and `groups_provider_authorization` answer questions about one user at a time, and have no endpoint that returns everyone. This is also why Kibana can't always list the users you can impersonate.
+
+ROR solves this with mocks. [Wiktionary](https://en.wiktionary.org/wiki/mock) defines a mock as "an imitation, usually of lesser quality". A mock of an external service is a list you write yourself: which users the service would return and, for an authorization service, which groups each of them belongs to. That is all ROR needs during impersonation.
 
 For example, when ROR evaluates an `ldap_auth` rule for a regular request, it:
 
@@ -171,25 +184,51 @@ During impersonation, ROR doesn't contact the LDAP server, and no password is ne
 * asks the mock whether the user exists, and if so,
 * asks the mock which groups the user belongs to.
 
+A mock that makes `bob` impersonable as a member of the `devs` group of the `ldap1` connector contains just that:
+
+| Service | User | Groups |
+|---------|------|--------|
+| `ldap1` | `bob` | `devs` |
+
 **⚠️ IMPORTANT:** If an external service used in the ACL has no mock, ROR may report that impersonation is not supported. To avoid this, define mocks for all external services.
 
-The ROR Kibana plugin has a UI for creating and editing mocks. See the [service mock configuration guide](external-services-mocks-ui.md).
+#### Defining mocks in Kibana
+
+Mocks are defined in the ROR menu, under **Edit security settings**, for the services listed in the Test Settings. You never create an account in the real service - you only list the users, and their groups, that the service would normally return.
+
+![Auth mock](<../../.gitbook/assets/auth_mock.png>)
+
+After clicking the add/edit user buttons (1), you see a dialog where you can add (2) or remove (3) a user of an external service mock.
+
+![Add/edit external mock service](<../../.gitbook/assets/add_edit_auth_mock_service.png>)
 
 ### Which rules support impersonation
 
 Rules differ in how they support impersonation. When Test Settings are applied, ROR checks every rule and reports a warning for each block with a rule that won't work during impersonation. The ROR Kibana plugin shows these warnings in the Test Settings UI.
 
-| Rule | Impersonation support | Notes |
-|------|-----------------------|-------|
-| `auth_key`, `auth_key_unix`, `proxy_auth`, `token_authentication` | Full | No extra configuration needed |
+#### Rules that support impersonation
+
+| Rule | What it needs | Notes |
+|------|---------------|-------|
+| `auth_key`, `auth_key_unix`, `proxy_auth`, `token_authentication` | Nothing | The usernames are written in the rule itself, or come with the request |
 | Group rules (`groups_any_of`, `groups_all_of` and other [groups logic](../../details/authorization-rules-details.md#checking-groups-logic)) | Depends on the `users` section | The rules in the matching `users` entry decide. Static groups work without extra configuration. Groups from an external system, for example through `ldap_auth`, need a mock of that system |
-| `auth_key_sha1`, `auth_key_sha256`, `auth_key_sha512`, `auth_key_pbkdf2_hmac_sha512` | Partial | Work only in the `USER_NAME:hash(PASSWORD)` form. In the `hash(USER_NAME:PASSWORD)` form, ROR can't read the username, so the rule never matches during impersonation. See [limitations](#impersonation-limitations) |
-| `ldap_authentication`, `ldap_authorization`, `ldap_auth` | Requires a mock | Need an LDAP mock (see [Defining mocks of the external services](#defining-mocks-of-the-external-services-optional)). Without it, ROR reports that impersonation is not supported |
-| `external_authentication` | Requires a mock | Needs a mock of the external authentication service |
-| `external_authorization` | Requires a mock | Needs a mock of the external authorization service |
-| `jwt_auth`, `jwt_authentication`, `jwt_authorization` | Not supported | These rules look for a JWT in the request, don't find one, and fail, so the block doesn't match. ROR shows a Test Settings warning for such blocks |
-| `ror_kbn_auth`, `ror_kbn_authentication`, `ror_kbn_authorization` | Not supported | Same as the JWT rules, but with the ROR Kibana token |
-| All other rules (`indices`, `actions`, `kibana_*`, `fields`, `filter`, `hosts`, `uri_re` and so on) | Not applicable | These rules don't identify users. They work the same way for an impersonated user as for a regular user |
+| `ldap_authentication`, `ldap_authorization`, `ldap_auth` | An LDAP mock | See [Defining mocks of the external services](#defining-mocks-of-the-external-services-optional) |
+| `external_authentication` | A mock of the external authentication service | As above |
+| `groups_provider_authorization` | A mock of the external authorization service | As above |
+| `auth_key_sha1`, `auth_key_sha256`, `auth_key_sha512`, `auth_key_pbkdf2_hmac_sha512` | The `USER_NAME:hash(PASSWORD)` form | In the other form, the rule doesn't support impersonation. See the table below |
+
+Rules that don't identify users - `indices`, `actions`, `kibana_*`, `fields`, `filter`, `hosts`, `uri_re` and so on - are in neither table. They work the same way for an impersonated user as for a regular one.
+
+#### Rules that don't support impersonation
+
+The reason differs from rule to rule.
+
+| Rule | Why | What you see |
+|------|-----|--------------|
+| `jwt_auth`, `jwt_authentication`, `jwt_authorization` | The rule takes the username from a JWT. An impersonation request carries the impersonator's Basic Auth credentials instead, and the rule has no other way to learn who is impersonated | The rule fails as it would for any request without a token. The block doesn't match, and ROR moves on to the next one. ROR shows a Test Settings warning for the block |
+| `ror_kbn_auth`, `ror_kbn_authentication`, `ror_kbn_authorization` | The same, with the token issued by the ROR Kibana plugin | The same as above |
+| `auth_key_sha1`, `auth_key_sha256`, `auth_key_sha512`, `auth_key_pbkdf2_hmac_sha512` in the `hash(USER_NAME:PASSWORD)` form | The username is part of the hash, so ROR can't read it and can't tell whether the rule knows the impersonated user | The block doesn't match. If no other block matches, ROR reports that impersonation is not supported. ROR shows a Test Settings warning |
+| Any rule from the table above whose mock is missing | Without the mock, the rule has no way to check whether the impersonated user exists | The block doesn't match. If no other block matches, ROR reports that impersonation is not supported. ROR shows a Test Settings warning naming the service |
 
 Only blocks for users you want to impersonate need to support impersonation. A block that relies on an unsupported rule can't be tested with impersonation. Requests that would match it go on to the next blocks, as they would if the block didn't match for any other reason.
 
@@ -253,7 +292,7 @@ readonlyrest:
       ldap_authentication: "ldap1"   # alice's own LDAP credentials, checked separately
 ```
 
-For impersonation to work, an LDAP mock for `ldap1` must define `bob` as a user in the `devs` group (see [Defining mocks of the external services](#defining-mocks-of-the-external-services-optional)). Without the mock, neither LDAP rule can check whether `bob` exists, and the request is refused as not supported, even though `alice` was authenticated as an impersonator.
+For impersonation to work, an LDAP mock for `ldap1` must define `bob` as a user in the `devs` group, exactly like the [mock example above](#defining-mocks-of-the-external-services-optional). Without the mock, neither LDAP rule can check whether `bob` exists, and the request is refused as not supported, even though `alice` was authenticated as an impersonator.
 
 ## Common misconfigurations
 
@@ -268,7 +307,7 @@ Most impersonation problems are caused by one of the misconfigurations below. Th
 | The settings fail to load with "should be either impersonator or a user to be impersonated" | Settings validation error | The same username (without wildcards) is in both `impersonator` and `users` of one entry | Remove the username from one of them. Users can't impersonate themselves |
 | The settings fail to load with "it's used in a context of user patterns" | Settings validation error | The authentication rule of an `impersonation` entry has a fixed username that doesn't match the `impersonator` pattern, for example `impersonator: alice` with `auth_key: someone_else:pass` | Change the username in the rule so that it matches the `impersonator` pattern |
 | The impersonator is authenticated, but the request is refused because the impersonated user doesn't exist | `AUTH_FAIL (Impersonated user does not exist)` in the logs | No block knows the user: they aren't defined in any block and aren't in the mock. Blocks that don't know the user always log this message, so it's a problem only if no block matches | Add the user to the mock, or check the spelling of the username |
-| The request is refused as not supported, although the `impersonation` section looks correct | Impersonation not supported | A block uses LDAP, external authentication or external authorization without a mock, or an `auth_key_sha*` rule in the `hash(USER_NAME:PASSWORD)` form (see [limitations](#impersonation-limitations)) | Add the missing mock, or use the `USER_NAME:hash(PASSWORD)` form |
+| The request is refused as not supported, although the `impersonation` section looks correct | Impersonation not supported | A block uses LDAP, `external_authentication` or `groups_provider_authorization` without a mock, or an `auth_key_sha*` rule in the `hash(USER_NAME:PASSWORD)` form (see [Rules that don't support impersonation](#rules-that-dont-support-impersonation)) | Add the missing mock, or use the `USER_NAME:hash(PASSWORD)` form |
 | A block that uses `jwt_auth` or `ror_kbn_auth` never matches during impersonation | No impersonation error, the block just doesn't match | These rules don't support impersonation. They look for a JWT or ROR Kibana token, don't find one, and fail. ROR shows a Test Settings warning for such blocks | Test these blocks in a real user session, or use a rule that supports impersonation |
 | The user you want to impersonate isn't on the list in Kibana | None (UI limitation) | The user matches only a wildcard pattern in the `users` section, so ROR can't list them | Type the username manually (see [limitations](#impersonation-limitations)) |
 | Impersonation is refused for every user, although the `impersonation` entry looks correct and the credentials work elsewhere | Impersonation not allowed | ROR identifies the impersonator only by HTTP Basic Auth credentials, whatever rule the `impersonation` entry uses. Credentials sent in any other form don't match any entry | Make sure the impersonator authenticates with a username and password (HTTP Basic Auth) |
@@ -285,8 +324,8 @@ When audit is enabled, the audit document contains an `impersonated_by` field.
 
 Check whether these limitations affect your use cases:
 
-* Not everything in the ROR settings can be tested with impersonation, because some rules don't support it. For example, a rule with hashed credentials (such as `auth_key_sha512`) works during impersonation only in the `USER_NAME:HASH(PASSWORD)` form. If the username and password are hashed together, ROR can't read the username, and the rule won't match during impersonation. The [rules description](../../elasticsearch.md#rules) says which rules support impersonation.
-* Test Settings are stored in the memory of the Elasticsearch node that received the save request from the ROR Kibana plugin, so impersonation works only on that node. For now, Kibana should communicate with only one Elasticsearch node. We plan to improve this in the future.
+* Not everything in the ROR settings can be tested with impersonation, because some rules don't support it. See [Rules that don't support impersonation](#rules-that-dont-support-impersonation).
+* Test Settings and mocks are stored in the ROR settings index, and each Elasticsearch node picks them up when it next refreshes its settings. Just after you apply or invalidate Test Settings, nodes that haven't refreshed yet still use the previous ones, so an impersonation session can behave inconsistently for a moment. A node that loads its settings from a file only, or that has settings refreshing disabled, never picks up Test Settings, and impersonation doesn't work there.
 *   ROR can't always list the users defined in Test Settings. If the `users` section contains a username pattern with a wildcard, you have to type the username of a user that matches the pattern manually.
 
     ```yaml

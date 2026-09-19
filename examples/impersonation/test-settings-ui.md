@@ -4,19 +4,4 @@ description: Creating Test Settings
 
 # Creating Test Settings
 
-For impersonation to work, some valid Test Settings should be created and saved. It's important that the main ROR setting will be unaffected, so you, as an admin/user don't need to worry that you will break something. Here is how to write test settings:
-
-1. Open the ROR menu
-1. Click the Edit security settings button
-
-    ![Test settings ror menu](<../../.gitbook/assets/test_settings_ror_menu.png>)
-
-1. Go into the Test settings tab
-1. You can set the "time to live" (TTL), which is a time interval after which the test settings will be automatically deactivated and impersonation session will also abruptly exit
-1. You can load current settings as test settings
-1. You can deactivate settings manually
-1. You can save test settings as settings
-
-    ![test settings tab](<../../.gitbook/assets/test_settings_tab.png>)
-
-Read more about [configuring impersonation in the ROR settings](README.md#creating-rors-test-settings).
+Test Settings, and the Kibana UI for creating them, are described in [Creating ROR's Test Settings](README.md#creating-rors-test-settings), which is part of the [Impersonation guide](README.md).
