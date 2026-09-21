@@ -303,7 +303,7 @@ When some nodes answer and the others do not, the check passes and ROR logs a wa
 
 When the nodes which answer report different `cluster_uuid` values, ROR rejects the settings in the `required` mode and in the `best_effort` mode. This is a configuration error, not a connectivity problem: one audit output can use the nodes of one cluster only.
 
-When ROR rejects the settings, the node does not start the auditing with them. A reload through the [ReadonlyREST API](../kibana/readonlyrest-api.md) answers with the details of the failed check.
+When ROR rejects the settings, the node does not start the auditing with them.
 
 ### The 'data_stream' output specific configurations
 
