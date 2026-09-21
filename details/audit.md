@@ -230,8 +230,12 @@ readonlyrest:
 
 It's possible to set up a custom audit cluster responsible for storing audit events. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
-**⚠️IMPORTANT**: Audit events are sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
+**⚠️IMPORTANT**: All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
+
+The `cluster` setting is optional. It accepts two syntaxes.
+
+**Simple syntax**: a non-empty list of audit cluster node URIs. ROR sends the audit events in the `round-robin` mode and does not check the connectivity of the cluster.
 
 ```yaml
 readonlyrest:
@@ -239,11 +243,67 @@ readonlyrest:
     enabled: true
     outputs:
     - type: index
-      cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
+      cluster: ["https://user1:password@auditNode1:9200", "https://user1:password@auditNode2:9200"]
   ...
 ```
 
-Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
+**Extended syntax**: an object which also sets the cluster mode, the credentials and the connectivity check.
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      cluster:
+        nodes: ["https://auditNode1:9200", "https://auditNode2:9200"]
+        mode: failover
+        username: "audit_user"
+        password: "audit_password"
+        connectivity_check: required
+  ...
+```
+
+| Setting | Required | Default | Description |
+| --- | --- | --- | --- |
+| `nodes` | yes | - | Non-empty list of audit cluster node URIs. |
+| `mode` | yes | - | How ROR picks the node for an audit event: `round-robin` or `failover`. |
+| `username`, `password` | no | credentials from the node URIs | Credentials used for every audit node. Set both fields or none of them. |
+| `connectivity_check` | no | `disabled` | How a connectivity problem of the audit cluster influences the settings loading: `required`, `best_effort` or `disabled`. |
+
+##### Cluster modes
+
+* `round-robin` - ROR spreads the audit events over all the audit nodes. One client knows all the nodes. When a node fails, the client marks it as dead, sends the request to another node and retries the dead node later.
+
+* `failover` - ROR sends the audit events to the first audit node which is available, in the order of the `nodes` list. Each node has its own client and its own circuit breaker. After a failure, the node is skipped for one second. The skip time grows with each subsequent failure, up to 30 minutes. ROR tries the next node when the request ends with a connection error or with the `502`, `503` or `504` status code. Any other error status stops the request, because another node answers it in the same way.
+
+Use `round-robin` when all the audit nodes are equal. Use `failover` when they are not, for example when the first node is the local one and the others are a remote backup.
+
+##### Credentials
+
+All the audit nodes must use the same credentials. ROR does not accept a configuration where the node URIs hold different credentials, because different credentials usually mean that the nodes belong to different clusters.
+
+Put the credentials in the `username` and `password` fields, or in each node URI (`https://user:password@auditNode1:9200`). The `username` and `password` fields win when both places are used.
+
+##### Connectivity check
+
+ROR can verify the audit cluster when it loads the settings. That happens at the start of the node and at every settings reload. The check calls `GET /` on every audit node in parallel and compares the answers.
+
+| Value | Behaviour |
+| --- | --- |
+| `disabled` | ROR does not check the audit cluster. |
+| `required` | ROR rejects the settings when no audit node answers. |
+| `best_effort` | ROR logs the connectivity problem and starts the auditing anyway. |
+
+A node which does not answer is retried three times, with a first delay of 500 milliseconds which doubles after each attempt. Only a connection error and the `408`, `429`, `502`, `503` and `504` status codes are retried. The whole check ends after 30 seconds. The check does not validate the TLS certificates of the audit nodes.
+
+A node which rejects the credentials of the check with the `401` or `403` status code counts as a node which did not answer.
+
+When some nodes answer and the others do not, the check passes and ROR logs a warning with the details of the unreachable nodes.
+
+When the nodes which answer report different `cluster_uuid` values, ROR rejects the settings in the `required` mode and in the `best_effort` mode. This is a configuration error, not a connectivity problem: one audit output can use the nodes of one cluster only.
+
+When ROR rejects the settings, the node does not start the auditing with them.
 
 ### The 'data_stream' output specific configurations
 
@@ -275,7 +335,7 @@ This creation process includes setting up the following components, each dedicat
 
 It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
-**⚠️IMPORTANT**: Audit events are sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
+**⚠️IMPORTANT**: All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
 
 ```yaml
@@ -284,11 +344,18 @@ readonlyrest:
     enabled: true
     outputs:
     - type: data_stream
-      cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
+      cluster:
+        nodes: ["https://auditNode1:9200", "https://auditNode2:9200"]
+        mode: failover
+        username: "audit_user"
+        password: "audit_password"
+        connectivity_check: required
   ...
 ```
 
-Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
+The `cluster` setting accepts the same simple and extended syntax as the `index` output. See [Custom audit cluster](#custom-audit-cluster) for the description of `nodes`, `mode`, `username`, `password` and `connectivity_check`.
+
+**⚠️IMPORTANT**: The `data_stream` output verifies the audit data stream when it loads the settings, and creates the data stream when it does not exist. Therefore an unreachable audit cluster makes the settings loading fail, also when `connectivity_check` is `best_effort` or `disabled`. The `index` output creates the audit index with the first audit event, so it does not have this restriction.
 
 #### Data stream settings
 
