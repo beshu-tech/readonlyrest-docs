@@ -27,6 +27,7 @@
   * [OpenID Connect (OIDC) (Enterprise)](examples/oidc-sso/README.md)
     * [Keycloak](examples/oidc-sso/keycloak\_oidc.md)
   * [Impersonation (Enterprise)](examples/impersonation/README.md)
+    * [Configuring impersonation](examples/impersonation/configuring-impersonation.md)
     * [Creating Test Settings](examples/impersonation/test-settings-ui.md)
     * [Defining external services mock configurations](examples/impersonation/external-services-mocks-ui.md)
     * [Impersonating users](examples/impersonation/impersonate-user-ui.md)
