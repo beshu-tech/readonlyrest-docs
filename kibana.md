@@ -1158,7 +1158,7 @@ readonlyrest_kbn.auth:
 
 ### Impersonation
 
-Impersonation lets you use Kibana as another user, so you can check what that user can see and do. The [impersonation guide](examples/impersonation/README.md) explains how to configure and use it.
+Impersonation lets you use Kibana as another user, so you can check what that user can see and do. The [impersonation guide](examples/impersonation/README.md) explains how it works and how to use it, and [Configuring impersonation](examples/impersonation/configuring-impersonation.md) describes the settings it depends on.
 
 
 ## Multi-tenancy
