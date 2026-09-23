@@ -1,0 +1,6 @@
+version: "1.72.0"
+release_date: "TBD"
+entries:
+  - type: fix
+    components: [es]
+    text: "`prompt_for_basic_auth: true` works together with the ROR Kibana plugin again. Your browser, Cerebro and every other client still get the request for credentials. Only the ROR Kibana plugin gets none, because it has its own login."
