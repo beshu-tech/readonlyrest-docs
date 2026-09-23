@@ -173,7 +173,7 @@ Create and edit the `readonlyrest.yml` settings file in the **same directory whe
 vim $ES_PATH_CONF/conf/readonlyrest.yml
 ```
 
-Now write some basic settings, just to get started. In this example, we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
+Now write some basic settings, just to get started. In this example, we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `403 Forbidden` otherwise.
 
 ```yaml
 readonlyrest:
@@ -212,7 +212,7 @@ The following command should succeed, and the response should show a status code
 curl -vvv -u user:password "http://localhost:9200/_cat/indices"
 ```
 
-The following command should not succeed, and the response should show a status code 401
+The following command should not succeed, and the response should show a status code 403
 
 ```bash
 curl -vvv "http://localhost:9200/_cat/indices"
