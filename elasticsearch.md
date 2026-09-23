@@ -1590,7 +1590,7 @@ When the subset of indices is empty, it means that user are not allowed to acces
 
 For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled \(for nonexistent index\). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. See [detailed example](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/index-not-found-examples.md).
 
-It's also worth mentioning, that when `global_settings.prompt_for_basic_auth` is set to `true` \(that is disabled by default\), ROR will return 401 instead of 404 HTTP status code. It is relevant for clients which reach Elasticsearch through a browser and rely on its native basic auth dialog, for example Cerebro (see [the example](#prompt_for_basic_auth)). A request of the ROR Kibana plugin gets 404, because the plugin has its own login and no browser shows that dialog.
+It's also worth mentioning, that when `global_settings.prompt_for_basic_auth` is set to `true` \(that is disabled by default\), ROR will return 401 instead of 404 HTTP status code for the index, search and alias APIs. `_resolve/index`, `_resolve/cluster`, `_msearch` and `_msearch/template` keep the 404. It is relevant for clients which reach Elasticsearch through a browser and rely on its native basic auth dialog, for example Cerebro (see [the example](#prompt_for_basic_auth)). A request of the ROR Kibana plugin gets 404, because the plugin has its own login and no browser shows that dialog.
 If a **write request** wants to write to indices they don't have permission for, the write request is rejected. 
 
 **Requests related to templates**
@@ -2947,7 +2947,7 @@ The `readonlyrest.global_settings` section contains various settings that affect
 
 ##### `prompt_for_basic_auth`
 
-When set to `true`, ROR will return HTTP 401 instead of 403 when authentication fails. This prompts browsers to show a basic auth dialog. Use it for clients which reach Elasticsearch through a browser and have no login of their own, for example Cerebro, or a person who opens an Elasticsearch URL. Defaults to `false`.
+When set to `true`, ROR answers every refused request with HTTP 401 instead of 403, and adds a `WWW-Authenticate` header. This prompts browsers to show a basic auth dialog. Use it for clients which reach Elasticsearch through a browser and have no login of their own, for example Cerebro, or a person who opens an Elasticsearch URL. Defaults to `false`.
 
 The ROR Kibana plugin is not affected. ROR asks it for no credentials, because the plugin has its own login, which the dialog of the browser breaks.
 
