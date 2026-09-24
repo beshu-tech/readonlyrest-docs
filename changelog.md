@@ -27,18 +27,12 @@ ROR now enforces the ACL on the indices referenced in an ESQL `LOOKUP JOIN`. Pre
 The `_terms_enum` API now honors the `fields` rule. Because document-level security cannot be applied to this API, ROR rejects a `_terms_enum` request coming from a block that defines a `filter` rule.
 
 </details>
-<details>
-<summary><strong>🚀New</strong> (KBN) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.21 support</summary>
 
-Adds support for Kibana 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, and 8.19.21.
 
-</details>
-<details>
-<summary><strong>🚀New</strong> (ES) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.21 support</summary>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.22, 8.19.21 support
 
-Adds support for Elasticsearch 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, and 8.19.21.
 
-</details>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.22, 8.19.21 support
 <details>
 <summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#block-level-audit-control">Give each audit output a name. A block can then send its events only to the outputs that you select, with <code>enabled_audit_outputs</code> or <code>disabled_audit_outputs</code></a></summary>
 
