@@ -491,6 +491,52 @@ readonlyrest:
 
 Use Kibana dashboards, metrics, or direct queries to confirm that new audit events are flowing into the configured data stream.
 
+### The ingest pipeline of the 'index' and 'data_stream' outputs
+
+Use the `pipeline` setting to send the audit events of an `index` or `data_stream` output through an Elasticsearch [ingest pipeline](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines). Elasticsearch runs the pipeline before it stores the audit event. With a pipeline, you can add fields, rename fields, parse the request content or read data from other indices with the `enrich` processor. You do not have to write a custom serializer or restart the node.
+
+Each output has its own `pipeline`. An output without `pipeline` stores the audit events as the serializer creates them.
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      index_template: "'audit'-yyyy-MM-dd"
+      pipeline: "audit_add_user_details"   # the events of this output go through this pipeline
+    - type: data_stream
+      data_stream: "audit_data_stream"
+      pipeline: "audit_add_geoip"           # a different pipeline for this output
+    - type: log                             # the 'log' output does not accept 'pipeline'
+```
+
+Create the pipeline with the Elasticsearch API or in Kibana, in the cluster that stores the audit events. That is the local cluster, or the audit cluster when the output sets `cluster`. For example:
+
+```
+PUT _ingest/pipeline/audit_add_user_details
+{
+  "processors": [
+    { "set": { "field": "environment", "value": "production" } }
+  ]
+}
+```
+
+Rules:
+
+* The value must be the ID of a pipeline. ROR rejects the settings when the value is empty or blank, and when the `log` output sets `pipeline`.
+* ROR rejects the value `_none`. With `_none`, Elasticsearch skips the `index.default_pipeline` of the audit index. To store the audit events without a pipeline, remove the `pipeline` setting.
+* ROR does not check that the pipeline exists when it loads the settings. Elasticsearch finds the pipeline when it stores an audit event.
+* The audit is best-effort. A missing or failing pipeline does not change the response to the audited request.
+* When Elasticsearch rejects an audit event, the event is lost and ROR logs an error:
+  * the local cluster: `Some failures flushing the BulkProcessor:`, then `<count>x: [<index>] <error from Elasticsearch>`
+  * an audit cluster: `Cannot submit audit event [index: <index>, doc: <id>]`, with the request and the response from Elasticsearch
+* The pipeline replaces the `index.default_pipeline` of the audit index. The `index.final_pipeline` of the audit index still runs after the pipeline.
+* A pipeline for a `data_stream` output must keep the `@timestamp` field.
+* When the failure store of the audit data stream is enabled, Elasticsearch keeps the rejected audit events in the failure store. ROR does not log these events.
+* Elasticsearch runs pipelines only when the cluster has a node with the `ingest` role.
+* The ROR Kibana plugin reads the audit events with the fields of the serializer. A pipeline which removes or renames these fields can break the audit views in Kibana. Add fields, and keep the fields of the serializer.
+
 ### The 'log' output specific configurations
 
 The `log` output writes audit events to Elasticsearch log at INFO level using a dedicated logger.
@@ -610,6 +656,8 @@ You can:
 * use dynamic, configurable serializer - define JSON fields in ReadonlyREST settings (no implementation required, [see how to do it](#using-configurable-serializer))
 * use ECS ([Elastic Common Schema](https://www.elastic.co/docs/reference/ecs)) serializer (no implementation required, [learn more about it](#using-ecs-serializer))
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
+
+To add or change fields without a custom serializer, you can also send the audit events of an `index` or `data_stream` output through an ingest pipeline ([see how to do it](#the-ingest-pipeline-of-the-index-and-data_stream-outputs)).
 
 
 ### Predefined serializers:
