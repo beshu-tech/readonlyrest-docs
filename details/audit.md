@@ -491,6 +491,51 @@ readonlyrest:
 
 Use Kibana dashboards, metrics, or direct queries to confirm that new audit events are flowing into the configured data stream.
 
+### Sending audit events through an ingest pipeline
+
+You can send the audit events of an `index` or `data_stream` output through an Elasticsearch [ingest pipeline](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines). Elasticsearch runs the pipeline on each audit event, before it stores the event. Use a pipeline to change the audit events without a custom serializer. For example, a pipeline can:
+
+* add a field, such as the name of the environment
+* remove or mask a field that contains sensitive data
+* add data from other indices, with the `enrich` processor
+
+The `pipeline` setting is optional. If you do not set it, ROR sends the audit events to Elasticsearch without a pipeline, the same as before this setting existed. The `log` output does not support pipelines.
+
+#### Setting the pipeline in the audit output
+
+The pipeline must already exist in the cluster that stores the audit events: the local cluster, or the audit cluster when the output sets `cluster`. To learn how to create a pipeline, see the Elasticsearch [ingest pipelines](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines) documentation.
+
+Put the ID of the pipeline in the `pipeline` setting of the output:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      pipeline: "audit_add_environment"
+    - type: data_stream
+      pipeline: "audit_add_geoip"
+```
+
+Each output has its own optional `pipeline` setting. Two outputs can use the same pipeline or different pipelines. An output without the `pipeline` setting stores the audit events without changes.
+
+The `pipeline` value must be a non-empty string. It also cannot be `_none`, which is an internal Elasticsearch value. For no pipeline, leave out the `pipeline` setting. The `pipeline` setting applies only to the `index` and `data_stream` outputs, not to the `log` output.
+
+When you change the pipeline in Elasticsearch, the change applies to the next audit event. You do not have to reload the ROR settings.
+
+#### When the pipeline does not exist
+
+ROR does not check that the pipeline exists. If it does not exist, ROR starts and handles requests as usual. But Elasticsearch rejects each audit event of this output, and ROR writes the error to the Elasticsearch log. The rejected audit events are lost. The same happens when the pipeline fails on an audit event.
+
+**⚠️IMPORTANT**: Create the pipeline before you add it to the ROR settings.
+
+#### Things to know
+
+* **Default and final pipelines of the audit index.** The `pipeline` setting replaces the `index.default_pipeline` of the audit index or data stream. Thus, Elasticsearch does not run the default pipeline. If you also need the default pipeline, call it from your pipeline with the [`pipeline` processor](https://www.elastic.co/docs/reference/enrich-processor/pipeline-processor). The `index.final_pipeline` still runs, after your pipeline.
+* **The `@timestamp` field.** A data stream accepts only documents with the `@timestamp` field. A pipeline for a `data_stream` output must not remove this field.
+* **The ROR audit views in Kibana.** The ROR Kibana plugin reads the fields that the ROR serializer creates. If your pipeline removes or renames these fields, the audit views in Kibana can show wrong or empty data. It is safe to add new fields.
+
 ### The 'log' output specific configurations
 
 The `log` output writes audit events to Elasticsearch log at INFO level using a dedicated logger.
@@ -610,6 +655,8 @@ You can:
 * use dynamic, configurable serializer - define JSON fields in ReadonlyREST settings (no implementation required, [see how to do it](#using-configurable-serializer))
 * use ECS ([Elastic Common Schema](https://www.elastic.co/docs/reference/ecs)) serializer (no implementation required, [learn more about it](#using-ecs-serializer))
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
+
+To add or change fields without a custom serializer, you can also send the audit events of an `index` or `data_stream` output through an ingest pipeline ([see how to do it](#sending-audit-events-through-an-ingest-pipeline)).
 
 
 ### Predefined serializers:
