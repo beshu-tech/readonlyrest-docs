@@ -491,30 +491,27 @@ readonlyrest:
 
 Use Kibana dashboards, metrics, or direct queries to confirm that new audit events are flowing into the configured data stream.
 
-### The ingest pipeline of the 'index' and 'data_stream' outputs
+### Sending audit events through an ingest pipeline
 
-Use the `pipeline` setting to send the audit events of an `index` or `data_stream` output through an Elasticsearch [ingest pipeline](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines). Elasticsearch runs the pipeline before it stores the audit event. With a pipeline, you can add fields, rename fields, parse the request content or read data from other indices with the `enrich` processor. You do not have to write a custom serializer or restart the node.
+You can send the audit events of an `index` or `data_stream` output through an Elasticsearch [ingest pipeline](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines). Elasticsearch runs the pipeline on each audit event, before it stores the event. Use a pipeline to change the audit events without a custom serializer. For example, a pipeline can:
 
-Each output has its own `pipeline`. An output without `pipeline` stores the audit events as the serializer creates them.
+* add a field, such as the name of the environment
+* remove or mask a field that contains sensitive data
+* add data from other indices, with the `enrich` processor
 
-```yaml
-readonlyrest:
-  audit:
-    enabled: true
-    outputs:
-    - type: index
-      index_template: "'audit'-yyyy-MM-dd"
-      pipeline: "audit_add_user_details"   # the events of this output go through this pipeline
-    - type: data_stream
-      data_stream: "audit_data_stream"
-      pipeline: "audit_add_geoip"           # a different pipeline for this output
-    - type: log                             # the 'log' output does not accept 'pipeline'
-```
+The `pipeline` setting is optional. If you do not set it, ROR sends the audit events to Elasticsearch without a pipeline, the same as before this setting existed. The `log` output does not support pipelines.
 
-Create the pipeline with the Elasticsearch API or in Kibana, in the cluster that stores the audit events. That is the local cluster, or the audit cluster when the output sets `cluster`. For example:
+#### Step 1: Create the pipeline
+
+Create the pipeline in the cluster that stores the audit events:
+
+* If the output does not set `cluster`, create the pipeline in the local cluster.
+* If the output sets `cluster`, create the pipeline in that audit cluster.
+
+This example pipeline adds the field `environment` with the value `production` to each audit event:
 
 ```
-PUT _ingest/pipeline/audit_add_user_details
+PUT _ingest/pipeline/audit_add_environment
 {
   "processors": [
     { "set": { "field": "environment", "value": "production" } }
@@ -522,20 +519,70 @@ PUT _ingest/pipeline/audit_add_user_details
 }
 ```
 
-Rules:
+To test the pipeline before you use it, run it on a sample document:
 
-* The value must be the ID of a pipeline. ROR rejects the settings when the value is empty or blank, and when the `log` output sets `pipeline`.
-* ROR rejects the value `_none`. With `_none`, Elasticsearch skips the `index.default_pipeline` of the audit index. To store the audit events without a pipeline, remove the `pipeline` setting.
-* ROR does not check that the pipeline exists when it loads the settings. Elasticsearch finds the pipeline when it stores an audit event.
-* The audit is best-effort. A missing or failing pipeline does not change the response to the audited request.
-* When Elasticsearch rejects an audit event, the event is lost and ROR logs an error:
-  * the local cluster: `Some failures flushing the BulkProcessor:`, then `<count>x: [<index>] <error from Elasticsearch>`
-  * an audit cluster: `Cannot submit audit event [index: <index>, doc: <id>]`, with the request and the response from Elasticsearch
-* The pipeline replaces the `index.default_pipeline` of the audit index. The `index.final_pipeline` of the audit index still runs after the pipeline.
-* A pipeline for a `data_stream` output must keep the `@timestamp` field.
-* When the failure store of the audit data stream is enabled, Elasticsearch keeps the rejected audit events in the failure store. ROR does not log these events.
-* Elasticsearch runs pipelines only when the cluster has a node with the `ingest` role.
-* The ROR Kibana plugin reads the audit events with the fields of the serializer. A pipeline which removes or renames these fields can break the audit views in Kibana. Add fields, and keep the fields of the serializer.
+```
+POST _ingest/pipeline/audit_add_environment/_simulate
+{
+  "docs": [
+    { "_source": { "user": "admin", "action": "indices:data/read/search" } }
+  ]
+}
+```
+
+#### Step 2: Set the pipeline in the audit output
+
+Put the ID of the pipeline in the `pipeline` setting of the output:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      pipeline: "audit_add_environment"
+    - type: data_stream
+      pipeline: "audit_add_geoip"
+```
+
+Each output has its own optional `pipeline` setting. Two outputs can use the same pipeline or different pipelines. An output without the `pipeline` setting stores the audit events without changes.
+
+ROR rejects the settings in these cases:
+
+* The `pipeline` value is empty.
+* The `pipeline` value is `_none`. To store audit events without a pipeline, remove the `pipeline` setting.
+* A `log` output has the `pipeline` setting.
+
+When you change the pipeline in Elasticsearch, the change applies to the next audit event. You do not have to reload the ROR settings.
+
+#### When Elasticsearch cannot store an audit event
+
+ROR does not check that the pipeline exists when it starts or when it loads new settings. If the pipeline does not exist, this is what happens:
+
+1. ROR starts and loads the settings without an error.
+2. Users send requests to Elasticsearch. ROR allows or forbids the requests as usual. The missing pipeline has no effect on the requests or on their responses.
+3. ROR sends the audit event of each request to Elasticsearch, with the ID of the pipeline.
+4. Elasticsearch cannot find the pipeline, and it returns an error for the audit event. Elasticsearch does not store the event.
+5. ROR writes the error to the Elasticsearch log (see the messages below). ROR does not try again, and does not store the event without the pipeline.
+
+**⚠️IMPORTANT**: The audit events that Elasticsearch rejects are lost. To prevent this, create the pipeline before you add it to the ROR settings. If you create the pipeline later, Elasticsearch stores the audit events from that time. The events from before are not recovered.
+
+The same thing occurs when the pipeline exists but fails on an audit event, for example when a processor cannot read a field.
+
+Elasticsearch also rejects all audit events that use a pipeline when the cluster has no node with the `ingest` role.
+
+When Elasticsearch rejects audit events, ROR writes these errors to the Elasticsearch log:
+
+* For the local cluster: `Some failures flushing the BulkProcessor:`, and then `<number of events>x: [<index>] <error from Elasticsearch>`. ROR groups the same errors into one line.
+* For an audit cluster: `Cannot submit audit event [index: <index>, doc: <document id>]`, with the request and the response from Elasticsearch.
+
+A `data_stream` output can use the data stream [failure store](https://www.elastic.co/docs/manage-data/data-store/data-streams/failure-store). If the failure store of the audit data stream is enabled, Elasticsearch puts the rejected events into the failure store. The events are not lost, and ROR does not write an error to the log.
+
+#### Things to know
+
+* **Default and final pipelines of the audit index.** The `pipeline` setting replaces the `index.default_pipeline` of the audit index or data stream. Thus, Elasticsearch does not run the default pipeline. If you also need the default pipeline, call it from your pipeline with the [`pipeline` processor](https://www.elastic.co/docs/reference/enrich-processor/pipeline-processor). The `index.final_pipeline` still runs, after your pipeline.
+* **The `@timestamp` field.** A data stream accepts only documents with the `@timestamp` field. A pipeline for a `data_stream` output must not remove this field.
+* **The ROR audit views in Kibana.** The ROR Kibana plugin reads the fields that the ROR serializer creates. If your pipeline removes or renames these fields, the audit views in Kibana can show wrong or empty data. It is safe to add new fields.
 
 ### The 'log' output specific configurations
 
@@ -657,7 +704,7 @@ You can:
 * use ECS ([Elastic Common Schema](https://www.elastic.co/docs/reference/ecs)) serializer (no implementation required, [learn more about it](#using-ecs-serializer))
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
 
-To add or change fields without a custom serializer, you can also send the audit events of an `index` or `data_stream` output through an ingest pipeline ([see how to do it](#the-ingest-pipeline-of-the-index-and-data_stream-outputs)).
+To add or change fields without a custom serializer, you can also send the audit events of an `index` or `data_stream` output through an ingest pipeline ([see how to do it](#sending-audit-events-through-an-ingest-pipeline)).
 
 
 ### Predefined serializers:
