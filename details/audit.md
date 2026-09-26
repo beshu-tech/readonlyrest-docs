@@ -501,36 +501,9 @@ You can send the audit events of an `index` or `data_stream` output through an E
 
 The `pipeline` setting is optional. If you do not set it, ROR sends the audit events to Elasticsearch without a pipeline, the same as before this setting existed. The `log` output does not support pipelines.
 
-#### Step 1: Create the pipeline
+#### Setting the pipeline in the audit output
 
-Create the pipeline in the cluster that stores the audit events:
-
-* If the output does not set `cluster`, create the pipeline in the local cluster.
-* If the output sets `cluster`, create the pipeline in that audit cluster.
-
-This example pipeline adds the field `environment` with the value `production` to each audit event:
-
-```
-PUT _ingest/pipeline/audit_add_environment
-{
-  "processors": [
-    { "set": { "field": "environment", "value": "production" } }
-  ]
-}
-```
-
-To test the pipeline before you use it, run it on a sample document:
-
-```
-POST _ingest/pipeline/audit_add_environment/_simulate
-{
-  "docs": [
-    { "_source": { "user": "admin", "action": "indices:data/read/search" } }
-  ]
-}
-```
-
-#### Step 2: Set the pipeline in the audit output
+The pipeline must already exist in the cluster that stores the audit events: the local cluster, or the audit cluster when the output sets `cluster`. To learn how to create a pipeline, see the Elasticsearch [ingest pipelines](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines) documentation.
 
 Put the ID of the pipeline in the `pipeline` setting of the output:
 
@@ -547,11 +520,7 @@ readonlyrest:
 
 Each output has its own optional `pipeline` setting. Two outputs can use the same pipeline or different pipelines. An output without the `pipeline` setting stores the audit events without changes.
 
-ROR rejects the settings in these cases:
-
-* The `pipeline` value is empty.
-* The `pipeline` value is `_none`. To store audit events without a pipeline, remove the `pipeline` setting.
-* A `log` output has the `pipeline` setting.
+The `pipeline` value must be a non-empty string. It also cannot be `_none`, which is an internal Elasticsearch value. For no pipeline, leave out the `pipeline` setting. The `pipeline` setting applies only to the `index` and `data_stream` outputs, not to the `log` output.
 
 When you change the pipeline in Elasticsearch, the change applies to the next audit event. You do not have to reload the ROR settings.
 
