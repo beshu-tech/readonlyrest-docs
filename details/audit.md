@@ -555,28 +555,11 @@ ROR rejects the settings in these cases:
 
 When you change the pipeline in Elasticsearch, the change applies to the next audit event. You do not have to reload the ROR settings.
 
-#### When Elasticsearch cannot store an audit event
+#### When the pipeline does not exist
 
-ROR does not check that the pipeline exists when it starts or when it loads new settings. If the pipeline does not exist, this is what happens:
+ROR does not check that the pipeline exists. If it does not exist, ROR starts and handles requests as usual. But Elasticsearch rejects each audit event of this output, and ROR writes the error to the Elasticsearch log. The rejected audit events are lost. The same happens when the pipeline fails on an audit event.
 
-1. ROR starts and loads the settings without an error.
-2. Users send requests to Elasticsearch. ROR allows or forbids the requests as usual. The missing pipeline has no effect on the requests or on their responses.
-3. ROR sends the audit event of each request to Elasticsearch, with the ID of the pipeline.
-4. Elasticsearch cannot find the pipeline, and it returns an error for the audit event. Elasticsearch does not store the event.
-5. ROR writes the error to the Elasticsearch log (see the messages below). ROR does not try again, and does not store the event without the pipeline.
-
-**⚠️IMPORTANT**: The audit events that Elasticsearch rejects are lost. To prevent this, create the pipeline before you add it to the ROR settings. If you create the pipeline later, Elasticsearch stores the audit events from that time. The events from before are not recovered.
-
-The same thing occurs when the pipeline exists but fails on an audit event, for example when a processor cannot read a field.
-
-Elasticsearch also rejects all audit events that use a pipeline when the cluster has no node with the `ingest` role.
-
-When Elasticsearch rejects audit events, ROR writes these errors to the Elasticsearch log:
-
-* For the local cluster: `Some failures flushing the BulkProcessor:`, and then `<number of events>x: [<index>] <error from Elasticsearch>`. ROR groups the same errors into one line.
-* For an audit cluster: `Cannot submit audit event [index: <index>, doc: <document id>]`, with the request and the response from Elasticsearch.
-
-A `data_stream` output can use the data stream [failure store](https://www.elastic.co/docs/manage-data/data-store/data-streams/failure-store). If the failure store of the audit data stream is enabled, Elasticsearch puts the rejected events into the failure store. The events are not lost, and ROR does not write an error to the log.
+**⚠️IMPORTANT**: Create the pipeline before you add it to the ROR settings.
 
 #### Things to know
 
