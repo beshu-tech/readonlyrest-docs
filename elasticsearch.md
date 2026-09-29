@@ -123,7 +123,9 @@ ReadonlyREST runs on the JVM of Elasticsearch. Each ReadonlyREST build needs a m
 
 Elasticsearch 7.0 and newer includes a JDK in the `jdk/` directory. This JDK meets the requirement.
 
-Elasticsearch 6.x does not include a JDK. It uses the JDK that `JAVA_HOME` points to. Set `JAVA_HOME` to Java 11 or newer before you install ReadonlyREST. Elastic supports Elasticsearch 6.8 on Java 11.
+Elasticsearch uses a different JDK when `ES_JAVA_HOME` is set, or `JAVA_HOME` on Elasticsearch 6.x and 7.x. That JDK must also meet the requirement. Elastic supports Java 8 on Elasticsearch 7.x, but ReadonlyREST does not.
+
+Elasticsearch 6.x does not include a JDK. It uses the JDK that `JAVA_HOME` points to. Set `JAVA_HOME` to Java 11 before you install ReadonlyREST. A newer Java must be in [Elastic's support matrix](https://www.elastic.co/support/matrix#matrix_jvm) for your Elasticsearch version.
 
 #### 1. Obtain the build
 
@@ -157,7 +159,7 @@ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_AC
 
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
-**⚠️IMPORTANT**: Elasticsearch 6.x has no `jdk/` directory. Use `$JAVA_HOME/bin/java` instead of `jdk/bin/java` in the `ror-tools` commands on this page. See [Java requirements](#java-requirements).
+**⚠️IMPORTANT**: If your Elasticsearch installation has no `jdk/` directory, use `$JAVA_HOME/bin/java` instead of `jdk/bin/java` in the `ror-tools` commands on this page. See [Java requirements](#java-requirements).
 
 You can verify if Elasticsearch was correctly patched using the command `verify`:
 
