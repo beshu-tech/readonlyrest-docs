@@ -8,6 +8,9 @@ entries:
     components: [kbn]
     text: "[CVE-2024-21538](https://www.cve.org/CVERecord?id=CVE-2024-21538), [CVE-2024-47764](https://www.cve.org/CVERecord?id=CVE-2024-47764), [CVE-2024-52798](https://www.cve.org/CVERecord?id=CVE-2024-52798)"
   - type: warning
+    components: [es]
+    text: "ReadonlyREST for Elasticsearch 6.7.x – 7.17.x now needs Java 11 or newer. Elasticsearch 6.x does not include a JDK, so set `JAVA_HOME` to Java 11 or newer. See [Java requirements](https://docs.readonlyrest.com/elasticsearch#java-requirements)."
+  - type: warning
     components: [kbn]
     text: "Updated [`readonlyrest_kbn: license: activationKeyRefreshInterval`](https://forum.readonlyrest.com/t/restricting-access-to-some-spaces/2633/4) - the maximum refresh interval is now set to 1 day."
   - type: new
