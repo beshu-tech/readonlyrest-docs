@@ -61,7 +61,7 @@ readonlyrest:
     default_acl_log_enabled: true   # enable/disable the built-in ACL log (default: true)
     outputs:
     - type: index
-      name: my-index-sink           # optional name, used for per-block sink routing
+      name: my-index-output         # optional name, used for per-block output routing
 ```
 
 | Setting | Default | Description |
@@ -70,13 +70,13 @@ readonlyrest:
 | `default_acl_log_enabled` | `true` | Controls the built-in ACL log output (see below) |
 | `outputs` | default `index` output | List of audit outputs |
 
-Each entry in `outputs` accepts an optional `name` field. Names are only needed for per-block routing: when you want a specific block to send events to only a subset of outputs, you reference them by name using `enabled_audit_sinks` or `disabled_audit_sinks` (see [Block-level audit control](#block-level-audit-control)). If you do not need per-block routing, you can omit `name` from all outputs.
+Each entry in `outputs` accepts an optional `name` field. Names are only needed for per-block routing: when you want a specific block to send events to only a subset of outputs, you reference them by name using `enabled_audit_outputs` or `disabled_audit_outputs` (see [Block-level audit control](#block-level-audit-control)). If you do not need per-block routing, you can omit `name` from all outputs.
 
 ### The default ACL log
 
 When `default_acl_log_enabled: true` (the default), ROR writes a human-readable ACL decision line to Elasticsearch logs for every request, using the logger named `tech.beshu.ror.accesscontrol.logging.AccessControlListLoggingDecorator`. This happens regardless of whether any `outputs` are configured.
 
-The default ACL log is exposed as a named output with the reserved name `default_acl_log`. You can use this name in block-level `enabled_audit_sinks` and `disabled_audit_sinks` to include or exclude it from per-block routing:
+The default ACL log is exposed as a named output with the reserved name `default_acl_log`. You can use this name in block-level `enabled_audit_outputs` and `disabled_audit_outputs` to include or exclude it from per-block routing:
 
 ```yaml
 readonlyrest:
@@ -85,7 +85,7 @@ readonlyrest:
     default_acl_log_enabled: true
     outputs:
     - type: index
-      name: my-index-sink
+      name: my-index-output
 
   access_control_rules:
 
@@ -93,7 +93,7 @@ readonlyrest:
     auth_key: svc:secret
     audit:
       # send events only to the index, skip the ACL log line for this noisy block
-      enabled_audit_sinks: [my-index-sink]
+      enabled_audit_outputs: [my-index-output]
 
   - name: Admin users
     auth_key: admin:admin
@@ -128,24 +128,26 @@ access_control_rules:
 - name: Example block
   auth_key: user:pass
   audit:
-    enabled: true               # default: true — set to false to suppress all audit for this block
-    log_allowed_events: true    # default: true — set to false to suppress allowed-request events
-    enabled_audit_sinks: []     # whitelist: only these named sinks receive events from this block
-    disabled_audit_sinks: []    # blacklist: all sinks except these receive events from this block
+    enabled: true                             # default: true — set to false to suppress all audit for this block
+    log_allowed_events: true                  # default: true — set to false to suppress allowed-request events
+    enabled_audit_outputs: [my-index-output]  # whitelist: only these named outputs receive events from this block
+    # disabled_audit_outputs: [ops-log]       # blacklist: all outputs except these. Use one key or the other, never both
 ```
 
 | Setting | Default | Description |
 |---|---|---|
 | `enabled` | `true` | When `false`, no audit events are emitted when this block is matched, regardless of global settings |
 | `log_allowed_events` | `true` | When `false`, allowed requests matched by this block are not written to audit. Denied requests, errors, and index-not-found responses are always written |
-| `enabled_audit_sinks` | (all sinks) | Whitelist of sink names. Only the listed sinks receive events from this block. Use sink `name` values from `audit.outputs`, plus `default_acl_log` for the built-in ACL log |
-| `disabled_audit_sinks` | (none) | Blacklist of sink names. All sinks except the listed ones receive events from this block |
+| `enabled_audit_outputs` | (all outputs) | Whitelist of output names. Only the listed outputs receive events from this block. Use output `name` values from `audit.outputs`, plus `default_acl_log` for the built-in ACL log. The list must name at least one output |
+| `disabled_audit_outputs` | (none) | Blacklist of output names. All outputs except the listed ones receive events from this block. The list must name at least one output |
 
-`enabled_audit_sinks` and `disabled_audit_sinks` are mutually exclusive — you cannot specify both on the same block.
+`enabled_audit_outputs` and `disabled_audit_outputs` are mutually exclusive — you cannot specify both on the same block.
 
-**⚠️IMPORTANT**: When `audit.enabled: false` for a specific block, there will be no audit events at all when that block is matched — this suppresses both custom outputs and the default ACL log. **This is a change in behaviour from previous versions**, where block-level `audit: {enabled: false}` only suppressed the ES audit sinks while the ACL log continued to write.
+Neither list can be empty. ROR refuses to load settings that contain `enabled_audit_outputs: []` or `disabled_audit_outputs: []`. Omit the key to send events to every output. To send no events at all from a block, use `audit: {enabled: false}`.
 
-#### Per-sink routing example
+**⚠️IMPORTANT**: When `audit.enabled: false` for a specific block, there will be no audit events at all when that block is matched — this suppresses both custom outputs and the default ACL log. **This is a change in behaviour from previous versions**, where block-level `audit: {enabled: false}` only suppressed the ES audit outputs while the ACL log continued to write.
+
+#### Per-output routing example
 
 ```yaml
 readonlyrest:
@@ -163,7 +165,7 @@ readonlyrest:
     auth_key: admin:admin
     audit:
       # Only write to the security index, skip the ops log and default ACL log
-      enabled_audit_sinks: [security-index]
+      enabled_audit_outputs: [security-index]
 
   - name: Noisy read-only block
     auth_key: reader:pass
@@ -171,11 +173,11 @@ readonlyrest:
       # Skip allowed events entirely, errors still get written
       log_allowed_events: false
       # Write to ops log only, skip security index for this block
-      enabled_audit_sinks: [ops-log]
+      enabled_audit_outputs: [ops-log]
 
   - name: Regular block
     auth_key: user:pass
-    # No audit section = all sinks active with default settings
+    # No audit section = all outputs active with default settings
 ```
 
 ### Multiple outputs
@@ -228,8 +230,12 @@ readonlyrest:
 
 It's possible to set up a custom audit cluster responsible for storing audit events. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
-**⚠️IMPORTANT**: Audit events are sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
+**⚠️IMPORTANT**: All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
+
+The `cluster` setting is optional. It accepts two syntaxes.
+
+**Simple syntax**: a non-empty list of audit cluster node URIs. ROR sends the audit events in the `round-robin` mode and does not check the connectivity of the cluster.
 
 ```yaml
 readonlyrest:
@@ -237,11 +243,67 @@ readonlyrest:
     enabled: true
     outputs:
     - type: index
-      cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
+      cluster: ["https://user1:password@auditNode1:9200", "https://user1:password@auditNode2:9200"]
   ...
 ```
 
-Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
+**Extended syntax**: an object which also sets the cluster mode, the credentials and the connectivity check.
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      cluster:
+        nodes: ["https://auditNode1:9200", "https://auditNode2:9200"]
+        mode: failover
+        username: "audit_user"
+        password: "audit_password"
+        connectivity_check: required
+  ...
+```
+
+| Setting | Required | Default | Description |
+| --- | --- | --- | --- |
+| `nodes` | yes | - | Non-empty list of audit cluster node URIs. |
+| `mode` | yes | - | How ROR picks the node for an audit event: `round-robin` or `failover`. |
+| `username`, `password` | no | credentials from the node URIs | Credentials used for every audit node. Set both fields or none of them. |
+| `connectivity_check` | no | `disabled` | How a connectivity problem of the audit cluster influences the settings loading: `required`, `best_effort` or `disabled`. |
+
+##### Cluster modes
+
+* `round-robin` - ROR spreads the audit events over all the audit nodes. One client knows all the nodes. When a node fails, the client marks it as dead, sends the request to another node and retries the dead node later.
+
+* `failover` - ROR sends the audit events to the first audit node which is available, in the order of the `nodes` list. Each node has its own client and its own circuit breaker. After a failure, the node is skipped for one second. The skip time grows with each subsequent failure, up to 30 minutes. ROR tries the next node when the request ends with a connection error or with the `502`, `503` or `504` status code. Any other error status stops the request, because another node answers it in the same way.
+
+Use `round-robin` when all the audit nodes are equal. Use `failover` when they are not, for example when the first node is the local one and the others are a remote backup.
+
+##### Credentials
+
+All the audit nodes must use the same credentials. ROR does not accept a configuration where the node URIs hold different credentials, because different credentials usually mean that the nodes belong to different clusters.
+
+Put the credentials in the `username` and `password` fields, or in each node URI (`https://user:password@auditNode1:9200`). The `username` and `password` fields win when both places are used.
+
+##### Connectivity check
+
+ROR can verify the audit cluster when it loads the settings. That happens at the start of the node and at every settings reload. The check calls `GET /` on every audit node in parallel and compares the answers.
+
+| Value | Behaviour |
+| --- | --- |
+| `disabled` | ROR does not check the audit cluster. |
+| `required` | ROR rejects the settings when no audit node answers. |
+| `best_effort` | ROR logs the connectivity problem and starts the auditing anyway. |
+
+A node which does not answer is retried three times, with a first delay of 500 milliseconds which doubles after each attempt. Only a connection error and the `408`, `429`, `502`, `503` and `504` status codes are retried. The whole check ends after 30 seconds. The check does not validate the TLS certificates of the audit nodes.
+
+A node which rejects the credentials of the check with the `401` or `403` status code counts as a node which did not answer.
+
+When some nodes answer and the others do not, the check passes and ROR logs a warning with the details of the unreachable nodes.
+
+When the nodes which answer report different `cluster_uuid` values, ROR rejects the settings in the `required` mode and in the `best_effort` mode. This is a configuration error, not a connectivity problem: one audit output can use the nodes of one cluster only.
+
+When ROR rejects the settings, the node does not start the auditing with them.
 
 ### The 'data_stream' output specific configurations
 
@@ -273,7 +335,7 @@ This creation process includes setting up the following components, each dedicat
 
 It's possible to set a custom audit cluster responsible for audit events storage. When a custom cluster is specified, items will be sent to defined cluster nodes instead of the local one.
 
-**⚠️IMPORTANT**: Audit events are sent to audit nodes using a round-robin strategy. All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
+**⚠️IMPORTANT**: All audit nodes must belong to the same Elasticsearch cluster. Otherwise, each audit cluster will contain only a subset of audit events.
 If you intend to send audit events to multiple clusters, define one output per Elasticsearch cluster.
 
 ```yaml
@@ -282,11 +344,18 @@ readonlyrest:
     enabled: true
     outputs:
     - type: data_stream
-      cluster: ["https://user1:password@auditNode1:9200", "https://user2:password@auditNode2:9200"]
+      cluster:
+        nodes: ["https://auditNode1:9200", "https://auditNode2:9200"]
+        mode: failover
+        username: "audit_user"
+        password: "audit_password"
+        connectivity_check: required
   ...
 ```
 
-Setting `audit.cluster` is optional, it accepts a non-empty list of audit cluster nodes URIs.
+The `cluster` setting accepts the same simple and extended syntax as the `index` output. See [Custom audit cluster](#custom-audit-cluster) for the description of `nodes`, `mode`, `username`, `password` and `connectivity_check`.
+
+**⚠️IMPORTANT**: The `data_stream` output verifies the audit data stream when it loads the settings, and creates the data stream when it does not exist. Therefore an unreachable audit cluster makes the settings loading fail, also when `connectivity_check` is `best_effort` or `disabled`. The `index` output creates the audit index with the first audit event, so it does not have this restriction.
 
 #### Data stream settings
 
@@ -422,6 +491,51 @@ readonlyrest:
 
 Use Kibana dashboards, metrics, or direct queries to confirm that new audit events are flowing into the configured data stream.
 
+### Sending audit events through an ingest pipeline
+
+You can send the audit events of an `index` or `data_stream` output through an Elasticsearch [ingest pipeline](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines). Elasticsearch runs the pipeline on each audit event, before it stores the event. Use a pipeline to change the audit events without a custom serializer. For example, a pipeline can:
+
+* add a field, such as the name of the environment
+* remove or mask a field that contains sensitive data
+* add data from other indices, with the `enrich` processor
+
+The `pipeline` setting is optional. If you do not set it, ROR sends the audit events to Elasticsearch without a pipeline, the same as before this setting existed. The `log` output does not support pipelines.
+
+#### Setting the pipeline in the audit output
+
+The pipeline must already exist in the cluster that stores the audit events: the local cluster, or the audit cluster when the output sets `cluster`. To learn how to create a pipeline, see the Elasticsearch [ingest pipelines](https://www.elastic.co/docs/manage-data/ingest/transform-enrich/ingest-pipelines) documentation.
+
+Put the ID of the pipeline in the `pipeline` setting of the output:
+
+```yaml
+readonlyrest:
+  audit:
+    enabled: true
+    outputs:
+    - type: index
+      pipeline: "audit_add_environment"
+    - type: data_stream
+      pipeline: "audit_add_geoip"
+```
+
+Each output has its own optional `pipeline` setting. Two outputs can use the same pipeline or different pipelines. An output without the `pipeline` setting stores the audit events without changes.
+
+The `pipeline` value must be a non-empty string. It also cannot be `_none`, which is an internal Elasticsearch value. For no pipeline, leave out the `pipeline` setting. The `pipeline` setting applies only to the `index` and `data_stream` outputs, not to the `log` output.
+
+When you change the pipeline in Elasticsearch, the change applies to the next audit event. You do not have to reload the ROR settings.
+
+#### When the pipeline does not exist
+
+ROR does not check that the pipeline exists. If it does not exist, ROR starts and handles requests as usual. But Elasticsearch rejects each audit event of this output, and ROR writes the error to the Elasticsearch log. The rejected audit events are lost. The same happens when the pipeline fails on an audit event.
+
+**⚠️IMPORTANT**: Create the pipeline before you add it to the ROR settings.
+
+#### Things to know
+
+* **Default and final pipelines of the audit index.** The `pipeline` setting replaces the `index.default_pipeline` of the audit index or data stream. Thus, Elasticsearch does not run the default pipeline. If you also need the default pipeline, call it from your pipeline with the [`pipeline` processor](https://www.elastic.co/docs/reference/enrich-processor/pipeline-processor). The `index.final_pipeline` still runs, after your pipeline.
+* **The `@timestamp` field.** A data stream accepts only documents with the `@timestamp` field. A pipeline for a `data_stream` output must not remove this field.
+* **The ROR audit views in Kibana.** The ROR Kibana plugin reads the fields that the ROR serializer creates. If your pipeline removes or renames these fields, the audit views in Kibana can show wrong or empty data. It is safe to add new fields.
+
 ### The 'log' output specific configurations
 
 The `log` output writes audit events to Elasticsearch log at INFO level using a dedicated logger.
@@ -496,7 +610,7 @@ logger.readonlyrest_audit.additivity = false
 
 #### ACL serializer
 
-The `log` output type supports a special `acl` serializer that reproduces the human-readable format written by the default ACL log. This is useful when you want to disable the built-in ACL log (`default_acl_log_enabled: false`) and replace it with a custom log sink that you can route per-block:
+The `log` output type supports a special `acl` serializer that reproduces the human-readable format written by the default ACL log. This is useful when you want to disable the built-in ACL log (`default_acl_log_enabled: false`) and replace it with a custom log output that you can route per-block:
 
 ```yaml
 readonlyrest:
@@ -541,6 +655,8 @@ You can:
 * use dynamic, configurable serializer - define JSON fields in ReadonlyREST settings (no implementation required, [see how to do it](#using-configurable-serializer))
 * use ECS ([Elastic Common Schema](https://www.elastic.co/docs/reference/ecs)) serializer (no implementation required, [learn more about it](#using-ecs-serializer))
 * implement and use your own serializer ([see how to implement a custom serializer](#custom-audit-event-serializer))
+
+To add or change fields without a custom serializer, you can also send the audit events of an `index` or `data_stream` output through an ingest pipeline ([see how to do it](#sending-audit-events-through-an-ingest-pipeline)).
 
 
 ### Predefined serializers:

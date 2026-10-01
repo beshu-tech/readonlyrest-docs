@@ -111,6 +111,22 @@ services:
 
 To install the ReadonlyREST plugin for Elasticsearch:
 
+#### Java requirements
+
+ReadonlyREST runs on the JVM of Elasticsearch. Each ReadonlyREST build needs a minimum Java version:
+
+| Elasticsearch version | Minimum Java version |
+|-----------------------|----------------------|
+| 6.7.x – 7.17.x        | 11                   |
+| 8.x                   | 17                   |
+| 9.x                   | 21                   |
+
+Elasticsearch 7.0 and newer includes a JDK in the `jdk/` directory. This JDK meets the requirement.
+
+Elasticsearch uses a different JDK when `ES_JAVA_HOME` is set, or `JAVA_HOME` on Elasticsearch 6.x and 7.x. That JDK must also meet the requirement. Elastic supports Java 8 on Elasticsearch 7.x, but ReadonlyREST does not.
+
+Elasticsearch 6.x does not include a JDK. It uses the JDK that `JAVA_HOME` points to. Set `JAVA_HOME` to Java 11 before you install ReadonlyREST. A newer Java must be in [Elastic's support matrix](https://www.elastic.co/support/matrix#matrix_jvm) for your Elasticsearch version.
+
 #### 1. Obtain the build
 
 From the [official download page](https://readonlyrest.com/download). Select your Elasticsearch version and send yourself a link to the compatible ReadonlyREST zip file.
@@ -143,6 +159,8 @@ jdk/bin/java -jar plugins/readonlyrest/ror-tools.jar patch --I_UNDERSTAND_AND_AC
 
 **⚠️IMPORTANT**: for Elasticsearch 8.3.x or newer, the patching operation requires `root` user privileges.
 
+**⚠️IMPORTANT**: If your Elasticsearch installation has no `jdk/` directory, use `$JAVA_HOME/bin/java` instead of `jdk/bin/java` in the `ror-tools` commands on this page. See [Java requirements](#java-requirements).
+
 You can verify if Elasticsearch was correctly patched using the command `verify`:
 
 ```bash
@@ -173,7 +191,7 @@ Create and edit the `readonlyrest.yml` settings file in the **same directory whe
 vim $ES_PATH_CONF/conf/readonlyrest.yml
 ```
 
-Now write some basic settings, just to get started. In this example, we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `401 Unauthorized` otherwise.
+Now write some basic settings, just to get started. In this example, we are going to tell ReadonlyREST to require HTTP Basic Authentication for all the HTTP requests, and return `403 Forbidden` otherwise.
 
 ```yaml
 readonlyrest:
@@ -212,7 +230,7 @@ The following command should succeed, and the response should show a status code
 curl -vvv -u user:password "http://localhost:9200/_cat/indices"
 ```
 
-The following command should not succeed, and the response should show a status code 401
+The following command should not succeed, and the response should show a status code 403
 
 ```bash
 curl -vvv "http://localhost:9200/_cat/indices"
@@ -858,7 +876,7 @@ It's an authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.
 
 **⚠️IMPORTANT**: this rule is handy just for tests, replace it with another rule that hashes credentials, like: `auth_key_sha512`, or `auth_key_unix`.
 
-[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### `auth_key_sha512`
 
@@ -874,7 +892,7 @@ The rules support also alternative syntax, where only password is hashed, eg:
 
 In the example below `admin` is the username and `280ac6f...94bf9` is the hashed secret.
 
-[Impersonation](details/impersonation.md) is supported by these rules by default.
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) is supported by these rules only in the alternative syntax, where the username is written in plain text and only the password is hashed. When the whole `username:password` string is hashed, ROR can't read the username, so the rule doesn't support impersonation.
 
 ##### `auth_key_pbkdf2`
 
@@ -893,7 +911,7 @@ The authentication rule that accepts [HTTP Basic Auth](https://en.wikipedia.org/
 
 The hash can be calculated using [this calculator](https://8gwifi.org/pbkdf.jsp) \(notice that the salt has to base Base64 encoded\).
 
-[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) is supported by this rule only when the username is written in plain text and only the password is hashed, like in the second example above. When the whole `username:password` string is hashed, ROR can't read the username, so the rule doesn't support impersonation.
 
 ##### `auth_key_unix`
 
@@ -955,7 +973,7 @@ if __name__ == '__main__':
 
 For example, `test` is the username and `$6$rounds=65535$d07dnv4N$QeErsDT9Mz.ZoEPXW3dwQGL7tzwRz.eOrTBepIwfGEwdUAYSy/NirGoOaNyPx8lqiR6DYRSsDzVvVbhP4Y9wf0` is the hash for `test` \(the password is identical to the username in this example\).
 
-[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### `token_authentication`
 
@@ -993,7 +1011,7 @@ For a complete Fleet setup — including the required `forbid` block for token/A
 
 For a complete walkthrough including credential flow, the `forbid` block rationale, and a runnable example, see the [Elastic Fleet guide](examples/fleet/README.md).
 
-[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### `proxy_auth: "*"`
 
@@ -1007,7 +1025,7 @@ If you are using this technique for authentication using our **Kibana** plugins,
 
 So that Kibana will forward the necessary headers to Elasticsearch.
 
-[Impersonation](details/impersonation.md) is supported by this rule without an extra configuration.
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) is supported by this rule without an extra configuration.
 
 ##### Groups rules
 
@@ -1145,7 +1163,7 @@ In general it looks like this:
 
 For details see [User management](elasticsearch.md#users-and-groups).
 
-[Impersonation](details/impersonation.md) support depends on
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) support depends on
 authentication and authorization rules used in `users` section.
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1218,7 +1236,7 @@ ldap_authorization:
 
 See the dedicated [LDAP section](elasticsearch.md#ldap-connector)
 
-[Impersonation](details/impersonation.md) support by LDAP rules requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) support by LDAP rules requires to add [an extra configuration](examples/impersonation/configuring-impersonation.md#defining-mocks-of-the-external-services-optional).
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1312,7 +1330,7 @@ re-issuing certificates.
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication rule.
 
-[Impersonation](details/impersonation.md) is not currently supported by this rule.
+[Impersonation](examples/impersonation/configuring-impersonation.md#auth-rules-that-dont-support-impersonation) is not currently supported by this rule.
 
 ```yaml
 readonlyrest:
@@ -1333,7 +1351,7 @@ readonlyrest:
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authorization rule.
 
-[Impersonation](details/impersonation.md) is not currently supported by this rule.
+[Impersonation](examples/impersonation/configuring-impersonation.md#auth-rules-that-dont-support-impersonation) is not currently supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1365,7 +1383,7 @@ readonlyrest:
 
 See below, the dedicated [JSON Web Tokens section](elasticsearch.md#json-web-token-jwt-auth). It's an authentication and authorization rule at the same time.
 
-[Impersonation](details/impersonation.md) is not currently supported by this rule.
+[Impersonation](examples/impersonation/configuring-impersonation.md#auth-rules-that-dont-support-impersonation) is not currently supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1391,7 +1409,7 @@ readonlyrest:
 
 Used to delegate authentication to another server that supports HTTP Basic Auth. See below, the dedicated [External BASIC Auth section](elasticsearch.md#external-basic-auth)
 
-[Impersonation](details/impersonation.md) support by this rule requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) support by this rule requires to add [an extra configuration](examples/impersonation/configuring-impersonation.md#defining-mocks-of-the-external-services-optional).
 
 For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
 
@@ -1399,7 +1417,7 @@ For more information on the ROR's authorization rules, see [Authorization rules 
 
 Used to delegate groups resolution for a user to a JSON microservice. See below, the dedicated [Groups Provider Authorization section](elasticsearch.md#custom-groups-providers)
 
-[Impersonation](details/impersonation.md) support by this rule requires to add [an extra configuration](details/impersonation.md#defining-mocks-of-the-external-services-optional).
+[Impersonation](examples/impersonation/configuring-impersonation.md#which-rules-support-impersonation) support by this rule requires to add [an extra configuration](examples/impersonation/configuring-impersonation.md#defining-mocks-of-the-external-services-optional).
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1423,7 +1441,7 @@ readonlyrest:
 
 It handles authentication only using the configured ROR KBN connector (here `kbn1`). Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
-[Impersonation](details/impersonation.md) is currently not supported by this rule.
+[Impersonation](examples/impersonation/configuring-impersonation.md#auth-rules-that-dont-support-impersonation) is currently not supported by this rule.
 
 ##### `ror_kbn_authorization`
 ([Enterprise](https://readonlyrest.com/enterprise))
@@ -1454,7 +1472,7 @@ readonlyrest:
 
 It handles authorization only using the configured ROR KBN connector (here `kbn1` and `kbn2`). Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
-[Impersonation](details/impersonation.md) is currently not supported by this rule.
+[Impersonation](examples/impersonation/configuring-impersonation.md#auth-rules-that-dont-support-impersonation) is currently not supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1490,7 +1508,7 @@ This authentication and authorization connector represents the secure channel \(
 
 Continue reading about this in the kibana plugin documentation, in the dedicated [SAML section](kibana.md#saml)
 
-[Impersonation](details/impersonation.md) is currently not supported by this rule.
+[Impersonation](examples/impersonation/configuring-impersonation.md#auth-rules-that-dont-support-impersonation) is currently not supported by this rule.
 
 * Groups logic syntax can be uses as part of this rule, as described in the [Checking groups logic section](details/authorization-rules-details.md#checking-groups-logic)
 * For more information on the ROR's authorization rules, see [Authorization rules details](details/authorization-rules-details.md)
@@ -1691,7 +1709,7 @@ When the subset of indices is empty, it means that user are not allowed to acces
 
 For both of these cases ROR is going to return HTTP 404 or HTTP 200 with an empty response. The same behaviour will be observed for ES with ROR disabled \(for nonexistent index\). If an index does exist, but a user is not authorized to access it, ROR is going to pretend that the index doesn't exist and a response will be the same like the index actually did not exist. See [detailed example](https://github.com/beshu-tech/readonlyrest-docs/tree/c53dbf8e6d8fa97f505b0513ac57d3738a2a9356/elasticsearch-details/index-not-found-examples.md).
 
-It's also worth mentioning, that when `global_settings.prompt_for_basic_auth` is set to `true` \(that is disabled by default\), ROR will return 401 instead of 404 HTTP status code. It is relevant for users who don't use ROR Kibana's plugin and would like to take advantage of default Kibana's behavior which shows the native browser basic auth dialog, when it receives HTTP 401 response (see [the example](#prompt_for_basic_auth)).
+It's also worth mentioning, that when `global_settings.prompt_for_basic_auth` is set to `true` \(that is disabled by default\), ROR will return 401 instead of 404 HTTP status code for the index, search and alias APIs. `_resolve/index`, `_resolve/cluster`, `_msearch` and `_msearch/template` keep the 404. It is relevant for clients which reach Elasticsearch through a browser and rely on its native basic auth dialog, for example Cerebro (see [the example](#prompt_for_basic_auth)). A request of the ROR Kibana plugin gets 404, because the plugin has its own login and no browser shows that dialog.
 If a **write request** wants to write to indices they don't have permission for, the write request is rejected. 
 
 **Requests related to templates**
@@ -3234,7 +3252,9 @@ The `readonlyrest.global_settings` section contains various settings that affect
 
 ##### `prompt_for_basic_auth`
 
-When set to `true`, ROR will return HTTP 401 instead of 403 when authentication fails. This prompts browsers to show a basic auth dialog. This is particularly useful when not using ReadonlyREST Kibana plugin and wanting to take advantage of Kibana's default behavior. Defaults to `false`. But we don't recommend to change this default behaviour.
+When set to `true`, ROR answers every refused request with HTTP 401 instead of 403, and adds a `WWW-Authenticate` header. This prompts browsers to show a basic auth dialog. Use it for clients which reach Elasticsearch through a browser and have no login of their own, for example Cerebro, or a person who opens an Elasticsearch URL. Defaults to `false`.
+
+The ROR Kibana plugin is not affected. ROR asks it for no credentials, because the plugin has its own login, which the dialog of the browser breaks.
 
 Example:
 ```yaml
