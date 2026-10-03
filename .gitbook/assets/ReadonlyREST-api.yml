@@ -32,6 +32,17 @@ paths:
                   $ref: "#/components/examples/UpdateMainSettingsSuccessResponse"
                 UpdateMainSettingsFailedResponse:
                   $ref: "#/components/examples/UpdateMainSettingsFailedResponse"
+        401:
+          description: The request has no session and no credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedRorResponse'
+              examples:
+                RejectedByAclUnauthorizedResponseExample:
+                  $ref: "#/components/examples/RejectedByAclUnauthorizedResponseExample"
+                NoErrorReasonFromEsUnauthorizedResponseExample:
+                  $ref: "#/components/examples/NoErrorReasonFromEsUnauthorizedResponseExample"
         403:
           description: The request was forbidden by ReadonlyREST's ACL
           content:
@@ -95,6 +106,17 @@ paths:
               examples:
                 YamlFileExtensionRequiredResponseExample:
                   $ref: "#/components/examples/YamlFileExtensionRequiredResponseExample"
+        401:
+          description: The request has no session and no credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedRorResponse'
+              examples:
+                RejectedByAclUnauthorizedResponseExample:
+                  $ref: "#/components/examples/RejectedByAclUnauthorizedResponseExample"
+                NoErrorReasonFromEsUnauthorizedResponseExample:
+                  $ref: "#/components/examples/NoErrorReasonFromEsUnauthorizedResponseExample"
         403:
           description: The request was forbidden by ReadonlyREST's ACL
           content:
@@ -176,6 +198,17 @@ paths:
                   $ref: '#/components/examples/UpdateLicenseKeyMalformedResponse'
                 NoLicenseKeyProvided:
                   $ref: "#/components/examples/UpdateLicenseKeyNoLicenseKeyResponse"
+        401:
+          description: The request has no session and no credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedRorResponse'
+              examples:
+                RejectedByAclUnauthorizedResponseExample:
+                  $ref: "#/components/examples/RejectedByAclUnauthorizedResponseExample"
+                NoErrorReasonFromEsUnauthorizedResponseExample:
+                  $ref: "#/components/examples/NoErrorReasonFromEsUnauthorizedResponseExample"
         403:
           description: The request was forbidden by ReadonlyREST
           content:
@@ -214,6 +247,17 @@ paths:
               examples:
                 GetUserTenantsSuccessResponse:
                   $ref: "#/components/examples/GetUserTenantsSuccessResponse"
+        401:
+          description: The request has no session and no credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedRorResponse'
+              examples:
+                RejectedByAclUnauthorizedResponseExample:
+                  $ref: "#/components/examples/RejectedByAclUnauthorizedResponseExample"
+                NoErrorReasonFromEsUnauthorizedResponseExample:
+                  $ref: "#/components/examples/NoErrorReasonFromEsUnauthorizedResponseExample"
         403:
           description: The request was forbidden by ReadonlyREST's ACL
           content:
@@ -275,8 +319,8 @@ components:
         - status
       properties:
         status:
-          type: number
-          example: 400
+          type: string
+          example: WRONG_FILE_EXTENSION
         message:
           type: string
           example: 'The file extension is not supported. Please upload a file with the correct yml or yaml extension.'
@@ -288,8 +332,8 @@ components:
         - status
       properties:
         status:
-          type: number
-          example: 415
+          type: string
+          example: UNSUPPORTED_MEDIA_TYPE
         message:
           type: string
           example: 'We are unable to process your request because the provided media type is not supported. Please ensure you are using a compatible content type.'
@@ -301,8 +345,8 @@ components:
         - status
       properties:
         status:
-          type: number
-          example: 413
+          type: string
+          example: FILE_SIZE_EXCEEDS
         message:
           type: string
           example: 'The file size exceeds the maximum 10MB allowed limit. Please upload a smaller file.'
@@ -314,11 +358,52 @@ components:
         - status
       properties:
         status:
-          type: number
-          example: 403
+          type: string
+          description: >-
+            The reason code. "FORBIDDEN" for a rejection by ReadonlyREST Kibana (license or access level).
+            The reason from the authentication when Elasticsearch rejects the credentials, for example
+            "CUSTOM_ERROR_FROM_ES" or "FORBIDDEN_BY_READONLYREST".
+          example: FORBIDDEN
         message:
           type: string
           example: 'No ACL block was matched'
+        statusCode:
+          type: integer
+          example: 403
+        error:
+          type: string
+          example: FAILURE
+
+    UnauthorizedRorResponse:
+      type: object
+      required:
+        - message
+        - status
+        - statusCode
+        - error
+      properties:
+        message:
+          type: string
+          description: The reason from Elasticsearch, or a default message when Elasticsearch gives no reason.
+          example: 'Forbidden by ReadonlyREST'
+        status:
+          type: string
+          description: >-
+            "CUSTOM_ERROR_FROM_ES" when Elasticsearch gives a reason, "FORBIDDEN_BY_READONLYREST" when it gives no reason.
+          enum:
+            - CUSTOM_ERROR_FROM_ES
+            - FORBIDDEN_BY_READONLYREST
+          example: CUSTOM_ERROR_FROM_ES
+        statusCode:
+          type: integer
+          enum:
+            - 401
+          example: 401
+        error:
+          type: string
+          enum:
+            - Unauthorized
+          example: Unauthorized
 
     XRorCorrelationId:
       type: string
@@ -405,6 +490,22 @@ components:
         $ref: '#/components/schemas/XRorCorrelationId'
 
   examples:
+    RejectedByAclUnauthorizedResponseExample:
+      summary: The ACL rejected a request with no session and no credentials
+      value:
+        message: "Forbidden by ReadonlyREST"
+        status: CUSTOM_ERROR_FROM_ES
+        statusCode: 401
+        error: Unauthorized
+
+    NoErrorReasonFromEsUnauthorizedResponseExample:
+      summary: Elasticsearch rejected a request with no session and no credentials and gave no reason
+      value:
+        message: "Forbidden by ReadonlyREST"
+        status: FORBIDDEN_BY_READONLYREST
+        statusCode: 401
+        error: Unauthorized
+
     NoAclBlockWasMatchedForbiddenResponseExample:
       summary: No ACL block was matched
       value:
