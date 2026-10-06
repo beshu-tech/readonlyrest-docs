@@ -354,6 +354,7 @@ ReadonlyREST for Kibana is almost entirely remote-controlled from the Elasticsea
 
 * `readonlyrest_kbn.logLevel: <trace|debug|info|error|warn>`: for extra visibility set debug or (rarely) trace. Keep in mind `trace` could leak secrets into logs, so be careful.
 * `readonlyrest_kbn.logPrettyPrintEnabled: true|false`: if you want to see pretty-printed or compact logs.
+* `readonlyrest_kbn.trusted_proxies: none|all|[<IP or CIDR>, ...]`: the proxies that Kibana trusts to write the `X-Forwarded-For` header. See [Trusted proxies and the X-Forwarded-For header](#trusted-proxies-and-the-x-forwarded-for-header).
 * [session configuration](#session-configuration)
 * [UI customisation](#login-screen-tweaking)
 * [custom middleware](#custom-middleware)
@@ -608,6 +609,170 @@ Each Kibana node stores user sessions in memory. This will cause problems when u
 {% hint style="warning" %}
 From ReadonlyREST version 1.51.0 `readonlyrest_kbn.cookiePass` is a required `kibana.yml` config parameter.
 {% endhint %}
+
+#### Trusted proxies and the X-Forwarded-For header
+
+##### What X-Forwarded-For is
+
+`X-Forwarded-For` is an HTTP header that holds the address of the client. Each proxy on the path adds the address it got the request from to the end of the header. A load balancer in front of Kibana uses this header to tell Kibana the address of the user.
+
+The client writes the first part of the header. A client can write any value there. For example, a user at home can send `X-Forwarded-For: 10.0.0.5` and pretend to be on the office network.
+
+The direct sender is the computer that connects to Kibana: the browser or a load balancer. Kibana gets this address from the network connection, so the client cannot change it.
+
+##### Why the setting exists
+
+Kibana sends one client address to Elasticsearch with each request of a user. The [`x_forwarded_for`](elasticsearch.md#x_forwarded_for) rule and the audit log use this address.
+
+Before ReadonlyREST 1.72.0, Kibana sent the `X-Forwarded-For` header of the browser without a check. A user could send a fake address and pass an `x_forwarded_for` rule. For example:
+
+1. The ACL allows only the office network: `x_forwarded_for: ["10.0.0.0/8"]`.
+2. A user at home sends `X-Forwarded-For: 10.0.0.5`.
+3. Elasticsearch gets `10.0.0.5` and allows the request.
+
+A load balancer does not stop this. Most load balancers add the real address to the end of the header, so the fake address stays first.
+
+The `readonlyrest_kbn.trusted_proxies` setting tells Kibana which proxies write a correct `X-Forwarded-For` header. Kibana reads the header only from these proxies.
+
+##### Values
+
+Set the value in `kibana.yml`:
+
+```yaml
+# Trust no proxy. This is the default.
+readonlyrest_kbn.trusted_proxies: none
+
+# Trust only the proxies in the list. Each entry is an IP address or a CIDR range.
+readonlyrest_kbn.trusted_proxies: ["10.0.0.10", "10.1.0.0/16"]
+
+# Trust each proxy.
+readonlyrest_kbn.trusted_proxies: all
+```
+
+| Value | Kibana trusts the `X-Forwarded-For` header |
+|-------|--------------------------------------------|
+| `none` | never. Kibana sends the address of the direct sender. |
+| a list of IP addresses and CIDR ranges | only when it comes from a proxy in the list |
+| `all` | always. Kibana sends the first address of the header. |
+
+Kibana does not start when the value is not valid:
+
+* An entry of the list is not an IP address or a CIDR range in the standard notation. Host names, netmasks such as `10.0.0.0/255.0.0.0`, and octets with a leading zero such as `010.0.0.1` are not accepted.
+* An IPv6 address in which the dotted IPv4 part comes right after `::`, for example `64:ff9b::1.2.3.4`. Write it in the hex form, for example `64:ff9b::102:304`.
+* A range contains every IPv4 address, for example `0.0.0.0/0` or `::ffff:10.0.0.0/8`. To trust each proxy, use `all`. Write an IPv4 range in the IPv4 form, for example `10.0.0.0/8`.
+* The list is empty. To trust no proxy, use `none`.
+
+When the value is `all`, Kibana writes a warning to the log at startup.
+
+##### Which address Kibana sends to Elasticsearch
+
+Kibana finds the client address as follows:
+
+1. Kibana makes a list. The list holds the addresses of the `X-Forwarded-For` header, from left to right, and then the address of the direct sender.
+2. Kibana looks at the last address in the list.
+3. If the address is a trusted proxy, Kibana goes to the address before it and does step 3 again.
+4. If the address is not a trusted proxy, Kibana stops. This is the client address.
+5. If all addresses are trusted, the client address is the first address.
+
+The user can write only the start of the header. A trusted load balancer adds the real address of the user to the end. Kibana stops at the real address and never gets to the fake one.
+
+Example: `readonlyrest_kbn.trusted_proxies: ["10.0.0.10"]`. The user is at `203.0.113.7` and sends the fake address `10.0.0.5`.
+
+| Direct sender | `X-Forwarded-For` header | Kibana sends |
+|---------------|--------------------------|--------------|
+| `10.0.0.10` (load balancer) | `10.0.0.5, 203.0.113.7` | `203.0.113.7` |
+| `203.0.113.7` (user, no load balancer) | `10.0.0.5` | `203.0.113.7` |
+
+The first request with the other values:
+
+| Value | Kibana sends |
+|-------|--------------|
+| `none` | `10.0.0.10`, the load balancer |
+| `all` | `10.0.0.5`, the fake address |
+
+Kibana sends only one address, also when the request went through many proxies. The `x_forwarded_for` rule reads the first address of the header. With the full header, the fake address would pass again.
+
+`elasticsearch.requestHeadersWhitelist` does not change this. When the list contains `x-forwarded-for`, Kibana sends the client address in place of the header of the browser, also when the browser sends no header. This applies also to the login request and to the other calls that Kibana sends to Elasticsearch for the user.
+
+##### How to choose a value
+
+| Setup | Value |
+|-------|-------|
+| The browser connects to Kibana directly | `none` |
+| One load balancer in front of Kibana | the addresses of the load balancer |
+| Many proxies in front of Kibana | the addresses of all the proxies |
+
+Use the addresses that Kibana sees on the network connection. Use a CIDR range when the proxy address can change.
+
+Put only proxies in the list. Kibana trusts the `X-Forwarded-For` header of each computer in the list, and a computer in a trusted range can write any address. For example, do not trust the office network `10.0.0.0/8` when the users connect to Kibana from it.
+
+A trusted proxy can also send the `X-Forwarded-Proto` header, with the protocol of the user (`http` or `https`). Kibana uses this protocol to make the URLs of its redirects. When a load balancer handles TLS, add it to the list, so that Kibana uses `https`.
+
+##### When `all` is safe
+
+`all` is safe only when both of these are true:
+
+* Clients cannot connect to Kibana directly. For example, a firewall lets only the proxy connect to the Kibana port.
+* The proxy in front of Kibana replaces the `X-Forwarded-For` header. It does not add to it.
+
+Otherwise, a client can send a fake address to Elasticsearch, and also a fake `X-Forwarded-Proto` header. Use a list when you can.
+
+##### Effect on Elasticsearch rules and the audit log
+
+Elasticsearch gets the client address in the `X-Forwarded-For` header of each request that Kibana sends for a user.
+
+* The [`x_forwarded_for`](elasticsearch.md#x_forwarded_for) rule checks this address.
+* The audit log writes this address. The [predefined serializers](details/audit.md#predefined-serializers) write it in the `xff` field. The [ECS serializer](details/audit.md#using-ecs-serializer) writes it in the `labels.x_forwarded_for` field. In a [configurable serializer](details/audit.md#using-configurable-serializer), use `{X_FORWARDED_FOR_HTTP_HEADER}`.
+
+You do not change the Elasticsearch settings.
+
+##### Upgrade notes
+
+From ReadonlyREST 1.72.0, the default value is `none`. After the upgrade:
+
+* **Kibana behind a load balancer.** Elasticsearch gets the address of the load balancer, not of the user. `x_forwarded_for` rules for the networks of the users stop allowing requests. Add the addresses of the load balancer to `readonlyrest_kbn.trusted_proxies`.
+* **Kibana with HTTPS and a reverse proxy on the same host.** Before, Kibana trusted `127.0.0.1` when HTTPS was on. Now, add `127.0.0.1` to the list.
+* **Kibana with HTTP behind a proxy that handles TLS.** Before, Kibana did not read `X-Forwarded-Proto`. Now, Kibana reads it from a trusted proxy.
+
+To find a load balancer that is not in the list, look at the client address in the audit log after the upgrade: the `xff` field, or `labels.x_forwarded_for` with the ECS serializer. If the field holds the address of the load balancer, add the load balancer to `readonlyrest_kbn.trusted_proxies`.
+
+To keep the result of `x_forwarded_for` rules of earlier versions, set `readonlyrest_kbn.trusted_proxies: all`. Elasticsearch then gets the first address of the header, not the full header. Kibana also reads `X-Forwarded-Proto` from each sender. Read [When `all` is safe](#when-all-is-safe) first.
+
+##### Load balancer examples
+
+**nginx**
+
+nginx writes the header with the `proxy_set_header` directive:
+
+```nginx
+location / {
+  proxy_pass https://kibana:5601;
+  # Adds the address of the client to the end of the header of the request.
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  # Or replaces the header with the address of the client:
+  # proxy_set_header X-Forwarded-For $remote_addr;
+  proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+Add the address of the nginx host, as Kibana sees it, to the list. When nginx runs on the Kibana host, add `127.0.0.1`. When `proxy_pass` uses the name `localhost`, nginx can also connect over the IPv6 loopback address, so add `::1` too:
+
+```yaml
+readonlyrest_kbn.trusted_proxies: ["127.0.0.1", "::1"]
+```
+
+**AWS Application Load Balancer**
+
+The load balancer also sets `X-Forwarded-Proto`. Two attributes of the load balancer change `X-Forwarded-For`:
+
+* `routing.http.xff_header_processing.mode`. Keep the default value `append`: the load balancer adds the address of the client to the end of the header. With `preserve`, the load balancer does not add the address, so a client can write any address. With `remove`, the load balancer removes the header, and Kibana sends the address of the load balancer.
+* `routing.http.xff_client_port.enabled`. Keep the default value `false`. With `true`, each address has a port, for example `203.0.113.7:51234`. Elasticsearch cannot read an address with a port, so the `x_forwarded_for` rule does not allow the request.
+
+The load balancer connects to Kibana from private addresses in its subnets. These addresses can change. Add the CIDR ranges of the load balancer subnets to the list:
+
+```yaml
+readonlyrest_kbn.trusted_proxies: ["10.0.1.0/24", "10.0.2.0/24"]
+```
 
 
 ### Session Configuration

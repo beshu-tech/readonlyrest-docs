@@ -1970,6 +1970,10 @@ response from above will look like:
 
 Behaves exactly like `hosts`, but gets the source IP address \(a.k.a. origin address, `OA` in logs\) inside the `X-Forwarded-For` header only \(useful replacement to `hosts`rule when requests come through a load balancer like AWS ELB\)
 
+**Requests from Kibana**
+
+For a request of a Kibana user, Kibana sends one client address in the `X-Forwarded-For` header. The `readonlyrest_kbn.trusted_proxies` setting in `kibana.yml` controls which address. See [Trusted proxies and the X-Forwarded-For header](kibana.md#trusted-proxies-and-the-x-forwarded-for-header).
+
 **Load balancers**
 
 This is a nice tip if your Elasticsearch is behind a load balancer. If you want to match all the requests that come through the load balancer, use `x_forwarded_for: ["0.0.0.0/0"]`. This will match the requests with a valid IP address as a value of the `X-Forwarded-For` header.
