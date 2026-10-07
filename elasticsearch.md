@@ -1972,7 +1972,7 @@ Behaves exactly like `hosts`, but gets the source IP address \(a.k.a. origin add
 
 **Requests from Kibana**
 
-For a request of a Kibana user, Kibana sends one client address in the `X-Forwarded-For` header. The `readonlyrest_kbn.trusted_proxies` setting in `kibana.yml` controls which address. See [Trusted proxies and the X-Forwarded-For header](kibana.md#trusted-proxies-and-the-x-forwarded-for-header).
+For the requests of the Kibana apps, Kibana sends one client address in the `X-Forwarded-For` header. The requests that ReadonlyREST for Kibana sends to Elasticsearch itself, for example at login, get it only when `elasticsearch.requestHeadersWhitelist` in `kibana.yml` contains `x-forwarded-for`. The `readonlyrest_kbn.trusted_proxies` setting in `kibana.yml` controls which address. See [Trusted proxies and the X-Forwarded-For header](kibana.md#trusted-proxies-and-the-x-forwarded-for-header).
 
 **Load balancers**
 

@@ -622,7 +622,7 @@ The direct sender is the computer that connects to Kibana: the browser or a load
 
 ##### Why the setting exists
 
-Kibana sends one client address to Elasticsearch with each request of a user. The [`x_forwarded_for`](elasticsearch.md#x_forwarded_for) rule and the audit log use this address.
+Kibana sends one client address to Elasticsearch with the requests of a user. The [`x_forwarded_for`](elasticsearch.md#x_forwarded_for) rule and the audit log use this address.
 
 If Kibana trusts the `X-Forwarded-For` header of each client, a user can send a fake address and pass an `x_forwarded_for` rule. For example:
 
@@ -692,7 +692,7 @@ The first request with the other values:
 
 Kibana sends only one address, also when the request went through many proxies. The `x_forwarded_for` rule reads the first address of the header, and a client can write that address.
 
-`elasticsearch.requestHeadersWhitelist` does not change this. When the list contains `x-forwarded-for`, Kibana sends the client address in place of the header of the browser, also when the browser sends no header. This applies also to the login request and to the other calls that Kibana sends to Elasticsearch for the user.
+`elasticsearch.requestHeadersWhitelist` does not change this. When the list contains `x-forwarded-for`, Kibana sends the client address in place of the header of the browser, also when the browser sends no header. This applies also to the requests that ReadonlyREST for Kibana sends to Elasticsearch itself, for example at login.
 
 ##### How to choose a value
 
@@ -720,7 +720,7 @@ Otherwise, a client can send a fake address to Elasticsearch, and also a fake `X
 
 ##### Effect on Elasticsearch rules and the audit log
 
-Elasticsearch gets the client address in the `X-Forwarded-For` header of each request that Kibana sends for a user.
+Elasticsearch gets the client address in the `X-Forwarded-For` header of the requests of the Kibana apps. The requests that ReadonlyREST for Kibana sends to Elasticsearch itself, for example at login, get it only when `elasticsearch.requestHeadersWhitelist` contains `x-forwarded-for`.
 
 * The [`x_forwarded_for`](elasticsearch.md#x_forwarded_for) rule checks this address.
 * The audit log writes this address. The [predefined serializers](details/audit.md#predefined-serializers) write it in the `xff` field. The [ECS serializer](details/audit.md#using-ecs-serializer) writes it in the `labels.x_forwarded_for` field. In a [configurable serializer](details/audit.md#using-configurable-serializer), use `{X_FORWARDED_FOR_HTTP_HEADER}`.
@@ -764,6 +764,8 @@ The load balancer connects to Kibana from private addresses in its subnets. Thes
 ```yaml
 readonlyrest_kbn.trusted_proxies: ["10.0.1.0/24", "10.0.2.0/24"]
 ```
+
+Kibana then trusts each host in these subnets, and such a host can write any address. Put the load balancer in subnets that hold no other hosts.
 
 
 ### Session Configuration
