@@ -27,12 +27,18 @@ ROR now enforces the ACL on the indices referenced in an ESQL `LOOKUP JOIN`. Pre
 The `_terms_enum` API now honors the `fields` rule. Because document-level security cannot be applied to this API, ROR rejects a `_terms_enum` request coming from a block that defines a `filter` rule.
 
 </details>
+<details>
+<summary><strong>🚀New</strong> (KBN) 9.5.5, 9.5.4, 9.5.3, 9.5.2, 9.4.8, 9.4.7, 9.4.6, 8.19.23, 8.19.22, 8.19.21 support</summary>
 
+Official support for the ReadonlyREST Kibana plugin now covers Kibana 9.5.5, 9.5.4, 9.5.3, 9.5.2, 9.4.8, 9.4.7, 9.4.6, 8.19.23, 8.19.22, and 8.19.21. You can upgrade Kibana to any of these versions while keeping the same access control and authentication features.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (KBN) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.22, 8.19.21 support
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.5.5, 9.5.4, 9.5.3, 9.5.2, 9.4.8, 9.4.7, 9.4.6, 8.19.23, 8.19.22, 8.19.21 support</summary>
 
+Official support for the ReadonlyREST Elasticsearch plugin now covers Elasticsearch 9.5.5, 9.5.4, 9.5.3, 9.5.2, 9.4.8, 9.4.7, 9.4.6, 8.19.23, 8.19.22, and 8.19.21. You can upgrade your clusters to any of these versions while keeping the same fine-grained index, document, and field-level access control.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**🚀New** (ES) 9.5.4, 9.5.3, 9.5.2, 9.4.7, 9.4.6, 8.19.22, 8.19.21 support
+</details>
 <details>
 <summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#block-level-audit-control">Give each audit output a name. A block can then send its events only to the outputs that you select, with <code>enabled_audit_outputs</code> or <code>disabled_audit_outputs</code></a></summary>
 
