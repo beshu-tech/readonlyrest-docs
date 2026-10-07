@@ -660,6 +660,7 @@ Kibana does not start when the value is not valid:
 * An entry of the list is not an IP address or a CIDR range in the standard notation. Host names, netmasks such as `10.0.0.0/255.0.0.0`, and octets with a leading zero such as `010.0.0.1` are not accepted.
 * An IPv6 address in which the dotted IPv4 part comes right after `::`, for example `64:ff9b::1.2.3.4`. Write it in the hex form, for example `64:ff9b::102:304`.
 * A range contains every IPv4 address, for example `0.0.0.0/0` or `::ffff:10.0.0.0/8`. To trust each proxy, use `all`. Write an IPv4 range in the IPv4 form, for example `10.0.0.0/8`.
+* Ranges together contain every IPv4 address, for example `0.0.0.0/1` and `128.0.0.0/1`, or `0.0.0.0/1` and `::ffff:128.0.0.0/97`. To trust each proxy, use `all`.
 * The list is empty. To trust no proxy, use `none`.
 
 When the value is `all`, Kibana writes a warning to the log at startup.
