@@ -669,12 +669,10 @@ When the value is `all`, Kibana writes a warning to the log at startup.
 Kibana finds the client address as follows:
 
 1. Kibana makes a list. The list holds the addresses of the `X-Forwarded-For` header, from left to right, and then the address of the direct sender.
-2. Kibana looks at the last address in the list.
-3. If the address is a trusted proxy, Kibana goes to the address before it and does step 3 again.
-4. If the address is not a trusted proxy, Kibana stops. This is the client address.
-5. If all addresses are trusted, the client address is the first address.
+2. Kibana reads the list from right to left. Kibana sends to Elasticsearch, as the client address, the first address that is not a trusted proxy.
+3. If all addresses are trusted, Kibana sends the first address of the list.
 
-The user can write only the start of the header. A trusted load balancer adds the real address of the user to the end. Kibana stops at the real address and never gets to the fake one.
+The user can write only the start of the header. A trusted load balancer adds the real address of the user to the end. Kibana takes the real address and never reads the fake one.
 
 Example: `readonlyrest_kbn.trusted_proxies: ["10.0.0.10"]`. The user is at `203.0.113.7` and sends the fake address `10.0.0.5`.
 
