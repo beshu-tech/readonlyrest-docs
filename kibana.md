@@ -782,21 +782,53 @@ This is a sliding inactivity window — each user action resets the clock.
 
 #### Automatic Session cleanup
 
-All expired Index or In-memory sessions, determined by an `expiresAt` date that falls prior to the current time and date, will be systematically cleaned. The parameters for this automated session cleanup procedure can be adjusted within the `kibana.yml` configuration file.
+ReadonlyREST deletes the expired sessions automatically.
+
+**Sessions in memory.** Each Kibana node keeps sessions in its memory. Each `sessions_cleanup_interval`, the node deletes the expired sessions from its memory.
+
+**Sessions in the session index.** When `readonlyrest_kbn.store_sessions_in_index` is `true`, a Kibana Task Manager task (`ror_session_cleanup`) also deletes sessions from the session index. Task Manager gives each run of the task to one Kibana node at a time. So with many Kibana nodes, only one node does the work.
+
+The session index keeps each session encrypted, and the expiry date is inside the encrypted session. So the task reads and decrypts each session:
+
+* It deletes the expired sessions.
+* It deletes the sessions that it cannot decrypt, for example the sessions that Kibana encrypted with an old `cookiePass`. No Kibana node can use these sessions.
+* It keeps all other sessions.
+
+The task reads the index in passes. A pass reads all the sessions in the index, one batch for each run:
+
+1. Each `sessions_cleanup_run_interval`, the task reads the next batch of at most `sessions_cleanup_batch_size` sessions.
+2. After the last batch, the pass ends.
+3. The next pass starts `sessions_cleanup_interval` after the start of the last pass. Until then, a run sends no request to Elasticsearch. When a pass takes more time than `sessions_cleanup_interval`, the next pass starts at the first run after the end of the pass.
+
+Task Manager stores the position of the task in its index. After a Kibana restart, the pass continues from that position.
 
 ```yaml
-readonlyrest_kbn.sessions_cleanup_interval: '1h' # Default to 1d 
+readonlyrest_kbn.sessions_cleanup_interval: '12h'     # default: 1d
+readonlyrest_kbn.sessions_cleanup_batch_size: 2000    # default: 1000
+readonlyrest_kbn.sessions_cleanup_run_interval: '1m'  # default: 5m
 ```
+
 ##### Automatic Session cleanup options
 
-You can  defines interval as: 
+| Setting | Default | Accepted values | Effect |
+|---------|---------|-----------------|--------|
+| `readonlyrest_kbn.sessions_cleanup_interval` | `1d` | A positive duration, for example `1d`, `12h`, `3m`, `1 day` or `3hrs` | Sessions in memory: the time between two checks. Session index: the time from the start of a pass to the start of the next pass. |
+| `readonlyrest_kbn.sessions_cleanup_batch_size` | `1000` | An integer from `1` to `10000` | The maximum number of sessions that one run of the task reads. |
+| `readonlyrest_kbn.sessions_cleanup_run_interval` | `5m` | A number of seconds or minutes: `<n>s` or `<n>m`, for example `30s` or `5m`. `<n>` is a positive integer with no leading zero. | The time between two runs of the task. |
 
-| Value | Description | Example |
-|-------|-------------|---------|
-| s     | seconds     | "1s"    |
-| m     | minutes     | "1m"    |
-| h     | hours       | "1h"    |
-| d     | days        | "1d"    |
+For `sessions_cleanup_interval`, you can use the units `s`, `m`, `h` and `d`, and their long forms, for example `sec`, `min`, `hrs` and `day`. A space between the number and the unit is permitted.
+
+`sessions_cleanup_run_interval` accepts only seconds and minutes, because the Task Manager of Kibana 7.10 and older accepts only these units.
+
+Kibana does not start when the value of `sessions_cleanup_batch_size` or `sessions_cleanup_run_interval` is not valid. From the next release, the same applies to `sessions_cleanup_interval`. The error names the setting.
+
+##### Notes for administrators
+
+* **Load.** The Kibana node that runs the task decrypts each session of the batch. A pass over N sessions takes N / `sessions_cleanup_batch_size` runs. With the default values, a pass over 10,000 sessions takes 10 runs (50 minutes), and the task reads at most 288,000 sessions a day. When the session index holds more sessions, increase `sessions_cleanup_batch_size` or decrease `sessions_cleanup_run_interval`.
+* **`cookiePass` change.** After a `cookiePass` change, the task deletes the sessions that Kibana encrypted with the old value. A `cookiePass` change ends all sessions anyway, because Kibana encrypts the session cookie with the same password. During a rolling restart, the nodes with the old value and the nodes with the new value delete the sessions of the other group. The users of these sessions log in again.
+* **Session index deleted and created again.** When you delete and create the session index again during a pass, the pass can skip some new sessions. The next pass checks them. No expired session stays in the index.
+* **One index, not an alias.** `readonlyrest_kbn.sessions_index_name` must name one index. With an alias over many indices, a pass can skip sessions. ReadonlyREST creates the session index as one index.
+* **Clocks.** The clocks of the Kibana nodes can differ by up to 10 minutes. With a larger difference, a pass can start again from the beginning when the task moves to another node. Keep the clocks of the Kibana nodes in sync, for example with NTP.
 
 #### Clearing session history
 
