@@ -812,11 +812,11 @@ readonlyrest_kbn.sessions_cleanup_run_interval: '1m'  # default: 5m
 
 | Setting | Default | Accepted values | Effect |
 |---------|---------|-----------------|--------|
-| `readonlyrest_kbn.sessions_cleanup_interval` | `1d` | A duration from more than 0 to 24 days, for example `1d`, `12h`, `3m`, `1 day` or `3hrs` | Sessions in memory: the time between two checks. Session index: the time from the start of a pass to the start of the next pass. |
+| `readonlyrest_kbn.sessions_cleanup_interval` | `1d` | A duration from 1 ms to 2147483647 ms (about 24.8 days), for example `1d`, `12h`, `3m`, `1 day` or `3hrs` | Sessions in memory: the time between two checks. Session index: the time from the start of a pass to the start of the next pass. |
 | `readonlyrest_kbn.sessions_cleanup_batch_size` | `1000` | An integer from `1` to `10000` | The maximum number of sessions that one run of the task reads. |
 | `readonlyrest_kbn.sessions_cleanup_run_interval` | `5m` | A number of seconds or minutes: `<n>s` or `<n>m`, for example `30s` or `5m`. `<n>` is a positive integer with no leading zero. | The time between two runs of the task. |
 
-For `sessions_cleanup_interval`, you can use the units `s`, `m`, `h` and `d`, and their long forms, for example `sec`, `min`, `hrs` and `day`. A space between the number and the unit is permitted. The maximum is 2147483647 ms (about 24.8 days), so use `24d` and not `30d`.
+For `sessions_cleanup_interval`, you can use the units `s`, `m`, `h` and `d`, and their long forms, for example `sec`, `min`, `hrs` and `day`. A space between the number and the unit is permitted, and a number with no unit is a number of milliseconds. The value has no sign and at most 64 characters. The maximum is 2147483647 ms (about 24.8 days), so use `24d` and not `30d`.
 
 `sessions_cleanup_run_interval` accepts only seconds and minutes, because the Task Manager of Kibana 7.10 and older accepts only these units.
 
