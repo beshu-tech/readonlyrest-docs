@@ -8,6 +8,9 @@ entries:
     components: [es]
     text: "[CVE-2023-3894](https://nvd.nist.gov/vuln/detail/CVE-2023-3894), [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193)"
   - type: warning
+    components: [kbn]
+    text: "The `x-ror-current-group` header is deprecated. To select a tenancy in a Kibana API request, use the [`x-ror-tenancy-id` header](https://docs.readonlyrest.com/kibana#extending-the-kibana-api-with-the-x-ror-tenancy-id-header)."
+  - type: warning
     components: [es]
     text: "Acknowledgement needs to be accepted before the Elasticsearch patching process. For scripts, you can [set the flag](https://docs.readonlyrest.com/elasticsearch#id-3.-patch-elasticsearch) to automate the process."
   - type: new
