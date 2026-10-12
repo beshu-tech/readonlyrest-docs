@@ -2,6 +2,350 @@
 
 # Changelog
 
+### (2026-10-11) What's new in **ROR 1.72.0**
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83610">CVE-2026-83610</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-82562">CVE-2026-82562</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-82417">CVE-2026-82417</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-84375">CVE-2026-84375</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-15603">CVE-2026-15603</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-85024">CVE-2026-85024</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-86472">CVE-2026-86472</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-17495">CVE-2026-17495</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-102276">CVE-2026-102276</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-101907">CVE-2026-101907</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-93748">CVE-2026-93748</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-90711">CVE-2026-90711</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-97058">CVE-2026-97058</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-24999">CVE-2022-24999</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-15284">CVE-2025-15284</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-75899">CVE-2026-75899</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-75931">CVE-2026-75931</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-75975">CVE-2026-75975</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-76172">CVE-2026-76172</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-84292">CVE-2026-84292</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-87859">CVE-2026-87859</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83605">CVE-2026-83605</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83607">CVE-2026-83607</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83608">CVE-2026-83608</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83611">CVE-2026-83611</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83613">CVE-2026-83613</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83614">CVE-2026-83614</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83615">CVE-2026-83615</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83616">CVE-2026-83616</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83619">CVE-2026-83619</a></summary>
+
+This release fixes a batch of security vulnerabilities in the ROR Kibana plugin, including issues in its bundled dependencies. We recommend upgrading to 1.72.0 as soon as possible.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) Kibana no longer sends the browser's <code>X-Forwarded-For</code> header to Elasticsearch, where a fake address could pass an <code>x_forwarded_for</code> rule. The new <a href="https://docs.readonlyrest.com/kibana#trusted-proxies-and-the-x-forwarded-for-header"><code>readonlyrest_kbn.trusted_proxies</code></a> setting gives the proxies that Kibana trusts.</summary>
+
+Previously, a client could spoof its address by sending a fake `X-Forwarded-For` header, which Kibana forwarded to Elasticsearch and which could satisfy an `x_forwarded_for` rule. Kibana now only forwards this header when it comes from a trusted proxy, configured via the new `readonlyrest_kbn.trusted_proxies` setting (`none`, `all`, or a list of IPs/CIDRs).
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) A Kibana user can no longer send the internal ROR headers to Elasticsearch.</summary>
+
+Internal ROR headers are now stripped from user requests, so a Kibana user can no longer inject them to impersonate the plugin or bypass ACL rules.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) The ROR Kibana plugin now hides every secret in its logs, not only the <code>Authorization</code> header.</summary>
+
+Log masking now covers all sensitive values (such as cookies, tokens and other credentials), preventing secrets from leaking into Kibana logs.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-89044">CVE-2026-89044</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-59990">CVE-2026-59990</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-61814">CVE-2026-61814</a></summary>
+
+This release fixes several security vulnerabilities in the ROR Elasticsearch plugin. We recommend upgrading to 1.72.0 as soon as possible.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) SQL API: a user with an <code>indices</code> rule could read data outside the allowed indices, for example on a remote cluster. ROR now limits each SQL query to the allowed indices, and forbids the query when it cannot.</summary>
+
+A user restricted by an `indices` rule could previously read data from indices outside their allowed set via the SQL API, for example on a remote cluster. ROR now rewrites each SQL query to target only the allowed indices, and rejects the query outright when it cannot enforce the restriction.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) SQL API: a user with an <code>indices</code> rule could list the names and the columns of forbidden indices with <code>SHOW TABLES</code> or <code>SHOW COLUMNS</code>.</summary>
+
+`SHOW TABLES` and `SHOW COLUMNS` no longer expose the names or columns of indices a user is not allowed to access.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) When ROR could not read an ES|QL query, it sent the query to Elasticsearch unchanged. ROR now forbids such a query when the ACL limits the indices of the user.</summary>
+
+If ROR failed to parse an ES|QL query, it previously forwarded it to Elasticsearch as-is, which could bypass index restrictions. ROR now rejects such queries whenever the user's ACL limits the accessible indices.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) Fixed an authorization bypass in ES|QL PROMQL queries on Elasticsearch 9.4 and newer: a query with no <code>index</code> parameter read every <code>metrics-*</code> index. ROR now writes the allowed indices into such a query.</summary>
+
+On Elasticsearch 9.4 and newer, an ES|QL PROMQL query without an `index` parameter could read all `metrics-*` indices, bypassing the user's ACL. ROR now injects the user's allowed indices into such queries.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) The <code>hosts</code>, <code>hosts_local</code> and <code>x_forwarded_for</code> rules no longer match other IPv6 addresses in the same /32 network. The logs and the audit events now show one IPv6 address as /128, not /32.</summary>
+
+These rules previously treated a single IPv6 address as a /32 network, so they could match unrelated addresses in the same range. They now match the exact address, and logs and audit events display a single IPv6 address as /128.
+
+</details>
+<details>
+<summary><strong>⚠️Warning</strong> (KBN) Behind a load balancer or a reverse proxy, Elasticsearch now gets the address of the proxy, not of the user. <code>x_forwarded_for</code> rules for user networks then stop allowing requests, so <a href="https://docs.readonlyrest.com/kibana#trusted-proxies-and-the-x-forwarded-for-header">add the proxy addresses to <code>readonlyrest_kbn.trusted_proxies</code></a>.</summary>
+
+As a consequence of the `X-Forwarded-For` security fix, Elasticsearch now sees the proxy's address instead of the user's. If you use `x_forwarded_for` rules for user networks behind a load balancer or reverse proxy, add the proxy addresses to `readonlyrest_kbn.trusted_proxies` to keep those rules working.
+
+</details>
+<details>
+<summary><strong>⚠️Warning</strong> (KBN) ROR ignores the <code>xpack.reporting.kibanaServer</code> setting.</summary>
+
+ROR does not read the `xpack.reporting.kibanaServer` setting, so any configuration relying on it for reporting URLs will not be honored.
+
+</details>
+<details>
+<summary><strong>⚠️Warning</strong> (ES) For a user with an <code>indices</code> rule, <code>SYS COLUMNS</code> and the JDBC/ODBC metadata queries now return 403. A BI tool that connects over JDBC/ODBC can then fail to show the index schema.</summary>
+
+As part of the SQL API security fixes, `SYS COLUMNS` and JDBC/ODBC metadata queries now return 403 for users restricted by an `indices` rule. BI tools connecting over JDBC/ODBC may therefore fail to display the index schema.
+
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#custom-audit-cluster">A remote audit cluster now supports the <code>failover</code> mode and an optional connectivity check at startup</a></summary>
+
+A remote audit cluster can now use `failover` mode, which sends events to the first available node in order (each with its own circuit breaker) instead of round-robin. An optional connectivity check at startup and on settings reload can be set to `disabled`, `required` or `best_effort`.
+
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#sending-audit-events-through-an-ingest-pipeline">An audit output of the <code>index</code> or <code>data_stream</code> type can now send its events through an Elasticsearch ingest pipeline</a></summary>
+
+Audit outputs of type `index` and `data_stream` can now route their events through an Elasticsearch ingest pipeline, letting you enrich, transform or filter audit events before they are stored.
+
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) Kibana sends <code>X-Forwarded-For</code> and the headers from <code>elasticsearch.requestHeadersWhitelist</code> to Elasticsearch as normal HTTP headers. A proxy between Kibana and Elasticsearch can use them.</summary>
+
+These headers are now forwarded as regular HTTP headers, so a proxy sitting between Kibana and Elasticsearch can read and act on them.
+
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (KBN) An API request with no session and no credentials now gets 401 (not authenticated) instead of 403 (forbidden). Kibana then logs out, and the user returns to the same page after the next login.</summary>
+
+Returning 401 instead of 403 lets Kibana trigger a proper logout and redirect the user back to the same page after they log in again.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A short Elasticsearch outage no longer logs out every Kibana tab. Kibana keeps the session when Elasticsearch does not answer, answers 429 or 5xx, or when ROR in Elasticsearch has not started yet.</summary>
+
+Kibana now preserves the session during transient Elasticsearch problems (no response, 429, 5xx, or ROR not yet started) instead of logging out all tabs.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana tabs no longer stop checking the session after an Elasticsearch error, so they detect when the session ends. This happened during impersonation, and with <code>readonlyrest_kbn.store_sessions_in_index</code> turned on.</summary>
+
+Tabs now keep polling the session after an Elasticsearch error, so they correctly detect session end. This affected impersonation and setups with `readonlyrest_kbn.store_sessions_in_index` enabled.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) An API call after the session expires or times out now gets 401, not a redirect to the logout page. On Kibana 9.x the tab goes to the login page at that call, not at the next one.</summary>
+
+Expired or timed-out sessions now return 401 for API calls instead of a logout redirect, and on Kibana 9.x the tab redirects to the login page immediately rather than on the following call.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) When the browser tab that checks the session closes, crashes or hangs, the other Kibana tabs keep checking it. A second logout or reload now reaches every tab.</summary>
+
+Session checking is now resilient to the loss of the tab that coordinates it, so a subsequent logout or reload is propagated to all open tabs.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) The session cleanup task deletes the expired sessions from the session index again. Two new <code>kibana.yml</code> settings set its pace: <code>readonlyrest_kbn.sessions_cleanup_batch_size</code> and <code>readonlyrest_kbn.sessions_cleanup_run_interval</code>.</summary>
+
+Expired sessions are again removed from the session index. The new `readonlyrest_kbn.sessions_cleanup_batch_size` and `readonlyrest_kbn.sessions_cleanup_run_interval` settings control how many sessions are deleted per run and how often the cleanup runs.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A change of the session cleanup interval in <code>kibana.yml</code> now applies after a Kibana restart.</summary>
+
+The configured session cleanup interval is now picked up correctly after restarting Kibana.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) With more than one Kibana instance, a stopping instance no longer removes the session cleanup task for the others.</summary>
+
+In multi-instance deployments, a shutting-down Kibana no longer deregisters the shared session cleanup task, so the remaining instances keep cleaning up expired sessions.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) ROR now clears the Kibana session when the logout at the identity provider fails.</summary>
+
+If the identity provider's logout fails, ROR now still clears the local Kibana session, preventing a stale session from remaining active.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) With more than one Kibana instance, a session that starts with a JWT now works on every instance.</summary>
+
+JWT-based sessions are now shared correctly across all Kibana instances instead of being valid on only one of them.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana no longer shows a blank page after a SAML or OIDC login. The browser asks for <code>/favicon.ico</code>, Kibana sent that request to <code>/logout</code>, and the logout ended the new session.</summary>
+
+A `/favicon.ico` request was incorrectly routed to `/logout`, which terminated the freshly created session and left a blank page. This routing is now fixed.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) The ROR security settings editor no longer shows a blank page when <code>kibana.yml</code> sets <code>server.basePath</code>.</summary>
+
+The settings editor now loads correctly when Kibana runs under a non-root `server.basePath`.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana now shows the error correctly when a request ends with the 403 status.</summary>
+
+403 responses are now surfaced to the user with the correct error message instead of being mishandled.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) The Rules and Connectors pages show the ROR alerting and reporting link again when you open them from another page in Kibana.</summary>
+
+The ROR alerting and reporting link is now displayed on the Rules and Connectors pages regardless of how you navigate to them.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana no longer logs a warning that it ignores <code>kibana.index</code> when multi-tenancy is off and the user has the default Kibana index.</summary>
+
+A spurious warning about the ignored `kibana.index` setting is no longer logged in this configuration.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) For Kibana requests, including Dev Tools, the <code>hosts</code> and <code>x_forwarded_for</code> rules check the address of the user, not the address of Kibana.</summary>
+
+These rules now evaluate the end user's address for Kibana-originated requests (including Dev Tools) instead of Kibana's own address.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana no longer stops at boot when one Elasticsearch call fails with a short network error, such as a socket hang up.</summary>
+
+A transient network error during startup no longer prevents Kibana from booting.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) ROR requests to Elasticsearch now stop after <code>elasticsearch.requestTimeout</code>. An Elasticsearch node that does not answer can no longer block a Kibana request forever.</summary>
+
+ROR now honors `elasticsearch.requestTimeout` for its own calls to Elasticsearch, so an unresponsive node can no longer hang a Kibana request indefinitely.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A tenant now gets every object from the template index at login, when <code>readonlyrest_kbn.resetKibanaIndexToTemplate</code> is on. Before, some objects could be missing.</summary>
+
+With `readonlyrest_kbn.resetKibanaIndexToTemplate` enabled, all objects from the template index are now copied to the tenant at login; previously some could be omitted.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana in the ROR Docker image now stops gracefully on <code>docker stop</code> and <code>docker restart</code>.</summary>
+
+Kibana now shuts down cleanly when the container is stopped or restarted, instead of being killed abruptly.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) ROR works again on Elasticsearch 7.4.x and 7.5.x. In 1.71.0, Elasticsearch stopped a few seconds after start on these versions (on 7.4.2 also in 1.66.0 to 1.69.0).</summary>
+
+A regression that caused Elasticsearch 7.4.x and 7.5.x to shut down a few seconds after start (and 7.4.2 also in 1.66.0–1.69.0) is fixed.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) On Elasticsearch 7.11.2 to 7.12.1, a search with a <code>match_phrase</code> query no longer fails when the <code>fields</code> rule applies to it.</summary>
+
+A `match_phrase` search no longer fails on Elasticsearch 7.11.2–7.12.1 when a `fields` rule is in effect.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Requests with a large body no longer hang when you turn on ROR SSL on Elasticsearch 9.1 and newer.</summary>
+
+With ROR SSL enabled on Elasticsearch 9.1+, large request bodies are now processed correctly instead of hanging.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) SQL API: a query with no table, such as <code>SELECT 1 + 1</code>, now works. Before, it failed.</summary>
+
+Table-less SQL queries such as `SELECT 1 + 1` are now executed successfully.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) SQL API: a query on an alias that points to several indices now works. Before, it failed or returned wrong values.</summary>
+
+SQL queries against an alias spanning multiple indices now return correct results instead of failing or returning wrong values.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) SQL API: a query with a text value that holds an index name, or the word <code>FROM</code>, now works.</summary>
+
+SQL queries are no longer misparsed when a text literal contains an index name or the word `FROM`.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) ROR now reads a header in the same way whatever the letter case of its name. Before, a rule could read the wrong value.</summary>
+
+Header names are now matched case-insensitively, so rules no longer read the wrong value when a client varies the letter case.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) ROR reads no value from a header that the request sends with two different values. A rule that needs the header, such as <code>auth_key</code>, <code>jwt_auth</code> or <code>proxy_auth</code>, then does not match.</summary>
+
+When a request sends the same header with two different values, ROR now treats it as having no value, so authentication rules such as `auth_key`, `jwt_auth` and `proxy_auth` do not match. This prevents ambiguous headers from being used to bypass authentication.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) For <code>jwt_auth</code>, <code>ror_kbn_auth</code>, <code>token_authentication</code> and <code>proxy_auth</code>, the log says that the header holds more than one value. The <code>headers_and</code> and <code>headers_or</code> rules check each value of a repeated header.</summary>
+
+These authentication rules now log when a header carries more than one value, and `headers_and`/`headers_or` evaluate every value of a repeated header.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) The <code>hosts</code> and <code>x_forwarded_for</code> rules check the first address of <code>X-Forwarded-For</code>, also when the request sends this header more than once.</summary>
+
+The first address in `X-Forwarded-For` is now used consistently, even when the header appears multiple times in a request.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) The <code>@{header:&lt;header_name&gt;}</code> and <code>@explode{header:&lt;header_name&gt;}</code> variables now read all values of a header that the request sends more than once, joined by a comma.</summary>
+
+These variables now collect every value of a repeated header, joined by a comma, instead of only one of them.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) <code>prompt_for_basic_auth</code> now applies only to requests that do not come from the ROR Kibana plugin. You can use the setting and the plugin together, and every other client still gets the credentials prompt.</summary>
+
+`prompt_for_basic_auth` no longer interferes with requests from the ROR Kibana plugin, so the setting and the plugin can be used together while other clients still receive the credentials prompt.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Elasticsearch now starts when you patch it with a restrictive umask, for example <code>sudo</code> with <code>umask 077</code>. Before, it did not start, and the error said that the installation is corrupted.</summary>
+
+Patching under a restrictive umask (e.g. `sudo` with `umask 077`) no longer produces a false "installation is corrupted" error, and Elasticsearch starts normally.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) When ROR cannot read its patch files, the error now tells you to check their permissions.</summary>
+
+The error message now points to file permissions as the likely cause when ROR cannot read its patch files.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) On Windows, <code>ror-tools</code> keeps the hidden and system flags of the files that it patches, backs up or restores.</summary>
+
+`ror-tools` on Windows now preserves the hidden and system attributes of files it patches, backs up or restores.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) When patching fails, <code>ror-tools</code> now restores the original Elasticsearch files. Before, it removed the backup and left some files patched, and only a new Elasticsearch installation could fix that.</summary>
+
+A failed patch now triggers a rollback to the original Elasticsearch files, instead of deleting the backup and leaving a partially patched installation that required a fresh install to repair.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) <code>ror-tools</code> now finds a corrupted patch also from the files that it patched before. Before, it reported such an Elasticsearch as not patched, and patched it again.</summary>
+
+`ror-tools` now detects a corrupted patch by inspecting previously patched files, instead of misreporting the installation as unpatched and patching it again.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) When <code>ror-tools</code> cannot read a file or a folder that it checks, it now tells you which one. Before, it showed an unexpected error with a stack trace.</summary>
+
+`ror-tools` now reports the specific file or folder it cannot read, replacing the previous unexpected error with a stack trace.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Elasticsearch shows a clear error when the JVM is older than ROR needs.</summary>
+
+An outdated JVM now produces a clear, actionable error message instead of a confusing failure.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Elasticsearch in the ROR Docker image now stops gracefully on <code>docker stop</code> and <code>docker restart</code>.</summary>
+
+Elasticsearch now shuts down cleanly when the container is stopped or restarted, instead of being killed abruptly.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) The Elasticsearch 7.10.x Docker images now start.</summary>
+
+The Elasticsearch 7.10.x Docker images now boot correctly.
+
+</details>
+
 ### (2026-08-28) What's new in **ROR 1.71.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-12590">CVE-2026-12590</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-16221">CVE-2026-16221</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-13149">CVE-2026-13149</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-59869">CVE-2026-59869</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-59879">CVE-2026-59879</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-59880">CVE-2026-59880</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-14257">CVE-2026-14257</a>, <a href="https://github.com/advisories/GHSA-r292-9mhp-454m">GHSA-r292-9mhp-454m</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-18446">CVE-2026-18446</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-69152">CVE-2026-69152</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-16728">CVE-2026-16728</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-13697">CVE-2026-13697</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-15157">CVE-2026-15157</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-14643">CVE-2026-14643</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-16729">CVE-2026-16729</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-67314">CVE-2026-67314</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-5078">CVE-2026-5078</a>, <a href="https://github.com/advisories/GHSA-cmwh-pvxp-8882">GHSA-cmwh-pvxp-8882</a></summary>
