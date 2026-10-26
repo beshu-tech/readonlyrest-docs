@@ -1582,6 +1582,15 @@ If a request involves a wildcard \(i.e. "logstash-\*", "\*"\), this is first exp
 
 The rejection message and HTTP status code returned to the requester are chosen carefully with the main intent to simulate not-allowed indices do not exist at all.
 
+**Remote cluster indices**
+
+A pattern with a cluster part, for example `prod:logs-*` or `*:logs-*`, matches indices on remote clusters. ReadonlyREST gets the indices of each remote cluster that the request names. Each call to a remote cluster has a timeout of 10 seconds.
+
+When a remote cluster does not answer, ReadonlyREST follows the `skip_unavailable` setting of the cluster, as Elasticsearch does:
+
+* `true`: ReadonlyREST skips the cluster. The request gets the indices of the other clusters.
+* `false`: the rule stops with the error `RULE_ERROR(indices)`. ReadonlyREST then checks the next block.
+
 The rule has also an extended version:
 
 ```yaml
@@ -3067,7 +3076,7 @@ Here is a glossary:
 * `MET`: String, HTTP Method
 * `CNT`: String, HTTP body content. Comes as a summary of its length, full body of the request is available in debug mode.
 * `HDR`: String array, list of HTTP headers, headers' content is available in debug mode.
-* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated. When a block is `NOT_MATCHED`, the denial cause appears in parentheses after the block name (e.g. `AUTH_FAIL(...)`, `GROUPS_AUTH_FAIL(...)`, `AUTHZ_FAIL`, `IDX_NOT_FOUND`). See [Denial causes in HIS](#denial-causes-in-his) for a full reference.
+* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated. When a block is `NOT_MATCHED`, the denial cause appears in parentheses after the block name (e.g. `AUTH_FAIL(...)`, `GROUPS_AUTH_FAIL(...)`, `AUTHZ_FAIL`, `IDX_NOT_FOUND`, `RULE_ERROR(...)`). See [Denial causes in HIS](#denial-causes-in-his) for a full reference.
 
 In the example, the block `Admins` is allowing the request because all the rules in this block evaluate to `true`.
 
@@ -3105,6 +3114,9 @@ When a block is `NOT_MATCHED`, a denial cause appears in parentheses after the b
 | `TPL_NOT_FOUND` | All auth rules matched but the requested index template does not exist. Applies only to read-only requests. |
 | `IMPERSONATION_NOT_SUPPORTED` | The rule being evaluated does not support impersonation, which was attempted by the request. |
 | `IMPERSONATION_NOT_ALLOWED` | Impersonation was attempted but the impersonator is not allowed to impersonate the target user under this block. |
+| `RULE_ERROR(rule)` | The check of the rule stops with an error, for example when a remote cluster is unavailable. The Elasticsearch log has the details. Search the log for the request `ID`. |
+
+In `RULES:[...]`, each rule shows its result: `true` (the rule matches), `false` (the rule does not match) or `error` (the check stops with an error).
 
 ##### `blocks_history` in audit logs
 
