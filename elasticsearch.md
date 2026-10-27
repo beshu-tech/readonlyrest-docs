@@ -1586,10 +1586,10 @@ The rejection message and HTTP status code returned to the requester are chosen 
 
 A pattern with a cluster part, for example `prod:logs-*` or `*:logs-*`, matches indices on remote clusters. ReadonlyREST gets the indices of each remote cluster that the request names. Each call to a remote cluster has a timeout of 10 seconds.
 
-When a remote cluster does not answer, ReadonlyREST follows the `skip_unavailable` setting of the cluster, as Elasticsearch does:
+When the call to a remote cluster fails or times out, ReadonlyREST follows the `skip_unavailable` setting of the cluster, as Elasticsearch does:
 
 * `true`: ReadonlyREST skips the cluster. The request gets the indices of the other clusters.
-* `false`: the rule stops with the error `RULE_ERROR(indices)`. ReadonlyREST then checks the next block.
+* `false`: the rule stops with the error `RULE_ERROR (indices)`. ReadonlyREST then checks the next block.
 
 The rule has also an extended version:
 
