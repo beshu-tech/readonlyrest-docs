@@ -1593,7 +1593,7 @@ When the call to a remote cluster fails or times out, ReadonlyREST follows the `
 
 The default is `false` before Elasticsearch 8.15 and `true` from 8.15. Set `cluster.remote.<alias>.skip_unavailable: false` to make the search fail when the cluster is unavailable.
 
-When the call times out, but the cluster answers Elasticsearch later, the search can fail with `index_not_found_exception` for an index with the prefix `ROR_`. ReadonlyREST sends this index, which does not exist, so that the search gets no data.
+When the call fails or times out, but the cluster answers the search of Elasticsearch, the search can fail with `index_not_found_exception` for an index with the prefix `ROR_`. ReadonlyREST sends this index, which does not exist, so that the search gets no data.
 
 The rule has also an extended version:
 
