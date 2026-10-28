@@ -1582,6 +1582,19 @@ If a request involves a wildcard \(i.e. "logstash-\*", "\*"\), this is first exp
 
 The rejection message and HTTP status code returned to the requester are chosen carefully with the main intent to simulate not-allowed indices do not exist at all.
 
+**Remote cluster indices**
+
+A pattern with a cluster part, for example `prod:logs-*` or `*:logs-*`, matches indices on remote clusters. In the cluster part of a request, only `*` is a wildcard. Every other character matches itself, as in Elasticsearch. In a pattern of the `indices` rule, `?` matches one character, also in the cluster part. ReadonlyREST gets the indices of each remote cluster that the request names and that the rule allows. Each call to a remote cluster has a timeout of 10 seconds.
+
+When the call to a remote cluster fails or times out, ReadonlyREST follows the `skip_unavailable` setting of the cluster, as Elasticsearch does:
+
+* `true`: ReadonlyREST skips the cluster. The request gets the indices of the other clusters. If the request names only skipped clusters, the response has no hits.
+* `false`: Elasticsearch fails the search that names the cluster, with its own error, as without ReadonlyREST. In an `_msearch`, only that search fails. The other searches get their results.
+
+The default is `false` before Elasticsearch 8.15 and `true` from 8.15. Set `cluster.remote.<alias>.skip_unavailable: false` to make the search fail when the cluster is unavailable.
+
+When the call fails or times out, but the cluster answers the search of Elasticsearch, the search can fail with `index_not_found_exception` for an index with the prefix `ROR_`. ReadonlyREST sends this index, which does not exist, so that the search gets no data.
+
 The rule has also an extended version:
 
 ```yaml
@@ -3067,7 +3080,7 @@ Here is a glossary:
 * `MET`: String, HTTP Method
 * `CNT`: String, HTTP body content. Comes as a summary of its length, full body of the request is available in debug mode.
 * `HDR`: String array, list of HTTP headers, headers' content is available in debug mode.
-* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated. When a block is `NOT_MATCHED`, the denial cause appears in parentheses after the block name (e.g. `AUTH_FAIL(...)`, `GROUPS_AUTH_FAIL(...)`, `AUTHZ_FAIL`, `IDX_NOT_FOUND`). See [Denial causes in HIS](#denial-causes-in-his) for a full reference.
+* `HIS`: Chronologically ordered history of the ACL blocks and their rules being evaluated. When a block is `NOT_MATCHED`, the denial cause appears in parentheses after the block name (e.g. `AUTH_FAIL (...)`, `GROUPS_AUTH_FAIL (...)`, `AUTHZ_FAIL`, `IDX_NOT_FOUND`, `RULE_ERROR (...)`). See [Denial causes in HIS](#denial-causes-in-his) for a full reference.
 
 In the example, the block `Admins` is allowing the request because all the rules in this block evaluate to `true`.
 
@@ -3097,14 +3110,17 @@ When a block is `NOT_MATCHED`, a denial cause appears in parentheses after the b
 
 | Cause | Meaning |
 |---|---|
-| `AUTH_FAIL(details)` | Authentication failed. The human-readable `details` string describes the specific reason \(e.g. wrong username, bad password, missing credentials\). |
-| `GROUPS_AUTH_FAIL(details)` | Groups-based authorization failed. The `details` string describes which user definitions were tried and why each one was rejected. |
+| `AUTH_FAIL (details)` | Authentication failed. The human-readable `details` string describes the specific reason \(e.g. wrong username, bad password, missing credentials\). |
+| `GROUPS_AUTH_FAIL (details)` | Groups-based authorization failed. The `details` string describes which user definitions were tried and why each one was rejected. |
 | `AUTHZ_FAIL` | A non-authentication rule \(e.g. `indices`, `actions`\) caused the block to be rejected. |
 | `IDX_NOT_FOUND` | All auth rules matched but the requested index does not exist. Applies only to read-only requests. |
 | `ALIAS_NOT_FOUND` | All auth rules matched but the requested alias does not exist. Applies only to read-only requests. |
 | `TPL_NOT_FOUND` | All auth rules matched but the requested index template does not exist. Applies only to read-only requests. |
 | `IMPERSONATION_NOT_SUPPORTED` | The rule being evaluated does not support impersonation, which was attempted by the request. |
 | `IMPERSONATION_NOT_ALLOWED` | Impersonation was attempted but the impersonator is not allowed to impersonate the target user under this block. |
+| `RULE_ERROR (rule)` | The check of the rule stops with an error, for example when a service that the rule uses fails. The Elasticsearch log has the details. Search the log for the request `ID`. |
+
+In `RULES:[...]`, each rule shows its result: `true` (the rule matches), `false` (the rule does not match) or `error` (the check stops with an error).
 
 ##### `blocks_history` in audit logs
 
@@ -3115,7 +3131,7 @@ The same per-block information is also available in structured form in the `bloc
   {
     "block_name": "KIBANA",
     "matched": false,
-    "forbidden_cause": "AUTH_FAIL(Username mismatch)"
+    "forbidden_cause": "AUTH_FAIL (Username mismatch)"
   },
   {
     "block_name": "Admins",
