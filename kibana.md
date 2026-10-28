@@ -778,7 +778,20 @@ When a user logs in, ReadonlyREST writes an encrypted cookie in the browser. The
 readonlyrest_kbn.session_timeout_minutes: 480 # defaults to 4320 (3 days)
 ```
 
-This is a sliding inactivity window — each user action resets the clock.
+This is a sliding inactivity window: each user action resets the clock. After `session_timeout_minutes` with no user action, the Kibana tab shows the login page.
+
+A user action is:
+
+* A click, a key press or a mouse wheel event in a visible Kibana tab. The requests of the tab in the 60 seconds after the input also reset the clock, so a slow chart that loads after a click counts.
+* A page load, for example a reload or a link to Kibana from another site.
+* The browser Back or Forward button in a Kibana tab. An older browser without the Navigation API does not report it.
+
+These requests do not reset the clock:
+
+* Requests that a Kibana tab sends by itself, with no user input: dashboard auto-refresh, polls, the periodic refresh of the Dev Tools autocomplete data, and background requests of Kibana. A dashboard that auto-refreshes on a screen with no input, for example a kiosk or a wall display, shows the login page after the timeout.
+* Requests of a tab that is not visible.
+
+A client without the Kibana UI, for example an API client or a script that sends the session cookie, resets the clock with each request. An API request with credentials in a header (Basic auth, an API key, a JWT) gets a short-lived session, so the timeout does not apply to it.
 
 #### Automatic Session cleanup
 
