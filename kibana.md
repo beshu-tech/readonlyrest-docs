@@ -784,6 +784,7 @@ A user action is:
 
 * A click, a key press or a mouse wheel event in a visible Kibana tab. The requests of the tab in the 60 seconds after the input also reset the clock, so a slow chart that loads after a click counts.
 * A page load, for example a reload or a link to Kibana from another site.
+* The browser Back or Forward button in a Kibana tab. An older browser without the Navigation API does not report it.
 
 These requests do not reset the clock:
 
