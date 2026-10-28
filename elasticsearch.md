@@ -1588,8 +1588,10 @@ A pattern with a cluster part, for example `prod:logs-*` or `*:logs-*`, matches 
 
 When the call to a remote cluster fails or times out, ReadonlyREST follows the `skip_unavailable` setting of the cluster, as Elasticsearch does:
 
-* `true`: ReadonlyREST skips the cluster. The request gets the indices of the other clusters.
+* `true`: ReadonlyREST skips the cluster. The request gets the indices of the other clusters. If the request names only skipped clusters, the response has no hits.
 * `false`: the rule stops with the error `RULE_ERROR (indices)`. ReadonlyREST then checks the next block.
+
+The default is `false` before Elasticsearch 8.15 and `true` from 8.15. Set `cluster.remote.<alias>.skip_unavailable: false` to deny the request when the cluster is unavailable.
 
 The rule has also an extended version:
 
