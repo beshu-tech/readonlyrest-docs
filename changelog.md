@@ -82,6 +82,18 @@ As part of the SQL API security fixes, `SYS COLUMNS` and JDBC/ODBC metadata quer
 
 </details>
 <details>
+<summary><strong>🚀New</strong> (KBN) 9.5.6 9.4.9, 8.19.24 support</summary>
+
+The ReadonlyREST Kibana plugin now ships builds for Kibana 9.5.6, 9.4.9 and 8.19.24, so you can keep your Kibana UI secured with ROR after upgrading to these patch releases. Use the build matching your exact Kibana version.
+
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 9.5.6 9.4.9, 8.19.24 support</summary>
+
+The ReadonlyREST Elasticsearch plugin now ships builds for Elasticsearch 9.5.6, 9.4.9 and 8.19.24, allowing you to upgrade your clusters to these patch releases without losing fine-grained access control. Use the build matching your exact Elasticsearch version.
+
+</details>
+<details>
 <summary><strong>🚀New</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch/audit#custom-audit-cluster">A remote audit cluster now supports the <code>failover</code> mode and an optional connectivity check at startup</a></summary>
 
 A custom audit cluster can now use `failover` mode, which uses the first available node and skips failed nodes with exponential backoff (1s up to 30 min). An optional `connectivity_check` (`disabled`, `required`, or `best_effort`) verifies node reachability at startup and on settings reload.
