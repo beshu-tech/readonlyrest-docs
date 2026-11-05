@@ -2494,7 +2494,7 @@ There are also plenty of technical settings which can be useful:
       * `ha` (enum: [`FAILOVER`, `ROUND_ROBIN`], optional, default: `FAILOVER`) - provides high availability strategy for LDAP
     * auto-discovery:
       * `server_discovery` (Boolean|YAML object, optional, default: `false`) - for details see [LDAP server discovery section](#ldap-server-discovery)
-* `connection_pool_size` (Integer, optional, default: `30`) - indicates how many connections LDAP connector should create to LDAP server
+* `connection_pool_size` (Integer, optional, default: `30`) - the maximum number of connections in each LDAP connection pool of the connector. It also limits the number of parallel LDAP calls of the pool. A call waits while all connections of its pool are in use. The connector has up to three pools: one for the user search, one for the authentication and one for the authorization. So it can open up to three times this number of connections on each ES node.
 * `connection_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for the connection to LDAP server
 * `request_timeout` (Duration, optional, default: `10 sec`) - instructs connector how long it should wait for receiving a whole response from LDAP server
 * `connection_health_check_interval` (Duration, optional, default: `120 sec`) - defines how often the LDAP connection pool should perform health checks on idle connections. Health checks proactively detect and replace stale connections before they cause authentication failures. 
