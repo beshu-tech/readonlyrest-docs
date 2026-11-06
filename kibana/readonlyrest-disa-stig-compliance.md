@@ -111,7 +111,7 @@ ReadonlyREST enforces a configurable session timeout. For STIG compliance this m
 
 **Status: Fully satisfied — requires configuration**
 
-ReadonlyREST terminates idle sessions and cleans them up automatically. Requests that a Kibana tab sends by itself, such as dashboard auto-refresh, do not keep a session open. For a Kibana tab, only these keep it open: user input in a visible tab, the requests that the tab sends in the 60 seconds after that input, page loads, and the browser Back or Forward button. This holds for all ReadonlyREST editions. See [Session timeout](../kibana.md#session-timeout) for configuration details.
+ReadonlyREST terminates idle sessions and cleans them up automatically. Requests that a Kibana tab sends by itself, such as dashboard auto-refresh, do not reset the timeout. A client without the Kibana UI that sends a copy of the session cookie, for example a script, resets the timeout with each request, so it can keep a session open with no user present. See [Session timeout](../kibana.md#session-timeout) for what counts as user activity and for configuration details.
 
 ---
 

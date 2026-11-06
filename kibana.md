@@ -778,20 +778,22 @@ When a user logs in, ReadonlyREST writes an encrypted cookie in the browser. The
 readonlyrest_kbn.session_timeout_minutes: 480 # defaults to 4320 (3 days)
 ```
 
-This is a sliding inactivity window: each user action resets the clock. After `session_timeout_minutes` with no user action, the Kibana tab shows the login page.
+This is a sliding inactivity window: each user action resets the clock. After `session_timeout_minutes` with no user action, ReadonlyREST ends the session and logs the user out of all Kibana tabs in the browser.
 
 A user action is:
 
 * A click, a key press or a mouse wheel event in a visible Kibana tab. The requests of the tab in the 60 seconds after the input also reset the clock, so a slow chart that loads after a click counts.
 * A page load, for example a reload or a link to Kibana from another site.
-* The browser Back or Forward button in a Kibana tab. An older browser without the Navigation API does not report it.
+* The browser Back or Forward button in a Kibana tab. Chrome and Edge 102 or later, Firefox 147 or later and Safari 26.2 or later report it. In an older browser, the button does not reset the clock, but the next click, key press or mouse wheel event does.
 
 These requests do not reset the clock:
 
-* Requests that a Kibana tab sends by itself, with no user input: dashboard auto-refresh, polls, the periodic refresh of the Dev Tools autocomplete data, and background requests of Kibana. A dashboard that auto-refreshes on a screen with no input, for example a kiosk or a wall display, shows the login page after the timeout.
+* Requests that a Kibana tab sends by itself, with no user input: dashboard auto-refresh, polls, the periodic refresh of the Dev Tools autocomplete data, and background requests of Kibana.
 * Requests of a tab that is not visible.
 
-A client without the Kibana UI, for example an API client or a script that sends the session cookie, resets the clock with each request. An API request with credentials in a header (Basic auth, an API key, a JWT) gets a short-lived session, so the timeout does not apply to it.
+**A dashboard on a screen with no input.** In earlier ReadonlyREST versions, dashboard auto-refresh kept a session open, so a kiosk or a wall display stayed logged in. Now such a screen logs out after `session_timeout_minutes`. To keep the screen logged in, reload the whole page in the browser, as F5 does, more often than `session_timeout_minutes`, for example with the auto-reload setting of the kiosk software or a browser extension. Dashboard auto-refresh does not reload the page, so it does not reset the clock. A longer `session_timeout_minutes` also keeps the screen logged in, but it applies to all users of the Kibana instance.
+
+An API client that logs in gets its own session, and its requests reset the clock of that session only. A script that sends a copy of the session cookie from a browser resets the clock of that browser session with each request. An API request with credentials in a header (Basic auth, an API key, a JWT) does not get a session cookie, so the timeout does not apply to it. A login with a JWT in a URL query parameter gets a session cookie, and the timeout applies to it as to a login in the login form.
 
 #### Automatic Session cleanup
 
