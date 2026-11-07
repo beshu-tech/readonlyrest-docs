@@ -791,9 +791,13 @@ These requests do not reset the clock:
 * Requests that a Kibana tab sends by itself, with no user input: dashboard auto-refresh, polls, the periodic refresh of the Dev Tools autocomplete data, and background requests of Kibana.
 * Requests of a tab that is not visible.
 
-**A dashboard on a screen with no input.** In earlier ReadonlyREST versions, dashboard auto-refresh kept a session open, so a kiosk or a wall display stayed logged in. Now such a screen logs out after `session_timeout_minutes`. To keep the screen logged in, reload the whole page in the browser, as F5 does, more often than `session_timeout_minutes`, for example with the auto-reload setting of the kiosk software or a browser extension. Dashboard auto-refresh does not reload the page, so it does not reset the clock. A longer `session_timeout_minutes` also keeps the screen logged in, but it applies to all users of the Kibana instance.
+**A dashboard on a screen with no input.** In earlier ReadonlyREST versions, dashboard auto-refresh kept a session open, so a kiosk or a wall display stayed logged in. Now such a screen logs out after `session_timeout_minutes`. To keep the screen logged in, reload the whole page in the browser, as F5 does, more often than `session_timeout_minutes`, for example with the auto-reload setting of the kiosk software or a browser extension. A longer `session_timeout_minutes` also keeps the screen logged in, but it applies to all users of the Kibana instance.
 
-An API client that logs in gets its own session, and its requests reset the clock of that session only. A script that sends a copy of the session cookie from a browser resets the clock of that browser session with each request. An API request with credentials in a header (Basic auth, an API key, a JWT) does not get a session cookie, so the timeout does not apply to it. A login with a JWT in a URL query parameter gets a session cookie, and the timeout applies to it as to a login in the login form.
+**Scripts and API requests.** The timeout applies as follows:
+
+* A script that sends a copy of a browser's session cookie resets the clock of that browser session.
+* A request with credentials in a header (Basic auth, an API key, a JWT) gets no session cookie, so the timeout does not apply to it.
+* A login with a JWT in a URL query parameter gets a session cookie, so the timeout applies to it.
 
 #### Automatic Session cleanup
 
