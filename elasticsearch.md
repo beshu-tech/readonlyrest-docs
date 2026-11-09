@@ -2581,7 +2581,7 @@ The server discovery mechanism can be optionally configured further, by adding a
 * `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
 * `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default, the system DNS is used.
 * `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in the cache. Default is 1h.
-* `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used. With `use_ssl: true`, the connector setting `ssl_hostname_verification` checks the SRV target name.
+* `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used. When `ssl_hostname_verification` is also `true`, the certificate must contain the SRV target name.
 
 Example:
 
