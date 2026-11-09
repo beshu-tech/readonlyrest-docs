@@ -2500,6 +2500,7 @@ There are also plenty of technical settings which can be useful:
 * `connection_health_check_interval` (Duration, optional, default: `120 sec`) - defines how often the LDAP connection pool should perform health checks on idle connections. Health checks proactively detect and replace stale connections before they cause authentication failures. 
 * `connection_max_age` (Duration, optional, default: `10 min`) - defines the maximum age of a connection in the pool. Connections older than this value are automatically replaced with fresh ones, preventing stale connection issues. This works in conjunction with `connection_health_check_interval` to maintain a healthy connection pool.
 * `ssl_trust_all_certs` (Boolean, optional, default: `false`) - if it is set to `true`, untrusted certificates will be accepted
+* `ssl_hostname_verification` (Boolean, optional, default: `true`, or `false` when `ssl_trust_all_certs` is `true`) - when it is `true`, the LDAPS server certificate must contain the configured host name or IP address. The check does not use DNS, so the short name `ldap1` does not match `ldap1.example.com`. A loopback IP address, for example `127.0.0.1`, always passes.
 * `ignore_ldap_connectivity_problems` (Boolean, optional, default: `false`) - when it is set to `true`, it allows ROR to function even when LDAP server is unreachable. Rules using unreachable LDAP servers won't match. By default, ROR starts only after it's able to connect to each server
 * `cache_ttl` (Duration, optional, default: `0 sec`) - tells how long LDAP connector should cache queries results (for default see [caching section](#caching))
 * `circuit_breaker` (YAML object, optional, default: `max_retries: 10`, `reset_duration: 10 sec`) - for details see [circuit breaker section](#circuit-breaker)
@@ -2580,7 +2581,7 @@ The server discovery mechanism can be optionally configured further, by adding a
 * `record_name` - DNS SRV record name. By default it's `_ldap._tcp`, but could be `_ldap._tcp.domainname` or any custom value.
 * `dns_url` - Address of non-default DNS server in form `dns://IP[:PORT]`. By default, the system DNS is used.
 * `ttl` - DNS cache timeout. Specifies how long values from DNS will be kept in the cache. Default is 1h.
-* `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used.
+* `use_ssl` - Use `true` when SSL should be used for LDAP connections. Default is `false` which means that SSL won't be used. When `ssl_hostname_verification` is also `true`, the certificate must contain the SRV target name.
 
 Example:
 
