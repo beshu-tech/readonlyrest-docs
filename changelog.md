@@ -2,6 +2,278 @@
 
 # Changelog
 
+### (2026-11-09) What's new in **ROR 1.73.0**
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-111181">CVE-2026-111181</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110306">CVE-2026-110306</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110095">CVE-2026-110095</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110180">CVE-2026-110180</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110725">CVE-2026-110725</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109869">CVE-2026-109869</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109924">CVE-2026-109924</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109841">CVE-2026-109841</a>, <a href="https://github.com/advisories/GHSA-cg2g-xh64-v4q7">GHSA-cg2g-xh64-v4q7</a>, <a href="https://github.com/advisories/GHSA-mrv2-3pqr-j5jr">GHSA-mrv2-3pqr-j5jr</a>, <a href="https://github.com/advisories/GHSA-c6gr-qvv4-5v3f">GHSA-c6gr-qvv4-5v3f</a></summary>
+
+Fixes a batch of Kibana-side vulnerabilities, including three GitHub advisories in the bundled DOMPurify HTML sanitizer (template-expression bypass through shadow roots, an incomplete `IN_PLACE` hook fix, and a SMIL `attributeName=href` guard bypass in XHTML mode). All three DOMPurify issues are DOM XSS vectors that require non-default sanitizer configurations, but they matter for any deployment where Kibana renders user-supplied content. We recommend upgrading as soon as your maintenance window allows.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) An anonymous request with a large or compressed body can no longer exhaust the Kibana memory</summary>
+
+Unauthenticated callers could previously send oversized or compressed request bodies that were buffered and decompressed before authentication, allowing a single anonymous request to consume large amounts of Kibana heap. Request bodies are now bounded before they are processed, closing this denial-of-service vector.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110816">CVE-2026-110816</a></summary>
+
+A Kibana-side vulnerability tracked as CVE-2026-110816 is fixed in this release. See the CVE record for the full technical details and affected versions.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) Only a user with admin or unrestricted Kibana access can write to the Kibana app registry, or read all of it</summary>
+
+The Kibana app registry was previously reachable by users with restricted Kibana access. It is now writable only by admins or users with unrestricted Kibana access, and non-privileged users can no longer read the full registry, preventing them from enumerating apps they are not allowed to use.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) A local process can no longer use the Kibana tech user through the ROR Kibana to Elasticsearch proxy</summary>
+
+The ROR Kibana-to-Elasticsearch proxy could be abused by a local process on the Kibana host to act with the privileges of the Kibana technical (service) user. The proxy now refuses such requests, so local access to the Kibana port no longer grants cluster-level privileges.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-116689">CVE-2026-116689</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-118764">CVE-2026-118764</a></summary>
+
+Two further Kibana-side vulnerabilities, CVE-2026-116689 and CVE-2026-118764, are addressed in this release. Consult the CVE records for the specific impact and affected configurations.
+
+</details>
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-102554">CVE-2026-102554</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110257">CVE-2026-110257</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110258">CVE-2026-110258</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110259">CVE-2026-110259</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110260">CVE-2026-110260</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110261">CVE-2026-110261</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110263">CVE-2026-110263</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110591">CVE-2026-110591</a></summary>
+
+This release also fixes a set of Elasticsearch-side vulnerabilities tracked under the CVEs listed above. See the individual CVE records for details on each issue and its impact.
+
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) The ACL history and the audit now show a rule error as RULE_ERROR (&lt;rule&gt;) and &lt;rule&gt;-&gt;error</summary>
+
+When a rule throws an error instead of simply not matching, the ACL history and audit logs now report it explicitly as `RULE_ERROR (<rule>)` and `<rule>->error`. This makes it much easier to tell a genuine misconfiguration or runtime failure apart from a normal "rule did not match" outcome when troubleshooting access denials.
+
+</details>
+<details>
+<summary><strong>🧐Enhancement</strong> (ES) An LDAP connector now limits its parallel calls to <code>connection_pool_size</code>, over up to 3 pools per ES node</summary>
+
+The LDAP connector now caps concurrent LDAP calls at `connection_pool_size`, spread over up to three connection pools per Elasticsearch node. This keeps the load on your directory server predictable and bounded under bursts of authentication traffic, instead of growing with the number of concurrent requests.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) With sessions in the index, Kibana no longer stops answering logins and API calls after a failed first start of ReadonlyREST</summary>
+
+If ReadonlyREST failed during its very first start with `store_sessions_in_index` enabled, the session index could be left in a state that made Kibana stop responding to logins and API calls. Startup now recovers cleanly from that condition.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Spurious 'Probe request timeout' warnings no longer appear after a rejected Elasticsearch host probe.</summary>
+
+After an Elasticsearch host probe was rejected, the plugin could keep logging "Probe request timeout" warnings even though nothing was actually wrong. The probe state is now reset properly, so the logs stay clean.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Four timer settings now reject an invalid or sub-millisecond value: readonlyrest_kbn.sessions_cleanup_interval, sessions_refresh_after, license.activationKeyRefreshInterval and memoryDiagnostics.interval. These and the three elasticsearch and reporting timeouts now accept more than 24.8 days.</summary>
+
+The four timer settings `readonlyrest_kbn.sessions_cleanup_interval`, `sessions_refresh_after`, `license.activationKeyRefreshInterval` and `memoryDiagnostics.interval` now fail fast on invalid or sub-millisecond values instead of silently misbehaving. All of these, plus the three Elasticsearch and reporting timeouts, now accept durations longer than 24.8 days, which previously overflowed.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A new tenancy index with a digit after an underscore, for example <code>.kibana_group_1</code>, now gets its own alias instead of a shared one</summary>
+
+Tenancy index names containing a digit after an underscore (e.g. `.kibana_group_1`) were parsed incorrectly, so the new index was given an alias shared with another tenancy. Each tenancy index now gets its own distinct alias, keeping tenancy data properly isolated.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) With <a href="https://docs.readonlyrest.com/kibana#tenancy-index-templating">kibanaIndexTemplate</a>, a page reload no longer re-applies the template, which reverted the user's changes and, with <a href="https://docs.readonlyrest.com/kibana#reset-tenancy-to-template">resetKibanaIndexToTemplate</a>, deleted their saved objects</summary>
+
+With `kibanaIndexTemplate` configured, a simple page reload could re-apply the template to the tenancy index, silently reverting the user's changes and — when `resetKibanaIndexToTemplate` was enabled — deleting their saved objects. The template is now applied only when it should be, so reloads are safe.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Hidden apps no longer open through in-app navigation (nav links, Global Search, back/forward)</summary>
+
+Apps hidden with `hide_apps` were still reachable by navigating inside Kibana — via nav links, Global Search results, or browser back/forward. These navigation paths are now blocked as well, so hidden apps stay hidden regardless of how the user gets there.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Kibana requests to Elasticsearch no longer fail at random with "socket hang up" (500) after an idle time</summary>
+
+After a period of inactivity, Kibana's requests to Elasticsearch could randomly fail with a "socket hang up" error surfaced as a 500. Idle connections are now handled correctly, removing these intermittent failures.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) The ROR user menu no longer closes by itself in the first seconds after a page load</summary>
+
+The ReadonlyREST user menu could close on its own shortly after a page load, making it hard to use. It now stays open until the user closes it.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Starting or ending an impersonation no longer logs out every Kibana tab</summary>
+
+Beginning or ending an impersonation session used to invalidate the session in all other open Kibana tabs, effectively logging the user out everywhere. Other tabs now keep their session when impersonation starts or stops.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) The ReadonlyREST API no longer accepts credentials in the request body, and no longer parses the body before it checks them</summary>
+
+The ReadonlyREST API now only accepts credentials via the standard authentication headers, not in the request body, and it authenticates before parsing any body content. This removes an unnecessary attack surface and prevents unauthenticated callers from triggering body parsing.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) When Kibana cannot reach Elasticsearch to read an index-based session, the open tabs keep their session</summary>
+
+With `store_sessions_in_index`, a temporary inability to reach Elasticsearch while reading a session could invalidate it and log users out. Open tabs now retain their session through such transient failures.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) On Kibana 9.4.0 and later, <a href="https://docs.readonlyrest.com/kibana#hiding-kibana-apps"><code>hide_apps</code></a> hides the navigation link of a hidden app, and the category of a group with only hidden apps</summary>
+
+On Kibana 9.4.0+, `hide_apps` now also removes the navigation link of a hidden app and hides the category of a nav group whose apps are all hidden, so no empty or dead entries remain in the side navigation.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) On Kibana 8.0 and later, the title of a category that links to a hidden app stays visible, and only opens or closes the category</summary>
+
+On Kibana 8.0+, a category whose title links to a hidden app no longer disappears or navigates to that app. The title stays visible and now only expands or collapses the category.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A <a href="https://docs.readonlyrest.com/kibana#hiding-kibana-management-apps"><code>kibana.hide_apps</code></a> entry that names Saved Objects, Data Views, Index Patterns or Reporting now hides that page and its sub-pages</summary>
+
+Entries in `kibana.hide_apps` that refer to Saved Objects, Data Views, Index Patterns or Reporting were not matched against the actual Kibana app IDs, so those pages stayed visible. They are now mapped correctly and hide the page together with its sub-pages.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) <a href="https://docs.readonlyrest.com/kibana#session-timeout"><code>session_timeout_minutes</code> now ends an idle session while a Kibana tab stays open: only user input keeps it open, not an auto-refreshing dashboard</a></summary>
+
+`session_timeout_minutes` previously never fired while a Kibana tab was open, because background traffic such as an auto-refreshing dashboard kept the session alive. Only genuine user input now extends the session, so idle sessions end as configured.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) With server.basePath, ROR no longer hides an allowed Stack Management page from the menu when Stack Management is hidden</summary>
+
+When `server.basePath` was set and Stack Management was hidden, ROR could also hide an individual Stack Management page the user was allowed to see. The menu now respects the per-page permissions correctly under a base path.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) With sessions in the index and several Kibana nodes, a stale session copy no longer logs out an active user</summary>
+
+With `store_sessions_in_index` and multiple Kibana nodes, a node holding an outdated copy of a session could invalidate it and log out a user who was actively working on another node. Stale copies are no longer treated as authoritative.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) An API request with Basic auth and no ROR cookie no longer gets a random 403 during the session cleanup</summary>
+
+API calls authenticated with Basic auth and no ROR cookie could intermittently receive a 403 if they landed while the session cleanup was running. Such requests are now handled consistently.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) In a non-English Kibana, hidden_apps now also hides a side nav group header when it hides every entry of the group.</summary>
+
+In a non-English Kibana, the side nav group header was left behind after `hidden_apps` removed all of its entries, leaving an empty group in the menu. The header is now hidden too.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A busy Kibana no longer answers some of its first page requests with Internal Server Error</summary>
+
+Under load, some of the first page requests after a Kibana start could return an Internal Server Error. Initialization is now handled so that early requests wait for it instead of failing.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) Behind a reverse proxy, a POST to Kibana no longer fails at random with 502. The ROR proxy now holds an idle connection for <a href="https://www.elastic.co/docs/reference/kibana/configuration-reference/general-settings#server-keepalivetimeout"><code>server.keepaliveTimeout</code></a>, like Kibana</summary>
+
+Behind a reverse proxy, POST requests to Kibana could randomly fail with a 502 when the proxy reused a connection the ROR proxy had already closed. The ROR proxy now keeps idle connections open for `server.keepaliveTimeout`, matching Kibana's own behaviour.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Non-ASCII user and group names from external authentication and authorization services</summary>
+
+User and group names containing non-ASCII characters, as returned by external authentication and authorization services (e.g. LDAP), are now handled correctly instead of being mangled or failing to match ACL rules.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Clear error when a settings file is not valid UTF-8</summary>
+
+A settings file that is not valid UTF-8 now produces a clear, actionable error message instead of a confusing failure during startup.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Closed indices on remote clusters (ES 6.7 to 7.8)</summary>
+
+On Elasticsearch 6.7 to 7.8, closed indices on remote clusters are now handled correctly by the `indices` rule instead of causing errors or incorrect access decisions.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Case-insensitive user names and settings on a server with a Turkish locale</summary>
+
+On servers running with a Turkish locale, case-insensitive comparisons of user names and settings could produce wrong results due to locale-specific casing rules. These comparisons are now locale-independent.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Wrong timestamps in the deprecated audit serializers</summary>
+
+The deprecated audit serializers emitted incorrect timestamps. They now produce correct values, so audit records from those serializers can be trusted for correlation and compliance purposes.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Validation of the audit data stream name length</summary>
+
+The audit data stream name is now validated for length, so an over-long name is rejected with a clear error instead of failing later when the data stream is created.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) ror-tools: the patch could damage the ES security policy file, and --es-path changed the path case</summary>
+
+`ror-tools` could corrupt the Elasticsearch security policy file while patching, and `--es-path` could alter the case of the supplied path. Both are fixed, so patching is now safe and the path is used exactly as given.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) The <code>fields</code> rule hides field names with regex characters, e.g. <code>price(usd)</code>. <code>*</code> is the only wildcard</summary>
+
+The `fields` rule treated characters such as parentheses as regular-expression syntax, so field names like `price(usd)` were not matched and could not be hidden. Field names are now matched literally, with `*` as the only wildcard.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) Slow requests when a pattern has many <code>*</code>, e.g. in the <code>indices</code> rule</summary>
+
+Patterns containing many `*` wildcards (for example in the `indices` rule) could make matching very slow. Matching is now efficient, so such patterns no longer add noticeable latency to requests.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) <a href="https://forum.readonlyrest.com/t/index-restrictions-do-not-work-in-acl/3001/11">The indices rule follows each remote cluster's skip_unavailable setting (false before ES 8.15, true from 8.15), with a 10s timeout per remote call</a></summary>
+
+The `indices` rule now respects each remote cluster's `skip_unavailable` setting — `false` before Elasticsearch 8.15 and `true` from 8.15 — with a 10-second timeout per remote call. This prevents an unreachable remote cluster from making index resolution fail and causing spurious 403 responses.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) The indices rule reads only * as a wildcard in the cluster part of a remote index name, as ES does</summary>
+
+In the cluster part of a remote index name (e.g. `cluster:index`), the `indices` rule now treats only `*` as a wildcard, matching Elasticsearch's own semantics. Other characters are no longer interpreted as wildcards.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) ROR no longer returns 403 in a selected Kibana tenancy when a user definition mixes a groups mapping with separate authentication and authorization rules (regression in 1.69.0)</summary>
+
+A regression introduced in 1.69.0 caused 403 responses inside a selected Kibana tenancy when a user definition combined a groups mapping with separate authentication and authorization rules. This combination now works as before.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) An LDAP request no longer hangs when the server closes a pooled connection as ROR uses it</summary>
+
+If the LDAP server closed a pooled connection at the moment ROR tried to use it, the request could hang indefinitely. Such a connection is now detected and retried, so authentication completes normally.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) A slow or unreachable LDAP server no longer blocks the processing of other requests (regression in 1.57.0)</summary>
+
+A regression in 1.57.0 meant that a slow or unreachable LDAP server could block the processing of unrelated requests. LDAP calls no longer hold up other request processing, so a struggling directory server only affects the authentications that depend on it.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (ES) A response no longer takes a header from a concurrent request. With <code>session_max_idle</code>, that could fail the user's next request with 403</summary>
+
+Under concurrency, a response could pick up a header belonging to another request. With `session_max_idle` enabled this could cause the user's next request to fail with a 403. Response headers are now kept strictly per request.
+
+</details>
+
 ### (2026-10-11) What's new in **ROR 1.72.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83610">CVE-2026-83610</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-82562">CVE-2026-82562</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-82417">CVE-2026-82417</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-84375">CVE-2026-84375</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-15603">CVE-2026-15603</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-85024">CVE-2026-85024</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-86472">CVE-2026-86472</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-17495">CVE-2026-17495</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-102276">CVE-2026-102276</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-101907">CVE-2026-101907</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-93748">CVE-2026-93748</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-90711">CVE-2026-90711</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-97058">CVE-2026-97058</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-24999">CVE-2022-24999</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-15284">CVE-2025-15284</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-75899">CVE-2026-75899</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-75931">CVE-2026-75931</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-75975">CVE-2026-75975</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-76172">CVE-2026-76172</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-84292">CVE-2026-84292</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-87859">CVE-2026-87859</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83605">CVE-2026-83605</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83607">CVE-2026-83607</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83608">CVE-2026-83608</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83611">CVE-2026-83611</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83613">CVE-2026-83613</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83614">CVE-2026-83614</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83615">CVE-2026-83615</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83616">CVE-2026-83616</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-83619">CVE-2026-83619</a></summary>

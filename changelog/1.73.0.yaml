@@ -1,0 +1,138 @@
+version: "1.73.0"
+release_date: "2026-11-09"
+entries:
+  - type: security
+    components: [kbn]
+    text: "[CVE-2026-111181](https://nvd.nist.gov/vuln/detail/CVE-2026-111181), [CVE-2026-110306](https://nvd.nist.gov/vuln/detail/CVE-2026-110306), [CVE-2026-110095](https://nvd.nist.gov/vuln/detail/CVE-2026-110095), [CVE-2026-110180](https://nvd.nist.gov/vuln/detail/CVE-2026-110180), [CVE-2026-110725](https://nvd.nist.gov/vuln/detail/CVE-2026-110725), [CVE-2026-109869](https://nvd.nist.gov/vuln/detail/CVE-2026-109869), [CVE-2026-109924](https://nvd.nist.gov/vuln/detail/CVE-2026-109924), [CVE-2026-109841](https://nvd.nist.gov/vuln/detail/CVE-2026-109841), [GHSA-cg2g-xh64-v4q7](https://github.com/advisories/GHSA-cg2g-xh64-v4q7), [GHSA-mrv2-3pqr-j5jr](https://github.com/advisories/GHSA-mrv2-3pqr-j5jr), [GHSA-c6gr-qvv4-5v3f](https://github.com/advisories/GHSA-c6gr-qvv4-5v3f)"
+  - type: security
+    components: [kbn]
+    text: "An anonymous request with a large or compressed body can no longer exhaust the Kibana memory"
+  - type: security
+    components: [kbn]
+    text: "[CVE-2026-110816](https://nvd.nist.gov/vuln/detail/CVE-2026-110816)"
+  - type: security
+    components: [kbn]
+    text: "Only a user with admin or unrestricted Kibana access can write to the Kibana app registry, or read all of it"
+  - type: security
+    components: [kbn]
+    text: "A local process can no longer use the Kibana tech user through the ROR Kibana to Elasticsearch proxy"
+  - type: security
+    components: [kbn]
+    text: "[CVE-2026-116689](https://nvd.nist.gov/vuln/detail/CVE-2026-116689), [CVE-2026-118764](https://nvd.nist.gov/vuln/detail/CVE-2026-118764)"
+  - type: security
+    components: [es]
+    text: "[CVE-2026-102554](https://nvd.nist.gov/vuln/detail/CVE-2026-102554), [CVE-2026-110257](https://nvd.nist.gov/vuln/detail/CVE-2026-110257), [CVE-2026-110258](https://nvd.nist.gov/vuln/detail/CVE-2026-110258), [CVE-2026-110259](https://nvd.nist.gov/vuln/detail/CVE-2026-110259), [CVE-2026-110260](https://nvd.nist.gov/vuln/detail/CVE-2026-110260), [CVE-2026-110261](https://nvd.nist.gov/vuln/detail/CVE-2026-110261), [CVE-2026-110263](https://nvd.nist.gov/vuln/detail/CVE-2026-110263), [CVE-2026-110591](https://nvd.nist.gov/vuln/detail/CVE-2026-110591)"
+  - type: enhancement
+    components: [es]
+    text: "The ACL history and the audit now show a rule error as RULE_ERROR (<rule>) and <rule>->error"
+  - type: enhancement
+    components: [es]
+    text: "An LDAP connector now limits its parallel calls to `connection_pool_size`, over up to 3 pools per ES node"
+  - type: fix
+    components: [kbn]
+    text: "With sessions in the index, Kibana no longer stops answering logins and API calls after a failed first start of ReadonlyREST"
+  - type: fix
+    components: [kbn]
+    text: "Spurious 'Probe request timeout' warnings no longer appear after a rejected Elasticsearch host probe."
+  - type: fix
+    components: [kbn]
+    text: "Four timer settings now reject an invalid or sub-millisecond value: readonlyrest_kbn.sessions_cleanup_interval, sessions_refresh_after, license.activationKeyRefreshInterval and memoryDiagnostics.interval. These and the three elasticsearch and reporting timeouts now accept more than 24.8 days."
+  - type: fix
+    components: [kbn]
+    text: "A new tenancy index with a digit after an underscore, for example `.kibana_group_1`, now gets its own alias instead of a shared one"
+  - type: fix
+    components: [kbn]
+    text: "With [kibanaIndexTemplate](https://docs.readonlyrest.com/kibana#tenancy-index-templating), a page reload no longer re-applies the template, which reverted the user's changes and, with [resetKibanaIndexToTemplate](https://docs.readonlyrest.com/kibana#reset-tenancy-to-template), deleted their saved objects"
+  - type: fix
+    components: [kbn]
+    text: "Hidden apps no longer open through in-app navigation (nav links, Global Search, back/forward)"
+  - type: fix
+    components: [kbn]
+    text: "Kibana requests to Elasticsearch no longer fail at random with \"socket hang up\" (500) after an idle time"
+  - type: fix
+    components: [kbn]
+    text: "The ROR user menu no longer closes by itself in the first seconds after a page load"
+  - type: fix
+    components: [kbn]
+    text: "Starting or ending an impersonation no longer logs out every Kibana tab"
+  - type: fix
+    components: [kbn]
+    text: "The ReadonlyREST API no longer accepts credentials in the request body, and no longer parses the body before it checks them"
+  - type: fix
+    components: [kbn]
+    text: "When Kibana cannot reach Elasticsearch to read an index-based session, the open tabs keep their session"
+  - type: fix
+    components: [kbn]
+    text: "On Kibana 9.4.0 and later, [`hide_apps`](https://docs.readonlyrest.com/kibana#hiding-kibana-apps) hides the navigation link of a hidden app, and the category of a group with only hidden apps"
+  - type: fix
+    components: [kbn]
+    text: "On Kibana 8.0 and later, the title of a category that links to a hidden app stays visible, and only opens or closes the category"
+  - type: fix
+    components: [kbn]
+    text: "A [`kibana.hide_apps`](https://docs.readonlyrest.com/kibana#hiding-kibana-management-apps) entry that names Saved Objects, Data Views, Index Patterns or Reporting now hides that page and its sub-pages"
+  - type: fix
+    components: [kbn]
+    text: "[`session_timeout_minutes` now ends an idle session while a Kibana tab stays open: only user input keeps it open, not an auto-refreshing dashboard](https://docs.readonlyrest.com/kibana#session-timeout)"
+  - type: fix
+    components: [kbn]
+    text: "With server.basePath, ROR no longer hides an allowed Stack Management page from the menu when Stack Management is hidden"
+  - type: fix
+    components: [kbn]
+    text: "With sessions in the index and several Kibana nodes, a stale session copy no longer logs out an active user"
+  - type: fix
+    components: [kbn]
+    text: "An API request with Basic auth and no ROR cookie no longer gets a random 403 during the session cleanup"
+  - type: fix
+    components: [kbn]
+    text: "In a non-English Kibana, hidden_apps now also hides a side nav group header when it hides every entry of the group."
+  - type: fix
+    components: [kbn]
+    text: "A busy Kibana no longer answers some of its first page requests with Internal Server Error"
+  - type: fix
+    components: [kbn]
+    text: "Behind a reverse proxy, a POST to Kibana no longer fails at random with 502. The ROR proxy now holds an idle connection for [`server.keepaliveTimeout`](https://www.elastic.co/docs/reference/kibana/configuration-reference/general-settings#server-keepalivetimeout), like Kibana"
+  - type: fix
+    components: [es]
+    text: "Non-ASCII user and group names from external authentication and authorization services"
+  - type: fix
+    components: [es]
+    text: "Clear error when a settings file is not valid UTF-8"
+  - type: fix
+    components: [es]
+    text: "Closed indices on remote clusters (ES 6.7 to 7.8)"
+  - type: fix
+    components: [es]
+    text: "Case-insensitive user names and settings on a server with a Turkish locale"
+  - type: fix
+    components: [es]
+    text: "Wrong timestamps in the deprecated audit serializers"
+  - type: fix
+    components: [es]
+    text: "Validation of the audit data stream name length"
+  - type: fix
+    components: [es]
+    text: "ror-tools: the patch could damage the ES security policy file, and --es-path changed the path case"
+  - type: fix
+    components: [es]
+    text: "The `fields` rule hides field names with regex characters, e.g. `price(usd)`. `*` is the only wildcard"
+  - type: fix
+    components: [es]
+    text: "Slow requests when a pattern has many `*`, e.g. in the `indices` rule"
+  - type: fix
+    components: [es]
+    text: "[The indices rule follows each remote cluster's skip_unavailable setting (false before ES 8.15, true from 8.15), with a 10s timeout per remote call](https://forum.readonlyrest.com/t/index-restrictions-do-not-work-in-acl/3001/11)"
+  - type: fix
+    components: [es]
+    text: "The indices rule reads only * as a wildcard in the cluster part of a remote index name, as ES does"
+  - type: fix
+    components: [es]
+    text: "ROR no longer returns 403 in a selected Kibana tenancy when a user definition mixes a groups mapping with separate authentication and authorization rules (regression in 1.69.0)"
+  - type: fix
+    components: [es]
+    text: "An LDAP request no longer hangs when the server closes a pooled connection as ROR uses it"
+  - type: fix
+    components: [es]
+    text: "A slow or unreachable LDAP server no longer blocks the processing of other requests (regression in 1.57.0)"
+  - type: fix
+    components: [es]
+    text: "A response no longer takes a header from a concurrent request. With `session_max_idle`, that could fail the user's next request with 403"
