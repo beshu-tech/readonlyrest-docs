@@ -778,7 +778,26 @@ When a user logs in, ReadonlyREST writes an encrypted cookie in the browser. The
 readonlyrest_kbn.session_timeout_minutes: 480 # defaults to 4320 (3 days)
 ```
 
-This is a sliding inactivity window — each user action resets the clock.
+This is a sliding inactivity window: each user action resets the clock. After `session_timeout_minutes` with no user action, ReadonlyREST ends the session and logs the user out of all Kibana tabs in the browser.
+
+A user action is:
+
+* A click, a key press or a mouse wheel event in a visible Kibana tab. The requests of the tab in the 60 seconds after the input also reset the clock, so a slow chart that loads after a click counts.
+* A page load, for example a reload or a link to Kibana from another site.
+* The browser Back or Forward button in a Kibana tab. Chrome and Edge 102 or later, Firefox 147 or later and Safari 26.2 or later report it. In an older browser, the button does not reset the clock, but the next click, key press or mouse wheel event does.
+
+These requests do not reset the clock:
+
+* Requests that a Kibana tab sends by itself, with no user input: dashboard auto-refresh, polls, the periodic refresh of the Dev Tools autocomplete data, and background requests of Kibana.
+* Requests of a tab that is not visible.
+
+**A dashboard on a screen with no input.** In earlier ReadonlyREST versions, dashboard auto-refresh kept a session open, so a kiosk or a wall display stayed logged in. Now such a screen logs out after `session_timeout_minutes`. To keep the screen logged in, reload the whole page in the browser, as F5 does, more often than `session_timeout_minutes`, for example with the auto-reload setting of the kiosk software or a browser extension. A longer `session_timeout_minutes` also keeps the screen logged in, but it applies to all users of the Kibana instance.
+
+**Scripts and API requests.** The timeout applies as follows:
+
+* A script that sends a copy of a browser's session cookie resets the clock of that browser session.
+* A request with credentials in a header (Basic auth, an API key, a JWT) gets no session cookie, so the timeout does not apply to it.
+* A login with a JWT in a URL query parameter gets a session cookie, so the timeout applies to it.
 
 #### Automatic Session cleanup
 
