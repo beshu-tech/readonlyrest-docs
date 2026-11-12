@@ -6,7 +6,6 @@ Here is an example of the data points contained in each audit event. We can leve
 {
     "match": true,
     "final_state": "ALLOWED",
-    "block": "{ name: 'Read-write users', policy: ALLOW, rules: [auth_key, indices] }",
     "matched_block_names": [
       "Read-write users"
     ],
@@ -53,6 +52,7 @@ Here is an example of the data points contained in each audit event. We can leve
 ```
 
 A field without a value (for example, `error_message` when no error occurs) is not in the event.
+The example does not show the deprecated fields `user` and `block`.
 
 ## Configuration
 
@@ -686,6 +686,7 @@ To add or change fields without a custom serializer, you can also send the audit
   * Fields included:
     ```
      match — whether the request matched a rule (boolean)
+     block — the block that allowed or forbade the request, or the reason of the final state (string) - deprecated field, please use `matched_block_names`
      matched_block_names - list of names of the blocks, that were matched (both forbidden and allowed) (array of strings)
      id — audit event identifier (string)  
      final_state — final processing state (ALLOWED/FORBIDDEN/ERRORED/INDEX NOT EXIST) (string)  
@@ -699,7 +700,7 @@ To add or change fields without a custom serializer, you can also send the audit
      type — request type (string)  
      origin — client (remote) address (string)  
      destination — server (local) address (string)  
-     xff — X-Forwarded-For HTTP header value (string)  
+     xff — the first address of the `X-Forwarded-For` HTTP header (string)  
      task_id — Elasticsearch task ID (number)  
      req_method — HTTP request method (string)  
      headers — HTTP header names (array of strings)  
@@ -821,7 +822,7 @@ Available placeholders:
   {TYPE} — request type (string)
   {REMOTE_ADDRESS} — client (remote) address (string)
   {LOCAL_ADDRESS} — server (local) address (string)
-  {X_FORWARDED_FOR_HTTP_HEADER} — `X-Forwarded-For` HTTP header value (string)
+  {X_FORWARDED_FOR_HTTP_HEADER} — the first address of the `X-Forwarded-For` HTTP header (string)
   {TASK_ID} — Elasticsearch task ID (number)
   {HTTP_METHOD} — HTTP request method (string)
   {HTTP_HEADER_NAMES} — HTTP header names (array of strings)
@@ -843,20 +844,20 @@ Available placeholders:
 You cannot change the fields of a [predefined serializer](#predefined-serializers).
 Instead, use the configurable serializer to define an equivalent with only the fields that you need.
 
-The configuration below is the equivalent of `BlockVerbosityAwareAuditLogSerializer`.
+The configuration below is the equivalent of `BlockVerbosityAwareAuditLogSerializer`, without its deprecated fields `user` and `block`.
+Instead of `user`, use `logged_user` or `presented_identity`. Instead of `block`, use `matched_block_names`.
 Use it as a starting point, and keep in `fields` only the fields that you need:
 ```yaml
     readonlyrest:
       audit:
         enabled: true
         outputs:
-        - type: log
+        - type: index
           serializer:
             type: "configurable"
             allowed_events_serialization_mode: "based_on_block_settings"
             fields:
               match: "{IS_MATCHED}"
-              block: "{REASON}"
               matched_block_names: "{MATCHED_BLOCK_NAMES}"
               id: "{ID}"
               final_state: "{FINAL_STATE}"
@@ -892,7 +893,7 @@ To get the equivalent of the other predefined serializers, change this configura
 
 For example, with many ACL blocks, `acl_history` and `blocks_history` make the events large.
 To leave them out, do not define them in `fields`.
-You can define them only in one output, for example an `index` output that you use for troubleshooting.
+With [multiple outputs](#multiple-outputs), you can define them only in the output that you use for troubleshooting.
 
 To get a field that the predefined serializer does not have, define it with a placeholder from the list above.
 
@@ -968,7 +969,8 @@ The configuration above corresponds to serialized event, compatible with ECS 1.6
 The ECS schema is highly permissive and ambiguous. The ROR audit events can be mapped to ECS fields in multiple ways. 
 If the provided ECS implementation does not suit your needs, you can define your own ECS-compliant serializer as `configurable` serializer.
 
-The provided ECS implementation is equivalent to `configurable` serializer shown below. You can [use and adjust it as needed](#using-configurable-serializer) in the configuration.
+The provided ECS implementation is equivalent to `configurable` serializer shown below, without its deprecated `ror_detailed_reason` label. Instead of it, use `ror_matched_block_names`.
+You can [use and adjust it as needed](#using-configurable-serializer) in the configuration.
 ```yaml
     readonlyrest:
       audit:
@@ -1019,6 +1021,7 @@ The provided ECS implementation is equivalent to `configurable` serializer shown
                   ror_acl_history: "{ACL_HISTORY}"
                   ror_final_state: "{FINAL_STATE}"
                   ror_matched_block_names: "{MATCHED_BLOCK_NAMES}"
+                  presented_identity: "{PRESENTED_IDENTITY}"
 ```
 
 ### Custom audit event serializer
