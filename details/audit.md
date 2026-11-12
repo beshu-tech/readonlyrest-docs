@@ -41,7 +41,7 @@ Here is an example of the data points contained in each audit event. We can leve
     "content_len_kb": 0,
     "processingMillis": 0,
     "action": "indices:data/read/search",
-    "id": "933409190-292622897#1158",
+    "id": "6b8f1d2e-3c4a-4f5b-9e7d-1a2b3c4d5e6f-292622897#1158",
     "correlation_id": "6b8f1d2e-3c4a-4f5b-9e7d-1a2b3c4d5e6f",
     "content_len": 0,
     "logged_user": "simone",
@@ -52,7 +52,7 @@ Here is an example of the data points contained in each audit event. We can leve
 ```
 
 A field without a value (for example, `error_message` when no error occurs) is not in the event.
-The example does not show the deprecated fields `user` and `block`.
+The default serializer also writes the deprecated fields `user` and `block`. The example does not show them.
 
 ## Configuration
 
@@ -686,7 +686,7 @@ To add or change fields without a custom serializer, you can also send the audit
   * Fields included:
     ```
      match — whether the request matched a rule (boolean)
-     block — the block that allowed or forbade the request, or the reason of the final state (string) - deprecated field, please use `matched_block_names`
+     block — the block that allowed or forbade the request, or the reason of the final state (string) - deprecated field, please use `matched_block_names`, `final_state` and `blocks_history`
      matched_block_names - list of names of the blocks, that were matched (both forbidden and allowed) (array of strings)
      id — audit event identifier (string)  
      final_state — final processing state (ALLOWED/FORBIDDEN/ERRORED/INDEX NOT EXIST) (string)  
@@ -705,7 +705,7 @@ To add or change fields without a custom serializer, you can also send the audit
      req_method — HTTP request method (string)  
      headers — HTTP header names (array of strings)  
      path — HTTP request path (string)  
-     user — authenticated user (string) - deprecated field, please use `logged_user` or `presented_identity`
+     user — authenticated user (string) - deprecated field, please use `logged_user` or `presented_identity`. When ROR finds no user name, this field contains the value of the `Authorization` header, for example a JWT or an API key
      logged_user — human-readable username (string)
      presented_identity — user identity that was presented with the request, e.g. basic auth username (string)
      impersonated_by — impersonating user, if applicable (string)  
@@ -845,7 +845,7 @@ You cannot configure the fields of a [predefined serializer](#predefined-seriali
 Instead, use the configurable serializer to define an equivalent with only the fields that you need.
 
 The configuration below is the equivalent of `BlockVerbosityAwareAuditLogSerializer`, without its deprecated fields `user` and `block`.
-Instead of `user`, use `logged_user` or `presented_identity`. Instead of `block`, use `matched_block_names`.
+Instead of `user`, use `logged_user` or `presented_identity`. Instead of `block`, use `matched_block_names`, `final_state` and `blocks_history`.
 Use it as a starting point, and keep in `fields` only the fields that you need:
 ```yaml
     readonlyrest:
@@ -932,8 +932,7 @@ The configuration above corresponds to serialized event, compatible with ECS 1.6
     "request" : {
       "method" : "GET",
       "body" : {
-        "bytes" : 123,
-        "content" : "Full content of the request"
+        "bytes" : 123
       }
     }
   },
@@ -995,9 +994,6 @@ You can [use and adjust it as needed](#using-configurable-serializer) in the con
                   request:
                     method: "{HTTP_METHOD}"
                     body:
-                      # Warning: Enabling logging of the full HTTP request body is not recommended when requests 
-                      # may contain sensitive data. It can also significantly increase the size of audit log entries.
-                      content: "{CONTENT}"
                       bytes: "{CONTENT_LENGTH_IN_BYTES}"
                 user:
                   name: "{LOGGED_USER}"
@@ -1023,6 +1019,10 @@ You can [use and adjust it as needed](#using-configurable-serializer) in the con
                   ror_matched_block_names: "{MATCHED_BLOCK_NAMES}"
                   presented_identity: "{PRESENTED_IDENTITY}"
 ```
+
+This configuration does not write the request body, like the ECS serializer with `include_full_request_content: false`.
+To write the request body, add `content: "{CONTENT}"` under `http.request.body`.
+Do not do this when requests can contain sensitive data. The request body also makes the audit events much larger.
 
 ### Custom audit event serializer
 
