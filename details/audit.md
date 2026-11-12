@@ -761,7 +761,7 @@ The configuration above corresponds to serialized event looking like that:
   }
 ```
 
-The event has only the fields that `fields` defines, and the `@timestamp` field.
+The event has only the fields that `fields` defines, the `@timestamp` field, and the fields of the audit events that ROR Kibana sends.
 
 You can also define nested structure of fields, and use fixed text, number and boolean values:
 ```yaml
@@ -841,7 +841,7 @@ Available placeholders:
 
 #### Equivalents of the predefined serializers
 
-You cannot change the fields of a [predefined serializer](#predefined-serializers).
+You cannot configure the fields of a [predefined serializer](#predefined-serializers).
 Instead, use the configurable serializer to define an equivalent with only the fields that you need.
 
 The configuration below is the equivalent of `BlockVerbosityAwareAuditLogSerializer`, without its deprecated fields `user` and `block`.

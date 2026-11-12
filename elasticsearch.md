@@ -3144,7 +3144,7 @@ The same per-block information is also available in structured form in the `bloc
 Each entry has these fields:
 
 * `block_name` — the name of the ACL block
-* `matched` — `true` if the block permitted the request, `false` if it was rejected
+* `matched` — `true` if all rules of the block matched (the type of the block, allow or forbid, then decides the result), `false` if a rule did not match
 * `forbidden_cause` — the denial reason in the same format as `HIS`. The field is not in the entry when the block matched.
 
 The [predefined audit serializers](details/audit.md#predefined-serializers) write `blocks_history`. The ECS serializer does not write it.
