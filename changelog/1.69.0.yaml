@@ -25,6 +25,9 @@ entries:
   - type: new
     components: [kbn]
     text: "Added support for rolling upgrades when upgrading the ROR Elasticsearch plugin and ROR Kibana plugin in a cluster"
+  - type: warning
+    components: [es]
+    text: "All predefined audit serializers and the custom serializers that extend them now write the `blocks_history` field. With many ACL blocks, the audit events become much larger. To leave the field out, [use the configurable serializer](https://docs.readonlyrest.com/elasticsearch/audit#equivalents-of-the-predefined-serializers)."
   - type: enhancement
     components: [kbn]
     text: "Removed the need for manual username input in the impersonation mechanism"

@@ -3135,17 +3135,20 @@ The same per-block information is also available in structured form in the `bloc
   },
   {
     "block_name": "Admins",
-    "matched": true,
-    "forbidden_cause": null
+    "matched": true
   }
 ]
 ```
 
-Each entry has three fields:
+Each entry has these fields:
 
 * `block_name` — the name of the ACL block
 * `matched` — `true` if the block permitted the request, `false` if it was rejected
-* `forbidden_cause` — the denial reason in the same format as `HIS`, or `null` if the block matched
+* `forbidden_cause` — the denial reason in the same format as `HIS`. The field is not in the entry when the block matched.
+
+The [predefined audit serializers](details/audit.md#predefined-serializers) write `blocks_history`. The ECS serializer does not write it.
+With the configurable serializer, use the `{BLOCKS_HISTORY}` placeholder.
+To leave the field out of the audit events, see [Equivalents of the predefined serializers](details/audit.md#equivalents-of-the-predefined-serializers).
 
 
 #### Enabling debug logs
