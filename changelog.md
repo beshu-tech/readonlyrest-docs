@@ -2,6 +2,38 @@
 
 # Changelog
 
+### (2026-11-12) What's new in **ROR 1.73.1**
+<details>
+<summary><strong>🚨Security Fix</strong> (ES) <a href="https://docs.readonlyrest.com/elasticsearch#ldap-connector">LDAP connector</a> with LDAPS and <code>ssl_trust_all_certs: false</code> (the default): ROR did not check the host name in the server certificate. So a server with a trusted certificate for another name could act as the LDAP server. ROR now checks the host name.</summary>
+
+Previously, when an LDAP connector used LDAPS with `ssl_trust_all_certs: false` (the default), ROR validated the server certificate chain but not the host name in it. This allowed a server holding a valid certificate issued for a different name to impersonate the LDAP server. ROR now verifies the host name, closing this man-in-the-middle gap.
+
+</details>
+<details>
+<summary><strong>⚠️Warning</strong> (ES) An LDAPS connector with <code>ssl_trust_all_certs: false</code> fails when the server certificate does not contain the configured host name. Fix the host name or the certificate, or set <code>ssl_hostname_verification: false</code>.</summary>
+
+Because host name verification is now enforced, an LDAPS connector with `ssl_trust_all_certs: false` will fail to connect if the server certificate does not match the configured host name. Align the configured host name with the certificate (or reissue the certificate), or explicitly set `ssl_hostname_verification: false` to opt out — note this weakens protection against impersonation.
+
+</details>
+<details>
+<summary><strong>🚀New</strong> (KBN) 8.19.25 support</summary>
+
+The ReadonlyREST Kibana plugin is now compatible with Kibana 8.19.25.
+
+</details>
+<details>
+<summary><strong>🚀New</strong> (ES) 8.19.25 support</summary>
+
+The ReadonlyREST Elasticsearch plugin is now compatible with Elasticsearch 8.19.25.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A request with a session but no usable identity, for example with a tenancy that is not one of the user's groups, no longer gets 500. A logged-in user gets 403 instead of being logged out, and a page with a stale tenancy loads again without it</summary>
+
+Requests carrying a session but no usable identity — e.g. a tenancy that is not among the user's groups — no longer result in a 500 error. A logged-in user now receives 403 instead of being logged out, and a page referencing a stale tenancy reloads without it.
+
+</details>
+
 ### (2026-11-09) What's new in **ROR 1.73.0**
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-111181">CVE-2026-111181</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110306">CVE-2026-110306</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110095">CVE-2026-110095</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110180">CVE-2026-110180</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110725">CVE-2026-110725</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109869">CVE-2026-109869</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109924">CVE-2026-109924</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109841">CVE-2026-109841</a>, <a href="https://github.com/advisories/GHSA-cg2g-xh64-v4q7">GHSA-cg2g-xh64-v4q7</a>, <a href="https://github.com/advisories/GHSA-mrv2-3pqr-j5jr">GHSA-mrv2-3pqr-j5jr</a>, <a href="https://github.com/advisories/GHSA-c6gr-qvv4-5v3f">GHSA-c6gr-qvv4-5v3f</a></summary>
