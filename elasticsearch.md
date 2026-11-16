@@ -1477,19 +1477,19 @@ Possible access levels:
 | Access level | Kibana indices | Data indices | Requests without indices |
 |---|---|---|---|
 | `ro_strict` | Read | Read | Read |
-| `ro` | Read, and the writes that save the "Discover" state and short URLs | Read | Read |
+| `ro` | Read. Also some writes to the main Kibana index ([`kibana.index`](#index)): short URLs, the "Discover" state, data views, telemetry and new config documents. Also legacy templates (`_template`) of the Kibana indices | Read | Read |
 | `api_only` | Same as `ro` | Read | Read |
 | `rw` | Read and write | Read | Read, and some write actions, for example cluster settings updates (`PUT _cluster/settings`) and template changes |
 | `admin` | Read and write | Read. Requests from the Kibana "Index Management" and "Tags" apps can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
 | `unrestricted` | All actions | All actions | All actions |
 
-All access levels also allow these cluster actions: `cluster:monitor/*`, `cluster:*/xpack/*`, `cluster:*/info`, `cluster:*/get` and `cluster:*/simulate`.
+All access levels also allow these actions: `cluster:monitor/*`, `cluster:*/xpack/*`, `cluster:*/info`, `cluster:*/get`, `cluster:*/simulate` and `indices:admin/template/get*`.
 
-The `rw`, `admin` and `unrestricted` access levels also allow all actions on the Kibana sample data indices (`kibana_sample_data_*`).
+The `rw` and `admin` access levels also allow all actions on a Kibana sample data index or data stream (`kibana_sample_data_*`). The request must target only this one index or data stream.
 
 With `api_only`, ROR always denies the login with a browser. The user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
 
-**NB:** The `admin` access level does not allow all indices and actions. For full access, including the ReadonlyREST PRO/Enterprise app, use `kibana.access: unrestricted`. You can use the `users` rule to give this access only to selected admins.
+**NB:** The `admin` access level does not allow all indices and actions. For full access to all indices and actions, use `kibana.access: unrestricted`. You can use the `users` rule to give this access only to selected admins.
 
 This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case, ROR allows the Kibana indices automatically. You do not have to add them to the `indices` rule.
 
