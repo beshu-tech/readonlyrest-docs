@@ -767,6 +767,8 @@ The core of this plugin is an ACL \(access control list\). A logic structure ver
 * HTTP requests run through the blocks, starting from the first,
 * The _first_ block that satisfies _all the rules_ decides if to forbid or allow the request \(according to its policy\).
 * If none of the blocks is matched, the request is rejected
+* A block limits a request only with its own rules. For example, a block without the `indices` rule does not limit the indices.
+* A request must match all the rules of one block. ROR does not combine the permissions of different blocks.
 
 **⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
 
@@ -1472,32 +1474,35 @@ The idea is that with one single sub-rule we allow the bare minimum set of index
 
 Possible access levels:
 
-* `ro_strict`: the browser has a read-only view on Kibana dashboards and settings and all other indices.
-* `ro`: some write requests can go through to the `kibana_index` index so that the UI state in "Discover" can be saved and new short urls can be created.
-* `rw`: some more requests will be allowed towards the `kibana_index` index only, so Kibana dashboards and settings can be modified.
-* `admin`: like `rw`, but has additional permissions to save security settings in the ReadonlyREST PRO/Enterprise app
-* `api_only`: only [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) actions are allowed, login via browser is always denied.
-* `unrestricted`: no action is restricted.
+| Access level | Kibana indices | Data indices | Requests without indices |
+|---|---|---|---|
+| `ro_strict` | Read | Read | Read |
+| `ro` | Read, and the writes that save the "Discover" state and short URLs | Read | Read |
+| `api_only` | Same as `ro` | Read | Read |
+| `rw` | Read and write | Read | Read, and some write actions, for example cluster settings updates (`PUT _cluster/settings`) and template changes |
+| `admin` | Read and write | Read. Requests from the Kibana "Index Management" and "Tags" apps can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
+| `unrestricted` | All actions | All actions | All actions |
 
-**NB:** The `admin` access level does not mean the user will be allowed to access all indices/actions. It's just like "rw" with settings changes privileges. If you truly require unrestricted access for your Kibana user, including ReadonlyREST PRO/Enterprise app, set `kibana.access: unrestricted`. You can use this rule with the `users` rule to restrict access to selected admins.
+All access levels also allow these cluster actions: `cluster:monitor/*`, `cluster:*/xpack/*`, `cluster:*/info`, `cluster:*/get` and `cluster:*/simulate`.
 
-This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case do not forget to allow the custom kibana index in the `indices` rule!
+The `rw`, `admin` and `unrestricted` access levels also allow all actions on the Kibana sample data indices (`kibana_sample_data_*`).
 
-###### `index` 
-([Enterprise](https://readonlyrest.com/enterprise))
+With `api_only`, ROR always denies the login with a browser. The user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
 
-**Default value is `.kibana`**
+**NB:** The `admin` access level does not allow all indices and actions. For full access, including the ReadonlyREST PRO/Enterprise app, use `kibana.access: unrestricted`. You can use the `users` rule to give this access only to selected admins.
 
-Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in the `kibana.yml` file)
+This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case, ROR allows the Kibana indices automatically. You do not have to add them to the `indices` rule.
 
-This value directly affects how `kibana.access` works because at all the access levels \(yes, even admin\), `kibana.access` sub-rule will **NOT** match any _write_ request in indices that are not the designated kibana index.
+The Kibana indices are:
 
-If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
+* `<kibana_index>`, `<kibana_index>_<version>` and `<kibana_index>_<version>_<number>`
+* `<kibana_index>_alerting_cases`, `<kibana_index>_analytics`, `<kibana_index>_ingest`, `<kibana_index>_security_solution`, `<kibana_index>_search_solution`, `<kibana_index>_task_manager` and `<kibana_index>_usage_counters`, also with a version suffix
+* `<kibana_index>-event-log-<version>`
+* the reporting data stream `.kibana-reporting-<kibana_index>` and its backing indices `.ds-.kibana-reporting-<kibana_index>-*`
 
-It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
+`<kibana_index>` is the value of [`kibana.index`](#index), `.kibana` by default. For example, with the default value, ROR allows `.kibana_8.19.7_001`, `.kibana_analytics_8.19.7` and `.kibana-reporting-.kibana`.
 
-**⚠️IMPORTANT** When you use the `kibana` rule together with the `indices` rule in the same block, you don't have to explicitly allow
-the Kibana-related indices in the list of allowed indices of the `indices` rule. ROR will do it for you automatically. 
+ROR does not allow the old reporting indices (`.reporting-*`) automatically. Add them to the `indices` rule if users need the old reports.
 
 Example:
 ```yaml
@@ -1507,6 +1512,19 @@ Example:
     access: rw
   indices: ["r*"] # .kibana, .kibana_8.10.4, .kibana_task_manager, etc are allowed here, because there is the `kibana` rule present in the same block
 ```
+
+###### `index` 
+([Enterprise](https://readonlyrest.com/enterprise))
+
+**Default value is `.kibana`**
+
+Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in the `kibana.yml` file)
+
+This value directly affects how `kibana.access` works. ROR makes the list of Kibana indices from this name, and `kibana.access` allows write requests to these indices. See [`access`](#access) for the list and for the other write permissions.
+
+If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
+
+It supports [dynamic variables](./elasticsearch.md#dynamic-variables).
 
 ###### `template_index` 
 ([Enterprise](https://readonlyrest.com/enterprise))
@@ -1633,6 +1651,8 @@ Templates are also connected with indices, but rather indirectly. An index templ
 `actions: ["indices:data/read/*"]`
 
 Match if the request action starts with "indices:data/read/".
+
+For Kibana users, use [`kibana.access`](#access) and not a list of actions. Kibana needs more actions than `indices:data/read/*`. For example, Kibana uses `indices:admin/resolve/index` to create a data view.
 
 In Elasticsearch, each request carries only one action. We extracted from Elasticsearch source code the full list of valid action strings as of all Elasticsearch versions. Please see the [dedicated section to find the actions list of your specific Elasticsearch version](https://github.com/beshu-tech/readonlyrest-docs/tree/master/actionstrings).
 
