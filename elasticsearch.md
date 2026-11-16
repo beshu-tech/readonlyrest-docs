@@ -767,8 +767,8 @@ The core of this plugin is an ACL \(access control list\). A logic structure ver
 * HTTP requests run through the blocks, starting from the first,
 * The _first_ block that satisfies _all the rules_ decides if to forbid or allow the request \(according to its policy\).
 * If none of the blocks is matched, the request is rejected
-* A block limits a request only with its own rules. For example, a block without the `indices` rule does not limit the indices.
-* A request must match all the rules of one block. ROR does not combine the permissions of different blocks.
+* A block without the `indices` rule does not limit the index names.
+* ROR does not combine the permissions of different blocks.
 
 **⚠️IMPORTANT**: The ACL blocks are **evaluated sequentially**, therefore **the ordering of the ACL blocks is crucial**. The order of the rules inside an ACL block instead, is irrelevant.
 
@@ -1468,9 +1468,7 @@ The rule consists of several sub-rules:
 
 Enables the minimum set of Elasticsearch `actions` necessary for browsers to sustain a Kibana session, and rejects any other unrelated actions.
 
-This "macro" rule allows the minimum set of actions necessary for a browser to use Kibana. It allows a set of actions towards the designated kibana index (see [`kibana.index`](elasticsearch.md#index)), plus a stricter subset of read-only actions towards other indices, which are considered "data indices".
-
-The idea is that with one single sub-rule we allow the bare minimum set of index+action combinations necessary to support a Kibana browsing session.
+Data indices are all the indices that are not Kibana indices (see the list below).
 
 Possible access levels:
 
@@ -1479,8 +1477,8 @@ Possible access levels:
 | `ro_strict` | Read | Read | Read |
 | `ro` | Read. Also some writes to the main Kibana index ([`kibana.index`](#index)): short URLs, the "Discover" state, data views, telemetry and new config documents. Also legacy templates (`_template`) of the Kibana indices | Read | Read |
 | `api_only` | Same as `ro` | Read | Read |
-| `rw` | Read and write | Read | Read, and some write actions, for example cluster settings updates (`PUT _cluster/settings`) and template changes |
-| `admin` | Read and write | Read. Requests from the Kibana "Index Management" and "Tags" apps can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
+| `rw` | Read and write | Read | Read, and some write actions, for example cluster settings updates (`PUT _cluster/settings`) and template deletions |
+| `admin` | Read and write | Read. Requests with the Kibana request path of the "Index Management" or "Tags" app can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
 | `unrestricted` | All actions | All actions | All actions |
 
 All access levels also allow these actions: `cluster:monitor/*`, `cluster:*/xpack/*`, `cluster:*/info`, `cluster:*/get`, `cluster:*/simulate` and `indices:admin/template/get*`.
@@ -1520,7 +1518,7 @@ Example:
 
 Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in the `kibana.yml` file)
 
-This value directly affects how `kibana.access` works. ROR makes the list of Kibana indices from this name, and `kibana.access` allows write requests to these indices. See [`access`](#access) for the list and for the other write permissions.
+This value directly affects how `kibana.access` works. ROR makes the list of Kibana indices from this name. The access level decides which requests to these indices are allowed. See [`access`](#access) for the list and the access levels.
 
 If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
 
