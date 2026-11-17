@@ -1447,7 +1447,7 @@ This feature will work only with ReadonlyREST Enterprise
 
 When a tenant logs in for the first time, ReadonlyREST Enterprise will create the kibana index associated to the tenancy as per ACL. For example, it will create and initialize the ".kibana\_user1" index, where the tenant "user1" will store all the ["saved objects"](https://www.elastic.co/guide/en/kibana/current/managing-saved-objects.html), that is: visualizations, dashboards, spaces, settings, data views, etc.
 
-The problem is that user1, and any other new users would login for the first time in to a completely blank Kibana. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana.access: "ro") because they won't even have privileges to create their own index-pattern, let alone any dashboards.
+The problem is that user1, and any other new users would login for the first time in to a completely blank Kibana. And this is particularly challenging if the tenant is supposed to be read-only (i.e. kibana.access: "ro") because they cannot create their own dashboards.
 
 To fix this, ReadonlyREST Enterprise offers the possibility for administrators to create and curate a template kibana index from which all the Kibana objects will be copied over to the newly initialised tenancy. The objects in the templating index will be copied every time the user logs in (or changes tenancy with the tenancy selector), and **if the objects were already present, they will be overwritten**.
 

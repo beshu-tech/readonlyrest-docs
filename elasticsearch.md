@@ -1475,32 +1475,31 @@ Possible access levels:
 | Access level | Kibana indices | Data indices | Requests without indices |
 |---|---|---|---|
 | `ro_strict` | Read | Read | Read |
-| `ro` | Read. Also some writes to the main Kibana index ([`kibana.index`](#index)): short URLs, the "Discover" state, data views, telemetry and new config documents. Also legacy templates (`_template`) of the Kibana indices | Read | Read |
-| `api_only` | Same as `ro` | Read | Read |
-| `rw` | Read and write | Read | Read, and some write actions, for example cluster settings updates (`PUT _cluster/settings`) and template deletions |
-| `admin` | Read and write | Read. Requests with the Kibana request path of the "Index Management" or "Tags" app can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
+| `ro` | Read. Also some writes to the main Kibana index ([`kibana.index`](#index)): short URLs, the "Discover" state, data views, telemetry and new config documents. Also legacy templates (`_template`) whose index patterns are Kibana index names without wildcards | Read | Read |
+| `api_only` | Read, and the same writes to the main Kibana index as `ro`. ROR always denies the browser login | Read | Read |
+| `rw` | Read and write | Read. Also all actions on a Kibana sample data index or data stream (`kibana_sample_data_*`), when the request targets only this one index or data stream | Read, and some write actions, for example cluster settings updates (`PUT _cluster/settings`) and template deletions |
+| `admin` | Read and write | Same as `rw`. Requests with the Kibana request path of the "Index Management" or "Tags" app can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
 | `unrestricted` | All actions | All actions | All actions |
 
 All access levels also allow these actions: `cluster:monitor/*`, `cluster:*/info`, `cluster:*/get`, `cluster:*/simulate` and `indices:admin/template/get*`.
 
-The `rw` and `admin` access levels also allow all actions on a Kibana sample data index or data stream (`kibana_sample_data_*`). The request must target only this one index or data stream.
-
-With `api_only`, ROR always denies the login with a browser. The user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
+With `api_only`, the user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
 
 **NB:** The `admin` access level does not allow all indices and actions. For full access to all indices and actions, use `kibana.access: unrestricted`. You can use the `users` rule to give this access only to selected admins.
 
-This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case, ROR allows the Kibana indices automatically. You do not have to add them to the `indices` rule.
+This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case, ROR allows a request that targets only Kibana indices, whatever the `indices` rule says. You do not have to add the Kibana indices to the `indices` rule. If a request also targets other indices, the `indices` rule checks all of its indices, the Kibana indices too.
 
 The Kibana indices are:
 
 * `<kibana_index>`, `<kibana_index>_<version>` and `<kibana_index>_<version>_<number>`
-* `<kibana_index>_alerting_cases`, `<kibana_index>_analytics`, `<kibana_index>_ingest`, `<kibana_index>_security_solution`, `<kibana_index>_search_solution`, `<kibana_index>_task_manager` and `<kibana_index>_usage_counters`, also with a version suffix
+* `<kibana_index>_alerting_cases`, `<kibana_index>_alerting_cases_<version>` and `<kibana_index>_alerting_cases_<version>_<number>`
+* `<kibana_index>_analytics`, `<kibana_index>_ingest`, `<kibana_index>_security_solution`, `<kibana_index>_search_solution`, `<kibana_index>_task_manager` and `<kibana_index>_usage_counters`, each also with the `_<version>` suffix
 * `<kibana_index>-event-log-<version>`
-* the reporting data stream `.kibana-reporting-<kibana_index>` and its backing indices `.ds-.kibana-reporting-<kibana_index>-*`
+* on Kibana 8.15 and newer, the reporting data stream `.kibana-reporting-<kibana_index>` and its backing indices `.ds-.kibana-reporting-<kibana_index>-*`
 
-`<kibana_index>` is the value of [`kibana.index`](#index), `.kibana` by default. For example, with the default value, ROR allows `.kibana_8.19.7_001`, `.kibana_analytics_8.19.7` and `.kibana-reporting-.kibana`.
+`<kibana_index>` is the value of [`kibana.index`](#index), `.kibana` by default. `<version>` is the Kibana version (`major.minor.patch`). `<number>` is a sequence number, for example `001`. For example, with the default value, ROR allows `.kibana_8.19.7_001`, `.kibana_analytics_8.19.7` and `.kibana-reporting-.kibana`.
 
-ROR does not allow the old reporting indices (`.reporting-*`) automatically. Add them to the `indices` rule if users need the old reports.
+Kibana older than 8.15 stores reports in the indices `.reporting<kibana_index>-*`, for example `.reporting.kibana-2025.11.17`. ROR does not allow these indices automatically. Add them to the `indices` rule if users need these reports.
 
 Example:
 ```yaml
