@@ -1481,7 +1481,7 @@ Possible access levels:
 | `admin` | Read and write | Read. Requests with the Kibana request path of the "Index Management" or "Tags" app can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
 | `unrestricted` | All actions | All actions | All actions |
 
-All access levels also allow these actions: `cluster:monitor/*`, `cluster:*/xpack/*`, `cluster:*/info`, `cluster:*/get`, `cluster:*/simulate` and `indices:admin/template/get*`.
+All access levels also allow these actions: `cluster:monitor/*`, `cluster:*/info`, `cluster:*/get`, `cluster:*/simulate` and `indices:admin/template/get*`.
 
 The `rw` and `admin` access levels also allow all actions on a Kibana sample data index or data stream (`kibana_sample_data_*`). The request must target only this one index or data stream.
 
