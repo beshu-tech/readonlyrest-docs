@@ -1468,22 +1468,35 @@ The rule consists of several sub-rules:
 
 Enables the minimum set of Elasticsearch `actions` necessary for browsers to sustain a Kibana session, and rejects any other unrelated actions.
 
-Data indices are all the indices that are not Kibana indices (see the list below).
+Possible access levels, and what each level allows for each target of a request:
 
-Possible access levels:
+| Access level | Kibana indices | Data indices | Kibana sample data | No indices |
+|---|---|---|---|---|
+| `ro_strict` | R | R | R | R |
+| `ro`, `api_only` | R, NS | R | R | R |
+| `rw` | R, W, CR | R, CR | R, SD | R, CR |
+| `admin` | R, W, CR | R, CR | R, SD | R, CR, ROR |
+| `unrestricted` | All actions | All actions | All actions | All actions |
 
-| Access level | Kibana indices | Data indices | Requests without indices |
-|---|---|---|---|
-| `ro_strict` | Read | Read | Read |
-| `ro` | Read. Also some writes to the main Kibana index ([`kibana.index`](#index)): short URLs, the "Discover" state, data views, telemetry and new config documents. Also legacy templates (`_template`) whose index patterns are Kibana index names without wildcards | Read | Read |
-| `api_only` | Read, and the same writes to the main Kibana index as `ro`. ROR always denies the browser login | Read | Read |
-| `rw` | Read and write | Read. Also all actions on a Kibana sample data index or data stream (`kibana_sample_data_*`), when the request targets only this one index or data stream | Read, and some write actions, for example cluster settings updates (`PUT _cluster/settings`) and template deletions |
-| `admin` | Read and write | Same as `rw`. Requests with the Kibana request path of the "Index Management" or "Tags" app can also use admin actions, for example index deletion | Same as `rw`, and admin actions, for example ILM policies, ingest pipelines, snapshot repositories and the ReadonlyREST settings in the PRO/Enterprise app |
-| `unrestricted` | All actions | All actions | All actions |
+The targets of a request:
 
-All access levels also allow these actions: `cluster:monitor/*`, `cluster:*/info`, `cluster:*/get`, `cluster:*/simulate` and `indices:admin/template/get*`.
+* **Kibana indices:** the request uses only Kibana indices (see the list below).
+* **Data indices:** the request uses other indices. Data indices are all the indices that are not Kibana indices.
+* **Kibana sample data:** the request uses only one Kibana sample data set: `kibana_sample_data_ecommerce`, `kibana_sample_data_flights`, `kibana_sample_data_logs` or `kibana_sample_data_logstsdb`.
+* **No indices:** the request uses no index, for example a cluster request.
 
-With `api_only`, the user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
+What the access levels allow:
+
+* **R:** read. This includes the cluster reads that Kibana needs, for example the cluster health, the node information and the license.
+* **NS:** some writes to the main Kibana index ([`kibana.index`](#index)): short URLs, the "Discover" state, data views, telemetry and new config documents.
+* **W:** write documents, create indices and update mappings. To delete an index, a user needs `unrestricted`.
+* **CR:** read the cluster configuration, for example snapshots and SLM policies.
+* **SD:** add and remove the Kibana sample data sets with the Kibana "Sample data" page.
+* **ROR:** change the ReadonlyREST settings in the PRO/Enterprise app.
+
+Only `unrestricted` writes to data indices or changes the cluster configuration.
+
+With `api_only`, ROR always denies the browser login. The user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
 
 **NB:** The `admin` access level does not allow all indices and actions. For full access to all indices and actions, use `kibana.access: unrestricted`. You can use the `users` rule to give this access only to selected admins.
 
