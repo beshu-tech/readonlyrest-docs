@@ -1468,7 +1468,7 @@ The rule consists of several sub-rules:
 
 Enables the minimum set of Elasticsearch `actions` necessary for browsers to sustain a Kibana session, and rejects any other unrelated actions.
 
-Possible access levels, and what each level allows for each target of a request:
+The table shows what each access level allows for each target of a request.
 
 | Access level | Kibana indices | Data indices | Kibana sample data | No indices |
 |---|---|---|---|---|
@@ -1481,7 +1481,7 @@ Possible access levels, and what each level allows for each target of a request:
 The targets of a request:
 
 * **Kibana indices:** the request uses only Kibana indices (see the list below).
-* **Data indices:** the request uses other indices. Data indices are all the indices that are not Kibana indices.
+* **Data indices:** the request uses at least one index that is not a Kibana index.
 * **Kibana sample data:** the request uses only one Kibana sample data set: `kibana_sample_data_ecommerce`, `kibana_sample_data_flights`, `kibana_sample_data_logs` or `kibana_sample_data_logstsdb`.
 * **No indices:** the request uses no index, for example a cluster request.
 
@@ -1489,18 +1489,18 @@ What the access levels allow:
 
 * **R:** read. This includes the cluster reads that Kibana needs, for example the cluster health, the node information and the license.
 * **NS:** some writes to the main Kibana index ([`kibana.index`](#index)): short URLs, the "Discover" state, data views, telemetry and new config documents.
-* **W:** write documents, create indices and update mappings. To delete an index, a user needs `unrestricted`.
+* **W:** write documents, create indices and update mappings. W does not include index deletion.
 * **CR:** read the cluster configuration, for example snapshots and SLM policies.
 * **SD:** add and remove the Kibana sample data sets with the Kibana "Sample data" page.
 * **ROR:** change the ReadonlyREST settings in the PRO/Enterprise app.
 
-Only `unrestricted` writes to data indices or changes the cluster configuration.
+Only `unrestricted` allows writes to data indices and changes to the cluster configuration.
 
 With `api_only`, ROR always denies the browser login. The user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
 
 **NB:** The `admin` access level does not allow all indices and actions. For full access to all indices and actions, use `kibana.access: unrestricted`. You can use the `users` rule to give this access only to selected admins.
 
-This sub-rule is often used with the `indices` rule, to limit the data a user is able to see represented on the dashboards. In that case, ROR allows a request that targets only Kibana indices, whatever the `indices` rule says. You do not have to add the Kibana indices to the `indices` rule. If a request also targets other indices, the `indices` rule checks all of its indices, the Kibana indices too.
+You often use this sub-rule with the `indices` rule, to limit the data that a user sees on the dashboards. In that case, ROR allows a request that uses only Kibana indices, whatever the `indices` rule says. You do not have to add the Kibana indices to the `indices` rule. If a request also uses other indices, the `indices` rule checks all of its indices, the Kibana indices too.
 
 The Kibana indices are:
 
@@ -1530,7 +1530,7 @@ Example:
 
 Specify to what index we expect Kibana to attempt to read/write its settings (use this together with `kibana.index` setting in the `kibana.yml` file)
 
-This value directly affects how `kibana.access` works. ROR makes the list of Kibana indices from this name. The access level decides which requests to these indices are allowed. See [`access`](#access) for the list and the access levels.
+This value directly affects how `kibana.access` works. ROR makes the list of Kibana indices from this name. The access level decides which requests to these indices ROR allows. See [`access`](#access) for the list and the access levels.
 
 If used in conjunction with ReadonlyREST Enterprise, this rule enables **multi tenancy**, because in ReadonlyREST, a tenancy is identified with a set of Kibana configurations, which are by design collected inside a kibana index \(default: `.kibana`\).
 
