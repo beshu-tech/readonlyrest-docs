@@ -1481,7 +1481,7 @@ The table shows what each access level allows for each target of a request.
 The targets of a request:
 
 * **Kibana indices:** the request uses only Kibana indices (see the list below).
-* **Data indices:** the request uses at least one index that is not a Kibana index.
+* **Data indices:** the request uses at least one index that is not a Kibana index, and it is not a Kibana sample data request.
 * **Kibana sample data:** the request uses only one Kibana sample data set: `kibana_sample_data_ecommerce`, `kibana_sample_data_flights`, `kibana_sample_data_logs` or `kibana_sample_data_logstsdb`.
 * **No indices:** the request uses no index, for example a cluster request.
 
@@ -1498,7 +1498,7 @@ Only `unrestricted` allows writes to data indices and changes to the cluster con
 
 With `api_only`, ROR always denies the browser login. The user can call only the [Kibana REST API](https://www.elastic.co/guide/en/kibana/current/api.html) (see [`allowed_api_paths`](#allowed_api_paths)).
 
-**NB:** The `admin` access level does not allow all indices and actions. For full access to all indices and actions, use `kibana.access: unrestricted`. You can use the `users` rule to give this access only to selected admins.
+**NB:** The `admin` access level does not allow all indices and actions. For full access to all indices and actions, use `kibana.access: unrestricted`. The other rules of the block, for example `indices`, still apply. You can use the `users` rule to give this access only to selected admins.
 
 You often use this sub-rule with the `indices` rule, to limit the data that a user sees on the dashboards. In that case, ROR allows a request that uses only Kibana indices, whatever the `indices` rule says. You do not have to add the Kibana indices to the `indices` rule. If a request also uses other indices, the `indices` rule checks all of its indices, the Kibana indices too.
 
