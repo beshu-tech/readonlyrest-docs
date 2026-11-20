@@ -1,0 +1,18 @@
+version: "1.73.1"
+release_date: "2026-11-12"
+entries:
+  - type: security
+    components: [es]
+    text: "[LDAP connector](https://docs.readonlyrest.com/elasticsearch#ldap-connector) with LDAPS and `ssl_trust_all_certs: false` (the default): ROR did not check the host name in the server certificate. So a server with a trusted certificate for another name could act as the LDAP server. ROR now checks the host name."
+  - type: warning
+    components: [es]
+    text: "An LDAPS connector with `ssl_trust_all_certs: false` fails when the server certificate does not contain the configured host name. Fix the host name or the certificate, or set `ssl_hostname_verification: false`."
+  - type: new
+    components: [kbn]
+    text: "8.19.25 support"
+  - type: new
+    components: [es]
+    text: "8.19.25 support"
+  - type: fix
+    components: [kbn]
+    text: "A request with a session but no usable identity, for example with a tenancy that is not one of the user's groups, no longer gets 500. A logged-in user gets 403 instead of being logged out, and a page with a stale tenancy loads again without it"
