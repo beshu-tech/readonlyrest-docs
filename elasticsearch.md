@@ -109,7 +109,9 @@ services:
 
 The image adds `-XX:-UseBASE64Intrinsics` to `ES_JAVA_OPTS`. This option disables the JDK Base64 decoder intrinsic, which has the vulnerability CVE-2026-114938 (Java4Shell).
 
-To enable the intrinsic again, add `-XX:+UseBASE64Intrinsics` to `ES_JAVA_OPTS`. The container then prints a warning. A file in `config/jvm.options.d` cannot enable it, because Elasticsearch reads that directory before `ES_JAVA_OPTS`.
+To enable the intrinsic again, add `-XX:+UseBASE64Intrinsics` to `ES_JAVA_OPTS`. The container then prints a warning. The `config/jvm.options` file and the `config/jvm.options.d` directory cannot enable it, because Elasticsearch reads them before `ES_JAVA_OPTS`.
+
+The plugin ZIP does not set this option. On a ZIP installation, add a file to `config/jvm.options.d` that contains the line `-XX:-UseBASE64Intrinsics`, as [Elastic's advisory](https://discuss.elastic.co/t/java4shell-remove-code-execution-rce-vulnerability-cve-2026-114938/391703) describes.
 
 ####
 
