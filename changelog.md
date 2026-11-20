@@ -36,21 +36,15 @@ Requests carrying a session but no usable identity — e.g. a tenancy that is no
 
 ### (2026-11-09) What's new in **ROR 1.73.0**
 <details>
-<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-111181">CVE-2026-111181</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110306">CVE-2026-110306</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110095">CVE-2026-110095</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110180">CVE-2026-110180</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110725">CVE-2026-110725</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109869">CVE-2026-109869</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109924">CVE-2026-109924</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109841">CVE-2026-109841</a>, <a href="https://github.com/advisories/GHSA-cg2g-xh64-v4q7">GHSA-cg2g-xh64-v4q7</a>, <a href="https://github.com/advisories/GHSA-mrv2-3pqr-j5jr">GHSA-mrv2-3pqr-j5jr</a>, <a href="https://github.com/advisories/GHSA-c6gr-qvv4-5v3f">GHSA-c6gr-qvv4-5v3f</a></summary>
+<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-111181">CVE-2026-111181</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110306">CVE-2026-110306</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110095">CVE-2026-110095</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110180">CVE-2026-110180</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110725">CVE-2026-110725</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109869">CVE-2026-109869</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109924">CVE-2026-109924</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109841">CVE-2026-109841</a>, <a href="https://github.com/advisories/GHSA-cg2g-xh64-v4q7">GHSA-cg2g-xh64-v4q7</a>, <a href="https://github.com/advisories/GHSA-mrv2-3pqr-j5jr">GHSA-mrv2-3pqr-j5jr</a>, <a href="https://github.com/advisories/GHSA-c6gr-qvv4-5v3f">GHSA-c6gr-qvv4-5v3f</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110816">CVE-2026-110816</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-116689">CVE-2026-116689</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-118764">CVE-2026-118764</a></summary>
 
-Fixes a batch of Kibana-side vulnerabilities, including three GitHub advisories in the bundled DOMPurify HTML sanitizer (template-expression bypass through shadow roots, an incomplete `IN_PLACE` hook fix, and a SMIL `attributeName=href` guard bypass in XHTML mode). All three DOMPurify issues are DOM XSS vectors that require non-default sanitizer configurations, but they matter for any deployment where Kibana renders user-supplied content. We recommend upgrading as soon as your maintenance window allows.
+The Kibana plugin's bundled frontend dependencies have been updated to resolve 14 known vulnerabilities, including several DOMPurify advisories that could allow HTML sanitization bypasses and DOM XSS in specific configurations. We recommend upgrading the ReadonlyREST Kibana plugin to 1.73.0 to pick up the patched dependency versions.
 
 </details>
 <details>
 <summary><strong>🚨Security Fix</strong> (KBN) An anonymous request with a large or compressed body can no longer exhaust the Kibana memory</summary>
 
 Unauthenticated callers could previously send oversized or compressed request bodies that were buffered and decompressed before authentication, allowing a single anonymous request to consume large amounts of Kibana heap. Request bodies are now bounded before they are processed, closing this denial-of-service vector.
-
-</details>
-<details>
-<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-110816">CVE-2026-110816</a></summary>
-
-A Kibana-side vulnerability tracked as CVE-2026-110816 is fixed in this release. See the CVE record for the full technical details and affected versions.
 
 </details>
 <details>
@@ -63,12 +57,6 @@ The Kibana app registry was previously reachable by users with restricted Kibana
 <summary><strong>🚨Security Fix</strong> (KBN) A local process can no longer use the Kibana tech user through the ROR Kibana to Elasticsearch proxy</summary>
 
 The ROR Kibana-to-Elasticsearch proxy could be abused by a local process on the Kibana host to act with the privileges of the Kibana technical (service) user. The proxy now refuses such requests, so local access to the Kibana port no longer grants cluster-level privileges.
-
-</details>
-<details>
-<summary><strong>🚨Security Fix</strong> (KBN) <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-116689">CVE-2026-116689</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-118764">CVE-2026-118764</a></summary>
-
-Two further Kibana-side vulnerabilities, CVE-2026-116689 and CVE-2026-118764, are addressed in this release. Consult the CVE records for the specific impact and affected configurations.
 
 </details>
 <details>
