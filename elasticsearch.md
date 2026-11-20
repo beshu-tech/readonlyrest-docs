@@ -105,6 +105,12 @@ services:
       - ./my-readonlyrest.yml:/etc/share/elasticsearch/config/readonlyrest.yml # we assume that the `my-readonlyrest.yml` file is in the same folder as `docker-compose.yml` file is
 ```
 
+#### JVM options
+
+The image adds `-XX:-UseBASE64Intrinsics` to `ES_JAVA_OPTS`. This option disables the JDK Base64 decoder intrinsic, which has the vulnerability CVE-2026-114938 (Java4Shell).
+
+To enable the intrinsic again, add `-XX:+UseBASE64Intrinsics` to `ES_JAVA_OPTS`. The container then prints a warning. A file in `config/jvm.options.d` cannot enable it, because Elasticsearch reads that directory before `ES_JAVA_OPTS`.
+
 ####
 
 ### Installing the plugin
