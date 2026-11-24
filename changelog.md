@@ -10,27 +10,27 @@ Previously, when an LDAP connector used LDAPS with `ssl_trust_all_certs: false` 
 
 </details>
 <details>
-<summary><strong>⚠️Warning</strong> (ES) An LDAPS connector with <code>ssl_trust_all_certs: false</code> fails when the server certificate does not contain the configured host name. Fix the host name or the certificate, or set <code>ssl_hostname_verification: false</code>.</summary>
+<summary><strong>⚠️Warning</strong> (ES) An LDAPS connector with <code>ssl_trust_all_certs: false</code> fails when the server certificate does not contain the configured host name. Fix the hostname or the certificate, or set <code>ssl_hostname_verification: false</code>.</summary>
 
 Because host name verification is now enforced, an LDAPS connector with `ssl_trust_all_certs: false` will fail to connect if the server certificate does not match the configured host name. Align the configured host name with the certificate (or reissue the certificate), or explicitly set `ssl_hostname_verification: false` to opt out — note this weakens protection against impersonation.
 
 </details>
 <details>
-<summary><strong>🚀New</strong> (KBN) 8.19.25 support</summary>
+<summary><strong>🚀New</strong> (KBN) 9.5.7, 9.4.10, 8.19.26, 8.19.25 support</summary>
 
-The ReadonlyREST Kibana plugin is now compatible with Kibana 8.19.25.
-
-</details>
-<details>
-<summary><strong>🚀New</strong> (ES) 8.19.25 support</summary>
-
-The ReadonlyREST Elasticsearch plugin is now compatible with Elasticsearch 8.19.25.
+The ReadonlyREST Kibana plugin now ships builds for Kibana 9.5.7, 9.4.10, 8.19.26 and 8.19.25. Upgrade to the matching plugin build to keep ROR working after upgrading Kibana.
 
 </details>
 <details>
-<summary><strong>🐞Fix</strong> (KBN) A request with a session but no usable identity, for example with a tenancy that is not one of the user's groups, no longer gets 500. A logged-in user gets 403 instead of being logged out, and a page with a stale tenancy loads again without it</summary>
+<summary><strong>🚀New</strong> (ES) 9.5.7, 9.4.10, 8.19.26, 8.19.25 support</summary>
 
-Requests carrying a session but no usable identity — e.g. a tenancy that is not among the user's groups — no longer result in a 500 error. A logged-in user now receives 403 instead of being logged out, and a page referencing a stale tenancy reloads without it.
+The ReadonlyREST Elasticsearch plugin now ships builds for Elasticsearch 9.5.7, 9.4.10, 8.19.26 and 8.19.25. Install the plugin build matching your Elasticsearch version to keep your cluster secured after upgrading.
+
+</details>
+<details>
+<summary><strong>🐞Fix</strong> (KBN) A request with a session but no usable identity, for example, with a tenancy that is not one of the user's groups, no longer gets 500. A logged-in user gets 403 instead of being logged out, and a page with a stale tenancy loads again without it</summary>
+
+Previously, a request carrying a valid session but no usable identity — e.g. a tenancy that isn't one of the user's groups — failed with a 500 error. Now a logged-in user receives a 403 instead of being logged out, and pages holding a stale tenancy reload successfully without it.
 
 </details>
 
